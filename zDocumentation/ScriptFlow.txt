@@ -1,0 +1,114 @@
+
+%---------------------------------------------------------
+
+ScriptPreprocessor translates flow control (if, for, while) to conditional gotos
+	if test goto NNN
+	else    goto PPP
+	
+and unconditional gotos
+
+
+General form:
+100: TEST (expr) ? {A, B, C} : {D, E, F}
+
+- evaluate "expr"
+- if true,  run lines A through B (inclusive) then go to line C
+- if false, run lines D through E (inclusive) then go to line F 
+
+100: TEST (expr) ? {A, B, C} : {F}
+- if false go directly to line F 
+
+%---------------------------------------------------------
+
+100: if A (2) > 12,   
+110: 	C = A (2);
+120:	D =
+130: 	C = A (3);
+140:	D =
+150: end
+
+
+100: TEST {A (2) > 12} ? {110, 140, 150} : {150}
+110: 	C = A (2);
+120:	D = 43;
+130: 	C = A (3);
+140:	D = 99;
+150: NOP
+
+%---------------------------------------------------------
+
+100: if A (2) > 12,   
+110: 	C = A (2);
+120:	D =
+130: else
+140: 	C = A (3);
+150:	D =
+160: end
+
+
+100: TEST {A (2) > 12} ? {110, 120, 160} : {130}
+110: 	C = A (2);
+120:	D = 43;
+130: NOP
+140: 	C = A (3);
+150:	D = 99;
+160: NOP
+
+%---------------------------------------------------------
+
+100: if A (2) > 12,     
+110: 	C = A (2);
+120: 	D =
+130: elseif (x > 32),
+140: 	C = A (3);
+150: 	D =
+160: else
+170: 	L = 
+180: end
+
+
+100: TEST {A (2) > 12} ? {110, 120, 180} : {130}
+110: 	C = A (2);
+120: 	D =
+130: TEST {x > 32} ? {140, 150, 180} : {160}
+140: 	C = A (3);
+150: 	D =
+160: NOP 
+170: 	L = 
+180: NOP
+
+%---------------------------------------------------------
+
+100: while A > 11,
+110:	something!
+120:	something!
+130:	something!
+140: end
+
+100: TEST {A > 11} ? {110, 130, 100} : {140}  
+110:	something!
+120:	something!
+130:	something!
+140: NOP
+
+%---------------------------------------------------------
+
+100: for B = 1 : 10;
+110:	something!
+120:	something!
+130:	something!
+140: end
+
+100: ASSN {Bvals = [1:10]; Bsel = 0;} 
+101: ASSN {Bsel = Bsel + 1;}                                   
+102: TEST {Bsel < length (Bvals)} ? {103, 130, 101} : {140}
+103: ASSN {B = Bvals (Bsel))}
+110:	something!
+120:	something!
+130:	something!
+140: CLEAR Bval, Bsel
+
+%---------------------------------------------------------
+
+
+

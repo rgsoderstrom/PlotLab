@@ -1,0 +1,10 @@
+100: q = 22;
+110: w = 33;
+120: ASSN {avals = ( 1:10); asel = 0;}
+121: ASSN {asel = asel + 1;}
+122: TEST {asel <= length(avals)} ? {123, 130, 121} : {140}
+123: ASSN  {a = avals (asel)}
+130: q = q + 1;
+140: CLEAR {avals asel}
+150: cc = 3;
+160: ss = 4;

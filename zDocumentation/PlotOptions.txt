@@ -1,0 +1,56 @@
+﻿
+
+New data type:
+	PLCanvasObject   : PLVariable
+	PLViewportObject : PLVariable
+
+
+Supported Plot 2D Options
+=========================
+
+Plot2DType 
+	Unknown,
+	Line,
+	Points
+
+
+
+for all: step 1 is make a list of points (even if only 1)
+
+h = plot (x, y, ...);    single point as circle or square
+	type = Points;
+
+h = plot (yl, ...);		 list of points. xl (= 1, 2, ... N) pre-pended
+	type = Unknown;
+
+
+set (h, 'Property', value);
+
+
+
+plot (xl, yl, 'r', ...); continous line
+plot (xl, yl, 'r.', ...); continous line, dotted
+plot (xl, yl, 'r-', ...); continous line, dashed
+	type = Line;
+
+plot (xl, yl, 'ro', ...); discrete points, circles
+plot (xl, yl, 'rs', ...); discrete points, squares
+	type = Points
+
+
+
+Property-Value pairs
+--------------------
+'LineWidth', 3, 
+'PointSize', 3, 
+'Color', 'r', 
+
+
+		connector strings
+			what to plot at each (x,y) and how to connect them
+				'-', '.-', '*'
+		
+		color strings
+			'r', 'b', 'k'
+			'color', [r, g, b]
+

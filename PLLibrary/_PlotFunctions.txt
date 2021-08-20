@@ -1,0 +1,69 @@
+﻿
+
+Arguments to "plot" funtion
+===========================
+
+One Data Argument
+-----------------
+plot (dataArg1)
+plot (dataArg1, formatArg)
+
+if dataAarg1 is Matrix)	
+	if (dataArg1 is Vector, row or col)
+		plotted as "y" data. X data synthesized as [1, 2, ...]
+
+	if (dataArg1.Rows == 2)
+		plot2D each column as 2D point
+
+	if (dataArg1.Rows == 3)
+		plot3D each column as 3D point
+
+		
+Two Data Argument2
+------------------
+plot (dataArg1, dataArg2)
+plot (dataArg1, dataArg2, formatArg)
+
+if (dataArg1 is vector)
+	if (dataArg2 is a vector, same orientation and length)
+		plot2D (List<double> arg1, List<double> arg2) // line or points, depending of format
+
+if (dataArg1 is a scalar double)
+	if (dataArg2 is a scalar double)
+		plot2D (Point (arg1, arg2))
+
+
+Three Data Arguments
+--------------------
+plot (dataArg1, dataArg2, dataArg3)
+plot (dataArg1, dataArg3, dataArg3, formatArg)
+
+if (dataArg1 is vector, use as X data)
+	if (dataArg2 is vector, use as Y data)
+		if (dataArg3 is vector, use as Z data) // line
+			plot3D (List<double> arg1, List<double> arg2, List<double> arg3)
+		if (dataArg3 is matrix, use as Z data) // surface
+			plot3D (List<double> arg1, List<double> arg2, Matrix arg3)
+
+if (dataArg1 is a scalar double)
+	if (dataArg2 is a scalar double)
+		if (dataArg3 is a scalar double)
+			plot3D (Point3D (arg1, arg2, arg3))
+
+********************************************************************************************
+
+Arguments to "PlotVector" funtion
+=================================
+
+
+
+
+
+
+
+
+
+
+
+
+

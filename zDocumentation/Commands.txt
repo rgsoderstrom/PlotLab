@@ -1,0 +1,55 @@
+﻿
+
+Supported Commands 
+==================
+
+Environment
+-----------
+	cd
+	pwd
+	ls
+	exit
+
+
+MFileManager
+-----------
+	path	
+	addpath	
+	run script
+
+
+workspace
+---------
+	who
+	whos	
+	clear
+	exists
+	rows
+	cols
+	length
+	size  
+	disp
+	sprint
+	load
+	save
+
+
+plot manager
+------------
+	figure
+	hold	- on, off
+	clf
+	close   - number or all
+	axis   	- equal, normal, frozen
+
+	title ('aaaa'); 
+	xlabel ('xxxx'), 
+	ylabel ('wwwwwwww')
+
+	
+	
+	
+	
+	
+
+
