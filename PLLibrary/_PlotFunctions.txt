@@ -44,6 +44,8 @@ if (dataArg1 is vector, use as X data)
 			plot3D (List<double> arg1, List<double> arg2, List<double> arg3)
 		if (dataArg3 is matrix, use as Z data) // surface
 			plot3D (List<double> arg1, List<double> arg2, Matrix arg3)
+		if (dataArg3 is function, use to generate Z data) // surface
+			plot3D (List<double> arg1, List<double> arg2, Matrix arg3)
 
 if (dataArg1 is a scalar double)
 	if (dataArg2 is a scalar double)

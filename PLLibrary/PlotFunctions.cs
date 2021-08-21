@@ -15,6 +15,9 @@ using PlottingLib;
 
 //***************************************************************************************************
 
+// "PL" wrappers for CanvasObject and ViewportObject so they can be passed to internal functions
+// the same way matrices, vectors, etc. are
+
 namespace PLCommon
 {
     public class PLCanvasObject : PLScalar
