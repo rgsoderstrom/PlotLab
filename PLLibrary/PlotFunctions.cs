@@ -1,55 +1,9 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Media;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Common;
 
 using PLCommon;
-using Plot2D_Embedded;
-using Plot3D_Embedded;
 using PlottingLib;
-
-//***************************************************************************************************
-
-// "PL" wrappers for CanvasObject and ViewportObject so they can be passed to internal functions
-// the same way matrices, vectors, etc. are
-
-namespace PLCommon
-{
-    public class PLCanvasObject : PLScalar
-    {
-        readonly public Plot2D_Embedded.CanvasObject Data;
-
-        public PLCanvasObject (CanvasObject co)
-        {
-            Data = co;
-        }
-
-        public override string ToString (string fmt)
-        {
-            return "";
-        }
-    }
-
-    public class PLViewportObject : PLScalar
-    {
-        readonly public Plot3D_Embedded.ViewportObject Data;
-
-        public PLViewportObject (ViewportObject co)
-        {
-            Data = co;
-        }
-
-        public override string ToString (string fmt)
-        {
-            return "";
-        }
-    }
-}
 
 //***************************************************************************************************
 
@@ -61,16 +15,8 @@ namespace FunctionLibrary
 {
     static public partial class PlotFunctions
     {
-        //
         // holds 2D, 3D and PlotFigure (i.e. not yet assigned 2D or 3D) windows
-        //
         static readonly List<IPlotCommon> Figures = new List<IPlotCommon> ();
-
-        //
-        // current active figure
-        //
-        //static Plot2D Fig2D = null;
-        //static Plot3D Fig3D = null;
 
         static IPlotCommon CurrentFigure;
 

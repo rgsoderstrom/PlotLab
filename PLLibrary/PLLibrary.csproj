@@ -75,6 +75,7 @@
     <Compile Include="PlotFunctions2.cs" />
     <Compile Include="PlotFunctions2D.cs" />
     <Compile Include="PlotFunctions3D.cs" />
+    <Compile Include="PlotVariables.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

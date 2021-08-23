@@ -12,6 +12,11 @@ namespace FunctionLibrary
 {
     static public partial class PlotFunctions
     {
+        //***********************************************************************************************************
+        //
+        // SetCanvasObject - change a CanvasObject property 
+        //              
+
         static PLVariable SetCanvasObject (PLList args)
         {
             PLCanvasObject singleCanvasObject = args [0] as PLCanvasObject;

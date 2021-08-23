@@ -445,10 +445,9 @@ namespace FunctionLibrary
     
         static PLVariable ContourPlotFromMatrix (List<double> x, List<double> y, CommonMath.Matrix z, List<double> levs)
         {
+            ContourPlotView.ShowGradientArrows = false;
+            ContourPlotView.LabelLines = false;
             ContourPlotView cpv = new ContourPlotView (x, y, z, levs);
-
-            cpv.ShowGradientArrows = false; // not available ??????????
-            cpv.ShowText = false;
 
             Draw2DObject (cpv);
             //Fig2D.SetAxes (a2.Data, a3.Data, a4.Data, a5.Data);
@@ -492,9 +491,9 @@ namespace FunctionLibrary
             if (a2 == null || a3 == null || a4 == null || a5 == null)
                 throw new Exception ("Contour plot argument error");
 
+            ContourPlotView.ShowGradientArrows = false;
+            ContourPlotView.LabelLines = false;
             ContourPlotView cpv = new ContourPlotView (ZFromXYFunction, levels, a2.Data, a3.Data, a4.Data, a5.Data, 100, 100);
-            cpv.ShowText = false;
-            cpv.ShowGradientArrows = false;
 
             Draw2DObject (cpv);
             Plot2D fig = CurrentFigure as Plot2D;
@@ -503,7 +502,6 @@ namespace FunctionLibrary
 
             return new PLNull (); 
         }
-
 
         //*********************************************************************************************
         //*********************************************************************************************

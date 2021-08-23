@@ -8,7 +8,7 @@ One Data Argument
 plot (dataArg1)
 plot (dataArg1, formatArg)
 
-if dataAarg1 is Matrix)	
+if (dataArg1 is Matrix)	
 	if (dataArg1 is Vector, row or col)
 		plotted as "y" data. X data synthesized as [1, 2, ...]
 
@@ -18,7 +18,16 @@ if dataAarg1 is Matrix)
 	if (dataArg1.Rows == 3)
 		plot3D each column as 3D point
 
-		
+if (dataArg1 is List)  
+	if (List Count == 2)
+		if (List [0] is scalar and List [1] is scalar)
+			plot2D single point	
+	if (List Count == 3)
+		if (List [0] is scalar and List [1] is scalar and List [2] is scalar)
+			plot3D single point	
+
+	
+
 Two Data Argument2
 ------------------
 plot (dataArg1, dataArg2)
