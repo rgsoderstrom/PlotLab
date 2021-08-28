@@ -16,7 +16,12 @@ using PlottingLib;
 
 namespace PLCommon
 {
-    public class PLCanvasObject : PLScalar
+    public abstract class PLDisplayObject : PLScalar
+    {
+
+    }
+
+    public class PLCanvasObject : PLDisplayObject
     {
         readonly public Plot2D_Embedded.CanvasObject Data;
 
@@ -27,11 +32,11 @@ namespace PLCommon
 
         public override string ToString (string fmt)
         {
-            return "";
+            return "PLCanvasObject";
         }
     }
 
-    public class PLViewportObject : PLScalar
+    public class PLViewportObject : PLDisplayObject
     {
         readonly public Plot3D_Embedded.ViewportObject Data;
 
@@ -42,7 +47,7 @@ namespace PLCommon
 
         public override string ToString (string fmt)
         {
-            return "";
+            return "PLViewportObject";
         }
     }
 }

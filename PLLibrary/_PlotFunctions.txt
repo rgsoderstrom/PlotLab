@@ -6,7 +6,7 @@ Arguments to "plot" funtion
 One Data Argument
 -----------------
 plot (dataArg1)
-plot (dataArg1, formatArg)
+plot (dataArg1, formatArg
 
 if (dataArg1 is Matrix)	
 	if (dataArg1 is Vector, row or col)

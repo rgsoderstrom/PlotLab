@@ -139,7 +139,7 @@ namespace FunctionLibrary
             PLDouble dbl = var as PLDouble;
             PLList lst = var as PLList;
 
-            if (nul != null)
+            if (nul != null) // true if rand invoked with no argument
             {
                 // use default mat size of 1 x 1
             }
@@ -149,6 +149,7 @@ namespace FunctionLibrary
                 int N = (int)(0.5 + dbl.Data);
                 mat = new PLMatrix (N, N);
             }
+
             else if (lst != null)
             {
                 if (lst.Count == 2)
@@ -158,6 +159,7 @@ namespace FunctionLibrary
                     mat = new PLMatrix (M, N);
                 }
             }
+
             else
                 throw new Exception ("Unreconized arguments to function rand");
 

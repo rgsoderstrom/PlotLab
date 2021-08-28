@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using System.Windows;
 using System.Windows.Media;
+
+using Common;
 
 using PLCommon;
 using Plot2D_Embedded;
@@ -56,92 +57,71 @@ namespace FunctionLibrary
         //******************************************************************************************
         //******************************************************************************************
 
-        static bool CharToDrawingOption (char c,
-                                         ref LineView.DrawingStyle lineStyle, 
-                                         ref PointView.DrawingStyle pointStyle, 
-                                         ref Brush color)
-        {
-            bool success = true;
+        //static bool CharToDrawingOption (char c,
+        //                                 ref LineView.DrawingStyle lineStyle, 
+        //                                 ref PointView.DrawingStyle pointStyle, 
+        //                                 ref Brush color)
+        //{
+        //    bool success = true;
 
-            switch (c)
-            {
-                case 'r': color = Brushes.Red; break;
-                case 'n': color = Brushes.Orange; break;
-                case 'y': color = Brushes.Yellow; break;
-                case 'g': color = Brushes.Green; break;
-                case 'b': color = Brushes.Blue; break;
-                case 'k': color = Brushes.Black; break;
+        //    switch (c)
+        //    {
+        //        case 'r': color = Brushes.Red; break;
+        //        case 'n': color = Brushes.Orange; break;
+        //        case 'y': color = Brushes.Yellow; break;
+        //        case 'g': color = Brushes.Green; break;
+        //        case 'b': color = Brushes.Blue; break;
+        //        case 'k': color = Brushes.Black; break;
 
-                case '-':
-                {
-                    if (lineStyle == LineView.DrawingStyle.Dashes)
-                        lineStyle = LineView.DrawingStyle.LongDashes;
-                    else
-                        lineStyle = LineView.DrawingStyle.Dashes;
-                }
-                break;
+        //        case '-':
+        //        {
+        //            if (lineStyle == LineView.DrawingStyle.Dashes)
+        //                lineStyle = LineView.DrawingStyle.LongDashes;
+        //            else
+        //                lineStyle = LineView.DrawingStyle.Dashes;
+        //        }
+        //        break;
 
-                case '.': lineStyle = LineView.DrawingStyle.Dots; break;
+        //        case '.': lineStyle = LineView.DrawingStyle.Dots; break;
 
-                case 'o': pointStyle = PointView.DrawingStyle.Circle; break;
-                case 's': pointStyle = PointView.DrawingStyle.Square; break;
-                case '*': pointStyle = PointView.DrawingStyle.Star; break; 
-                case 't': pointStyle = PointView.DrawingStyle.Triangle; break; 
-                case 'x': pointStyle = PointView.DrawingStyle.X; break; 
-                case '+': pointStyle = PointView.DrawingStyle.Plus; break; 
+        //        case 'o': pointStyle = PointView.DrawingStyle.Circle; break;
+        //        case 's': pointStyle = PointView.DrawingStyle.Square; break;
+        //        case '*': pointStyle = PointView.DrawingStyle.Star; break; 
+        //        case 't': pointStyle = PointView.DrawingStyle.Triangle; break; 
+        //        case 'x': pointStyle = PointView.DrawingStyle.X; break; 
+        //        case '+': pointStyle = PointView.DrawingStyle.Plus; break; 
 
-                default: success = false; break;
-            }
+        //        default: success = false; break;
+        //    }
 
-            return success;
-        }
-
-        //*********************************************************************************************
-        //*********************************************************************************************
-        //*********************************************************************************************
-        //
-        // Plot function
-        //
-
-        static public PLCanvasObject Plot (PLVariable input)
-        {
-            //
-            // convert input argument to a PLLIst
-            //
-            if (input is PLList)
-                return Plot (input as PLList);
-
-            else if (input is PLMatrix) // e.g. plot (y)
-                return Plot (new PLList () {input as PLMatrix});
-
-            throw new Exception ("Plot input type " + input.GetType () + " not supported");
-        }
+        //    return success;
+        //}
 
         //*******************************************************************************************
         //
         //    - start unpacking plot arguments
         // 
 
-        static PLCanvasObject Plot (PLList input)
-        {
-            //
-            // the first one, two or three args are the data to plot
-            //
-            int count = 0;
+        //static PLCanvasObject Plot (PLList input)
+        //{
+        //    //
+        //    // the first one, two or three args are the data to plot
+        //    //
+        //    int count = 0;
 
-            if (input [0] is PLMatrix || input [0] is PLDouble) count++;
+        //    if (input [0] is PLMatrix || input [0] is PLDouble) count++;
             
-            if (input.Count > 1) if (input [1] is PLMatrix || input [1] is PLDouble) count++;
+        //    if (input.Count > 1) if (input [1] is PLMatrix || input [1] is PLDouble) count++;
 
-            // if only one data arg (the ordinate), we create the abscissa
-            if (count == 1) 
-                return Plot1 (input);
+        //    // if only one data arg (the ordinate), we create the abscissa
+        //    if (count == 1) 
+        //        return Plot1 (input);
             
-            if (count == 2) 
-                return Plot2 (input);
+        //    if (count == 2) 
+        //        return Plot2 (input);
 
-            throw new Exception ("Plot arguments error");
-        }
+        //    throw new Exception ("Plot arguments error");
+        //}
 
 
 
@@ -154,115 +134,116 @@ namespace FunctionLibrary
         //  - generate abscissa values here then plot as plot (x, y)
         //
 
-        static PLCanvasObject Plot1 (PLList args)
-        {
-            int length = (args [0] as PLMatrix).Size;
-            PLMatrix xNumbers = new PLMatrix (1, length);
-            xNumbers.Name = "x";
+        //static PLCanvasObject Plot1 (PLList args)
+        //{
+        //    int length = (args [0] as PLMatrix).Size;
+        //    PLMatrix xNumbers = new PLMatrix (1, length);
+        //    xNumbers.Name = "x";
 
-            for (int i = 0; i<length; i++)
-                xNumbers.Data [0, i] = i + 1;
+        //    for (int i = 0; i<length; i++)
+        //        xNumbers.Data [0, i] = i + 1;
 
-            args.Data.Insert (0, xNumbers);
+        //    args.Data.Insert (0, xNumbers);
 
-            return Plot2 (args); // continue as if input was plot (x, y, ...) format
-        }
+        //    return Plot2 (args); // continue as if input was plot (x, y, ...) format
+        //}
 
         //*************************************************************************************************
         //
         // Plot2 - two data collections
         //
-        static PLCanvasObject Plot2 (PLList args)
-        {
-            //
-            // convert the two data args into List<Point>
-            //
-            List<Point> points = new List<Point> ();
 
-            PLMatrix mx = args [0] as PLMatrix;
-            PLMatrix my = args [1] as PLMatrix;
+        //static PLCanvasObject Plot2 (PLList args)
+        //{
+        //    //
+        //    // convert the two data args into List<Point>
+        //    //
+        //    List<Point> points = new List<Point> ();
 
-            PLDouble px = args [0] as PLDouble;  // e.g. plot (3, 7, ...)
-            PLDouble py = args [1] as PLDouble;
+        //    PLMatrix mx = args [0] as PLMatrix;
+        //    PLMatrix my = args [1] as PLMatrix;
 
-            bool singlePoint = (px != null && py != null);
-            bool setOfPoints = (mx != null && my != null);
+        //    PLDouble px = args [0] as PLDouble;  // e.g. plot (3, 7, ...)
+        //    PLDouble py = args [1] as PLDouble;
 
-            if (singlePoint == false && setOfPoints == false)
-                throw new Exception ("Plot argument error");
+        //    bool singlePoint = (px != null && py != null);
+        //    bool setOfPoints = (mx != null && my != null);
 
-            //
-            // if just one point, convert it to a list with just one entry
-            //
-            if (singlePoint)
-            {
-                points.Add (new Point (px.Data, py.Data));
-            }
+        //    if (singlePoint == false && setOfPoints == false)
+        //        throw new Exception ("Plot argument error");
 
-            //
-            // read matrices by column
-            //
-            else
-            {
-                if (mx.Size == my.Size)
-                {
-                    List<double> x = mx.ReadByColumn ();
-                    List<double> y = my.ReadByColumn ();
+        //    //
+        //    // if just one point, convert it to a list with just one entry
+        //    //
+        //    if (singlePoint)
+        //    {
+        //        points.Add (new Point (px.Data, py.Data));
+        //    }
 
-                    for (int i = 0; i<x.Count; i++)
-                        points.Add (new Point (x [i], y [i]));
-                }
-                else
-                    throw new Exception ("Plot data x, y sizes different");
-            }
+        //    //
+        //    // read matrices by column
+        //    //
+        //    else
+        //    {
+        //        if (mx.Size == my.Size)
+        //        {
+        //            List<double> x = mx.ReadByColumn ();
+        //            List<double> y = my.ReadByColumn ();
 
-            //
-            // look at remaining args. are we plotting discrete points or a connected line?
-            //
+        //            for (int i = 0; i<x.Count; i++)
+        //                points.Add (new Point (x [i], y [i]));
+        //        }
+        //        else
+        //            throw new Exception ("Plot data x, y sizes different");
+        //    }
 
-            Brush dataColor = null;
-            PointView.DrawingStyle pointStyle = PointView.DrawingStyle.None;
-            LineView.DrawingStyle lineStyle   = LineView.DrawingStyle.None;
+        //    //
+        //    // look at remaining args. are we plotting discrete points or a connected line?
+        //    //
 
-            //
-            // look at args [2] to help determine actual color and style values
-            // 
+        //    Brush dataColor = null;
+        //    PointView.DrawingStyle pointStyle = PointView.DrawingStyle.None;
+        //    LineView.DrawingStyle lineStyle   = LineView.DrawingStyle.None;
 
-            if (args.Count > 2)
-            {
-                string str = (args [2] as PLString).Data;
+        //    //
+        //    // look at args [2] to help determine actual color and style values
+        //    // 
 
-                // remove leading and trailing single quote
-                int i1 = str.IndexOf ('\'');
-                int i2 = str.LastIndexOf ('\'');
+        //    if (args.Count > 2)
+        //    {
+        //        string str = (args [2] as PLString).Data;
 
-                if (i1 == -1 || i2 == -1) throw new Exception ("Plot option syntax error: " + str);
+        //        // remove leading and trailing single quote
+        //        int i1 = str.IndexOf ('\'');
+        //        int i2 = str.LastIndexOf ('\'');
 
-                str = str.Remove (i2);
-                str = str.Remove (i1, 1);
+        //        if (i1 == -1 || i2 == -1) throw new Exception ("Plot option syntax error: " + str);
 
-                foreach (char c in str)
-                {
-                    bool success = CharToDrawingOption (c, ref lineStyle, ref pointStyle, ref dataColor);
+        //        str = str.Remove (i2);
+        //        str = str.Remove (i1, 1);
 
-                    if (success == false)
-                        throw new Exception ("Unsupported plot option: " + str);
-                }
-            }
+        //        foreach (char c in str)
+        //        {
+        //            bool success = CharToDrawingOption (c, ref lineStyle, ref pointStyle, ref dataColor);
 
-            // fill-in any not explicitly set
-            if (dataColor == null) dataColor = Brushes.Black;
+        //            if (success == false)
+        //                throw new Exception ("Unsupported plot option: " + str);
+        //        }
+        //    }
 
-            if (pointStyle == PointView.DrawingStyle.None && lineStyle == LineView.DrawingStyle.None) lineStyle = LineView.DrawingStyle.Solid;
+        //    // fill-in any not explicitly set
+        //    if (dataColor == null) dataColor = Brushes.Black;
 
-            if (pointStyle != PointView.DrawingStyle.None)
-                return PlotPoints (points, dataColor, pointStyle);
+        //    if (pointStyle == PointView.DrawingStyle.None && lineStyle == LineView.DrawingStyle.None) lineStyle = LineView.DrawingStyle.Solid;
 
-            else 
-                return PlotLine (points, dataColor, lineStyle);
+        //    if (pointStyle != PointView.DrawingStyle.None)
+        //        return PlotPoints (points, dataColor, pointStyle);
 
-            throw new Exception ("Plot argument error");
-        }
+        //    else 
+        //        return PlotLine (points, dataColor, lineStyle);
+
+        //    throw new Exception ("Plot argument error");
+        //}
 
         //*********************************************************************************************
         //*********************************************************************************************

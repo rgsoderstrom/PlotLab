@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Media3D;
 using System.Collections.Generic;
 
 using PLCommon;
+using Plot2D_Embedded;
+using Plot3D_Embedded;
 using PlottingLib;
 
 //***************************************************************************************************
@@ -51,6 +55,284 @@ namespace FunctionLibrary
             names.Add ("clf");
         }
 
+        //*********************************************************************************************
+        //*********************************************************************************************
+        //*********************************************************************************************
+        //
+        //
+        // Plot function - entry point for most 2D and 3D plotting functions
+        //      - usage:
+        //          h = plot (dataArg1, dataArg2, ..., formatArg1, formatArg2, ...);
+        //
+        //      - format args
+        //          - optional, strings or numbers
+        //          - all dataArgs must preceed first formatArg
+        //          - first formatArg must be a string
+        //
+
+        static public PLDisplayObject Plot (PLVariable input)
+        {
+            //
+            // separate data arguments and formatting arguments
+            //
+            PLList dataArgs = new PLList ();
+            PLList formatArgs = new PLList ();
+
+            if (input is PLMatrix)
+            {
+                dataArgs.Add (input);
+            }
+    
+            else if (input is PLList)
+            {
+                PLList lst = input as PLList;
+                int i;
+
+                for (i=0; i<lst.Count; i++)
+                {
+                    if (lst [i] is PLString) // the first string indicates the start of formatting args
+                        break;
+
+                    dataArgs.Add (lst [i]);
+                }
+
+                for ( ; i<lst.Count; i++) // add all remaining to format list
+                    formatArgs.Add (lst [i]);
+            }
+
+            else
+                throw new Exception ("Plot function argument error");
+
+            //EventLog.WriteLine ("----------------------------------------------");
+            //EventLog.WriteLine (string.Format ("{0} data args, {1} fmt args", dataArgs.Count, formatArgs.Count));
+           
+            return Plot (dataArgs, formatArgs);
+        }
+
+        //******************************************************************************************
+
+        // Parse format arguments and call further processng based on the number of data arguments
+
+        static private PLDisplayObject Plot (PLList dataArgs, PLList formatArgs)
+        {
+            DrawingParameters dp = ParseDrawingStyle (formatArgs);
+
+            if (dataArgs.Count == 1)
+                return Plot1 (dataArgs, dp);
+
+            else if (dataArgs.Count == 2)
+                return Plot2 (dataArgs, dp);
+
+            else if (dataArgs.Count == 3)
+                return Plot3 (dataArgs, dp);
+
+            else
+                throw new Exception ("Plot function data argument count error");
+        }
+
+        //******************************************************************************************
+
+        static private PLDisplayObject Plot1 (PLList dataArgs, DrawingParameters dp)
+        {
+            if (dataArgs [0] is PLMatrix)
+            {
+                PLMatrix mat = dataArgs [0] as PLMatrix;
+
+                List<Point>   points   = new List<Point> ();
+                List<Point3D> points3D = new List<Point3D> ();
+
+                if (mat.IsColVector || mat.IsRowVector) // plot mat content as "y" data
+                {
+                    if (mat.IsRowVector) // plot passed-in data as "y", generate "x" here
+                    {
+                        for (int i=0; i<mat.Cols; i++)
+                            points.Add (new Point (i + 1, mat [0, i]));
+                    }
+                    else // is a column vector
+                    {
+                        if (mat.Rows == 2) // a single 2D point
+                        {
+                            points.Add (new Point (mat [0, 0], mat [1, 0]));
+                        }
+
+                        else if (mat.Rows == 3) // a single 3D point
+                        {
+                            points3D.Add (new Point3D (mat [0, 0], mat [1, 0], mat [2, 0]));
+                        }
+
+                        else // plot passed-in data as "y", generate "x" here
+                        {
+                            for (int i=0; i<mat.Rows; i++)
+                                points.Add (new Point (i + 1, mat [i, 0]));
+                        }
+                    }
+                }
+
+                else if (mat.Rows == 2) // plot each column as a 2D point
+                {
+                    for (int i=0; i<mat.Cols; i++)
+                        points.Add (new Point (mat [0, i], mat [1, i]));
+                }
+
+                else if (mat.Rows == 3) // plot each column as a 3D point
+                {
+                    for (int i=0; i<mat.Cols; i++)
+                        points3D.Add (new Point3D (mat [0, i], mat [1, i], mat [2, i]));
+                }
+
+                else
+                    throw new Exception ("Plot1 arg error");
+
+                //
+                // continue with either 2D or 3D points
+                //
+                if (points.Count > 0) return Plot1 (points, dp);
+                else                  return Plot1 (points3D, dp);
+            }
+
+            throw new NotImplementedException ("Plot1 argument type error");
+        }
+
+        //******************************************************************************************
+
+        // Plot a list of 2D points, either as a connected line or separate points
+
+        static private PLDisplayObject Plot1 (List<Point> pts, DrawingParameters dp)
+        {
+            if (CurrentFigure is Plot2D == false)
+                NewFigure2D ();            
+                    
+            CanvasObject drawObj;
+
+            // if no style specified plot as a line unless there is only one point
+            if (dp.lineStyle == LineView.DrawingStyle.None && dp.pointStyle == PointView.DrawingStyle.None)
+            {
+                if (pts.Count > 1)
+                {
+                    drawObj = new LineView (pts);
+                    (drawObj as LineView).LineStyle = LineView.DrawingStyle.Solid;
+                    (drawObj as LineView).Color = dp.color;
+                    (drawObj as LineView).Thickness = dp.lineWidth;
+                }
+
+                else
+                {
+                    drawObj = new PointView (pts, PointView.DrawingStyle.Star);
+                    (drawObj as PointView).Color = dp.color;
+                    (drawObj as PointView).Size = dp.radius * 2;
+                }
+            }
+
+            else if (dp.lineStyle != LineView.DrawingStyle.None)
+            {
+                drawObj = new LineView (pts);
+                (drawObj as LineView).LineStyle = dp.lineStyle;
+                (drawObj as LineView).Color = dp.color;
+                (drawObj as LineView).Thickness = dp.lineWidth;
+            }
+
+            else
+            {
+                drawObj = new PointView (pts, dp.pointStyle);
+                (drawObj as PointView).Color = dp.color;
+                (drawObj as PointView).Size = dp.radius * 2;
+            }
+
+            Draw2DObject (drawObj);
+            return new PLCanvasObject (drawObj);
+        }
+
+        //******************************************************************************************
+
+        // Plot a list of 3D points. more than one will be connected line, one will be a single point
+
+        static private PLDisplayObject Plot1 (List<Point3D> pts, DrawingParameters dp)
+        {
+            if (CurrentFigure is Plot3D == false)
+                NewFigure3D ();
+
+            ViewportObject vo;
+
+            if (pts.Count > 1)
+            {
+                Polyline3D pl3 = new Polyline3D (pts);
+                vo = pl3;
+                pl3.PolylineView.Color = (dp.color as SolidColorBrush).Color;
+                pl3.PolylineView.Thickness = dp.lineWidth;
+
+                //pv.ArrowEnds = Petzold.Media2D.ArrowEnds.End;
+                //pv.ArrowLength = 5;
+                //pv.Decimation = 1;
+            }
+
+            else
+            { 
+                PlottedPoint3D pp = new PlottedPoint3D (pts [0]);
+                vo = pp;
+               
+                pp.PointView.Color = (dp.color as SolidColorBrush).Color;
+                pp.Radius = dp.radius;
+            }
+
+            (CurrentFigure as Plot3D).Plot (vo);
+
+            return new PLViewportObject (vo);
+        }
+
+        //******************************************************************************************
+
+        // Plot2 - two data arguments
+
+        static private PLDisplayObject Plot2 (PLList dataArgs, DrawingParameters dp)
+        {
+            List<PLVariable> args = dataArgs.Data;
+            List<Point> pts = new List<Point> ();
+
+            if (args [0] is PLMatrix && args [1] is PLMatrix)
+            {
+                PLMatrix m1 = args [0] as PLMatrix;
+                PLMatrix m2 = args [1] as PLMatrix;
+
+                if (m1.Rows == m2.Rows && m1.Cols == m2.Cols)
+                {
+                    if (m1.IsRowVector)
+                    {
+                        for (int i=0; i<m1.Cols; i++)
+                            pts.Add (new Point (m1 [0, i], m2 [0, i]));
+                    }
+
+                    else
+                    {
+                        for (int i=0; i<m1.Rows; i++)
+                            pts.Add (new Point (m1 [i, 0], m2 [i, i]));
+                    }
+                }
+
+                else
+                    throw new Exception ("Plot error: x & y arg sizes must match");
+            }
+
+            else if (args [0] is PLDouble && args [1] is PLDouble)
+            {
+                double x = (args [0] as PLDouble).Data;
+                double y = (args [1] as PLDouble).Data;
+                pts.Add (new Point (x, y));
+            }
+
+            else
+                throw new NotImplementedException ("Plot2 argument type error");
+
+            return Plot1 (pts, dp);
+        }
+
+        //******************************************************************************************
+
+        static private PLCanvasObject Plot3 (PLList dataArgs, DrawingParameters dp)
+        {
+            throw new NotImplementedException ("Plot3");
+            return null;
+        }
+
         //******************************************************************************************
 
         static private void  NewFigureCommon (IPlotCommon fig)
@@ -61,13 +343,10 @@ namespace FunctionLibrary
             CurrentFigure = fig;
         }
 
-
         static public void NewFigure ()
         {
             NewFigureCommon (new PlotFigure ());
         }
-
-
 
         static public void NewFigure2D ()
         {
@@ -82,37 +361,18 @@ namespace FunctionLibrary
             (CurrentFigure as Plot2D).Title += " - Plot2D";
         }
 
-
-
-
-
-
         static public void NewFigure3D ()
         {
             NewFigureCommon (new Plot3D ());
-            //Plot3D Fig3D = new Plot3D ();
             (CurrentFigure as Plot3D).Title += " - Plot3D";
-            //Fig3D.Closed    += Fig_Closed;
-            //Fig3D.Activated += Fig_Activated; // when clicked to foreground
-            //Figures.Add (Fig3D);
-            //CurrentFigure = Fig3D;
         }
 
         static public void NewFigure3D (PlotFigure pf)
         {
             NewFigureCommon (new Plot3D (pf));
             pf.Close ();
-            //Plot3D Fig3D = new Plot3D (pf);
             (CurrentFigure as Plot3D).Title += " - Plot3D";
-            //Fig3D.Closed    += Fig_Closed;
-            //Fig3D.Activated += Fig_Activated; // when clicked to foreground
-            //Figures.Add (Fig3D);
-            //CurrentFigure = Fig3D;
         }
-
-
-
-
 
         static void Fig_Activated (object sender, EventArgs e)
         {
@@ -121,25 +381,12 @@ namespace FunctionLibrary
             else CurrentFigure = sender as PlotFigure;
         }
 
-
-
-        static bool IsPlot2D (IPlotCommon ipc) {return ipc is Plot2D;}
-        static bool IsPlot3D (IPlotCommon ipc) {return ipc is Plot3D;}
-
-
         static void Fig_Closed (object sender, EventArgs e)
         {
             IPlotCommon closedFig = sender as IPlotCommon;
             if (CurrentFigure == closedFig) CurrentFigure = null;
-            //if (Fig2D == closedFig) Fig2D = null;
-            //if (Fig3D == closedFig) Fig3D = null;
-
             Figures.Remove (closedFig);
-
-            //if (Fig2D == null) Fig2D = Figures.FindLast (IsPlot2D) as Plot2D;
-            //if (Fig3D == null) Fig3D = Figures.FindLast (IsPlot3D) as Plot3D;
         }
-
 
         //****************************************************************************************
 

@@ -10,7 +10,7 @@ namespace FrontEnd
     {
         static List<string> searchPath = new List<string> () 
         {
-            @"C:\Users\rgsod\Documents\Visual Studio 2019\Projects\PlotLab\Source",
+            @"C:\Users\rgsod\Documents\Visual Studio 2019\Projects\PlotLab\Examples",
         };
 
         //*******************************************************************************************

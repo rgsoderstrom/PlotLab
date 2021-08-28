@@ -71,6 +71,7 @@
     <Compile Include="MathFunctionsBuiltIn.cs" />
     <Compile Include="MathFunctionsUserDefined.cs" />
     <Compile Include="PlotCommands.cs" />
+    <Compile Include="PlotFormatArgs.cs" />
     <Compile Include="PlotFunctions.cs" />
     <Compile Include="PlotFunctions2.cs" />
     <Compile Include="PlotFunctions2D.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="_PlotFormatArgs.txt" />
     <Content Include="_PlotFunctions.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

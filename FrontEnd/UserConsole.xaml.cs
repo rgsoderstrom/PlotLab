@@ -31,8 +31,17 @@ namespace FrontEnd
             Workspace.Print = Print;
             TextPane.Focus ();
 
-            Print ("startup");
-            ReturnKeyHandler ();
+            try
+            {
+                Print ("startup");
+                ReturnKeyHandler ();
+            }
+
+            catch (Exception ex)
+            {
+                Print ("Startup error: " + ex.Message + "\n");
+            }
+
             Print (Utils.Prompt);
         }
 
