@@ -25,6 +25,7 @@ namespace FunctionLibrary
             {
                 {"linspace", Linspace},
                 {"zeros", Zeros},
+                {"ones", Ones},
                 {"sin", Sin},
                 {"cos", Cos},
                 {"sqrt", Sqrt},
@@ -229,27 +230,77 @@ namespace FunctionLibrary
             if (list != null)
             {
                 if (list.Count > 2) throw new Exception ("zeros argument error");
+
                 if (list.Count == 2)
                 {
                     if (list [0] is PLInteger)
-                    {
-                        rows = (int)(list [0] as PLInteger).Data;
-                        cols = (int)(list [1] as PLInteger).Data;
-                    }
+                        rows = (list [0] as PLInteger).Data;
 
                     else if (list [0] is PLDouble)
-                    {
-                        rows = (int)(list [0] as PLDouble).Data;
-                        cols = (int)(list [1] as PLDouble).Data;
-                    }
+                        rows = (int) (list [0] as PLDouble).Data;
 
-                    else throw new Exception ("zeros argument error");
+                    else 
+                        throw new Exception ("ones argument error");
+
+                    if (list [1] is PLInteger)
+                        cols = (list [1] as PLInteger).Data;
+
+                    else if (list [1] is PLDouble)
+                        cols = (int) (list [1] as PLDouble).Data;
+
+                    else 
+                        throw new Exception ("ones argument error");
                 }
             }
 
             if (rc != null) rows = cols = (int)rc.Data;
 
             PLMatrix results = new PLMatrix (rows, cols);
+            return results;
+        }
+
+        //*********************************************************************************************
+
+        static public PLVariable Ones (PLVariable arg)
+        {
+            int rows = 0, cols = 0;
+            PLList list = arg as PLList;
+            PLDouble rc = arg as PLDouble; // rows and cols
+
+            if (list != null)
+            {
+                if (list.Count > 2) throw new Exception ("ones argument error");
+
+                if (list.Count == 2)
+                {
+                    if (list [0] is PLInteger)
+                        rows = (list [0] as PLInteger).Data;
+
+                    else if (list [0] is PLDouble)
+                        rows = (int) (list [0] as PLDouble).Data;
+
+                    else 
+                        throw new Exception ("ones argument error");
+
+                    if (list [1] is PLInteger)
+                        cols = (list [1] as PLInteger).Data;
+
+                    else if (list [1] is PLDouble)
+                        cols = (int) (list [1] as PLDouble).Data;
+
+                    else 
+                        throw new Exception ("ones argument error");
+                }
+            }
+
+            if (rc != null) rows = cols = (int)rc.Data;
+
+            PLMatrix results = new PLMatrix (rows, cols);
+
+            for (int r=0; r<results.Rows; r++)
+                for (int c=0; c<results.Cols; c++)
+                    results [r, c] = 1;
+
             return results;
         }
 
