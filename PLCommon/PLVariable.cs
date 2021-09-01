@@ -36,6 +36,8 @@ namespace PLCommon
             if (op1 is PLDouble  && op2 is PLDouble)  return (op1 as PLDouble)  - (op2 as PLDouble);
             if (op1 is PLInteger && op2 is PLInteger) return (op1 as PLInteger) - (op2 as PLInteger);
             if (op1 is PLMatrix  && op2 is PLMatrix)  return (op1 as PLMatrix)  - (op2 as PLMatrix);
+            if (op1 is PLMatrix  && op2 is PLDouble)  return (op1 as PLMatrix)  - (op2 as PLDouble);
+            if (op1 is PLDouble  && op2 is PLMatrix)  return (op1 as PLDouble)  - (op2 as PLMatrix);
             throw new Exception ("Subtraction of " + op1.GetType () + " and " + op2.GetType () + " not implemented");
         }
 
@@ -146,6 +148,7 @@ namespace PLCommon
 
         public bool IsRowVector {get {return Rows == 1;}}
         public bool IsColVector {get {return Cols == 1;}}
+        public bool IsVector    {get {return IsRowVector || IsColVector;}}
         public bool IsMatrix    {get {return Rows != 1 && Cols != 1;}}
 
         public override int Rows {get {return Data.Rows;}}
@@ -178,6 +181,8 @@ namespace PLCommon
         public static PLMatrix operator+ (PLMatrix op1, PLMatrix op2) {return new PLMatrix ("", op1.Data + op2.Data);}
         public static PLMatrix operator+ (PLMatrix op1, PLDouble op2) {return new PLMatrix ("", op1.Data + op2.Data);}
         public static PLMatrix operator- (PLMatrix op1, PLMatrix op2) {return new PLMatrix ("", op1.Data - op2.Data);}
+        public static PLMatrix operator- (PLMatrix op1, PLDouble op2) {return new PLMatrix ("", op1.Data - op2.Data);}
+        public static PLMatrix operator- (PLDouble op1, PLMatrix op2) {return new PLMatrix ("", op1.Data - op2.Data);}
         public static PLMatrix operator* (PLMatrix op1, PLMatrix op2) {return new PLMatrix ("", op1.Data * op2.Data);}
         public static PLMatrix operator* (PLDouble op1, PLMatrix op2) {return new PLMatrix ("", op1.Data * op2.Data);}
         public static PLMatrix operator/ (PLMatrix op1, PLDouble op2) {return new PLMatrix ("", op1.Data / op2.Data);}
