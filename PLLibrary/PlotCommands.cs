@@ -50,14 +50,12 @@ namespace FunctionLibrary
             if (fig == null)
                 return new PLNull ();
 
-            PLString str = arg as PLString;
-
-            if (str != null)
+            if (arg is PLString str)
             {
                 switch (str.Data)
                 {
                     case "tight":
-                        fig.AxesTight = true; 
+                        fig.AxesTight = true;
                         break;
 
                     case "equal":
@@ -69,10 +67,10 @@ namespace FunctionLibrary
                         break;
 
                     case "auto":
-                        fig.Hold = true;
-                        fig.AxesFrozen = false; 
-                        fig.AxesTight  = true; 
-                        fig.AxesEqual  = false; 
+                        (fig as IPlotCommon).Hold = true;
+                        fig.AxesFrozen = false;
+                        fig.AxesTight  = true;
+                        fig.AxesEqual  = false;
                         break;
 
                     default:

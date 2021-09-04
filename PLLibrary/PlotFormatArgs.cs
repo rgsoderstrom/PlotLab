@@ -30,9 +30,10 @@ namespace FunctionLibrary
             {
                 lineStyle = LineView.DrawingStyle.None;
                 pointStyle = PointView.DrawingStyle.None;
-                color = edgeColor = fillColor = Brushes.Black;
-                lineWidth = 0.25;
-                radius = 0.1;
+                color = edgeColor = Brushes.Blue;
+                fillColor = Brushes.Yellow;
+                lineWidth = 2;
+                radius = 1;
             }
         }
 
@@ -53,6 +54,8 @@ namespace FunctionLibrary
 
                     switch (arg)
                     {
+                        case "Thickness":
+                        case "Width":
                         case "LineWidth":
                             drawingParams.lineWidth = (formatArgs [++get] as PLDouble).Data;
                             break;
@@ -65,6 +68,7 @@ namespace FunctionLibrary
                         break;
 
                         case "MarkerFaceColor":
+                        case "FaceColor":
                         {
                             string colorString  = (formatArgs [++get] as PLString).Data;
                             drawingParams.fillColor = CharToColor (colorString [0]);
@@ -72,6 +76,7 @@ namespace FunctionLibrary
                         break;
 
                         case "MarkerEdgeColor":
+                        case "EdgeColor":
                         {
                             string colorString  = (formatArgs [++get] as PLString).Data;
                             drawingParams.edgeColor = CharToColor (colorString [0]);
@@ -79,6 +84,7 @@ namespace FunctionLibrary
                         break;
 
                         case "MarkerSize":
+                        case "Size":
                             drawingParams.radius = (formatArgs [++get] as PLDouble).Data / 2;
                             break;
 
