@@ -305,9 +305,23 @@ namespace FunctionLibrary
         }
 
         //*********************************************************************************************
+        //*********************************************************************************************
+        //*********************************************************************************************
 
+        /// <summary>
+        /// Delegate for static "Math" class functions that accept a single double precision float and return same
+        /// </summary>
+        ///
         delegate double ddFunction (double arg);
 
+        /// <summary>
+        /// MathFunction - accepts a function pointer, a PLDouble or PLMatrix input and returns results in same format
+        /// </summary>
+        /// <param name="func - delegate referencing a function that accepts and returns a single double precision float"></param>
+        /// <param name="name - only used for error reporting"></param>
+        /// <param name="arg  - a PLDouble or a PLMatrix. Other PL vars not supported"></param>
+        /// <returns>A PLMatrix or a PLDouble</returns>
+        ///        
         static PLVariable MathFunction (ddFunction func, string name, PLVariable arg)
         {
             if (arg is PLDouble) return MathFunction (func, arg as PLDouble);
@@ -315,11 +329,27 @@ namespace FunctionLibrary
             throw new Exception ("Argument error - " + name + " function");
         }
 
+        /// <summary>
+        /// MathFunction - accepts a single PLDouble, pass it to the function "func" and return a PLDouble
+        /// </summary>
+        /// <param name="func - delegate referencing the Math functio to invoke"></param>
+        /// <param name="arg - a PLDouble"></param>
+        /// <returns>A PLDouble</returns>
+        /// 
         static PLDouble MathFunction (ddFunction func, PLDouble arg)
         {
-            return new PLDouble (func (arg.Data));
+            double funcArg = arg.Data; //
+            double result = func (funcArg);
+            return new PLDouble (result);
         }
 
+        /// <summary>
+        /// MathFunction - accepts a PLMatrix and passes one element at a time to the function "func"
+        /// </summary>
+        /// <param name="func"></param>
+        /// <param name="arg"></param>
+        /// <returns>PLMatrix same size as input arg</returns>
+        /// 
         static PLMatrix MathFunction (ddFunction func, PLMatrix arg)
         {
             PLMatrix result = new PLMatrix (arg.Rows, arg.Cols);
@@ -333,11 +363,13 @@ namespace FunctionLibrary
 
         //*********************************************************************************************
 
-        static public PLVariable Sin  (PLVariable arg) {return MathFunction (Math.Sin,  "sin", arg);}
-        static public PLVariable Cos  (PLVariable arg) {return MathFunction (Math.Cos,  "cos", arg);}
+        static public PLVariable Sin  (PLVariable arg) {return MathFunction (Math.Sin,  "sin",  arg);}
+        static public PLVariable Cos  (PLVariable arg) {return MathFunction (Math.Cos,  "cos",  arg);}
         static public PLVariable Sqrt (PLVariable arg) {return MathFunction (Math.Sqrt, "sqrt", arg);}
-        static public PLVariable Log  (PLVariable arg) {return MathFunction (Math.Log,  "log", arg);}
+        static public PLVariable Log  (PLVariable arg) {return MathFunction (Math.Log,  "log",  arg);}
 
+        //*********************************************************************************************
+        //*********************************************************************************************
         //*********************************************************************************************
 
         delegate double MaxOrMin (double a, double b);

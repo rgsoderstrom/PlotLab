@@ -128,14 +128,20 @@ namespace PLWorkspace
         //***************************************************************************************************
         //***************************************************************************************************
         
+        /// <summary>
+        /// WhatIs - determine whether a name represents a variable, a workspace operation or neither
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        
         public SymbolicNameTypes WhatIs (string str)
         {
             SymbolicNameTypes type = SymbolicNameTypes.Unknown;
 
-            if      (Variables.ContainsKey (str)) { type = SymbolicNameTypes.Variable; }
-            else if (Constants.ContainsKey (str)) { type = SymbolicNameTypes.Variable; }
-            else if (Commands.ContainsKey  (str)) { type = SymbolicNameTypes.WorkspaceCommand; }
-            else if (Functions.ContainsKey (str)) { type = SymbolicNameTypes.Function; }  // WorkspaceFunction;}
+            if      (Variables.ContainsKey (str)) {type = SymbolicNameTypes.Variable;}
+            else if (Constants.ContainsKey (str)) {type = SymbolicNameTypes.Variable;}
+            else if (Commands.ContainsKey  (str)) {type = SymbolicNameTypes.WorkspaceCommand;}
+            else if (Functions.ContainsKey (str)) {type = SymbolicNameTypes.Function;}  // WorkspaceFunction
 
             return type;
         }

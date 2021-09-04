@@ -15,7 +15,7 @@ namespace PLLibrary
         static readonly Dictionary<string, PLFunction>  PlotFunctions = new Dictionary<string, PLFunction> ();
         static readonly Dictionary<string, PLFunction>  PlotCommands  = new Dictionary<string, PLFunction> ();
 
-        static List<string> ZeroArgFunctions = new List<string> (); // functions that can be invoked with no arguments
+        static readonly List<string> ZeroArgFunctions = new List<string> (); // functions that can be invoked with no arguments
 
         static LibraryManager ()
         {
@@ -64,6 +64,12 @@ namespace PLLibrary
         //***************************************************************************************************
         //***************************************************************************************************
 
+        /// <summary>
+        /// WhatIs - test for plot command or function, math function, IO function
+        /// </summary>
+        /// <param name="str">string containing a single word</param>
+        /// <returns>The type or unknown</returns>
+        
         public static SymbolicNameTypes WhatIs (string str)
         {
             SymbolicNameTypes type = SymbolicNameTypes.Unknown;
