@@ -253,14 +253,13 @@ namespace FrontEnd
                     case "CLEAR":
                     {
                         bool unused = false;
-                        PLVariable results = new PLInteger (0);
                         string expression = "clear ";
                         for (int i = 1; i<words.Length; i++)
                             expression += words [i] + " ";
 
                         InputLineProcessor ip = new InputLineProcessor (workspace);
                         PLVariable ans = new PLInteger (-1);
-                        ip.ProcessOneLine (ref ans, expression, ref unused);
+                        ip.ProcessOneStatement (ref ans, expression, ref unused);
                         lineNumber = script.NextLineNumber (lineNumber);
                     }
                     break;
@@ -312,7 +311,7 @@ namespace FrontEnd
                         expr += inputLines [j].text;
 
                     PLVariable ans = new PLNull ();
-                    ip.ProcessOneLine (ref ans, expr, ref unused);
+                    ip.ProcessOneStatement (ref ans, expr, ref unused);
 
                     if (ans != null && ans is PLNull == false && ans is PLCanvasObject == false)
                     {

@@ -29,101 +29,114 @@ namespace FrontEnd
             ResumeButton = null;
         }
 
-        public void ProcessOneLine (ref PLVariable results, string text, ref bool forcePrint)
+        /// <summary>
+        /// Process a single statement. Input lines like:
+        /// a = 2; b = 3;
+        /// must be broken up into two calls to this function
+        /// </summary>
+        /// <param name="results"></param>
+        /// <param name="text">a single PlotLab statement</param>
+        /// <param name="forcePrint">Output, tells caller to print results even if statement end in semicolon</param>
+        
+        public void ProcessOneStatement (ref PLVariable results, string text, ref bool forcePrint)
         {
-            results = new PLNull ();
+            text = text.Trim ();
 
+            //
+            // isolate the first word and try to figure out what to do with it
+            //
+            string firstWord;    // characters up to the first space
+            PLString arguments;  // all characters after the first space
 
+            int i = text.IndexOf (' ');
 
+            if (i == -1) // no space found
+            {
+                firstWord = text;
+                arguments = new PLString ("");
+            }
+
+            else
+            {
+                firstWord = text.Substring (0, i);
+                arguments = new PLString (text.Substring (i + 1));
+            }
+
+            // forcePrint overrides the usual convention of not printing results
+            // of statements that end with a semicolon
+            if (firstWord == "disp")                 // OTHER "FORCE PRINT" CASES?
+            {
+                forcePrint = true;
+            }
+
+            //
+            // Test for system command (e.g. cd, ls, path)
+            //
+            if (SystemFunctions.WhatIs (firstWord) == SymbolicNameTypes.SystemCommand)
+            {
+                results = SystemFunctions.RunSystemCommand (new PLString (firstWord), arguments);
+                return;
+            }
+
+            //
+            // Search the path to see if it's the name of a script file
+            //
+            if (FileSearch.WhatIs (firstWord) == SymbolicNameTypes.ScriptFile)
+            {
+                ScriptProcessor sp = new ScriptProcessor (workspace, Print, ResumeButton);
+                ScriptProcessor.ScriptTerminationReason reason = sp.FindAndRunScript (firstWord);
+
+                if (reason == ScriptProcessor.ScriptTerminationReason.Paused)
+                {
+                    if (ResumeButton != null) ResumeButton.IsEnabled = true;
+                    ScriptProcessor.PausedScripts.Add (sp);
+                    Print ("Paused, click \"Resume Script\" to continue\n");
+                }
+
+                else if (reason != ScriptProcessor.ScriptTerminationReason.Complete)
+                    throw new Exception ("Script error");
+
+                return;
+            }
+
+            //
+            // Parse remaining words in the input text. This is a remnant of an earlier version
+            // and will eventually moved down to the RunCOmmand () functions
+            //
             TokenParsing tp = new TokenParsing ();
             List<Token> tok = tp.ParsingPassOne (text);
 
             if (tok.Count == 0)
                 return;
 
-            string [] words = new string [tok.Count];
-
-            for (int i=0; i<tok.Count; i++)
-                words [i] = tok [i].text;
-
-
-            //// get first word, see what it is
-            //string [] words = text.Split (new char [] { ' ', '(', ')', '='}, StringSplitOptions.RemoveEmptyEntries);
-
-            //if (words.Length == 0)
-            //    return;
-
-            SymbolicNameTypes firstWordType = SystemFunctions.WhatIs (words [0]);
-
-            if (firstWordType == SymbolicNameTypes.Unknown) 
-                firstWordType = LibraryManager.WhatIs (words [0]);
-
-            if (firstWordType == SymbolicNameTypes.Unknown) 
-                firstWordType = workspace.WhatIs (words [0]);
-
-            if (firstWordType == SymbolicNameTypes.Unknown)
-                firstWordType = FileSearch.WhatIs (words [0]);
-
-            PLString cmnd = new PLString (words [0]);
             PLList  args  = new PLList ();
-
-            if (cmnd.Text == "disp")                 // OTHER "FORCE PRINT" CASES?
-                forcePrint = true;
-
-            //if (words.Length == 1)
-            //    args.Add (new PLString (""));  
-
-            //else
-                for (int i = 1; i<words.Length; i++)
-                    args.Add (new PLString (words [i]));
-
-            switch (firstWordType)
+            for (i = 1; i<tok.Count; i++)
+                args.Add (new PLString (tok [i].text));
+            
+            //
+            // PlotCommand act on figures, they don't plat any data
+            //
+            if (LibraryManager.WhatIs (firstWord) == SymbolicNameTypes.PlotCommand)
             {
-                case SymbolicNameTypes.ScriptFile:
-                {
-                    if (args.Count > 0)
-                        throw new Exception ("Error: script name " + words [0] + " cannot be used as a variable");
-
-                    ScriptProcessor sp = new ScriptProcessor (workspace, Print, ResumeButton);
-                    ScriptProcessor.ScriptTerminationReason reason = sp.FindAndRunScript (words [0]);
-
-                    if (reason == ScriptProcessor.ScriptTerminationReason.Paused)
-                    {
-                        if (ResumeButton != null) ResumeButton.IsEnabled = true;
-                        ScriptProcessor.PausedScripts.Add (sp);
-                        Print ("Paused, click \"Resume Script\" to continue\n");
-                    }
-
-                    else if (reason == ScriptProcessor.ScriptTerminationReason.Complete)
-                    {
-                        //if (Print != null)
-                            //Print ("Script complete\n");
-                    }
-
-                    else
-                        throw new Exception ("Unrecognized script termination reason");
-                }                 
-                break;
-
-                case SymbolicNameTypes.PlotCommand:
-                    results = LibraryManager.RunPlotCommand (cmnd, args);
-                    break;
-
-                case SymbolicNameTypes.WorkspaceCommand:
-                    results = workspace.RunCommand (cmnd, args);
-                    break;
-
-                case SymbolicNameTypes.SystemCommand:
-                    results = SystemFunctions.RunSystemCommand (cmnd, args);
-                    break;
-
-                default:
-                {
-                    PLKernel.EntryPoint kernel = new PLKernel.EntryPoint ();
-                    kernel.ProcessArithmeticExpression (ref results, text, workspace);
-                }
-                break;
+                results = LibraryManager.RunPlotCommand (new PLString (firstWord), args);
+                return;
             }
+
+            //
+            // Workspace commands return information on things in the
+            // workspace, e.g. length (a)
+            // 
+            if (workspace.WhatIs (firstWord) == SymbolicNameTypes.WorkspaceCommand)
+            {
+                results = workspace.RunCommand (new PLString (firstWord), args);
+                return;
+            }
+
+            //
+            // Most arithmetic, plotting and function statements will come here
+            //
+            PLKernel.EntryPoint kernel = new PLKernel.EntryPoint ();
+            kernel.ProcessArithmeticExpression (ref results, text, workspace);
         }
     }
 }

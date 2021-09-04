@@ -184,7 +184,7 @@ namespace FrontEnd
                             expr += inputLines [j].text;
 
                         PLVariable ans = new PLNull ();
-                        ip.ProcessOneLine (ref ans, expr, ref forcePrint);
+                        ip.ProcessOneStatement (ref ans, expr, ref forcePrint);
 
                         if (ans != null && ans is PLNull == false && ans is PLCanvasObject == false)
                         {
