@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.IO;
 
 using PLCommon;
 
@@ -14,7 +15,9 @@ namespace FrontEnd
         static SystemFunctions ()
         {
             Dictionary<string, PLFunction> infCmnds = GetContents ();
-            foreach (string str in infCmnds.Keys) SystemCommands.Add (str, infCmnds [str]);
+
+            foreach (string str in infCmnds.Keys)
+                SystemCommands.Add (str, infCmnds [str]);
         }
 
         //*********************************************************************************************
@@ -26,9 +29,13 @@ namespace FrontEnd
         {
             return new Dictionary<string, PLFunction> 
             {
-                {"exit", Exit},
-                {"clc",  Clc },
-                {"path", Path},
+                {"cd",    Cd  },
+                {"ls",    Ls  },
+                {"pwd",   Pwd },
+                {"exit",  Exit},
+                {"edit",  Edit},
+                {"clc",   Clc },
+                {"path",  Path},
                 {"addpath", AddPath},
             };
         }
@@ -72,6 +79,177 @@ namespace FrontEnd
         }
 
         //*********************************************************************************************
+        //*********************************************************************************************
+        //*********************************************************************************************
+
+        /// <summary>
+        /// Open a file in its default editor
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        
+        public static PLVariable Edit (PLVariable filename)
+        {
+            string fullName = FileSearch.CurrentDirectory + "\\" + filename;
+
+            if (File.Exists (fullName) == false)
+                fullName += ".m";
+
+            if (File.Exists (fullName) == false)
+                throw new Exception ("File " + filename + "not found");
+
+            System.Diagnostics.Process.Start (fullName);
+            return new PLNull ();
+        }
+
+        //*********************************************************************************************
+        //*********************************************************************************************
+        //*********************************************************************************************
+
+        /// <summary>
+        /// Change Directory. Invoked to handle "cd" command
+        /// </summary>
+        /// <param name="arg"></param>
+        /// <returns></returns>
+
+        public static PLVariable Cd (PLVariable arg)
+        {
+            if (arg is PLString pstr)
+            {
+                string dest = pstr.Data;
+                string [] tokens = dest.Split (new string [] {"\\" }, StringSplitOptions.RemoveEmptyEntries);
+
+                for (int i=0; i<tokens.Length; i++)
+                    tokens [i] = RemoveQuotes (tokens [i]); // remove leading or trailing single quotes
+
+                string nextCurrentDir = FileSearch.CurrentDirectory;
+
+                foreach (string tok in tokens)
+                {
+                    switch (tok)
+                    {
+                        case ".":
+                            break;
+
+                        case "..":
+                            nextCurrentDir = RemoveLastFolder (nextCurrentDir);
+                            break;
+
+                        default:
+                            nextCurrentDir += "\\" + tok;
+                            break;
+                    }
+                }
+
+                if (Directory.Exists (nextCurrentDir))
+                    FileSearch.CurrentDirectory = nextCurrentDir;
+                else
+                    throw new Exception ("Directory " + nextCurrentDir + " doesn't exist");
+            }
+
+            else
+                throw new Exception ("cd - argument error");
+
+            return new PLNull ();
+        }
+
+        static private string RemoveLastFolder (string path)
+        {
+            int i = path.LastIndexOf ('\\');
+
+            if (i == -1)
+                return path;
+
+            return path.Substring (0, i);
+        }
+
+        static private string RemoveQuotes (string str)
+        {
+            if (str [str.Length - 1] == '\'')
+                str = str.Substring (0, str.Length - 1);
+
+            if (str [0] == '\'')
+                str = str.Substring (1);
+
+            return str;
+        }
+
+        //*********************************************************************************************
+        //*********************************************************************************************
+        //*********************************************************************************************
+
+        /// <summary>
+        /// Pwd - print working directory. Handles "pwd" command.
+        /// </summary>
+        /// <param name="_">None</param>
+        /// <returns>PLString containing cwd</returns>
+        
+        public static PLVariable Pwd (PLVariable _)
+        {
+            return new PLString (FileSearch.CurrentDirectory);
+        }
+
+        //*********************************************************************************************
+        //*********************************************************************************************
+        //*********************************************************************************************
+
+        /// <summary>
+        /// Ls - list directory contents. invoked to handle "ls" command. Prints content of current working directory
+        /// </summary>
+        /// <param name="arg">Optional pattern to search for</param>
+        /// <returns>List of PLStrings</returns>
+
+        public static PLVariable Ls (PLVariable arg)
+        {
+            PLList fileList = new PLList ();
+            string searchPattern = null;
+
+            // see if there is a search patterm
+            if (arg is PLString pstr && pstr.Data.Length > 0)
+            {
+                searchPattern = pstr.Data;
+            }
+
+            //*******************************************************************************
+
+            // get list of all subdirectories in current directory
+            string [] dirs = searchPattern == null ? System.IO.Directory.GetDirectories (FileSearch.CurrentDirectory)
+                                                   : System.IO.Directory.GetDirectories (FileSearch.CurrentDirectory, searchPattern);
+            for (int i = 0; i<dirs.Length; i++)
+            {
+                // strip off all but subdirs name           
+                string str = dirs [i];
+                int j = str.LastIndexOf ('\\');
+
+                if (j > -1)
+                    str = str.Remove (0, j + 1);
+
+                // add what's left to print list, with a trailing backslash appended to indicate this is a directory
+                fileList.Add (new PLString (str + "\\"));
+            }
+
+            //*******************************************************************************
+
+            // get list of all regular files in current directory
+            string [] files = searchPattern == null ? System.IO.Directory.GetFiles (FileSearch.CurrentDirectory)
+                                                    : System.IO.Directory.GetFiles (FileSearch.CurrentDirectory, searchPattern);
+            for (int i = 0; i<files.Length; i++)
+            {
+                // strip off all but file name and extension           
+                string str = files [i];
+                int j = str.LastIndexOf ('\\');
+
+                if (j > -1)
+                    str = str.Remove (0, j + 1);
+
+                // add what's left to print list
+                fileList.Add (new PLString (str));
+            }
+
+            return fileList;
+        }
+
+        //*********************************************************************************************
 
         public static PLVariable Clc (PLVariable _)
         {
@@ -84,24 +262,19 @@ namespace FrontEnd
 
         public static PLVariable AddPath (PLVariable arg)
         {
-            PLList lst = arg as PLList;
+            PLString pstr = arg as PLString;
 
-            if (lst != null)
+            if (pstr != null)
             {
-                PLString pstr = lst [0] as PLString;
+                string path = pstr.Data;
 
-                if (pstr != null)
-                {
-                    string path = pstr.Data;
-
-                    if (path [0] == '(') path = path.Substring (1);
-                    if (path [path.Length - 1] == ')') path = path.Substring (0, path.Length - 1);
+                if (path [0] == '(') path = path.Substring (1);
+                if (path [path.Length - 1] == ')') path = path.Substring (0, path.Length - 1);
  
-                    if (path [0] == '\'') path = path.Substring (1);
-                    if (path [path.Length - 1] == '\'') path = path.Substring (0, path.Length - 1);
+                if (path [0] == '\'') path = path.Substring (1);
+                if (path [path.Length - 1] == '\'') path = path.Substring (0, path.Length - 1);
 
-                    FileSearch.AddPath (path);
-                }
+                FileSearch.AddPath (path);
             }
 
             return new PLNull ();
