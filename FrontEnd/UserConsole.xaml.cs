@@ -72,6 +72,11 @@ namespace FrontEnd
                             string str = Clipboard.GetText ();
                             string [] lines = str.Split (new string [] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 
+
+                            bool A = str.Contains ("\n");
+                            bool B = str.Contains ("\r");
+                            int  C = lines.Length;
+
                             int firstScriptLine = 9999;
 
                             //
@@ -124,6 +129,8 @@ namespace FrontEnd
                             Print ("Error: " + ex.Message);
                         }
                     }
+
+                    Print (Utils.Prompt);
                 }
             }
         }
@@ -272,15 +279,22 @@ namespace FrontEnd
         //
         // raw input cleaned up and possibly concatenated into inputLine
         //
-        //List<string> inputLines = new List<string> ();
 
         int caretLowerLimit = -1;
-        //TextLineHistory CommandHistory = new TextLineHistory (Utils.Prompt);
 
         private void TextPane_PreviewKeyDown (object sender, KeyEventArgs e)
         {
             try
             {
+                if (e.Key == Key.Tab)
+                {
+                    e.Handled = true;
+                    return;
+                }
+
+                if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
+                    return;
+
                 //
                 // Up & Down Arrows - command line recall
                 //
@@ -401,6 +415,7 @@ namespace FrontEnd
             TextPane.Clear (); 
             Print (Utils.Prompt);
             ClearInputLine ();
+            TextPane.Focus ();
            // textPaneHasFocus = true;
         }
 
@@ -410,6 +425,7 @@ namespace FrontEnd
         {
             Print ('\n' + Utils.Prompt);
             ClearInputLine ();
+            TextPane.Focus ();
            // textPaneHasFocus = true;
         }
 
@@ -424,6 +440,7 @@ namespace FrontEnd
         private void ClearHistory_Click (object sender, RoutedEventArgs e)
         {
             CommandLineHistory.Clear ();
+            TextPane.Focus ();
         }
 
         //****************************************************************************************************

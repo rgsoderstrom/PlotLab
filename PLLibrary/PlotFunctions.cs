@@ -241,6 +241,7 @@ namespace FunctionLibrary
                     drawObj = new PointView (pts, PointView.DrawingStyle.Star);
                     (drawObj as PointView).Color = dp.color;
                     (drawObj as PointView).Size = dp.radius * 2;
+                    (drawObj as PointView).Thickness = dp.lineWidth;
                 }
             }
 
@@ -257,6 +258,7 @@ namespace FunctionLibrary
                 drawObj = new PointView (pts, dp.pointStyle);
                 (drawObj as PointView).Color = dp.color;
                 (drawObj as PointView).Size = dp.radius * 2;
+                (drawObj as PointView).Thickness = dp.lineWidth;
             }
 
             Draw2DObject (drawObj);

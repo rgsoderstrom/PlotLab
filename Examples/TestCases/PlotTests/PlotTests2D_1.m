@@ -1,23 +1,26 @@
 
 % PlotTests2D_1.m
 
-% plot (2, 3);
-% plot ([3;2]);
-% plot (1, 2, '*');
 
-x = [-3 : 0.2 : 3];
-y = x .^ 3;
+% plot (2, 3, 'r', 'Size', 0.3, 'Thickness', 5);
+% plot ([3;1], 'Size', 0.15, 'Thickness', 6);
+% plot (1, 2, 'g*', 'Size', 0.2, 'Thickness', 7);
+% axis ([0 4 0 5]);
+% title ('Individual points');
 
-% figure ; plot (y);
-% figure ; plot (x, y);
-% figure ; plot (y, 'r');
-% figure ; plot (x, y, 'g*');
+% x = [-3 : 0.2 : 3];
+% y = x .^ 3;
 
-% xx = [2 : 0.5 : 8];
-% yy = log (xx);
-% pts = [xx ; yy];
-% figure ; plot (pts);
-% figure ; plot (pts, 'r*');
+% figure ; plot (y); title ('x axis equals index, 1..N');
+% figure ; plot (x, y); title ('x axis values passed to plot');
+% figure ; plot (x, y, 'g*', 'MarkerSize', 0.1); title ('discrete points');
+
+xx = [2 : 0.5 : 8];
+yy = log (xx);
+pts = [xx ; yy];
+figure ; hold on
+plot (pts) ; plot (pts, 'ro', 'MarkerSize', 0.2);
+title ('Points on top of line');
 
 
-plot (x, y, 'LineWidth', 3, 'Color', 'r');
+

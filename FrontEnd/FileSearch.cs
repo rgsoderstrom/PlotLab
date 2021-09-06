@@ -39,13 +39,22 @@ namespace FrontEnd
 
         //*******************************************************************************************
         //
-        // Check path to see if file exists. if so, return its "path + name + ext"
+        // Check cwd and path to see if file exists. if so, return its "path + name + ext"
         //
+
         public static bool NameSearch (string name, ref string fullName)
         {
+            string full = currentDirectory + "\\" + name + ".m";
+
+            if (File.Exists (full))
+            {
+                fullName = full;
+                return true;
+            }
+
             foreach (string d in searchPath)
             {
-                string full = d + "\\" + name + ".m";
+                full = d + "\\" + name + ".m";
 
                 if (File.Exists (full))
                 {
@@ -76,44 +85,51 @@ namespace FrontEnd
         public static SymbolicNameTypes WhatIs (string name)
         {
             SymbolicNameTypes fileType = SymbolicNameTypes.Unknown;
+            string unused = "";
 
-            foreach (string d in searchPath)
-            {
-                string fullName = d + "\\" + name + ".m";
-
-                if (File.Exists (fullName))
-                {
-                    // find first word outside of comments
-                    string line;
-
-                    StreamReader file = new StreamReader (fullName);
-
-                    while ((line = file.ReadLine ()) != null)
-                    {
-                        if (line.Length > 0)
-                        {
-                            string [] words = line.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-                            if (words.Length > 0)
-                            {
-                                if (words [0].Contains ("%") == false)
-                                {
-                                    if (words [0] == "function")
-                                        fileType = SymbolicNameTypes.FunctionFile;
-                                    else
-                                        fileType = SymbolicNameTypes.ScriptFile;
-
-                                    break;
-                                }
-                            }
-                        }
-                    }
-
-                    file.Close ();
-                }
-            }
+            if (NameSearch (name, ref unused) == true)
+                fileType = SymbolicNameTypes.ScriptFile;
 
             return fileType;
+
+
+            //foreach (string d in searchPath)
+            //{
+            //    string fullName = d + "\\" + name + ".m";
+
+            //    if (File.Exists (fullName))
+            //    {
+            //        // find first word outside of comments
+            //        string line;
+
+            //        StreamReader file = new StreamReader (fullName);
+
+            //        while ((line = file.ReadLine ()) != null)
+            //        {
+            //            if (line.Length > 0)
+            //            {
+            //                string [] words = line.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            //                if (words.Length > 0)
+            //                {
+            //                    if (words [0].Contains ("%") == false)
+            //                    {
+            //                        if (words [0] == "function")
+            //                            fileType = SymbolicNameTypes.FunctionFile;
+            //                        else
+            //                            fileType = SymbolicNameTypes.ScriptFile;
+
+            //                        break;
+            //                    }
+            //                }
+            //            }
+            //        }
+
+            //        file.Close ();
+            //    }
+            //}
+
+            //return fileType;
         }
     }
 }

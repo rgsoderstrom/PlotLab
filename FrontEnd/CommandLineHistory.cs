@@ -44,13 +44,39 @@ namespace FrontEnd
             }
         }
 
+        //*****************************************************************************************
+
+        enum CommandHistoryWriteOptions {WriteAll, WriteUnique, WriteLatestUnique};
+        private static readonly CommandHistoryWriteOptions writeOption = CommandHistoryWriteOptions.WriteLatestUnique;
+        private static readonly int maxLineCount = 100; // don't write more than this many lines
+
         static public void Close ()
         {
             try
             {
                 StreamWriter file = new StreamWriter (historyFileName);
+                List<string> writeList;
 
-                List<string> writeList = history.Distinct ().ToList ();
+                if (writeOption == CommandHistoryWriteOptions.WriteAll)
+                {
+                    writeList = history.ToList ();
+                }
+
+                else if (writeOption == CommandHistoryWriteOptions.WriteUnique)
+                {
+                    writeList = history.Distinct ().ToList ();
+                }
+
+                else // write latest unique
+                {
+                    List<string> hist = history.ToList ();
+                    hist.Reverse ();
+                    writeList = hist.Distinct ().ToList ();
+                    writeList.Reverse ();
+                }
+
+                if (writeList.Count > maxLineCount)
+                    writeList.RemoveRange (0, writeList.Count - maxLineCount);
 
                 foreach (string str in writeList)
                     file.WriteLine (str);

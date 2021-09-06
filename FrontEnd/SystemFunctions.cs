@@ -90,15 +90,21 @@ namespace FrontEnd
         
         public static PLVariable Edit (PLVariable filename)
         {
-            string fullName = FileSearch.CurrentDirectory + "\\" + filename;
+            PLString pstr = filename as PLString;
+            string str = pstr.Data;
 
-            if (File.Exists (fullName) == false)
-                fullName += ".m";
+            if (str.Contains (".m")) // NameSearch function assumes no extension
+                str = str.Replace (".m", "");
 
-            if (File.Exists (fullName) == false)
-                throw new Exception ("File " + filename + "not found");
+            string fullName = "";
 
-            System.Diagnostics.Process.Start (fullName);
+            bool found = FileSearch.NameSearch (str, ref fullName);
+
+            if (found)
+                System.Diagnostics.Process.Start (fullName);
+            else
+                throw new Exception ("File " + filename + " not found");
+
             return new PLNull ();
         }
 
