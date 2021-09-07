@@ -1,0 +1,29 @@
+﻿
+
+Packed args, e.g. 'r*'
+======================
+'r': color = Brushes.Red; 
+'n': color = Brushes.Orange; 
+'y': color = Brushes.Yellow; 
+'g': color = Brushes.Green; 
+'b': color = Brushes.Blue; 
+'k': color = Brushes.Black; 
+
+'-'  ls = LineView.DrawingStyle.Dashes;        // line style
+'--' ls = LineView.DrawingStyle.LongDashes;
+'.': ls = LineView.DrawingStyle.Dots;   
+    
+'o': ps = PointView.DrawingStyle.Circle;       // point style
+'s': ps = PointView.DrawingStyle.Square; 
+'*': ps = PointView.DrawingStyle.Star;  
+'t': ps = PointView.DrawingStyle.Triangle;  
+'x': ps = PointView.DrawingStyle.X;  
+'+': ps = PointView.DrawingStyle.Plus;  
+
+Name-value pairs
+================
+'LineWidth', N  // 2D or 3D line or 3D Polyline
+
+'MarkerFaceColor', 'r', // 2D Point 
+'MarkerEdgeColor', 'r', 
+'MarkerSize', N         // 2D or 3D point
