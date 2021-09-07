@@ -209,7 +209,7 @@ namespace FunctionLibrary
             double start = (args [0] as PLDouble).Data;
             double stop = (args [1] as PLDouble).Data;
             int count = (int)(args [2] as PLDouble).Data;
-            if (count < 2) throw new Exception ("linspace arg 3 must be 2 or greater");
+            if (count < 2) throw new Exception ("linspace number of points (arg 3) must be 2 or greater");
 
             PLMatrix results = new PLMatrix (1, count);
 
