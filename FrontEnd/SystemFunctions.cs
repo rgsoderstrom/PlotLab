@@ -115,35 +115,61 @@ namespace FrontEnd
         /// <summary>
         /// Change Directory. Invoked to handle "cd" command
         /// </summary>
-        /// <param name="arg"></param>
+        /// <param name="arg">Relative or absolute path</param>
         /// <returns></returns>
 
         public static PLVariable Cd (PLVariable arg)
         {
             if (arg is PLString pstr)
             {
-                string dest = pstr.Data;
-                string [] tokens = dest.Split (new string [] {"\\" }, StringSplitOptions.RemoveEmptyEntries);
+                string nextCurrentDir;
+                string path = pstr.Data;
 
-                for (int i=0; i<tokens.Length; i++)
-                    tokens [i] = RemoveQuotes (tokens [i]); // remove leading or trailing single quotes
-
-                string nextCurrentDir = FileSearch.CurrentDirectory;
-
-                foreach (string tok in tokens)
+                if (path [0] == '\\') // absolute path on same disk
                 {
-                    switch (tok)
+                    int i = FileSearch.CurrentDirectory.IndexOf ("\\");
+
+                    if (i == -1)
+                        throw new Exception ("Error reading current disk");
+
+                    string disk = FileSearch.CurrentDirectory.Substring (0, i);
+
+                    nextCurrentDir = disk + path;
+                }
+
+                else
+                {
+                    string [] tokens = path.Split (new string [] {"\\" }, StringSplitOptions.RemoveEmptyEntries);
+
+                    for (int i=0; i<tokens.Length; i++)
+                        tokens [i] = RemoveQuotes (tokens [i]); // remove leading or trailing single quotes
+
+
+                    if (tokens [0].EndsWith (":")) // absolute path with disk specified
                     {
-                        case ".":
-                            break;
+                        nextCurrentDir = path;
+                    }
 
-                        case "..":
-                            nextCurrentDir = RemoveLastFolder (nextCurrentDir);
-                            break;
+                    else // relative path
+                    {
+                        nextCurrentDir = FileSearch.CurrentDirectory;
 
-                        default:
-                            nextCurrentDir += "\\" + tok;
-                            break;
+                        foreach (string tok in tokens)
+                        {
+                            switch (tok)
+                            {
+                                case ".":
+                                    break;
+
+                                case "..":
+                                    nextCurrentDir = RemoveLastFolder (nextCurrentDir);
+                                    break;
+
+                                default:
+                                    nextCurrentDir += "\\" + tok;
+                                    break;
+                            }
+                        }
                     }
                 }
 
@@ -159,6 +185,12 @@ namespace FrontEnd
             return new PLNull ();
         }
 
+        /// <summary>
+        /// Accepts a path string and returns a string  with last folder removed
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        
         static private string RemoveLastFolder (string path)
         {
             int i = path.LastIndexOf ('\\');
@@ -169,6 +201,12 @@ namespace FrontEnd
             return path.Substring (0, i);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        
         static private string RemoveQuotes (string str)
         {
             if (str [str.Length - 1] == '\'')
