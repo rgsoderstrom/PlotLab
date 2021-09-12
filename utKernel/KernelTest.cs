@@ -14,10 +14,12 @@ namespace utKernel
 
         static List<string> testCases = new List<string> ()
         {
-            "[1 ; 2]",
-            "[1 2]'",
-            "[1, 2]'",
-            "PlotVector ([1 ; 2], 'g')",
+            //"AA",
+            //"AA (1)",
+            //"length (AA)",
+            "AA ('end')",
+            //"AA (length (AA))",
+
 
             //"PlotVector (A', 'g')",
             //"text ([1 ; 2], 'aaa')",
@@ -235,46 +237,58 @@ namespace utKernel
             //PLMatrix A = new PLMatrix ("A", mat);
             //workspace.Add (A);
 
-            CommonMath.Matrix mat = new Matrix (1, 2);
-            mat.FillByRow (new double [] { 1, 2});
-            PLMatrix A = new PLMatrix ("A", mat);
-            workspace.Add (A);
+            //CommonMath.Matrix mat = new Matrix (1, 2);
+            //mat.FillByRow (new double [] { 1, 2});
+            //PLMatrix A = new PLMatrix ("A", mat);
+            //workspace.Add (A);
 
             CommonMath.Matrix mat2 = new Matrix (1, 6);
             mat2.FillByRow (new double [] { 21, 22, 23, 24, 25, 26 });
             PLMatrix AA = new PLMatrix ("AA", mat2);
             workspace.Add (AA);
 
-            CommonMath.Matrix mat3 = new Matrix (7, 1);
-            mat3.FillByRow (new double [] { 51, 52, 53, 54, 55, 56, 57 });
-            PLMatrix AAA = new PLMatrix ("AAA", mat3);
-            workspace.Add (AAA);
+            //CommonMath.Matrix mat3 = new Matrix (7, 1);
+            //mat3.FillByRow (new double [] { 51, 52, 53, 54, 55, 56, 57 });
+            //PLMatrix AAA = new PLMatrix ("AAA", mat3);
+            //workspace.Add (AAA);
 
 
 
-            PLBool b = new PLBool (true);
-            b.Name = "B";
-            workspace.Add (b);
+            //PLBool b = new PLBool (true);
+            //b.Name = "B";
+            //workspace.Add (b);
 
-            PLDouble C = new PLDouble (1.23);
-            C.Name = "C";
-            workspace.Add (C);
+            //PLDouble C = new PLDouble (1.23);
+            //C.Name = "C";
+            //workspace.Add (C);
 
-            PLDouble D = new PLDouble (9.87);
-            D.Name = "D";
-            workspace.Add (D);
+            //PLDouble D = new PLDouble (9.87);
+            //D.Name = "D";
+            //workspace.Add (D);
 
-            PLInteger E = new PLInteger (678);
-            E.Name = "E";
-            workspace.Add (E);
+            //PLInteger E = new PLInteger (678);
+            //E.Name = "E";
+            //workspace.Add (E);
 
-            PLString S1 = new PLString ("ABCDEF");
-            S1.Name = "S1";
-            workspace.Add (S1);
+            //PLString S1 = new PLString ("ABCDEF");
+            //S1.Name = "S1";
+            //workspace.Add (S1);
 
-            PLString S2 = new PLString ("ghij");
-            S2.Name = "S2";
-            workspace.Add (S2);
+            //PLString S2 = new PLString ("ghij");
+            //S2.Name = "S2";
+            //workspace.Add (S2);
+        }
+
+        public void ShowWorkspace ()
+        {
+            Console.WriteLine ("-----------------------------------------------\n");
+            workspace.PrintKeysAndSizes (Console.Write);
+        }
+
+        public void DumpWorkspace ()
+        {
+            Console.WriteLine ("-----------------------------------------------\n");
+            workspace.Dump (new PLNull ());
         }
 
         public void NextTest ()
@@ -309,18 +323,16 @@ namespace utKernel
                     Console.WriteLine ();
                 }
 
-                //Console.WriteLine ("Build TreeView");
+                Console.WriteLine ("Build TreeView");
 
-                //ExpressionTree tree = new ExpressionTree (testCases [Next], workspace);
-                //window.TreeView1.Items.Clear ();
-                //window.TreeView1.Items.Add (tree.TreeView ());
+                ExpressionTree tree = new ExpressionTree (testCases [Next], workspace);
+                window.TreeView1.Items.Clear ();
+                window.TreeView1.Items.Add (tree.TreeView ());
 
-                //Console.WriteLine ("Evaluate");
+                Console.WriteLine ("Evaluate");
 
-                //PLVariable results = tree.Evaluate (workspace);
-                //Console.WriteLine (results.ToString ());
-
-
+                PLVariable results = tree.Evaluate (workspace);
+                Console.WriteLine (results.ToString ());
             }
 
             catch (Exception ex)

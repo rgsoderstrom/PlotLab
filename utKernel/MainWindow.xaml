@@ -11,6 +11,8 @@
         <Border BorderBrush="Black" BorderThickness="2" Margin="2">
             <StackPanel Orientation="Vertical">
                 <Button Name="Next_Button" MinWidth="80" Margin="1" Click="Next_Button_Click">Next</Button>
+                <Button Name="ShowWorkspace_Button" MinWidth="80" Margin="1" Click="ShowWorkspace_Button_Click" ToolTip="List variable in workspace">whos</Button>
+                <Button Name="DumpWorkspace_Button" MinWidth="80" Margin="1" Click="DumpWorkspace_Button_Click" ToolTip="List variable in workspace with their contents">dump</Button>
             </StackPanel>
         </Border>
         

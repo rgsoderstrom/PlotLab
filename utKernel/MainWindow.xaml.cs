@@ -34,6 +34,16 @@ namespace utKernel
             kernelTest.NextTest ();
         }
 
+        private void ShowWorkspace_Button_Click (object sender, RoutedEventArgs e)
+        {
+            kernelTest.ShowWorkspace ();
+        }
+
+        private void DumpWorkspace_Button_Click (object sender, RoutedEventArgs e)
+        {
+            kernelTest.DumpWorkspace ();
+        }
+
         private void Window_Closed (object sender, EventArgs e)
         {            
             App.Current.Shutdown ();
