@@ -22,7 +22,7 @@ namespace FunctionLibrary
         // holds 2D, 3D and PlotFigure (i.e. not yet assigned 2D or 3D) windows
         static readonly List<IPlotCommon> Figures = new List<IPlotCommon> ();
 
-        static IPlotCommon CurrentFigure;
+        static internal IPlotCommon CurrentFigure;
 
         //*********************************************************************************************
         //
@@ -38,7 +38,7 @@ namespace FunctionLibrary
                 {"PlotVector3D", PlotVector3D},
                 {"quiver",       PlotVectorField},
                 {"arrow",        PlotVector2D},
-                {"contour",      ContourPlot},
+                {"contour",      ContourPlotFunctions.ContourPlot},
                 {"set",          Set},
                 {"axis",         PlotLimits}, // a = axis; 
                 {"figure",       Figure},
@@ -58,11 +58,16 @@ namespace FunctionLibrary
         //*********************************************************************************************
         //*********************************************************************************************
         //*********************************************************************************************
+
+        /// <summary>
+        /// Plot function - entry point for most 2D and 3D plotting functions
+        ///      - usage:
+        ///          h = plot (dataArg1, dataArg2, ..., formatArg1, formatArg2, ...);
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        
         //
-        //
-        // Plot function - entry point for most 2D and 3D plotting functions
-        //      - usage:
-        //          h = plot (dataArg1, dataArg2, ..., formatArg1, formatArg2, ...);
         //
         //      - format args
         //          - optional, strings or numbers
