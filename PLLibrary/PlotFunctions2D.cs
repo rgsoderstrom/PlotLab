@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
 
-using Common;
-
 using PLCommon;
 using Plot2D_Embedded;
 using PlottingLib;
@@ -19,7 +17,7 @@ namespace FunctionLibrary
     {
         //******************************************************************************************
 
-        static void Draw2DObject (CanvasObject co)
+        static internal void Draw2DObject (CanvasObject co)
         {
             if (CurrentFigure == null)
                 NewFigure2D ();
@@ -36,7 +34,7 @@ namespace FunctionLibrary
             fig.Plot (co);
         }
 
-        static void Draw2DObject (ContourPlotView co)
+        static internal void Draw2DObject (ContourPlotView co)
         {
             if (CurrentFigure == null)
                 NewFigure2D ();
@@ -48,202 +46,11 @@ namespace FunctionLibrary
                 NewFigure2D ();
 
             Plot2D fig = CurrentFigure as Plot2D;
-
+            fig.Hold = true;
+            fig.AxesEqual = true;
             fig.RectangularGridOn = true;
             fig.Plot (co);
         }
-
-        //******************************************************************************************
-        //******************************************************************************************
-        //******************************************************************************************
-
-        //static bool CharToDrawingOption (char c,
-        //                                 ref LineView.DrawingStyle lineStyle, 
-        //                                 ref PointView.DrawingStyle pointStyle, 
-        //                                 ref Brush color)
-        //{
-        //    bool success = true;
-
-        //    switch (c)
-        //    {
-        //        case 'r': color = Brushes.Red; break;
-        //        case 'n': color = Brushes.Orange; break;
-        //        case 'y': color = Brushes.Yellow; break;
-        //        case 'g': color = Brushes.Green; break;
-        //        case 'b': color = Brushes.Blue; break;
-        //        case 'k': color = Brushes.Black; break;
-
-        //        case '-':
-        //        {
-        //            if (lineStyle == LineView.DrawingStyle.Dashes)
-        //                lineStyle = LineView.DrawingStyle.LongDashes;
-        //            else
-        //                lineStyle = LineView.DrawingStyle.Dashes;
-        //        }
-        //        break;
-
-        //        case '.': lineStyle = LineView.DrawingStyle.Dots; break;
-
-        //        case 'o': pointStyle = PointView.DrawingStyle.Circle; break;
-        //        case 's': pointStyle = PointView.DrawingStyle.Square; break;
-        //        case '*': pointStyle = PointView.DrawingStyle.Star; break; 
-        //        case 't': pointStyle = PointView.DrawingStyle.Triangle; break; 
-        //        case 'x': pointStyle = PointView.DrawingStyle.X; break; 
-        //        case '+': pointStyle = PointView.DrawingStyle.Plus; break; 
-
-        //        default: success = false; break;
-        //    }
-
-        //    return success;
-        //}
-
-        //*******************************************************************************************
-        //
-        //    - start unpacking plot arguments
-        // 
-
-        //static PLCanvasObject Plot (PLList input)
-        //{
-        //    //
-        //    // the first one, two or three args are the data to plot
-        //    //
-        //    int count = 0;
-
-        //    if (input [0] is PLMatrix || input [0] is PLDouble) count++;
-            
-        //    if (input.Count > 1) if (input [1] is PLMatrix || input [1] is PLDouble) count++;
-
-        //    // if only one data arg (the ordinate), we create the abscissa
-        //    if (count == 1) 
-        //        return Plot1 (input);
-            
-        //    if (count == 2) 
-        //        return Plot2 (input);
-
-        //    throw new Exception ("Plot arguments error");
-        //}
-
-
-
-
-
-        //*************************************************************************************************
-        //
-        // Plot1 
-        //  - one data collection, e.g. plot (y) where y is a PLMatrix
-        //  - generate abscissa values here then plot as plot (x, y)
-        //
-
-        //static PLCanvasObject Plot1 (PLList args)
-        //{
-        //    int length = (args [0] as PLMatrix).Size;
-        //    PLMatrix xNumbers = new PLMatrix (1, length);
-        //    xNumbers.Name = "x";
-
-        //    for (int i = 0; i<length; i++)
-        //        xNumbers.Data [0, i] = i + 1;
-
-        //    args.Data.Insert (0, xNumbers);
-
-        //    return Plot2 (args); // continue as if input was plot (x, y, ...) format
-        //}
-
-        //*************************************************************************************************
-        //
-        // Plot2 - two data collections
-        //
-
-        //static PLCanvasObject Plot2 (PLList args)
-        //{
-        //    //
-        //    // convert the two data args into List<Point>
-        //    //
-        //    List<Point> points = new List<Point> ();
-
-        //    PLMatrix mx = args [0] as PLMatrix;
-        //    PLMatrix my = args [1] as PLMatrix;
-
-        //    PLDouble px = args [0] as PLDouble;  // e.g. plot (3, 7, ...)
-        //    PLDouble py = args [1] as PLDouble;
-
-        //    bool singlePoint = (px != null && py != null);
-        //    bool setOfPoints = (mx != null && my != null);
-
-        //    if (singlePoint == false && setOfPoints == false)
-        //        throw new Exception ("Plot argument error");
-
-        //    //
-        //    // if just one point, convert it to a list with just one entry
-        //    //
-        //    if (singlePoint)
-        //    {
-        //        points.Add (new Point (px.Data, py.Data));
-        //    }
-
-        //    //
-        //    // read matrices by column
-        //    //
-        //    else
-        //    {
-        //        if (mx.Size == my.Size)
-        //        {
-        //            List<double> x = mx.ReadByColumn ();
-        //            List<double> y = my.ReadByColumn ();
-
-        //            for (int i = 0; i<x.Count; i++)
-        //                points.Add (new Point (x [i], y [i]));
-        //        }
-        //        else
-        //            throw new Exception ("Plot data x, y sizes different");
-        //    }
-
-        //    //
-        //    // look at remaining args. are we plotting discrete points or a connected line?
-        //    //
-
-        //    Brush dataColor = null;
-        //    PointView.DrawingStyle pointStyle = PointView.DrawingStyle.None;
-        //    LineView.DrawingStyle lineStyle   = LineView.DrawingStyle.None;
-
-        //    //
-        //    // look at args [2] to help determine actual color and style values
-        //    // 
-
-        //    if (args.Count > 2)
-        //    {
-        //        string str = (args [2] as PLString).Data;
-
-        //        // remove leading and trailing single quote
-        //        int i1 = str.IndexOf ('\'');
-        //        int i2 = str.LastIndexOf ('\'');
-
-        //        if (i1 == -1 || i2 == -1) throw new Exception ("Plot option syntax error: " + str);
-
-        //        str = str.Remove (i2);
-        //        str = str.Remove (i1, 1);
-
-        //        foreach (char c in str)
-        //        {
-        //            bool success = CharToDrawingOption (c, ref lineStyle, ref pointStyle, ref dataColor);
-
-        //            if (success == false)
-        //                throw new Exception ("Unsupported plot option: " + str);
-        //        }
-        //    }
-
-        //    // fill-in any not explicitly set
-        //    if (dataColor == null) dataColor = Brushes.Black;
-
-        //    if (pointStyle == PointView.DrawingStyle.None && lineStyle == LineView.DrawingStyle.None) lineStyle = LineView.DrawingStyle.Solid;
-
-        //    if (pointStyle != PointView.DrawingStyle.None)
-        //        return PlotPoints (points, dataColor, pointStyle);
-
-        //    else 
-        //        return PlotLine (points, dataColor, lineStyle);
-
-        //    throw new Exception ("Plot argument error");
-        //}
 
         //*********************************************************************************************
         //*********************************************************************************************
@@ -316,173 +123,6 @@ namespace FunctionLibrary
             throw new Exception ("Set function argument error");
         }
 
-        //*********************************************************************************************
-        //*********************************************************************************************
-        //*********************************************************************************************
-
-        //
-        // Contour Plot
-        //
-
-        // two options:
-        //
-        // contour (zFunction, levels, minX, maxX, minY, maxY)                   - NUMBER OF POINTS IS HARDCODED
-        //      - arg1 is a function that returns double for an (x, y) input     - MUST BE CODED IN C# (see MathFunctionsUserDefined.cs)
-        //      - arg2 is list of the levels to plot
-        //      - next 4 define the plot boundry
-        //
-        // contour (xValues, yValues, zValues, levels)
-        //      - args 1 & 2 are lists
-        //      - arg 3 is a matrix
-        //      - arg 4 is a list
-
-        // points to PlotLab function that calculates z (x, y)
-        static PLFunction contourZFunction = null;
-
-        // this function invoked by Plot2D_embedded Contour Plot drawing code. Translates 
-        // the input .Net variable to PlotLab variables and the results back to .Net
-        static double ZFromXYFunction (double x, double y)
-        {
-            PLDouble xx = new PLDouble (x);
-            PLDouble yy = new PLDouble (y);
-            PLList pll = new PLList ();
-            pll.Add (xx);
-            pll.Add (yy);
-
-            PLVariable ZZ = contourZFunction (pll);
-            return (ZZ as PLDouble).Data;
-        }
-
-        //******************************************************************************************
-        //
-        // Common entry point
-        //
-
-        static public PLVariable ContourPlot (PLVariable input)
-        {
-            // ensure input is a list
-            PLList args = input as PLList;
-
-            if (args == null)
-                throw new Exception ("Contour plot argument error");
-
-            // see what first arg is
-            PLFunctionWrapper fptr = args [0] as PLFunctionWrapper;
-            PLMatrix          mat  = args [0] as PLMatrix;
-
-            if (fptr != null)
-            {
-                if (args.Count != 6) throw new Exception ("ContourPlot argument error");
-
-                PLVariable levels = args [1];  // double or an array
-                PLDouble a = args [2] as PLDouble;
-                PLDouble b = args [3] as PLDouble;
-                PLDouble c = args [4] as PLDouble;
-                PLDouble d = args [5] as PLDouble;
-
-                ContourPlotFromFunction (fptr, levels, a, b, c, d);
-
-            }
-
-            else if (mat != null)
-            {
-                PLMatrix a = args [0] as PLMatrix;
-                PLMatrix b = args [1] as PLMatrix;
-                PLMatrix c = args [2] as PLMatrix;
-
-                if (a == null || b == null || c == null)              throw new Exception ("Contour Plot arg error - first 3 args must be arrays");
-                if (a.IsRowVector == false || b.IsRowVector == false) throw new Exception ("Contour Plot arg error - first 2 args must be row vectors");
-                if (c.IsMatrix == false)                              throw new Exception ("Contour Plot arg error - third arg must be matrix");
-
-                List<double> x = new List<double> ();
-                List<double> y = new List<double> ();
-
-                for (int i=0; i<a.Cols; i++) x.Add (a [0, i]);
-                for (int i=0; i<b.Cols; i++) y.Add (b [0, i]);
-
-
-
-
-                PLMatrix d1 = args [3] as PLMatrix;
-                PLDouble d2 = args [3] as PLDouble;
-
-                List<double> levels = new List<double> ();
-
-                if      (d1 != null) for (int i=0; i<d1.Cols; i++) levels.Add (d1 [0, i]);                
-                else if (d2 != null) levels.Add (d2.Data);
-                else                 throw new Exception ("Contour Plot arg error - 4th arg");
-
-
-                ContourPlotFromMatrix (x, y, c.Data, levels);
-            }
-
-            else
-                throw new Exception ("Contour Plot syntax error");
-
-            return new PLNull ();
-        }
-
-        //******************************************************************************
-    
-        static PLVariable ContourPlotFromMatrix (List<double> x, List<double> y, CommonMath.Matrix z, List<double> levs)
-        {
-            ContourPlotView.ShowGradientArrows = false;
-            ContourPlotView.LabelLines = false;
-            ContourPlotView cpv = new ContourPlotView (x, y, z, levs);
-
-            Draw2DObject (cpv);
-            //Fig2D.SetAxes (a2.Data, a3.Data, a4.Data, a5.Data);
-            (CurrentFigure as Plot2D).AxesEqual = true;
-
-            return new PLNull ();
-        }
-
-        //******************************************************************************
-         
-        static PLVariable ContourPlotFromFunction (PLFunctionWrapper func, PLVariable _levels, PLDouble a2, PLDouble a3, PLDouble a4, PLDouble a5)
-        { 
-            //
-            // extract function pointer
-            //
-            contourZFunction = func.Data;
-
-            //
-            // list of levels
-            //
-            PLMatrix mat = _levels as PLMatrix;
-            PLDouble dbl = _levels as PLDouble;  // if a single level
-
-            List<double> levels = new List<double> ();
-
-            if (mat != null)
-            {
-                if (mat.Data.Rows != 1) throw new Exception ("Contour levels must be a row vector");
-                for (int i = 0; i<mat.Data.Cols; i++) levels.Add (mat.Data [0, i]);
-            }
-            else if (dbl != null)
-            {
-                levels.Add (dbl.Data);
-            }
-            else
-                throw new Exception ("Contour plot levels error");
-
-            //
-            // plot x & y limits
-            //
-            if (a2 == null || a3 == null || a4 == null || a5 == null)
-                throw new Exception ("Contour plot argument error");
-
-            ContourPlotView.ShowGradientArrows = false;
-            ContourPlotView.LabelLines = false;
-            ContourPlotView cpv = new ContourPlotView (ZFromXYFunction, levels, a2.Data, a3.Data, a4.Data, a5.Data, 100, 100);
-
-            Draw2DObject (cpv);
-            Plot2D fig = CurrentFigure as Plot2D;
-            fig.SetAxes (a2.Data, a3.Data, a4.Data, a5.Data);
-            fig.AxesEqual = true;
-
-            return new PLNull (); 
-        }
 
         //*********************************************************************************************
         //*********************************************************************************************

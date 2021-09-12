@@ -78,10 +78,10 @@ namespace PLKernel
             // remove leading and trailing parens
             //
             int index = tokens [0].text.IndexOf ('(');
-            if (index == -1) throw new Exception ("Syntax error");
+            if (index == -1) throw new Exception ("Syntax error, missing opening paren");
             string expr = tokens [0].text.Remove (0, index + 1);
             index = expr.LastIndexOf (')');
-            if (index == -1) throw new Exception ("Syntax error");
+            if (index == -1) throw new Exception ("Syntax error, missing closing paren");
             expr = expr.Remove (index);
 
             //

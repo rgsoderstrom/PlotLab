@@ -71,8 +71,9 @@ namespace PLKernel
                 PLVariable select = Operands [0].Evaluate (workspace);
 
                 PLMatrix selectVect   = select as PLMatrix;
-                PLDouble selectScalar = select as PLDouble;
+                PLDouble selectDouble = select as PLDouble;
                 PLString selectString = select as PLString;
+                PLInteger selectInt   = select as PLInteger;
 
                 if (srcIsMatrix)
                 {
@@ -85,9 +86,17 @@ namespace PLKernel
                     else throw new Exception ("Matrix requires two args");
                 }
 
-                if (selectScalar != null)
+                if (selectDouble != null)
                 {
-                    int i = (int)selectScalar.Data - 1;
+                    int i = (int)selectDouble.Data - 1;
+                    double d = srcIsRowVector ? matValue [0, i] : matValue [i, 0];
+                    Value = new PLDouble (d);
+                    return;
+                }
+
+                if (selectInt != null)
+                {
+                    int i = selectInt.Data - 1;
                     double d = srcIsRowVector ? matValue [0, i] : matValue [i, 0];
                     Value = new PLDouble (d);
                     return;

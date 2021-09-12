@@ -200,6 +200,12 @@ namespace FunctionLibrary
         //*********************************************************************************************
         //*********************************************************************************************
 
+        /// <summary>
+        /// Linspace - return a vector of linearly spaced spaced values
+        /// </summary>
+        /// <param name="arg">PLList, containing start, end and count</param>
+        /// <returns></returns>
+
         static public PLVariable Linspace (PLVariable arg)
         {
             PLList args = arg as PLList;
@@ -211,7 +217,22 @@ namespace FunctionLibrary
             int count = (int)(args [2] as PLDouble).Data;
             if (count < 2) throw new Exception ("linspace number of points (arg 3) must be 2 or greater");
 
-            PLMatrix results = new PLMatrix (1, count);
+            CommonMath.Matrix mat = Linspace (start, stop, count);
+            PLMatrix results = new PLMatrix (mat);
+            return results;
+        }
+
+        /// <summary>
+        /// Linspace - return a vector of linearly spaced spaced values with standard .Net inputs
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="stop"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        
+        static public CommonMath.Matrix Linspace (double start, double stop, int count)
+        {
+            CommonMath.Matrix results = new CommonMath.Matrix (1, count);
 
             for (int i = 0; i<count; i++)
                 results [0, i] = start + i * (stop - start) / (count - 1);

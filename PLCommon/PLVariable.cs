@@ -107,6 +107,11 @@ namespace PLCommon
             Data = new Matrix (r, c);
         }
 
+        public PLMatrix (CommonMath.Matrix src)
+        {
+            Data = src;
+        }
+
         public PLMatrix (PLDouble src)
         {
             Data = new Matrix (1, 1);
@@ -509,6 +514,11 @@ namespace PLCommon
         public void Add (PLVariable var)
         {
             Data.Add (var);
+        }
+
+        public void Insert (int index, PLVariable var)
+        {
+            Data.Insert (index, var);
         }
 
         public PLVariable this [int select]

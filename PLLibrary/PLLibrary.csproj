@@ -66,6 +66,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContourPlot.cs" />
     <Compile Include="IOFunctions.cs" />
     <Compile Include="LibraryManager.cs" />
     <Compile Include="MathFunctionsBuiltIn.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="_ContourPlot.txt" />
     <Content Include="_PlotFormatArgs.txt" />
     <Content Include="_PlotFunctions.txt" />
   </ItemGroup>
