@@ -169,73 +169,6 @@ namespace FunctionLibrary
                     displayArgs.Add (lst [nextArg++]);
                 }
             }
-
-
-
-
-
-
-
-            //// ensure input is a list
-            //PLList args = input as PLList;
-
-            //if (args == null)
-            //    throw new Exception ("Contour plot argument error");
-
-            //// see what first arg is
-            //PLFunctionWrapper fptr = args [0] as PLFunctionWrapper;
-            //PLMatrix          mat  = args [0] as PLMatrix;
-
-            //if (fptr != null)
-            //{
-            //    if (args.Count != 6) throw new Exception ("ContourPlot argument error");
-
-            //    PLVariable levels = args [1];  // double or an array
-            //    PLDouble a = args [2] as PLDouble;
-            //    PLDouble b = args [3] as PLDouble;
-            //    PLDouble c = args [4] as PLDouble;
-            //    PLDouble d = args [5] as PLDouble;
-
-            //    ContourPlotFromFunction (fptr, levels, a, b, c, d);
-
-            //}
-
-            //else if (mat != null)
-            //{
-            //    PLMatrix a = args [0] as PLMatrix;
-            //    PLMatrix b = args [1] as PLMatrix;
-            //    PLMatrix c = args [2] as PLMatrix;
-
-            //    if (a == null || b == null || c == null)              throw new Exception ("Contour Plot arg error - first 3 args must be arrays");
-            //    if (a.IsRowVector == false || b.IsRowVector == false) throw new Exception ("Contour Plot arg error - first 2 args must be row vectors");
-            //    if (c.IsMatrix == false)                              throw new Exception ("Contour Plot arg error - third arg must be matrix");
-
-            //    List<double> x = new List<double> ();
-            //    List<double> y = new List<double> ();
-
-            //    for (int i=0; i<a.Cols; i++) x.Add (a [0, i]);
-            //    for (int i=0; i<b.Cols; i++) y.Add (b [0, i]);
-
-
-
-
-            //    PLMatrix d1 = args [3] as PLMatrix;
-            //    PLDouble d2 = args [3] as PLDouble;
-
-            //    List<double> levels = new List<double> ();
-
-            //    if      (d1 != null) for (int i=0; i<d1.Cols; i++) levels.Add (d1 [0, i]);                
-            //    else if (d2 != null) levels.Add (d2.Data);
-            //    else                 throw new Exception ("Contour Plot arg error - 4th arg");
-
-
-            //    ContourPlotFromMatrix (x, y, c.Data, levels);
-            //}
-
-            //else
-            //    throw new Exception ("Contour Plot syntax error");
-
-            //return new PLNull ();
         }
 
         //******************************************************************************
@@ -334,6 +267,7 @@ namespace FunctionLibrary
 
 
 
+
 				        case "ShowBackground":
                             ContourPlotView.ShowColoredBackground = ContourArgToBool (displayArgs [++i]);
                             break;
@@ -349,9 +283,17 @@ namespace FunctionLibrary
                         case "DrawArrows":
                             ContourPlotView.ShowGradientArrows = ContourArgToBool (displayArgs [++i]);
                             break;
+
+                        case "ArrowSize":
+                            ContourPlotView.GradientArrowSize = (displayArgs [++i] as PLDouble).Data;
+                            break;
     
                         case "LabelLines":
                             ContourPlotView.LabelLines = ContourArgToBool (displayArgs [++i]);
+                            break;
+
+                        case "LabelFontSize":
+                            ContourPlotView.LabelFontSize = (displayArgs [++i] as PLDouble).Data;
                             break;
     
                         default:
