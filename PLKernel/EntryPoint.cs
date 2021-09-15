@@ -15,9 +15,9 @@ namespace PLKernel
         {
             try
             {
-                TokenParsing parsing = new TokenParsing ();
-                List<Token> passOneTokens = parsing.ParsingPassOne (expression);
-                List<Token> passTwoTokens = parsing.ParsingPassTwo (passOneTokens, workspace);
+                //TokenParsing parsing = new TokenParsing ();
+                //List<Token> passOneTokens = parsing.ParsingPassOne (expression);
+                //List<Token> passTwoTokens = parsing.ParsingPassTwo (passOneTokens, workspace);
 
                 ExpressionTree tree = new ExpressionTree (expression, workspace);
                 //window.TreeView1.Items.Clear ();
