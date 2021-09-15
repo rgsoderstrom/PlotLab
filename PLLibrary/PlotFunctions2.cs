@@ -68,8 +68,9 @@ namespace FunctionLibrary
 
             foreach (Window w in Figures)
             {
-                Plot2D p2 = w as Plot2D; if (p2 != null) { if (p2.ID == requestedFigNumber) {fig = w; break; } }
-                Plot3D p3 = w as Plot3D; if (p3 != null) { if (p3.ID == requestedFigNumber) {fig = w; break; } }
+                Plot2D p2 = w as Plot2D; if (p2 != null) {if (p2.ID == requestedFigNumber) {fig = w; break;}}
+                Plot3D p3 = w as Plot3D; if (p3 != null) {if (p3.ID == requestedFigNumber) {fig = w; break;}}
+                PlotFigure pf = w as PlotFigure; if (pf != null) {if (pf.ID == requestedFigNumber) {fig = w; break;}}
             }
 
             if (fig != null)
