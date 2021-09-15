@@ -12,14 +12,14 @@ namespace PLKernel
 {
     internal partial class ExpressionTreeNode
     {
-	    public string Operator = "";  
+        public string Operator = "";
         public TokenType NodeType = TokenType.None;
 
-	    public List<ExpressionTreeNode> Operands = new List<ExpressionTreeNode> ();
+        public List<ExpressionTreeNode> Operands = new List<ExpressionTreeNode> ();
 
 
         private Workspace workspace; // copy of passed-in value
-        
+
         private PLVariable nodeValue = null;
         public bool ValueValid {get {return nodeValue != null;}}
 
@@ -30,6 +30,7 @@ namespace PLKernel
                 if (ValueValid) return nodeValue;
                 else return Evaluate (workspace);
             }
+
             set
             {
                 nodeValue = value;
@@ -41,7 +42,7 @@ namespace PLKernel
         //******************************************************************************************
 
         public static PrintFunction PF = null;
-        static public int InstanceCounter = 0; // zeroed when new tree started
+        public static int InstanceCounter = 0; // zeroed when new tree started
 
         //
         // public ctor
