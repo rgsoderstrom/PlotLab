@@ -65,6 +65,7 @@ namespace PLCommon
         public static PLVariable operator^ (PLVariable op1, PLVariable op2)
         {
             if (op1 is PLDouble  && op2 is PLDouble) return (op1 as PLDouble) ^ (op2 as PLDouble);
+            if (op1 is PLDouble  && op2 is PLMatrix) return (op1 as PLDouble) ^ (op2 as PLMatrix);
             if (op1 is PLMatrix  && op2 is PLDouble) return (op1 as PLMatrix) ^ (op2 as PLDouble);
             if (op1 is PLMatrix  && op2 is PLMatrix) return (op1 as PLMatrix) ^ (op2 as PLMatrix);  // implments .^, element-by-element
             throw new Exception ("Exponentiation of " + op1.GetType () + " and " + op2.GetType () + " not implemented");
@@ -193,6 +194,7 @@ namespace PLCommon
         public static PLMatrix operator/ (PLMatrix op1, PLDouble op2) {return new PLMatrix ("", op1.Data / op2.Data);}
         public static PLMatrix operator^ (PLMatrix op1, PLDouble op2) {return new PLMatrix ("", op1.Data ^ op2.Data);}
         public static PLMatrix operator^ (PLMatrix op1, PLMatrix op2) {return new PLMatrix ("", op1.Data ^ op2.Data);}
+        public static PLMatrix operator^ (PLDouble op1, PLMatrix op2) {return new PLMatrix ("", op1.Data ^ op2.Data);}
 
         //*************************************************************************************
 
