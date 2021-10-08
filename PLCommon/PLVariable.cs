@@ -325,9 +325,9 @@ namespace PLCommon
 
         public override string ToString (string cfmt)
         {
-            int a = 8, b = 3; // defaults
+            int a = 8, b = 5; // defaults
 
-            List<string> cfmtParts = base.SplitFormatString (cfmt);
+            List<string> cfmtParts = SplitFormatString (cfmt);
 
             if (cfmtParts.Count == 3)  // --------------------- use defaults if error in format
             {
@@ -344,7 +344,10 @@ namespace PLCommon
 
         public override string ToString ()
         {
-            return ToString ("%8.3f");
+            if (Math.Abs (Data) > 1e4 || Math.Abs (Data) < 1e-4)
+                return (string.Format ("{0:E5}", Data));
+            else
+                return (string.Format ("{0:#.#####}", Data));
         }
     }
 
