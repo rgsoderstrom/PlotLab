@@ -226,52 +226,6 @@ namespace PLKernel
             return args;
         }
 
-
-
-
-        //public enum BracketType {Unknown, 
-        //                         EnumeratedRowVector,   // all elements listed
-        //                         IteratedRowVector,     // [start : end] or [start : step : end]
-        //                         ColVector, 
-        //                         Expression,            // [1 + 2 + 3]
-        //};
-
-        //public BracketType SplitBracketArgs (string str, List<string> args) //, PrintFunction pf = null)
-        //{
-        //    // remove outer brackets 
-        //    int index = str.LastIndexOf (']');
-        //    if (index == -1) throw new Exception ("Missing closing bracket: " + str);
-        //    string arguments = str.Remove (index);
-
-        //    index = arguments.IndexOf ('[');
-        //    if (index == -1) throw new Exception ("Missing opening bracket: " + str);
-        //    arguments = arguments.Remove (0, index + 1);
-
-        //    //
-        //    // first break into substrings at token separators, at zero nesting level
-        //    //
-
-        //    args = BreakIntoSubstrings (arguments, args, TokenUtils.IsColon);
-        //    if (args.Count > 0) return BracketType.IteratedRowVector;
-
-        //    args = BreakIntoSubstrings (arguments, args, TokenUtils.IsSemicolon);
-        //    if (args.Count > 0) return BracketType.ColVector;
-
-        //    args = BreakIntoSubstrings (arguments, args, TokenUtils.IsComma);
-        //    if (args.Count > 0) return BracketType.EnumeratedRowVector;
-
-
-        //    args = BreakIntoSubstrings (arguments, args, TokenUtils.IsBinaryOp);
-        //    if (args.Count > 0) {args.Clear (); args.Add (arguments); return BracketType.Expression;}
-
-        //    args = BreakIntoSubstrings (arguments, args, TokenUtils.IsWhitespace);
-
-        //    if (args.Count == 0) // this happens for a single entry, e.g. [22]
-        //        args.Add (arguments);
-
-        //    return BracketType.EnumeratedRowVector;
-        //}
-
         //********************************************************************************
         //
         // SplitSubmatrixArgs - break one string into two
@@ -289,14 +243,38 @@ namespace PLKernel
             if (index == -1) throw new Exception ("Submatrix arguments missing opening paren: " + str);
             arguments = arguments.Remove (0, index + 1);
 
-            string[] argStrings = arguments.Split (new char [] { ',' });
+            // split arguments string at any commas at nesting level 0
+            int [] nestingLevel = new int [arguments.Length];
+            int level = 0;
 
-            List<string> args = new List<string> ();
+            for (int i=0; i<arguments.Length; i++)
+            {
+                if (arguments [i] == '(') level++;
+                nestingLevel [i] = level;
+                if (arguments [i] == ')') level--;
+            }
 
-            foreach (string s in argStrings)
-                args.Add (s);
+            if (level != 0)
+                throw new Exception ("Parenthesis nesting error in " + str);
 
-            return args;
+            List<string> argStrings = new List<string> ();
+
+            int trailing = 0, leading = 1;
+
+            while (leading < arguments.Length)
+            {
+                if (arguments [leading] == ',' && nestingLevel [leading] == 0)
+                {
+                    string arg = arguments.Substring (trailing, leading - trailing);
+                    argStrings.Add (arg);
+                    trailing = leading + 1;
+                }
+
+                leading++;
+            }
+
+            argStrings.Add (arguments.Substring (trailing, leading - trailing));
+            return argStrings;
         }
 
 
