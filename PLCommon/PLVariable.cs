@@ -38,6 +38,10 @@ namespace PLCommon
             if (op1 is PLMatrix  && op2 is PLMatrix)  return (op1 as PLMatrix)  - (op2 as PLMatrix);
             if (op1 is PLMatrix  && op2 is PLDouble)  return (op1 as PLMatrix)  - (op2 as PLDouble);
             if (op1 is PLDouble  && op2 is PLMatrix)  return (op1 as PLDouble)  - (op2 as PLMatrix);
+
+            if (op1 is PLInteger && op2 is PLDouble)  return new PLDouble ((op1 as PLInteger).Data - (op2 as PLDouble).Data);
+            if (op1 is PLDouble  && op2 is PLInteger) return new PLDouble ((op1 as PLDouble).Data  - (op2 as PLInteger).Data);
+
             throw new Exception ("Subtraction of " + op1.GetType () + " and " + op2.GetType () + " not implemented");
         }
 
