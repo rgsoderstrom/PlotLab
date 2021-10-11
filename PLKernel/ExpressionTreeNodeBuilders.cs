@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Common;
 using PLCommon;
 using PLWorkspace;
 
@@ -330,10 +331,55 @@ namespace PLKernel
             List<string> args = parser.SplitSubmatrixArgs (tokens.t1.text);
 
             foreach (string str in args)
+            {
                 Operands.Add (new ExpressionTreeNode (str, workspace));
+            }
+
+            // search the operand tree for "end". replace any with appropriate number
+            // of rows or colums
+
+            Compact ();
+
+            string matrixName = Operator;
+
+            PLMatrix mat = workspace.Get (matrixName) as PLMatrix;
+            int rows = (workspace.Rows (mat) as PLInteger).Data;
+            int cols = (workspace.Cols (mat) as PLInteger).Data;
+
+            bool IsRowVector = rows == 1 && cols > 1;
+            bool IsColVector = rows > 1  && cols == 1;
+
+            for (int i = 0; i<Operands.Count; i++)
+            {
+                for (int j = 0; j<Operands [i].Operands.Count; j++)
+                {
+                    if (Operands [i].Operands [j].Operator == "end")
+                    {
+                        if (IsRowVector)
+                        {
+                            Operands [i].Operands [j] = new ExpressionTreeNode (cols.ToString (), workspace);
+                        }
+
+                        else if (IsColVector)
+                        { 
+                            Operands [i].Operands [j] = new ExpressionTreeNode (rows.ToString (), workspace);
+                        }
+
+                        else
+                        {
+                            if (i == 0)
+                            {
+                                Operands [i].Operands [j] = new ExpressionTreeNode (rows.ToString (), workspace);
+                            }
+
+                            else
+                            {
+                                Operands [i].Operands [j] = new ExpressionTreeNode (cols.ToString (), workspace);
+                            }
+                        }
+                    }
+                }
+            }
         }
-
-
-
     }
 }
