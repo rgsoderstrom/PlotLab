@@ -428,9 +428,7 @@ namespace PLKernel
             for (int i = 1; i<Operands.Count; i++)
             {
                 Operands [i].Evaluate (workspace);
-
-                PLDouble divisor = new PLDouble (Operands [i].Value);
-                Value /= divisor;
+                Value /= Operands [i].Value;
             }
         }
 
