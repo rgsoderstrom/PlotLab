@@ -397,7 +397,9 @@ namespace PLWorkspace
 
         public PLVariable Length (PLVariable a)
         {
-            return Rows (a) * Cols (a);
+            int rows = (Rows (a) as PLInteger).Data;
+            int cols = (Cols (a) as PLInteger).Data;
+            return new PLInteger (Math.Max (rows, cols));
         }
 
         //***********************************************************************************************
