@@ -1,0 +1,21 @@
+﻿<Window x:Class="utHelpWindow.HelpWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:utHelpWindow"
+        mc:Ignorable="d"
+        Title="Help Window" Height="450" MaxWidth="800" Loaded="Window_Loaded">
+    <StackPanel Orientation="Horizontal">
+        <StackPanel Orientation="Vertical">
+            <Button Margin="10">A Button</Button>    
+        </StackPanel>
+        
+        <TreeView Margin="10,10,0,13" Name="HelpTreeView" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Stretch" MinWidth="250" MinHeight="350"></TreeView>
+
+        <Border Margin="10" BorderBrush="Black" BorderThickness="1" VerticalAlignment="Stretch">
+            <TextBox Name="HelpTextBox" IsReadOnly="True" MinWidth="400"/>
+        </Border>
+        
+    </StackPanel>
+</Window>
