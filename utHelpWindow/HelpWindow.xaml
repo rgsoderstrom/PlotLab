@@ -14,7 +14,7 @@
         <TreeView Margin="10,10,0,13" Name="HelpTreeView" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Stretch" MinWidth="250" MinHeight="350"></TreeView>
 
         <Border Margin="10" BorderBrush="Black" BorderThickness="1" VerticalAlignment="Stretch">
-            <TextBox Name="HelpTextBox" IsReadOnly="True" MinWidth="400"/>
+            <TextBox Name="HelpTextBox" IsReadOnly="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  MinWidth="400"/>
         </Border>
         
     </StackPanel>

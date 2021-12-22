@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 
+using Common;
+
 namespace utHelpWindow
 {
     public class HelpTree
@@ -84,15 +86,11 @@ namespace utHelpWindow
 
             ReadFileIntoNodeList (top);
             AddNodesToDictionarys ();
-            FIllInChildReferences ();
-            //BuildTreeView ();
-
-
         }
 
         //********************************************************************************************
 
-        TextBox HelpTextPane;
+        TextBox? HelpTextPane;
 
         public TreeViewItem BuildTreeView (TextBox helpTextPane)
         {
@@ -100,19 +98,22 @@ namespace utHelpWindow
 
             TreeViewItem root = new TreeViewItem ();
 
-            root.Header = helpTreeNodeList [0].Subject;
+            root.Header = treeSubject; // helpTreeNodeList [0].Subject;
             root.Tag = helpTreeNodeList [0];
 
             root.Selected += TreeViewItem_Selected;
 
+            //
+            // helpTreeNodeList contains all the nodes in the file. 
+            // the first one is the root, all others descended from it.
+            //
 
-
-            foreach (HelpTreeNode node in helpTreeNodeList [0].childNodes)
+            for (int i=0; i<helpTreeNodeList [0].childNodes.Count; i++)
             {
-                node.BuildTreeView (root, TreeViewItem_Selected);    
+                HelpTreeNode node    = helpTreeNodeList [0].childNodes [i];
+                string?      subject = helpTreeNodeList [0].childLinks [i].Subject;
+                node.BuildTreeView (root, subject, TreeViewItem_Selected);
             }
-
-           
 
             return root;
         }
@@ -123,18 +124,25 @@ namespace utHelpWindow
 
             TreeViewItem? tvi = sender as TreeViewItem;
 
-
-            if (tvi != null)
+            if (tvi != null && HelpTextPane != null)
             {
                 HelpTreeNode? htn = tvi.Tag as HelpTreeNode;
+                
                 HelpTextPane.Text = "";
 
                 if (htn != null)
+                {
+                    HelpTextPane.AppendText (htn.Subject + '\n');
+
+                    string underline = new string ('-', htn.Subject.Length);                   
+                    HelpTextPane.AppendText (underline + '\n');
+
                     foreach (string str in htn.Content)
                     {
                         string str2 = str.Substring (1, str.Length - 2);
-                        HelpTextPane.Text += str2 + "\n";
+                        HelpTextPane.AppendText (str2 + '\n');
                     }
+                }
             }
         }
 
@@ -152,7 +160,7 @@ namespace utHelpWindow
             }
         }
 
-        private void FIllInChildReferences ()
+        public void FIllInChildReferences ()
         {
             foreach (HelpTreeNode hn in helpTreeNodeList)
             {
@@ -168,7 +176,7 @@ namespace utHelpWindow
 
                         catch (Exception ex)
                         {
-                            Console.WriteLine ("Exception: " + ex.Message);
+                            EventLog.WriteLine ("Exception: " + ex.Message);
                         }
                     }
                 }

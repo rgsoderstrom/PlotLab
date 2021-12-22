@@ -35,19 +35,19 @@ namespace utHelpWindow
 
         //************************************************************************
 
-        public void BuildTreeView (TreeViewItem tree, RoutedEventHandler select)
+        public void BuildTreeView (TreeViewItem tree, string? subject, RoutedEventHandler select)
         {
             TreeViewItem node = new TreeViewItem ();
-
             tree.Items.Add (node);
 
-            node.Header = Subject;
-            node.Tag = this;
+            node.Header    = subject;
+            node.Tag       = this;
+            node.Selected += select;
 
-            node.Selected += select; 
-
-            foreach (HelpTreeNode htn in childNodes)
-                htn.BuildTreeView (node, select);
+            for (int i = 0; i<childLinks.Count; i++)
+            {
+                childNodes [i].BuildTreeView (node, childLinks [i].Subject, select);
+            }
         }
 
 

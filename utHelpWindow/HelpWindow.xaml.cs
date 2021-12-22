@@ -15,6 +15,8 @@ using System.Windows.Shapes;
 using System.IO;
 using System.Xml;
 
+using Common;
+
 namespace utHelpWindow
 {
     /// <summary>
@@ -27,26 +29,41 @@ namespace utHelpWindow
             InitializeComponent ();
         }
 
-        string inputFile = @"C:\Users\rgsod\Documents\Visual Studio 2022\Projects\PlotLab\utHelpWindow\HelpTreeText.xml";
+        List<string> listOfHelpTextFiles = new List<string> ()
+        {
+            @"C:\Users\rgsod\Documents\Visual Studio 2022\Projects\PlotLab\utHelpWindow\HelpTextFiles\HelpTreeText1.xml",
+            @"C:\Users\rgsod\Documents\Visual Studio 2022\Projects\PlotLab\utHelpWindow\HelpTextFiles\HelpTreeText2.xml",
+        };
+
+        List<HelpTree> listOfHelpTrees = new List<HelpTree> ();
 
         private void Window_Loaded (object sender, RoutedEventArgs e)
         {
-            Left = 500;
+            Top = 20;
+            Left = 30;
 
             try
             {
-                HelpTree ht = new HelpTree (inputFile);
-                HelpTreeView.Items.Add (ht.BuildTreeView (HelpTextBox));
+                foreach (string fileName in listOfHelpTextFiles) 
+                { 
+                    listOfHelpTrees.Add (new HelpTree (fileName));
+                }
 
-                
-                
-                //Console.WriteLine (ht.ToString ());
+                foreach (HelpTree ht in listOfHelpTrees)
+                {
+                    ht.FIllInChildReferences ();
+                }
+
+                foreach (HelpTree ht in listOfHelpTrees)
+                {
+                    HelpTreeView.Items.Add (ht.BuildTreeView (HelpTextBox));
+                }
             }
 
 
             catch (Exception ex)
             {
-                Console.Write ("Exception: " + ex.Message);
+                EventLog.WriteLine ("Exception: " + ex.Message);
             }
         }
     }

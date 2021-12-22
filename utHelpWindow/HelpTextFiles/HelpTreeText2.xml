@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
-<HelpTree Subject="NOT USED - Math Functions" SearchKey="NOT USED - math_functions">
+<HelpTree Subject="Math Functions" SearchKey="math_functions">
 
   <!--********************************************************************-->
 
@@ -13,9 +13,9 @@
     </Content>
 
     <SubTopics>
-      <SubTopic Subject="NOT USED - sin" SearchKey="sin"/>
-      <SubTopic Subject="NOT USED - cos" SearchKey="cos"/>
-      <SubTopic Subject="NOT USED - tan" SearchKey="tan"/>
+      <SubTopic Subject="sin" SearchKey="sin"/>
+      <SubTopic Subject="cos" SearchKey="cos"/>
+      <SubTopic Subject="tan" SearchKey="tan"/>
     </SubTopics>
 
   </HelpTopic>

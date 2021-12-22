@@ -17,7 +17,6 @@
     <SubTopics>
       <SubTopic Subject="Plotting 2D points" SearchKey="plot2dPoints"/>
       <SubTopic Subject="Plotting 2D lines"  SearchKey="plot2dLines"/>
-      <SubTopic Subject="Tangent"  SearchKey="tan"/>
       <SubTopic Subject="Plotting 3D points" SearchKey="plot3dPoints"/>
       <SubTopic Subject="Plotting 3D lines"  SearchKey="plot3dLines"/>
     </SubTopics>
@@ -37,8 +36,8 @@
     </Content>
     
     <SubTopics>
-      <SubTopic Subject="Available colors"  SearchKey ="plotPoints2d_colors"/>
-      <SubTopic Subject="Available symbols" SearchKey ="plotPoints2d_symbols"/>
+      <SubTopic Subject="Available colors 1"  SearchKey ="plotPoints2d_colors"/>
+      <SubTopic Subject="Available symbols 1" SearchKey ="plotPoints2d_symbols"/>
     </SubTopics>
     
   </HelpTopic>
@@ -53,8 +52,8 @@
     </Content>
 
     <SubTopics>
-      <SubTopic Subject="Available colors"  SearchKey ="plotLines2d_colors"/>
-      <SubTopic Subject="Available symbols" SearchKey ="plotLines2d_symbols"/>
+      <SubTopic Subject="Available colors 2"  SearchKey ="plotLines2d_colors"/>
+      <SubTopic Subject="Available symbols 2" SearchKey ="plotLines2d_symbols"/>
     </SubTopics>
     
   </HelpTopic>
@@ -73,8 +72,8 @@
     </Content>
 
     <SubTopics>
-      <SubTopic Subject="Available colors"  SearchKey ="plotPoints3d_colors"/>
-      <SubTopic Subject="Available symbols" SearchKey ="plotPoints3d_symbols"/>
+      <SubTopic Subject="Available colors 3"  SearchKey ="plotPoints3d_colors"/>
+      <SubTopic Subject="Available symbols 3" SearchKey ="plotPoints3d_symbols"/>
     </SubTopics>
 
   </HelpTopic>
@@ -89,8 +88,8 @@
     </Content>
 
     <SubTopics>
-      <SubTopic Subject="Available colors"  SearchKey ="plotLines3d_colors"/>
-      <SubTopic Subject="Available symbols" SearchKey ="plotLines3d_symbols"/>
+      <SubTopic Subject="Available colors 4"  SearchKey ="plotLines3d_colors"/>
+      <SubTopic Subject="Available symbols 4" SearchKey ="plotLines3d_symbols"/>
     </SubTopics>
 
   </HelpTopic>
