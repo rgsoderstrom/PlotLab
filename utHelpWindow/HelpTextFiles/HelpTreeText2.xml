@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<HelpTree Subject="NOT USED - Math Functions" SearchKey="NOT USED - math_functions">
+
+  <!--********************************************************************-->
+
+  <!-- first node will be root of HelpTree -->
+
+  <HelpTopic Subject="math" SearchKey="math">
+
+    <Content>
+      <Line>"Math functions"</Line>
+    </Content>
+
+    <SubTopics>
+      <SubTopic Subject="NOT USED - sin" SearchKey="sin"/>
+      <SubTopic Subject="NOT USED - cos" SearchKey="cos"/>
+      <SubTopic Subject="NOT USED - tan" SearchKey="tan"/>
+    </SubTopics>
+
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic Subject="sin function" SearchKey="sin">
+
+    <Content>
+      <Line>"xxxx y = sin (x);"</Line>
+      <Line>"  arg x is in radians"</Line>
+    </Content>
+
+    <SubTopics>
+      <SubTopic Subject="Plotting 2D points" SearchKey="plot2dPoints"/>
+    </SubTopics>
+      
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic Subject="cos function" SearchKey="cos">
+
+    <Content>
+      <Line>"y = cos (x);"</Line>
+      <Line>"  arg x is in radians"</Line>
+    </Content>
+
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic Subject="tan function" SearchKey="tan">
+
+    <Content>
+      <Line>"y = tan (x);"</Line>
+      <Line>"  arg x is in radians"</Line>
+    </Content>
+
+  </HelpTopic>
+
+
+
+</HelpTree>
