@@ -445,6 +445,13 @@ namespace FrontEnd
 
         //****************************************************************************************************
 
+        private void HelpWindow_Click (object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start (@"C:\Users\rgsod\Documents\Visual Studio 2022\Projects\PlotLab\utHelpWindow\bin\Debug\net5.0-windows\utHelpWindow.exe");
+        }
+
+        //****************************************************************************************************
+
         //bool firstClick = true;
 
         private void ScriptFile_TextBox_GotFocus (object sender, RoutedEventArgs e)

@@ -78,9 +78,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="FileSearch.cs" />
-    <Compile Include="HelpWindow.xaml.cs">
-      <DependentUpon>HelpWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ScriptStack.cs" />
     <Compile Include="SystemFunctions.cs" />
     <Compile Include="InputLineProcessor.cs" />
@@ -89,10 +86,6 @@
     <Compile Include="Utils.cs" />
     <Compile Include="ScriptUtils.cs" />
     <Compile Include="Utils2.cs" />
-    <Page Include="HelpWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="UserConsole.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
