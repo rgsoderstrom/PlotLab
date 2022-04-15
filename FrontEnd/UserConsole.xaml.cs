@@ -193,7 +193,7 @@ namespace FrontEnd
                         PLVariable ans = new PLNull ();
                         ip.ProcessOneStatement (ref ans, expr, ref forcePrint);
 
-                        if (ans != null && ans is PLNull == false && ans is PLCanvasObject == false)
+                        if (ans != null && ans is PLNull == false && ans is PLCanvasObject == false && ans is PLViewportObject == false)
                         {
                             ans.Name = "ans";
                             userWorkspace.Add (ans);
