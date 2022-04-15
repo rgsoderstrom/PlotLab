@@ -51,7 +51,7 @@ namespace utHelpWindow
 
                 foreach (HelpTree ht in listOfHelpTrees)
                 {
-                    ht.FIllInChildReferences ();
+                    ht.FillInChildReferences ();
                 }
 
                 foreach (HelpTree ht in listOfHelpTrees)
@@ -60,10 +60,9 @@ namespace utHelpWindow
                 }
             }
 
-
             catch (Exception ex)
             {
-                EventLog.WriteLine ("Exception: " + ex.Message);
+                EventLog.WriteLine ("Exception loading Help Trees: " + ex.Message);
             }
         }
     }

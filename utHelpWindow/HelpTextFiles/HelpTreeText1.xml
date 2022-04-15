@@ -1,46 +1,55 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
+<!-- Comment 1 -->
+
 <HelpTree Subject="General Plotting" SearchKey="plotting">
-  
+
   <!--********************************************************************-->
   
-  <!-- first node will be root of HelpTree -->
+  <!-- first node will be root of this HelpTree -->
   
-  <HelpTopic Subject="Data Plotting" SearchKey="plot">
+  <HelpTopic Subject="Plotting points and lines" SearchKey="plot">
+
+    <!-- Comment 2 -->
 
     <Content>
-      <Line>"Entry point for most plotting of points or lines."</Line>
-      <Line>"   another line of text."</Line>
-      <Line>"     and still another."</Line>
+      <Line>"Plotting 2D or 3D points or lines."</Line>
     </Content>
 
     <SubTopics>
-      <SubTopic Subject="Plotting 2D points" SearchKey="plot2dPoints"/>
-      <SubTopic Subject="Plotting 2D lines"  SearchKey="plot2dLines"/>
-      <SubTopic Subject="Plotting 3D points" SearchKey="plot3dPoints"/>
-      <SubTopic Subject="Plotting 3D lines"  SearchKey="plot3dLines"/>
+      <SubTopic Subject="Plotting 2D points"     SearchKey="plot2dPoints"/>
+      <SubTopic Subject="Plotting 2D lines"      SearchKey="plot2dLines"/>
+      <SubTopic Subject="Plotting 3D points"     SearchKey="plot3dPoints"/>
+      <SubTopic Subject="Plotting 3D lines"      SearchKey="plot3dLines"/>
     </SubTopics>
-    
   </HelpTopic>
-
 
   <!-- ********************************************************************-->
 
   <HelpTopic Subject="plotting one or more 2D points" SearchKey="plot2dPoints">
 
     <Content>
-      <Line>"plot (xCoordinates, yCoordinates, options);"</Line>
-      <Line>"  xCoordinates - single number or a vector of x coords"</Line>
-      <Line>"  yCoordinates - single number or a vector of y coords"</Line>
+      <Line>"plot (xCoords, yCoords, options);"</Line>
+      <Line>"  xCoords - single number or a row vector of x coords"</Line>
+      <Line>"  yCoords - single number or a row vector of y coords"</Line>
       <Line>"  options - specify the color, size and type of symbol"</Line>
+      <Line>"  "</Line>
+      <Line>"plot (column vector, column vector, options);"</Line>
+      <Line>"  "</Line>
+      <Line>"plot (matrix, options);"</Line>
+
     </Content>
-    
+
     <SubTopics>
-      <SubTopic Subject="Available colors 1"  SearchKey ="plotPoints2d_colors"/>
-      <SubTopic Subject="Available symbols 1" SearchKey ="plotPoints2d_symbols"/>
+      <SubTopic Subject="2D point options"  SearchKey="plotPoints2d"/>
     </SubTopics>
     
   </HelpTopic>
+
+  <!-- ******************************************************************** -->
+
+
+
 
   <!-- ******************************************************************** -->
 
@@ -113,6 +122,9 @@
       <Line>"bbbbbb"</Line>
     </Content>
 
+    <SubTopics>
+      <Subtopic Subject="tangent function" SearchKey="sin"/>
+    </SubTopics>
   </HelpTopic>
 
 

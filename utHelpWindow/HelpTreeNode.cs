@@ -31,11 +31,11 @@ namespace utHelpWindow
         }
 
         public List<ChildLink>    childLinks = new List<ChildLink>    (); // text read from xml file
-        public List<HelpTreeNode> childNodes = new List<HelpTreeNode> (); // filed in when tree built
+        public List<HelpTreeNode> childNodes = new List<HelpTreeNode> (); // filled in when tree built
 
         //************************************************************************
 
-        public void BuildTreeView (TreeViewItem tree, string? subject, RoutedEventHandler select)
+        public void BuildTreeViewNode (TreeViewItem tree, string? subject, RoutedEventHandler select)
         {
             TreeViewItem node = new TreeViewItem ();
             tree.Items.Add (node);
@@ -43,17 +43,21 @@ namespace utHelpWindow
             node.Header    = subject;
             node.Tag       = this;
             node.Selected += select;
+            node.Expanded += select;
 
             for (int i = 0; i<childLinks.Count; i++)
             {
-                childNodes [i].BuildTreeView (node, childLinks [i].Subject, select);
+                childNodes [i].BuildTreeViewNode (node, childLinks [i].Subject, select);
             }
         }
 
-
-
-
         //************************************************************************
+
+        public HelpTreeNode ()
+        {
+            Subject = "Not initialized";
+        }
+
 
         public HelpTreeNode (XmlNode xml)
         {
@@ -133,7 +137,9 @@ namespace utHelpWindow
                                 childLinks.Add (link);
                             }
                         }
+                        break;
 
+                    case "#comment":
                         break;
 
                     default:

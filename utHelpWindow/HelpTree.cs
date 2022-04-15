@@ -15,8 +15,13 @@ namespace utHelpWindow
         // find a HelpTreeNode from its SearchKey
         static public Dictionary<string, HelpTreeNode> HelpFromSearchKey = new Dictionary<string, HelpTreeNode> ();
 
-        // find a SearchKey from a text string (typically typed in by user)
-        static public Dictionary<string, string> SearchKeyFromText = new Dictionary<string,string> ();
+
+        //static readonly TextBox? HelpTextPane;
+
+         
+
+
+
 
         //************************************************************************************
 
@@ -76,6 +81,9 @@ namespace utHelpWindow
                         treeSearchKey = attr.Value;
                         break;
 
+                    case "#comment":
+                        break;
+
                     default:
                         throw new Exception ("Unrecognized top-level attribute: " + attr.Name);
                 }
@@ -102,17 +110,18 @@ namespace utHelpWindow
             root.Tag = helpTreeNodeList [0];
 
             root.Selected += TreeViewItem_Selected;
+            root.Expanded += TreeViewItem_Selected;
 
             //
             // helpTreeNodeList contains all the nodes in the file. 
-            // the first one is the root, all others descended from it.
+            // the first one is the root, all others descend from it.
             //
 
             for (int i=0; i<helpTreeNodeList [0].childNodes.Count; i++)
             {
                 HelpTreeNode node    = helpTreeNodeList [0].childNodes [i];
                 string?      subject = helpTreeNodeList [0].childLinks [i].Subject;
-                node.BuildTreeView (root, subject, TreeViewItem_Selected);
+                node.BuildTreeViewNode (root, subject, TreeViewItem_Selected);
             }
 
             return root;
@@ -132,10 +141,12 @@ namespace utHelpWindow
 
                 if (htn != null)
                 {
-                    HelpTextPane.AppendText (htn.Subject + '\n');
-
-                    string underline = new string ('-', htn.Subject.Length);                   
-                    HelpTextPane.AppendText (underline + '\n');
+                    if (htn.Subject != null)
+                    {
+                        HelpTextPane.AppendText (htn.Subject + '\n');
+                        string underline = new string ('-', htn.Subject.Length);
+                        HelpTextPane.AppendText (underline + '\n');
+                    }
 
                     foreach (string str in htn.Content)
                     {
@@ -154,13 +165,11 @@ namespace utHelpWindow
             {
                 string key = hn.SearchKey;
                 string txt = hn.Subject;
-
                 HelpFromSearchKey.Add (key, hn);
-                SearchKeyFromText.Add (txt, key);
             }
         }
 
-        public void FIllInChildReferences ()
+        public void FillInChildReferences ()
         {
             foreach (HelpTreeNode hn in helpTreeNodeList)
             {
@@ -174,9 +183,24 @@ namespace utHelpWindow
                             hn.childNodes.Add (child);
                         }
 
+                        catch (KeyNotFoundException)
+                        {
+                            EventLog.WriteLine ("Subtopic key not found");
+                            EventLog.WriteLine ("Key: " + cl.SearchKey);
+                            EventLog.WriteLine ("Subject: " + cl.Subject);
+                            EventLog.WriteLine ("Parent Subject: " + hn.Subject);
+                            EventLog.WriteLine ("Tree Subject: " + treeSubject);
+
+                            HelpTreeNode dummy = new HelpTreeNode ();
+                            hn.childNodes.Add (dummy);
+                        }
+
                         catch (Exception ex)
                         {
-                            EventLog.WriteLine ("Exception: " + ex.Message);
+                            EventLog.WriteLine ("Exception filling in subtopic references: " + ex.Message);
+
+                            HelpTreeNode dummy = new HelpTreeNode ();
+                            hn.childNodes.Add (dummy);
                         }
                     }
                 }

@@ -4,10 +4,9 @@
 
   <!--********************************************************************-->
 
-  <!-- first node will be root of HelpTree -->
+  <!-- first node will be root of this HelpTree -->
 
   <HelpTopic Subject="math" SearchKey="math">
-
     <Content>
       <Line>"Math functions"</Line>
     </Content>
@@ -17,7 +16,6 @@
       <SubTopic Subject="cos" SearchKey="cos"/>
       <SubTopic Subject="tan" SearchKey="tan"/>
     </SubTopics>
-
   </HelpTopic>
 
   <!-- ********************************************************************-->
@@ -25,36 +23,27 @@
   <HelpTopic Subject="sin function" SearchKey="sin">
 
     <Content>
-      <Line>"xxxx y = sin (x);"</Line>
+      <Line>"y = sin (x);"</Line>
       <Line>"  arg x is in radians"</Line>
     </Content>
-
-    <SubTopics>
-      <SubTopic Subject="Plotting 2D points" SearchKey="plot2dPoints"/>
-    </SubTopics>
-      
   </HelpTopic>
 
   <!-- ********************************************************************-->
 
   <HelpTopic Subject="cos function" SearchKey="cos">
-
     <Content>
       <Line>"y = cos (x);"</Line>
       <Line>"  arg x is in radians"</Line>
     </Content>
-
   </HelpTopic>
 
   <!-- ********************************************************************-->
 
   <HelpTopic Subject="tan function" SearchKey="tan">
-
     <Content>
       <Line>"y = tan (x);"</Line>
       <Line>"  arg x is in radians"</Line>
     </Content>
-
   </HelpTopic>
 
 
