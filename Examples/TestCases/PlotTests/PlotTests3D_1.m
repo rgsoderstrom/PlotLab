@@ -9,6 +9,7 @@
 
 % title ('Random points, different sizes')
 
+clf
 
 t = 1 : 0.1 : 8 * pi;
 x = (6 - t/8) .* cos (t);
@@ -16,14 +17,14 @@ y = (5 - t/8) .* sin (t);
 z = 3 * log (t);
 
 pts = [x ; y ; z];
-figure (2) ; plot (pts);
+figure (2) % ; plot (pts);
 
 hold on
 
-select = 1 : 12 : size (pts, 2);
+select = 1 : 8 : size (pts, 2);
 
 for c = select,
 	v = [pts(1, c) ; pts(2, c) ; pts(3, c)];
-	plot (v, 'r*', 'Size', 0.25);
+	plot (v, 'g', 'Size', 0.25);
 end
 

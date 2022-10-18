@@ -1,1 +1,28 @@
 ﻿
+
+data args - first arg through matrix or function
+==================================================
+contour (z,                // x, y are assumed 1:NumbCols, 1:NumbRows
+contour (x, y, zMatrix, 
+contour (x, y, zFunction, 
+
+
+levels - default location is first numeric arg after matrix or functon
+======================================================================
+contour (,,, vector, ...); % numeric specifier must immediately follow data args
+contour (,,, number, ...); % number of levels, their value calculated
+
+contour (,,, 'Levels', vector, ...); % optional. Can be specified anywhere within display args
+contour (,,, 'Levels', number, ...);
+
+
+Display args. default shown
+===========================
+'Levels',           5
+'Levels',           [-1 : 2 : 12]
+'levels',           linspace (-1, 12, 6)
+
+'ShowBackground',   0 => false
+'DrawContourLines', 1 => true
+'DrawArrows',       0
+'LabelLines',       1

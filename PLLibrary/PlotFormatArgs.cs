@@ -19,9 +19,9 @@ namespace FunctionLibrary
         {
             public LineView.DrawingStyle lineStyle;
             public PointView.DrawingStyle pointStyle;
-            public Brush color;
-            public Brush edgeColor;
-            public Brush fillColor;
+            public SolidColorBrush color;
+            public SolidColorBrush edgeColor;
+            public SolidColorBrush fillColor;
 
             public double lineWidth;
             public double radius;
@@ -33,7 +33,7 @@ namespace FunctionLibrary
                 color = edgeColor = Brushes.Blue;
                 fillColor = Brushes.Yellow;
                 lineWidth = 2;
-                radius = 1;
+                radius = 0.5;
             }
         }
 
@@ -63,7 +63,7 @@ namespace FunctionLibrary
                         case "Color":
                         {
                             string colorString  = (formatArgs [++get] as PLString).Data;
-                            drawingParams.color = CharToColor (colorString [0]);
+                            drawingParams.color = (SolidColorBrush) CharToColor (colorString [1]);
                         }
                         break;
 
@@ -71,7 +71,7 @@ namespace FunctionLibrary
                         case "FaceColor":
                         {
                             string colorString  = (formatArgs [++get] as PLString).Data;
-                            drawingParams.fillColor = CharToColor (colorString [0]);
+                            drawingParams.fillColor = (SolidColorBrush) CharToColor (colorString [1]);
                         }
                         break;
 
@@ -79,13 +79,18 @@ namespace FunctionLibrary
                         case "EdgeColor":
                         {
                             string colorString  = (formatArgs [++get] as PLString).Data;
-                            drawingParams.edgeColor = CharToColor (colorString [0]);
+                            drawingParams.edgeColor = (SolidColorBrush) CharToColor (colorString [1]);
                         }
                         break;
 
+                        case "Diameter":
                         case "MarkerSize":
                         case "Size":
                             drawingParams.radius = (formatArgs [++get] as PLDouble).Data / 2;
+                            break;
+
+                        case "Radius":
+                            drawingParams.radius = (formatArgs [++get] as PLDouble).Data;
                             break;
 
                         default: 
@@ -118,7 +123,7 @@ namespace FunctionLibrary
                     case 'y':
                     case 'g':
                     case 'b':
-                    case 'k': drawingParams.color = CharToColor (c); break;
+                    case 'k': drawingParams.color = (SolidColorBrush) CharToColor (c); break;
                             
                     case '-':
                     {

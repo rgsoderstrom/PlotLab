@@ -1,5 +1,5 @@
-X = [-5:0.5:5];
-Y = [-5:0.5:5];
+X = [-5 : 0.25 : 5];
+Y = [-4 : 0.25 : 4];
 
 z = zeros (length (Y), length (X));
 
@@ -9,6 +9,13 @@ for c = 1: length (X),
 	end
 end
 	
-%z
-	
-contour (X, Y, z, [-13:1:2])
+%contour (z, 'Levels', [-8 : 1 : 1]);
+%contour (z, [-8 : 1 : 1], 'ShowBackground', 'tru0e');
+
+contour (X, Y, z, 6, ... % linspace (-12, 2, 6), ...
+				  'ShowBackground', 1, ...
+                  'DrawContourLines', 1, ...
+				  'DrawLinesInColors', 0, ...
+				  'DrawArrows', 1, ...
+				  'LabelLines', 1);
+

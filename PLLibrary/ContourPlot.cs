@@ -208,6 +208,17 @@ namespace FunctionLibrary
                 ContourPlotView.DrawLines             = true;
                 ContourPlotView.DrawLinesInColors     = false;
 
+                //
+                // defaults for case where no display arguments specified
+                //
+                if (displayArgs.Count == 0)
+                {
+                    displayArgs.Add (new PLString ("Levels"));
+                    displayArgs.Add (new PLDouble (5)); // 5 equally spaced levels
+                }
+
+
+
                 for (int i=0; i<displayArgs.Count; i++)
                 {
                     string arg = (displayArgs [i] as PLString).Data;

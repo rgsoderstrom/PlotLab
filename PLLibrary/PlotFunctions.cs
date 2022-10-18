@@ -272,7 +272,7 @@ namespace FunctionLibrary
 
         //******************************************************************************************
 
-        // Plot a list of 3D points. more than one will be connected line, one will be a single point
+        // Plot a list of 3D points. more than one will be connected line, one will be a single point ----- FIX
 
         /// <summary>
         /// Plot1 - called with a list of 3D points to be drawn
@@ -297,17 +297,64 @@ namespace FunctionLibrary
 
             if (pts.Count > 1)
             {
-                Polyline3D pl3 = new Polyline3D (pts);
-                vo = pl3;
-                pl3.PolylineView.Color = (dp.color as SolidColorBrush).Color;
-                pl3.PolylineView.Thickness = dp.lineWidth;
+                if (dp.pointStyle == PointView.DrawingStyle.None)
+                {
+                    Polyline3D pl3;
 
+                    switch (dp.lineStyle)
+                    {
+                        case LineView.DrawingStyle.None:
+                        case LineView.DrawingStyle.Solid:
+                        {
+                            pl3 = new Polyline3D (pts);
+                        }
+                        break;
+
+                        case LineView.DrawingStyle.Dots:
+                        {
+                            pl3 = new Polyline3D (CommonMath.Interpolation.Linear (pts, 32));
+                            pl3.PolylineView.Decimation = 8; 
+                        }
+                        break;
+
+                        case LineView.DrawingStyle.Dashes:
+                        {
+                            pl3 = new Polyline3D (CommonMath.Interpolation.Linear (pts, 32));
+                            pl3.PolylineView.Decimation = 4; 
+                        }
+                        break;
+
+                        case LineView.DrawingStyle.LongDashes:
+                        {
+                            pl3 = new Polyline3D (CommonMath.Interpolation.Linear (pts, 8));
+                            pl3.PolylineView.Decimation = 2; 
+                        }
+                        break;
+
+                        default:
+                            pl3 = new Polyline3D (pts);
+                            break;
+                    }
+
+                    pl3.PolylineView.Thickness = dp.lineWidth;
+                    pl3.PolylineView.Color = dp.color.Color;
+                    vo = pl3;
+                }
+
+                else // draw as points
+                {
+                    PointCloud3D pc = new PointCloud3D (pts);
+                    vo = pc;
+                    pc.PointView.Color = (dp.color as SolidColorBrush).Color;
+                    pc.PointView.Diameter = 2 * dp.radius;
+                }
+                
                 //pv.ArrowEnds = Petzold.Media2D.ArrowEnds.End;
                 //pv.ArrowLength = 5;
                 //pv.Decimation = 1;
             }
 
-            else
+            else // single point
             { 
                 PlottedPoint3D pp = new PlottedPoint3D (pts [0]);
                 vo = pp;
@@ -346,7 +393,7 @@ namespace FunctionLibrary
                     else
                     {
                         for (int i=0; i<m1.Rows; i++)
-                            pts.Add (new Point (m1 [i, 0], m2 [i, i]));
+                            pts.Add (new Point (m1 [i, 0], m2 [i, 0]));
                     }
                 }
 

@@ -13,3 +13,4 @@ addpath ('C:\Users\rgsod\Documents\Visual Studio 2019\Projects\PlotLab\Examples\
 
 addpath ('C:\Users\rgsod\Documents\Visual Studio 2019\Projects\PlotLab\Examples\Utils');
 
+cd C:\Users\rgsod\Documents\FreeMat\eigenchris\TFB_MetricTensors
