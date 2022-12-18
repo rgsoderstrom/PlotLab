@@ -1,0 +1,34 @@
+﻿<Window x:Class="utHelpWindow3.HelpWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:utHelpWindow3"
+        mc:Ignorable="d"
+        Title="Help Window" Height="450" Width="900" Loaded="Window_Loaded">
+    <Grid HorizontalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+
+        <TreeView Grid.Column="0" Margin="10,10,0,10" Padding="0,0,20,0" FontSize="16" x:Name="TreeView" BorderBrush="Black" BorderThickness="1"></TreeView>
+
+        <Border BorderBrush="Black" BorderThickness="1" Grid.Column="1" Margin="10">
+            <ScrollViewer Name="HelpTextScroller" HorizontalScrollBarVisibility="Auto">
+                <TextBlock Name="HelpTextBlock" FontSize="16" Padding="5" TextWrapping="Wrap"/>
+            </ScrollViewer>
+        </Border>
+
+        <Border BorderBrush="Black" BorderThickness="1" Grid.Column="2" Margin="0,10,10,10" Padding="10">
+            <StackPanel Orientation="Vertical">
+                <Button Name="HelpTextClearButton" Margin="10" Click="HelpTextClearButton_Click" MinWidth="60" FontSize="16" IsEnabled="False">Clear Help Text</Button>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

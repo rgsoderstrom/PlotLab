@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- 
+    MathFunctions.xml
+      
+      Note: the code that reads these files has very little error checking
+-->
+
+<HelpTree>
+
+  <HelpTopic SearchKey="">
+    <Header>Math Functions</Header>
+
+    <Content>
+      <Title>Built-in Math Functions</Title>
+      
+      <Text>
+        Library of built-in math functions
+      </Text>
+    </Content>
+
+    <SubTopics>
+      <SubTopic SearchKey="linspace"/>
+      <SubTopic SearchKey="zeroes"/>
+      <SubTopic SearchKey="ones"/>
+      <SubTopic SearchKey="sin"/>
+      <SubTopic SearchKey="cos"/>
+      <SubTopic SearchKey="tan"/>
+      <SubTopic SearchKey="cross"/>
+    </SubTopics>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="linspace">
+    <Header>linspace</Header>
+
+    <Content>
+      <Title>Generate a vector of evenly spaced numbers</Title>
+
+      <Text>
+        y = linspace (start, stop, count);
+            Returns a row vector of linearly spaced values. "Count" argument must be 2 or greater
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="zeroes">
+    <Header>zeros</Header>
+
+    <Content>
+      <Title>Generate a vector or matrix of zeros</Title>
+
+      <Text>
+        y = zeros (M);
+            arg M is an integer. y is an M x M matrix of zeros
+        y = zeros (M, N);
+            args M and N are integers. y is an M x N matrix of zeros
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="ones">
+    <Header>ones</Header>
+
+    <Content>
+      <Title>Generate a vector or matrix of ones</Title>
+
+      <Text>
+        y = ones (M);
+            arg M is an integer. y is an M x M matrix of ones
+        y = ones (M, N);
+            args M and N are integers. y is an M x N matrix of ones
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="sin">
+    <Header>sin</Header>
+
+    <Content>
+      <Title>returns sine of the input arg</Title>
+
+      <Text>
+        y = sin (x);
+            arg x is in radians. Can be a single number, a vector or a matrix
+      </Text>
+      
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="cos">
+    <Header>cos</Header>
+
+    <Content>
+      <Title>returns cosine of the input arg</Title>
+
+      <Text>
+        y = cos (x);
+            arg x is in radians. Can be a single number, a vector or a matrix
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="tan">
+    <Header>tan</Header>
+
+    <Content>
+      <Title>returns tangent of the input arg</Title>
+
+      <Text>
+        y = tan (x);
+        arg x is in radians. Can be a single number, a vector or a matrix
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="cross">
+    <Header>cross product</Header>
+
+    <Content>
+      <Title>returns cross product of two vectors</Title>
+
+      <Text>
+        v3 = cross (v1, v2);
+           v1 and v2 must both be column vectors of length 2 or 3
+      </Text>
+    </Content>
+  </HelpTopic>
+</HelpTree>
+
+
