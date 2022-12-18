@@ -1,19 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
-<!-- Comment 1 -->
+<!-- 
+  Help plotting points and lines in 2D and 3D space 
+-->
 
-<HelpTree Subject="General Plotting" SearchKey="plotting">
+<HelpTree Subject="General Plotting" SearchKey="ZzZzZ">
 
   <!--********************************************************************-->
   
   <!-- first node will be root of this HelpTree -->
   
-  <HelpTopic Subject="Plotting points and lines" SearchKey="plot">
-
-    <!-- Comment 2 -->
-
+  <HelpTopic Subject="Plotting points and lines" SearchKey="QqQqQplot">
     <Content>
-      <Line>"Plotting 2D or 3D points or lines."</Line>
+        Plotting 2D or 3D points or lines.
     </Content>
 
     <SubTopics>
@@ -26,43 +25,35 @@
 
   <!-- ********************************************************************-->
 
-  <HelpTopic Subject="plotting one or more 2D points" SearchKey="plot2dPoints">
-
+  <HelpTopic Subject="Plotting 2D points" SearchKey="plot2dPoints">
     <Content>
-      <Line>"plot (xCoords, yCoords, options);"</Line>
-      <Line>"  xCoords - single number or a row vector of x coords"</Line>
-      <Line>"  yCoords - single number or a row vector of y coords"</Line>
-      <Line>"  options - specify the color, size and type of symbol"</Line>
-      <Line>"  "</Line>
-      <Line>"plot (column vector, column vector, options);"</Line>
-      <Line>"  "</Line>
-      <Line>"plot (matrix, options);"</Line>
+        plot (xCoords, yCoords, options);
+              xCoords - single number or a row vector of x coords
+              yCoords - single number or a row vector of y coord
+              options - specify the color, size and type of symbol"
 
+        plot (column vector, column vector, options);
+
+        plot (matrix, options);
     </Content>
 
     <SubTopics>
-      <SubTopic Subject="2D point options"  SearchKey="plotPoints2d"/>
-    </SubTopics>
-    
+      <SubTopic Subject="Colors"  SearchKey="2dPointColors"/>
+      <SubTopic Subject="Symbols" SearchKey="2dPointSymbols"/>
+    </SubTopics>    
   </HelpTopic>
 
   <!-- ******************************************************************** -->
 
-
-
-
-  <!-- ******************************************************************** -->
-
-  <HelpTopic Subject="plotting 2D lines" SearchKey="plot2dLines">
-
+  <HelpTopic Subject="Plotting 2D lines" SearchKey="plot2dLines">
     <Content>
-      <Line>"plot (xCoordinates, yCoordinates, options);"</Line>
-      <Line>"   where \"options\" specify the color, size and type of line"</Line>
+      plot (xCoordinates, yCoordinates, options);
+        where "options" specify the color, size and type of line
     </Content>
 
     <SubTopics>
-      <SubTopic Subject="Available colors 2"  SearchKey ="plotLines2d_colors"/>
-      <SubTopic Subject="Available symbols 2" SearchKey ="plotLines2d_symbols"/>
+      <SubTopic Subject="Colors"  SearchKey ="2dLineColors"/>
+      <SubTopic Subject="Symbols" SearchKey ="2dLineSymbols"/>
     </SubTopics>
     
   </HelpTopic>
@@ -70,129 +61,104 @@
 
   <!-- ******************************************************************** -->
 
-  <HelpTopic Subject="plotting one or more 3D points" SearchKey="plot3dPoints">
-
+  <HelpTopic Subject="Plotting 3D points" SearchKey="plot3dPoints">
     <Content>
-      <Line>"plot (xCoordinates, yCoordinates, zCoordinates, options);"</Line>
-      <Line>"  xCoordinates - single number or a vector of x coords"</Line>
-      <Line>"  yCoordinates - single number or a vector of y coords"</Line>
-      <Line>"  zCoordinates - single number or a vector of z coords"</Line>
-      <Line>"  options - specify the color, size and type of symbol"</Line>
+      plot (xCoordinates, yCoordinates, zCoordinates, options);
+        xCoordinates - single number or a vector of x coords
+        yCoordinates - single number or a vector of y coords
+        zCoordinates - single number or a vector of z coords
+        options - specify the color, size and type of symbol
     </Content>
 
     <SubTopics>
-      <SubTopic Subject="Available colors 3"  SearchKey ="plotPoints3d_colors"/>
-      <SubTopic Subject="Available symbols 3" SearchKey ="plotPoints3d_symbols"/>
+      <SubTopic SearchKey ="3dPointColors"/>
+      <SubTopic SearchKey ="3dPointSymbols"/>
     </SubTopics>
 
   </HelpTopic>
 
   <!-- ******************************************************************** -->
 
-  <HelpTopic Subject="plotting a 3D line" SearchKey="plot3dLines">
+  <HelpTopic Subject="Plotting 3D lines" SearchKey="plot3dLines">
 
     <Content>
-      <Line>"plot (xCoordinates, yCoordinates, zCoordinates, options);"</Line>
-      <Line>"   where \"options\" specify the color, size and type of line"</Line>
+      plot (xCoordinates, yCoordinates, zCoordinates, options);
+        where "options" specify the color, size and type of line
     </Content>
 
     <SubTopics>
-      <SubTopic Subject="Available colors 4"  SearchKey ="plotLines3d_colors"/>
-      <SubTopic Subject="Available symbols 4" SearchKey ="plotLines3d_symbols"/>
+      <SubTopic SearchKey ="3dLineColors"/>
+      <SubTopic SearchKey ="3dLineSymbols"/>
     </SubTopics>
 
   </HelpTopic>
 
   <!-- ******************************************************************** -->
 
-  <HelpTopic Subject="selecting plot 2d point symbols" SearchKey="plotPoints2d_symbols">
-
+  <HelpTopic Subject="Plot 2D point symbols" SearchKey="2dPointSymbols">
     <Content>
-      <Line>"aaaaaaaaaaaa"</Line>
+        aaaaaaaaaaaa
+        bbbbbb
+        cccccccc
     </Content>
-
   </HelpTopic>
 
 
   <!-- ******************************************************************** -->
 
-  <HelpTopic Subject="selecting plot 2d point colors" SearchKey="plotPoints2d_colors">
-
+  <HelpTopic Subject="Plot 2D point colors" SearchKey="2dPointColors">
     <Content>
-      <Line>"bbbbbb"</Line>
+      bbbbbb
     </Content>
-
-    <SubTopics>
-      <Subtopic Subject="tangent function" SearchKey="sin"/>
-    </SubTopics>
   </HelpTopic>
-
 
   <!-- ******************************************************************** -->
 
-  <HelpTopic Subject="selecting plot 2d line symbols" SearchKey="plotLines2d_symbols">
-
+  <HelpTopic Subject="Plot 2D line symbols" SearchKey="2dLineSymbols">
     <Content>
-      <Line>"ccccccccccc"</Line>
+      ccccccccccc
     </Content>
-
   </HelpTopic>
-
 
   <!-- ******************************************************************** -->
 
-  <HelpTopic Subject="selecting plot 2d line colors" SearchKey="plotLines2d_colors">
-
+  <HelpTopic Subject="Plot 2D line colors" SearchKey="2dLineColors">
     <Content>
-      <Line>"dddddddddddd"</Line>
+      dddddddddddd
     </Content>
-
   </HelpTopic>
-
 
   <!-- ******************************************************************** -->
 
-  <HelpTopic Subject="selecting plot 3d point symbols" SearchKey="plotPoints3d_symbols">
-
+  <HelpTopic Subject="Plot 3D point symbols" SearchKey="3dPointSymbols">
     <Content>
-      <Line>"eeeeeeeeeeeeee"</Line>
+      eeeeeeeeeeeeee
     </Content>
-
   </HelpTopic>
-
 
   <!-- ******************************************************************** -->
 
-  <HelpTopic Subject="selecting plot 3d point colors" SearchKey="plotPoints3d_colors">
-
+  <HelpTopic Subject="Plot 3D point colors" SearchKey="3dPointColors">
     <Content>
-      <Line>"fffffffffff"</Line>
+      fffffffffff
     </Content>
-
   </HelpTopic>
-
 
   <!-- ******************************************************************** -->
 
-  <HelpTopic Subject="selecting plot 3d line symbols" SearchKey="plotLines3d_symbols">
-
+  <HelpTopic Subject="Plot 3D line symbols" SearchKey="3dLineSymbols">
     <Content>
-      <Line>"ggggggggggg"</Line>
+      ggggggggggg
     </Content>
-
   </HelpTopic>
-
 
   <!-- ******************************************************************** -->
 
-  <HelpTopic Subject="selecting plot 3d line colors" SearchKey="plotLines3d_colors">
-
+  <HelpTopic Subject="Plot 3D line colors" SearchKey="3dLineColors">
     <Content>
-      <Line>"hhhhhhhhhhhh"</Line>
+      hhhhhhhhhhhh
     </Content>
-
   </HelpTopic>
-
 </HelpTree>
 
 

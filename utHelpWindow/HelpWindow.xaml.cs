@@ -29,6 +29,10 @@ namespace utHelpWindow
             InitializeComponent ();
         }
 
+        // See:
+        // https://stackoverflow.com/questions/2820384/reading-embedded-xml-file-c-sharp
+        // to embed .xml into .exe
+
         List<string> listOfHelpTextFiles = new List<string> ()
         {
             @"C:\Users\rgsod\Documents\Visual Studio 2022\Projects\PlotLab\utHelpWindow\HelpTextFiles\HelpTreeText1.xml",

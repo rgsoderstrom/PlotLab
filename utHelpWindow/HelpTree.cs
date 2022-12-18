@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Collections.Generic;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Linq;
 using System.Text;
 using System.Xml;
@@ -15,16 +16,7 @@ namespace utHelpWindow
         // find a HelpTreeNode from its SearchKey
         static public Dictionary<string, HelpTreeNode> HelpFromSearchKey = new Dictionary<string, HelpTreeNode> ();
 
-
-        //static readonly TextBox? HelpTextPane;
-
-         
-
-
-
-
         //************************************************************************************
-
         //
         // Instance variables
         //
@@ -67,7 +59,7 @@ namespace utHelpWindow
             // read top-level attributes
             //
             if (top.Attributes == null)
-                throw new Exception ("Top level \"HelpTree\" node must have Subject and SearchKey attributes");
+                throw new Exception ("AAA Top level \"HelpTree\" node must have Subject and SearchKey attributes");
 
             foreach (XmlAttribute attr in top.Attributes)
             {
@@ -89,8 +81,8 @@ namespace utHelpWindow
                 }
             }
 
-            if (treeSearchKey == null || treeSubject == null)
-                throw new Exception ("Top level \"HelpTree\" node must have Subject and SearchKey attributes");
+        //    if (treeSearchKey == null || treeSubject == null)
+         //       throw new Exception ("BBB Top level \"HelpTree\" node must have Subject and SearchKey attributes");
 
             ReadFileIntoNodeList (top);
             AddNodesToDictionarys ();
@@ -98,9 +90,9 @@ namespace utHelpWindow
 
         //********************************************************************************************
 
-        TextBox? HelpTextPane;
+        TextBlock? HelpTextPane;
 
-        public TreeViewItem BuildTreeView (TextBox helpTextPane)
+        public TreeViewItem BuildTreeView (TextBlock helpTextPane)
         {
             HelpTextPane = helpTextPane;
 
@@ -143,15 +135,20 @@ namespace utHelpWindow
                 {
                     if (htn.Subject != null)
                     {
-                        HelpTextPane.AppendText (htn.Subject + '\n');
-                        string underline = new string ('-', htn.Subject.Length);
-                        HelpTextPane.AppendText (underline + '\n');
+                        Run run = new Run (htn.Subject + "\r\n");
+                        run.FontWeight = FontWeights.SemiBold;
+                        run.FontSize = 16;
+                        run.TextDecorations.Add (TextDecorations.Underline);
+                        HelpTextPane.Inlines.Add (run);
                     }
 
-                    foreach (string str in htn.Content)
+                    for (int i=0; i<htn.Content.Count; i++)
                     {
+                        string str = htn.Content [i];
                         string str2 = str.Substring (1, str.Length - 2);
-                        HelpTextPane.AppendText (str2 + '\n');
+                        Run run = new Run (str2 + "\r\n");
+                        run.FontSize = i == 0 ? 16 : 14;
+                        HelpTextPane.Inlines.Add (run);
                     }
                 }
             }

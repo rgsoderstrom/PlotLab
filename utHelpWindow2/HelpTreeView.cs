@@ -3,16 +3,22 @@ using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
+using System.Windows;
 
 namespace utHelpWindow2
 {
     public class HelpTreeView : TreeView
     {
-        public TextBox? HelpTextPane;
+        public TextBlock?     HelpTextPane;
+        private Button?       ClearButton;
+        private ScrollViewer? HelpTextScroller;
 
-        public void Fill (List<HelpTreeNodeList> allHelpLists, TextBox helpContentTextBox)
+        public void Fill (List<HelpTreeNodeList> allHelpLists, TextBlock helpContentTextBlock, Button clearButton, ScrollViewer scroll)
         {
-            HelpTextPane = helpContentTextBox;
+            HelpTextPane     = helpContentTextBlock;
+            ClearButton      = clearButton;
+            HelpTextScroller = scroll;
 
             foreach (HelpTreeNodeList htl in allHelpLists)
             {
@@ -22,7 +28,7 @@ namespace utHelpWindow2
                 tvi.Header = htl.Subject;
                 tvi.Tag = htl [0];
                 tvi.Selected += Tvi_Selected;
-                tvi.Expanded += Tvi_Selected;
+                //tvi.Expanded += Tvi_Selected;
 
                 //
                 // helpTreeNodeList contains all the nodes in the file. 
@@ -56,27 +62,44 @@ namespace utHelpWindow2
             {
                 if (tvi.Tag != null)
                 {
-                    HelpTreeNode? ht = tvi.Tag as HelpTreeNode;
+                    if (ClearButton != null)
+                        ClearButton.IsEnabled = true;
 
-                    if (ht != null && HelpTextPane != null)
+                    HelpTreeNode? htn = tvi.Tag as HelpTreeNode;
+
+                    if (htn != null && HelpTextPane != null)
                     {
-                        HelpTextPane.Text = "";
-
-                        if (ht.Subject != null)
+                        if (htn.Subject != null)
                         {
-                            HelpTextPane.AppendText (ht.Subject + '\n');
-                            string underline = new string ('-', ht.Subject.Length);
-                            HelpTextPane.AppendText (underline + '\n');
+                            Run run = new Run (htn.Subject + "\r\n");
+                            run.FontWeight = FontWeights.SemiBold;
+                            run.FontSize = 16;
+                            run.TextDecorations.Add (TextDecorations.Underline);
+                            HelpTextPane.Inlines.Add (run);
                         }
 
-                        foreach (string str in ht.Content)
+                        for (int i = 0; i<htn.Content.Count; i++)
                         {
+                            string str = htn.Content [i];
                             string str2 = str.Substring (1, str.Length - 2);
-                            HelpTextPane.AppendText (str2 + '\n');
+                            Run run = new Run (str2 + "\r\n");
+                            run.FontSize = i == 0 ? 16 : 14;
+                            HelpTextPane.Inlines.Add (run);
                         }
+
+                        if (HelpTextScroller != null)
+                            HelpTextScroller.ScrollToBottom ();
                     }
                 }
             }
+        }
+
+        //*************************************************************************************
+
+        public void ClearHelpText ()
+        {
+            if (HelpTextPane != null) HelpTextPane.Inlines.Clear ();
+            if (ClearButton != null)  ClearButton.IsEnabled = false;
         }
     }
 }

@@ -7,6 +7,14 @@ using System.Xml;
 
 using Common;
 
+//
+// HelpTreeNode - contains all the information for one node
+//                  - subject
+//                  - search key
+//                  - content
+//                  - child links
+//
+
 namespace utHelpWindow2
 {
     public class HelpTreeNode
@@ -59,6 +67,11 @@ namespace utHelpWindow2
                 SearchKey = key;
             }
 
+            public SubtopicLink (string key)
+            {
+                SearchKey = key;
+            }
+
             public override string ToString ()
             {
                 string sub = (Subject == null) ? "???" : Subject;
@@ -80,7 +93,7 @@ namespace utHelpWindow2
             node.Header    = Subject;
             node.Tag       = this;
             node.Selected += select;
-            node.Expanded += select;
+            //node.Expanded += select;
 
             for (int i = 0; i<childLinks.Count; i++)
             {
@@ -161,7 +174,10 @@ namespace utHelpWindow2
                     case "Content":
                         foreach (XmlNode textNode in childNode.ChildNodes)
                         {
-                            Content.Add (textNode.InnerText);
+                            string? formatted = FormatContent (textNode.InnerText);
+
+                            if (formatted != null) 
+                                Content.Add (formatted);
                         }
 
                         break;
@@ -190,10 +206,13 @@ namespace utHelpWindow2
                                     }
                                 }
 
-                                if (subj == null || key == null)
-                                    throw new Exception ("Incomplete subtopic link in " + Subject);
+                                if (key == null)
+                                    throw new Exception ("Subtopic has no search key " + Subject);
 
-                                childLinks.Add (new SubtopicLink (subj, key));
+                                if (subj == null)
+                                    childLinks.Add (new SubtopicLink (key));
+                                else
+                                   childLinks.Add (new SubtopicLink (subj, key));
                             }
                         }
                         break;
@@ -216,6 +235,24 @@ namespace utHelpWindow2
                 string str = (index == -1) ? fileName : fileName.Remove (0, index + 1); // file name w/o path
                 EventLog.WriteLine ("Error in file " + str + ": " + ex.Message);
             }
+        }
+
+        //*****************************************************************************
+        //
+        // For now, formatting just removes first line
+        //
+        private string? FormatContent (string str)
+        {
+            string? formatted = "";
+
+            string [] lines = str.Split ("\r\n", StringSplitOptions.None);
+
+            for (int i = 1; i<lines.Length; i++)
+            {
+                formatted += lines [i] + "\n";
+            }
+
+            return formatted;
         }
 
         //*****************************************************************************

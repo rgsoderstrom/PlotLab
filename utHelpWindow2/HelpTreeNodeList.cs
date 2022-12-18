@@ -6,6 +6,9 @@ using System.Xml;
 
 using Common;
 
+//
+// HelpTreeNodeList - a list of HelpTree nodes
+//
 namespace utHelpWindow2
 {
     public class HelpTreeNodeList : List<HelpTreeNode>
@@ -65,8 +68,8 @@ namespace utHelpWindow2
                 }
             }
 
-            if (SearchKey == null || Subject == null)
-                throw new Exception ("Top level \"HelpTree\" node must have Subject and SearchKey attributes");
+            if (Subject == null)
+                throw new Exception ("CCC Top level \"HelpTree\" node must have Subject attribute");
 
             //
             // Top-level nodes for remainder of file are either "HelpTopic" or comment nodes
@@ -97,7 +100,7 @@ namespace utHelpWindow2
         public override string ToString ()
         {
             string str = "Tree Subject: " + Subject;
-            str += ", TreeSearchKey: " + SearchKey;
+            //str += ", TreeSearchKey: " + SearchKey;
 
             string divider = "\n" + new string ('=', str.Length) + "\n";
             str += divider;

@@ -6,12 +6,15 @@
 
   <!-- first node will be root of this HelpTree -->
 
-  <HelpTopic Subject="math" SearchKey="math">
+  <HelpTopic Subject="Math functions" SearchKey="math">
     <Content>
-      <Line>"Math functions"</Line>
+      <Line>"Library of built-in math functions"</Line>
     </Content>
 
     <SubTopics>
+      <SubTopic Subject="linspace" SearchKey="linspace"/>
+      <SubTopic Subject="zeros" SearchKey="zeroes"/>
+      <SubTopic Subject="ones" SearchKey="ones"/>
       <SubTopic Subject="sin" SearchKey="sin"/>
       <SubTopic Subject="cos" SearchKey="cos"/>
       <SubTopic Subject="tan" SearchKey="tan"/>
@@ -20,11 +23,45 @@
 
   <!-- ********************************************************************-->
 
+  <HelpTopic Subject="linspace function" SearchKey="linspace">
+
+    <Content>
+      <Line>"y = linspace (start, stop, count);"</Line>
+      <Line>"  Returns a row vector of linearly spaced values. "Count" argument must be 2 or greater"</Line>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic Subject="zeros" SearchKey="zeroes">
+
+    <Content>
+      <Line>"y = zeros (M);"</Line>
+      <Line>"  arg M is an integer. y is an M x M matrix of zeros"</Line>
+      <Line>"y = zeros (M, N);"</Line>
+      <Line>"  args M and N are integers. y is an M x N matrix of zeros"</Line>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic Subject="ones" SearchKey="ones">
+
+    <Content>
+      <Line>"y = ones (M);"</Line>
+      <Line>"  arg M is an integer. y is an M x M matrix of ones"</Line>
+      <Line>"y = ones (M, N);"</Line>
+      <Line>"  args M and N are integers. y is an M x N matrix of ones"</Line>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
   <HelpTopic Subject="sin function" SearchKey="sin">
 
     <Content>
       <Line>"y = sin (x);"</Line>
-      <Line>"  arg x is in radians"</Line>
+      <Line>"  arg x is in radians. Can be a single number, a vector or a matrix"</Line>
     </Content>
   </HelpTopic>
 
@@ -33,7 +70,7 @@
   <HelpTopic Subject="cos function" SearchKey="cos">
     <Content>
       <Line>"y = cos (x);"</Line>
-      <Line>"  arg x is in radians"</Line>
+      <Line>"  arg x is in radians. Can be a single number, a vector or a matrix"</Line>
     </Content>
   </HelpTopic>
 
@@ -42,7 +79,7 @@
   <HelpTopic Subject="tan function" SearchKey="tan">
     <Content>
       <Line>"y = tan (x);"</Line>
-      <Line>"  arg x is in radians"</Line>
+      <Line>"  arg x is in radians. Can be a single number, a vector or a matrix"</Line>
     </Content>
   </HelpTopic>
 
