@@ -31,6 +31,9 @@ namespace FrontEnd
             Workspace.Print = Print;
             TextPane.Focus ();
 
+            Print ("path");
+            ReturnKeyHandler ();
+
             try
             {
                 Print ("startup");
@@ -447,7 +450,7 @@ namespace FrontEnd
 
         private void HelpWindow_Click (object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start (@"C:\Users\rgsod\Documents\Visual Studio 2022\Projects\PlotLab\utHelpWindow\bin\Debug\net5.0-windows\utHelpWindow.exe");
+            System.Diagnostics.Process.Start (@"C:\Users\rgsod\Documents\Visual Studio 2022\Projects\PlotLab\utHelpWindow3\bin\Debug\utHelpWindow3.exe");
         }
 
         //****************************************************************************************************

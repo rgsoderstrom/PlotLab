@@ -25,8 +25,8 @@ namespace utHelpWindow3
 
         List<string> helpTextFiles = new List<string> ()
         {
-            @"C:\Users\rgsod\Documents\Visual Studio 2022\Projects\PlotLab\utHelpWindow3\HelpTextFiles\GenaralPlotting.xml",
-            @"C:\Users\rgsod\Documents\Visual Studio 2022\Projects\PlotLab\utHelpWindow3\HelpTextFiles\MathFunctions.xml",
+            "GeneralPlotting.xml",
+            "MathFunctions.xml",
         };
 
         public HelpWindow ()
@@ -36,21 +36,29 @@ namespace utHelpWindow3
 
         private void Window_Loaded (object sender, RoutedEventArgs e)
         {
-            HelpTreeViewItem.textPane = HelpTextBlock;
+            HelpTreeViewItem.textPane     = HelpTextBlock;
             HelpTreeViewItem.scrollViewer = HelpTextScroller;
-            HelpTreeViewItem.clearButton = HelpTextClearButton;
+            HelpTreeViewItem.clearButton  = HelpTextClearButton;
 
-            List<HelpList> lst = new List<HelpList> ();
+            try
+            {
+                List<HelpList> lst = new List<HelpList> ();
 
-            foreach (string filename in helpTextFiles)
-                lst.Add (new HelpList (filename));
+                foreach (string filename in helpTextFiles)
+                    lst.Add (new HelpList (filename));
 
-            foreach (HelpList hl in lst)
-                foreach (HelpTreeViewItem htvi in hl)
-                    htvi.LookUpSubtopics ();
+                foreach (HelpList hl in lst)
+                    foreach (HelpTreeViewItem htvi in hl)
+                        htvi.LookUpSubtopics ();
 
-            foreach (HelpList hl in lst)
-                TreeView.Items.Add (hl [0]);
+                foreach (HelpList hl in lst)
+                    TreeView.Items.Add (hl [0]);
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine ("Exception in WindowLoaded: " + ex.Message);
+            }
         }
 
         private void HelpTextClearButton_Click (object sender, RoutedEventArgs e)

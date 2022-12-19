@@ -356,10 +356,10 @@ namespace FunctionLibrary
 
             else // single point
             { 
-                PlottedPoint3D pp = new PlottedPoint3D (pts [0]);
+                PointMarker pp = new Sphere (pts [0]);
                 vo = pp;
                
-                pp.PointView.Color = (dp.color as SolidColorBrush).Color;
+                pp.Color = (dp.color as SolidColorBrush).Color;
                 pp.Radius = dp.radius;
             }
 

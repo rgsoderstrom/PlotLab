@@ -40,7 +40,7 @@
 
       <Text>
         y = linspace (start, stop, count);
-            Returns a row vector of linearly spaced values. "Count" argument must be 2 or greater
+            Returns a row vector of equally spaced values. "Count" argument must be 2 or greater
       </Text>
     </Content>
   </HelpTopic>

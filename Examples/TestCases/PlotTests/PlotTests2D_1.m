@@ -1,8 +1,11 @@
 
 % PlotTests2D_1.m
 
+x = [1 2 3 4];
+y = x .* x;
+plot (x, y, 'r', 'Size', 0.3, 'Thickness', 5);
 
-% plot (2, 3, 'r', 'Size', 0.3, 'Thickness', 5);
+
 % plot ([3;1], 'Size', 0.15, 'Thickness', 6);
 % plot (1, 2, 'g*', 'Size', 0.2, 'Thickness', 7);
 % axis ([0 4 0 5]);

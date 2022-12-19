@@ -101,8 +101,8 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Resource Include="HelpTextFiles\GenaralPlotting.xml" />
-    <Resource Include="HelpTextFiles\MathFunctions.xml" />
+    <EmbeddedResource Include="HelpTextFiles\GeneralPlotting.xml" />
+    <EmbeddedResource Include="HelpTextFiles\MathFunctions.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
