@@ -450,7 +450,8 @@ namespace FrontEnd
 
         private void HelpWindow_Click (object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start (@"C:\Users\rgsod\Documents\Visual Studio 2022\Projects\PlotLab\utHelpWindow3\bin\Debug\utHelpWindow3.exe");
+            PLHelpWindow.HelpWindow win = new PLHelpWindow.HelpWindow ();
+            win.Show ();
         }
 
         //****************************************************************************************************

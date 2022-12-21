@@ -1,0 +1,282 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- 
+  GeneralPlotting.xml
+  
+    Note: the code that reads these files has very little error checking
+-->
+
+<HelpTree>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="GeneralPlotting"> 
+    <Header>General Plotting</Header>
+
+    <Content>
+      <Title>Plotting points and lines</Title>
+
+      <Text>
+          Plotting 2D or 3D points or lines.
+      </Text>
+    </Content>
+
+    <SubTopics>
+      <SubTopic SearchKey="plot2dLines"/>
+      <SubTopic SearchKey="plot2dPoints"/>
+      <SubTopic SearchKey="plot3dLines"/>
+      <SubTopic SearchKey="plot3dPoints"/>
+    </SubTopics>
+  </HelpTopic>
+
+
+  <!-- ******************************************************************** -->
+
+  <HelpTopic SearchKey="plot2dLines">
+    <Header>2D Lines</Header>
+
+    <Content>
+      <Title>Plotting 2D lines</Title>
+
+      <Text>
+        plot (xCoordinates, yCoordinates);
+           Where xCoordinates and yCoordinates can both be row or both be column vectors.
+           Solid line is drawn in default color
+          
+        plot (xCoords, yCoords, 'r', style, thickness);
+      </Text>
+    </Content>
+
+    <SubTopics>
+      <SubTopic SearchKey ="2dLineStyle"/>
+      <SubTopic SearchKey ="2dLineColors"/>
+      <SubTopic SearchKey ="2dLineThickness"/>
+    </SubTopics>
+
+  </HelpTopic>
+
+  <HelpTopic SearchKey="2dLineStyle">
+    <Header>Line Style</Header>
+
+    <Content>
+      <Title>Plot 2D line style</Title>
+
+      <Text>
+        Solid:       default 
+        Dashes:      '-'
+        Long Dashes: '--' 
+        Dots:        '.'
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <HelpTopic SearchKey="2dLineColors">
+    <Header>Colors</Header>
+
+    <Content>
+      <Title>Plot 2D line colors</Title>
+
+      <Text>
+        Color specified by a single character in quotes:
+          'r', 'o', 'y', 'g', 'b', 'k'
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <HelpTopic SearchKey="2dLineThickness">
+    <Header>Width</Header>
+
+    <Content>
+      <Title>Plot 2D line thickness</Title>
+
+      <Text>
+        either:
+          'Thickness', 1.5
+          'Width', 1.5
+      </Text>
+    </Content>
+  </HelpTopic>
+
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="plot2dPoints">
+    <Header>2D Points</Header>
+
+    <Content>
+      <Title>Plotting 2D points</Title>
+
+      <Text>  
+        plot (xCoords, yCoords, options);
+            xCoords - single number or a row vector of x coords
+            yCoords - single number or a row vector of y coord
+            options - specify the color, size and type of symbol. Symbol type is required.
+        
+        plot (column vector, column vector, options);
+        
+        plot (matrix, options);
+      </Text>
+    </Content>
+
+    <SubTopics>
+      <SubTopic SearchKey="2dPointSymbols"/>
+      <SubTopic SearchKey="2dPointColors"/>
+      <SubTopic SearchKey="2dPointThickness"/>
+    </SubTopics>
+  </HelpTopic>
+
+  <HelpTopic SearchKey="2dPointSymbols">
+    <Header>Symbols</Header>
+
+    <Content>
+      <Title>"Plot 2D point symbols</Title>
+
+      <Text>
+        Star: '*'
+        Plus: '+' 
+        x:    'x'
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <HelpTopic SearchKey="2dPointColors">
+    <Header>Colors</Header>
+
+    <Content>
+      <Title>Plot 2D point colors</Title>
+
+      <Text>
+        Color specified by a single character in quotes:
+          'r', 'o', 'y', 'g', 'b', 'k'
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <HelpTopic SearchKey="2dPointThickness">
+    <Header>Size</Header>
+
+    <Content>
+      <Title>Plot 2D point size</Title>
+
+      <Text>
+        'Size', 2.5, 
+      </Text>
+    </Content>
+  </HelpTopic>
+
+
+  <!-- ******************************************************************** -->
+
+  <HelpTopic SearchKey="plot3dLines">
+    <Header>3D Lines</Header>
+
+    <Content>
+      <Title>Plotting 3D lines</Title>
+
+      <Text>
+        plot (xCoordinates, yCoordinates, zCoordinates);
+           Where xCoordinates, yCoordinates and zCoordinates can all be row or all be column vectors.
+           Solid line is drawn in default color
+          
+        plot (xCoords, yCoords, zCoords, 'r', style, thickness);
+      </Text>
+    </Content>
+
+    <SubTopics>
+      <SubTopic SearchKey ="3dLineSymbols"/>
+      <SubTopic SearchKey ="3dLineColors"/>
+    </SubTopics>
+
+  </HelpTopic>
+
+  <HelpTopic SearchKey="3dLineSymbols">
+    <Header>Symbols</Header>
+
+    <Content>
+      <Title>Plot 3D line symbols</Title>
+
+      <Text>
+        Solid:       default 
+        Dashes:      '-'
+        Long Dashes: '--' 
+        Dots:        '.'
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <HelpTopic SearchKey="3dLineColors">
+    <Header>Colors</Header>
+
+    <Content>
+      <Title>Plot 3D line colors</Title>
+
+      <Text>
+        Color specified by a single character in quotes:
+          'r', 'o', 'y', 'g', 'b', 'k'
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ******************************************************************** -->
+
+  <HelpTopic SearchKey="plot3dPoints">
+    <Header>3D Points</Header>
+
+    <Content>
+      <Title>Plotting 3D points</Title>
+
+      <Text>
+        plot (xCoordinates, yCoordinates, zCoordinates, options);
+            xCoordinates - single number or a vector of x coords
+            yCoordinates - single number or a vector of y coords
+            zCoordinates - single number or a vector of z coords
+            options - specify the color, size and type of symbol
+      </Text>
+    </Content>
+
+    <SubTopics>
+      <SubTopic SearchKey ="3dPointSymbols"/>
+      <SubTopic SearchKey ="3dPointColors"/>
+      <SubTopic SearchKey ="3dPointSize"/>
+    </SubTopics>
+
+  </HelpTopic>
+
+  <HelpTopic SearchKey="3dPointSymbols">
+    <Header>Symbols</Header>
+
+    <Content>
+      <Title>Plot 3D point symbols</Title>
+
+      <Text>
+        Star: '*' (draws a sphere)
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <HelpTopic SearchKey="3dPointColors">
+    <Header>Colors</Header>
+
+    <Content>
+      <Title>Plot 3D point colors</Title>
+
+      <Text>
+        Color specified by a single character in quotes:
+          'r', 'o', 'y', 'g', 'b', 'k'
+      </Text>
+    </Content>
+  </HelpTopic>
+  
+  <HelpTopic SearchKey="3dPointSize">
+    <Header>Size</Header>
+
+    <Content>
+      <Title>Plot 3D point size</Title>
+
+      <Text>
+        'Size', 2.5, 
+      </Text>
+    </Content>
+  </HelpTopic>
+
+</HelpTree>
