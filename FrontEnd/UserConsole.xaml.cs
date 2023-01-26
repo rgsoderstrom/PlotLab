@@ -7,6 +7,8 @@ using System.Windows.Input;
 using Common;
 using PLCommon;
 using PLWorkspace;
+using static FrontEnd.Utils;
+using System.Net.NetworkInformation;
 
 namespace FrontEnd
 {
@@ -27,17 +29,15 @@ namespace FrontEnd
         private void Window_Loaded (object sender, RoutedEventArgs e)
         {
             Print ("PlotLab, Ver. 1\n");
-            Print (Utils.Prompt);
             Workspace.Print = Print;
             TextPane.Focus ();
 
-            Print ("path");
-            ReturnKeyHandler ();
-
             try
             {
-                Print ("startup");
-                ReturnKeyHandler ();
+                PLVariable ans = new PLNull ();
+                bool fp = false;
+                InputLineProcessor ip = new InputLineProcessor (userWorkspace, Print, ResumeScript_Button);
+                ip.ProcessOneStatement (ref ans, "startup", ref fp);
             }
 
             catch (Exception ex)

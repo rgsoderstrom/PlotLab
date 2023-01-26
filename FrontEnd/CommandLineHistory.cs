@@ -36,6 +36,9 @@ namespace FrontEnd
                 }
 
                 file.Close ();
+
+                NextBack = Newest;
+                NextFwd = NextBack + 2;
             }
 
             catch (Exception)
