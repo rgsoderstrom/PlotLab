@@ -203,6 +203,71 @@ namespace FunctionLibrary
 
             return ll;
         }
+
+
+        //*********************************************************************************************
+
+        // Utility to convert function args to a single Point3D
+
+        static private Point3D ExtractPoint3D (PLVariable arg)
+        {
+            double x = double.NaN, y = double.NaN, z = double.NaN;
+            
+            if (arg is PLList)
+            {
+                PLList lst = arg as PLList;
+
+                if (lst.Count != 3)
+                    throw new Exception ("Arg must be 3 coordinate numbers");
+
+                if (lst [0] is PLMatrix) {PLMatrix mx = (PLMatrix)lst [0]; x = mx [0, 0]; }
+                if (lst [0] is PLDouble) {PLDouble mx = (PLDouble)lst [0]; x = mx.Data; }
+                if (lst [1] is PLMatrix) {PLMatrix my = (PLMatrix)lst [1]; y = my [0, 0]; }
+                if (lst [1] is PLDouble) {PLDouble my = (PLDouble)lst [1]; y = my.Data; }
+                if (lst [2] is PLMatrix) {PLMatrix mz = (PLMatrix)lst [2]; z = mz [0, 0]; }
+                if (lst [2] is PLDouble) {PLDouble mz = (PLDouble)lst [2]; z = mz.Data; }
+
+                if (x == double.NaN || y == double.NaN || z == double.NaN)
+                    throw new Exception ("Arg must be 3 coordinate numbers");
+            }
+
+            else if (arg is PLMatrix)
+            {
+                PLMatrix mat = arg as PLMatrix;
+
+                if (mat.Rows == 1 && mat.Cols == 3)      { x = mat [0, 0]; y = mat [0, 1]; z = mat [0, 2]; }
+                else if (mat.Rows == 3 && mat.Cols == 1) { x = mat [0, 0]; y = mat [1, 0]; z = mat [2, 0]; }
+                else throw new Exception ("Center - arg must be 3 coordinate numbers");
+            }
+
+            else
+                throw new Exception ("CameraCenter - Unrecognized arg");
+
+            return new Point3D (x, y, z);
+        }
+
+        //*********************************************************************************************
+
+        static PLVariable CameraCenter (PLVariable arg)
+        {
+            if (CurrentFigure is Plot3D == false)
+                throw new Exception ("Figure is not a Plot3D");
+
+            (CurrentFigure as Plot3D).CenterOn (ExtractPoint3D (arg));
+            return new PLNull ();
+        }
+
+        //*********************************************************************************************
+
+        static PLVariable CameraPosition (PLVariable arg)
+        {
+            if (CurrentFigure is Plot3D == false)
+                throw new Exception ("Figure is not a Plot3D");
+
+            (CurrentFigure as Plot3D).CameraPosition (ExtractPoint3D (arg));
+            return new PLNull ();
+        }
+
     }
 }
 

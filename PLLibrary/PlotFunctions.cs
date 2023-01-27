@@ -44,6 +44,9 @@ namespace FunctionLibrary
                 {"figure",       Figure},
                 {"clf",          ClearFigure},
                 {"title",        Title},
+                {"PlotCenter",   CameraCenter},
+                {"CameraCenter", CameraCenter},
+                {"CameraPos",    CameraPosition},
             };
         }
 
