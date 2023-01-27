@@ -25,7 +25,7 @@ namespace FunctionLibrary
               //{"figure", Figure},
               //{"clf",    ClearFigure},
                 {"close",  CloseFigure},
-                {"hold",   Hold },
+                {"hold",   Hold},
             };
         }
 
@@ -171,13 +171,23 @@ namespace FunctionLibrary
                 // look for that id. if found make it the current figure
                 foreach (Window w in Figures)
                 {
+                    // see if "w" is a PlotFigure (i.e. not assigned to 2D or 3D yet)
                     PlotFigure pf = w as PlotFigure; if (pf != null) {if (pf.ID == requestedFigNumber) {found = true; CurrentFigure = pf; break;}}
 
-                    Plot2D p2 = w as Plot2D; if (p2 != null) {if (p2.ID == requestedFigNumber) { found = true; CurrentFigure = p2; break; } }
-                    Plot3D p3 = w as Plot3D; if (p3 != null) {if (p3.ID == requestedFigNumber) { found = true; CurrentFigure = p3; break; } }
+                    // see if it's a Plot2D
+                    Plot2D p2 = w as Plot2D; if (p2 != null) {if (p2.ID == requestedFigNumber) {found = true; CurrentFigure = p2; break;}}
+
+                    // or a Plot3D
+                    Plot3D p3 = w as Plot3D; if (p3 != null) {if (p3.ID == requestedFigNumber) {found = true; CurrentFigure = p3; break;}}
                 }
 
-                if (found == false) // not found, so make a new figure and assign that id                
+                if (found) // pull it to front
+                {
+                    (CurrentFigure as Window).Topmost = true;
+                    (CurrentFigure as Window).Topmost = false;
+                }
+
+                else // not found, so make a new figure and assign that id                
                 {
                     NewFigure ();
                     (CurrentFigure as Window).Title = "Figure " + requestedFigNumber.ToString ();
