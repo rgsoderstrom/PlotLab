@@ -268,6 +268,17 @@ namespace FunctionLibrary
             return new PLNull ();
         }
 
+        //*********************************************************************************************
+
+        static PLVariable CameraRelPosition (PLVariable arg)
+        {
+            if (CurrentFigure is Plot3D == false)
+                throw new Exception ("Figure is not a Plot3D");
+
+            (CurrentFigure as Plot3D).CameraRelPosition (ExtractPoint3D (arg));
+            return new PLNull ();
+        }
+
     }
 }
 

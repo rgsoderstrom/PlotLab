@@ -46,7 +46,8 @@ namespace FunctionLibrary
                 {"title",        Title},
                 {"PlotCenter",   CameraCenter},
                 {"CameraCenter", CameraCenter},
-                {"CameraPos",    CameraPosition},
+                {"CameraAbsPos", CameraPosition},
+                {"CameraRelPos", CameraRelPosition},
             };
         }
 
