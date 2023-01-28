@@ -37,6 +37,7 @@ namespace FrontEnd
                 {"clc",   Clc },
                 {"path",  Path},
                 {"addpath", AddPath},
+                {"help",    HelpWindow},
             };
         }
 
@@ -338,6 +339,27 @@ namespace FrontEnd
             }
 
             return copy;
+        }
+
+        //*********************************************************************************************
+
+        public static PLVariable HelpWindow (PLVariable _topic)
+        {
+            if ((_topic is PLString) && (_topic as PLString).Text != null && (_topic as PLString).Text.Length > 0)
+            {
+                string topic = (_topic as PLString).Text;
+
+                PLHelpWindow.HelpWindow win = new PLHelpWindow.HelpWindow (topic);
+                win.Show ();
+            }
+
+            else
+            {
+                PLHelpWindow.HelpWindow win = new PLHelpWindow.HelpWindow ();
+                win.Show ();
+            }
+
+            return new PLNull ();
         }
     }
 }

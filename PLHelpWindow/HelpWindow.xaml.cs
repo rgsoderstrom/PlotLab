@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using Common;
+
 namespace PLHelpWindow
 {
     public partial class HelpWindow : Window
@@ -21,12 +23,26 @@ namespace PLHelpWindow
         List<string> helpTextFiles = new List<string> ()
         {
             "GeneralPlotting.xml",
+            "PlotFigures.xml",
             "MathFunctions.xml",
         };
 
         public HelpWindow ()
         {
             InitializeComponent ();
+        }
+
+        string InitialTopic = null;
+
+        public HelpWindow (string topic)
+        {
+            InitializeComponent ();
+            InitialTopic = topic;
+        }
+
+        private void SearchFor (string str)
+        {
+            EventLog.WriteLine ("search for " + str);
         }
 
         private void Window_Loaded (object sender, RoutedEventArgs e)
@@ -42,17 +58,20 @@ namespace PLHelpWindow
                 foreach (string filename in helpTextFiles)
                     lst.Add (new HelpList (filename));
 
-                foreach (HelpList hl in lst)
-                    foreach (HelpTreeViewItem htvi in hl)
-                        htvi.LookUpSubtopics ();
+                //foreach (HelpList hl in lst)
+                //    foreach (HelpTreeViewItem htvi in hl)
+                //        htvi.LookUpSubtopics ();
 
                 foreach (HelpList hl in lst)
-                    TreeView.Items.Add (hl [0]);
+                    TreeView.Items.Add (hl.lst [0]);
+
+                if (InitialTopic != null)
+                    SearchFor (InitialTopic);
             }
 
             catch (Exception ex)
             {
-                Console.WriteLine ("Exception in WindowLoaded: " + ex.Message);
+                EventLog.WriteLine ("Exception in HelpWindow WindowLoaded: " + ex.Message);
             }
         }
 

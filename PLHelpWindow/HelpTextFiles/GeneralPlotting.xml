@@ -26,6 +26,7 @@
       <SubTopic SearchKey="plot2dPoints"/>
       <SubTopic SearchKey="plot3dLines"/>
       <SubTopic SearchKey="plot3dPoints"/>
+      <SubTopic SearchKey="camera3d"/>
     </SubTopics>
   </HelpTopic>
 
@@ -242,6 +243,8 @@
 
   </HelpTopic>
 
+  <!-- ******************************************************************** -->
+
   <HelpTopic SearchKey="3dPointSymbols">
     <Header>Symbols</Header>
 
@@ -253,6 +256,8 @@
       </Text>
     </Content>
   </HelpTopic>
+
+  <!-- ******************************************************************** -->
 
   <HelpTopic SearchKey="3dPointColors">
     <Header>Colors</Header>
@@ -267,6 +272,8 @@
     </Content>
   </HelpTopic>
   
+  <!-- ******************************************************************** -->
+
   <HelpTopic SearchKey="3dPointSize">
     <Header>Size</Header>
 
@@ -279,4 +286,73 @@
     </Content>
   </HelpTopic>
 
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="camera3d">
+    <Header>Camera 3D</Header>
+
+    <Content>
+      <Title>Camera Position and Orientation for 3D plots</Title>
+
+      <Text>
+        Specify camera poition and point it is looking at in 3D cartesian coordinates
+      </Text>
+    </Content>
+    
+    <SubTopics>
+      <SubTopic SearchKey ="cameraAbsPosition"/>
+      <SubTopic SearchKey ="cameraRelPosition"/>
+      <SubTopic SearchKey ="cameraCenter"/>
+    </SubTopics>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="cameraAbsPosition">
+    <Header>Position</Header>
+
+    <Content>
+      <Title>Camera Absolute Position</Title>
+
+      <Text>
+        CameraAbsPos (x, y, z);
+        CameraAbsPos (pos); % pos is a 3 element vector
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="cameraRelPosition">
+    <Header>Relative Position</Header>
+
+    <Content>
+      <Title>Camera Relative Position</Title>
+
+      <Text>
+        Camera position relative to Camera Center
+          CameraRelPos (x, y, z);
+          CameraRelPos (pos); % pos is a 3 element vector
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="cameraCenter">
+    <Header>Center</Header> 
+
+    <Content>
+      <Title>Camera Center</Title>
+
+      <Text>
+        The point in 3D space the camera rotates around and zooms towards or away from
+          CameraCenter (x, y, z);
+          CameraCenter (pos); % pos is a 3 element vector
+          PlotCenter (pos) % another name for this function
+      </Text>
+    </Content>
+  </HelpTopic>
+
+<!--*****************************************************************-->
 </HelpTree>

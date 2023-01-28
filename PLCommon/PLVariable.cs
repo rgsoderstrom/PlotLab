@@ -484,11 +484,13 @@ namespace PLCommon
             {
                 string text = Data;
 
-                if (text [0] == '\'')
-                    text = text.Remove (0, 1);
+                if (text.Length > 0)
+                    if (text [0] == '\'')
+                        text = text.Remove (0, 1);
 
-                if (text [text.Length - 1] == '\'')
-                    text = text.Remove (text.Length - 1, 1);
+                if (text.Length > 0)
+                    if (text [text.Length - 1] == '\'')
+                        text = text.Remove (text.Length - 1, 1);
 
                 return text;
             }

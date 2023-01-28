@@ -11,6 +11,8 @@ using System.Xml;
 using System.Xml.Linq;
 using static System.Net.Mime.MediaTypeNames;
 
+using Common;
+
 //
 // NOTE: Very little error checking here
 //
@@ -54,8 +56,6 @@ namespace PLHelpWindow
         public static ScrollViewer scrollViewer;
         public static Button       clearButton;
 
-        private static Dictionary<string, HelpTreeViewItem> dict = new Dictionary<string, HelpTreeViewItem> ();
-
         //*****************************************************************************************
         //*****************************************************************************************
         //*****************************************************************************************
@@ -81,7 +81,7 @@ namespace PLHelpWindow
 
         private List<string> subtopicKeys = new List<string> ();
 
-        private string SearchKey = "??";
+        public string SearchKey = "??";
 
         internal HelpTreeViewItem (XmlNode xml)
         {
@@ -125,21 +125,17 @@ namespace PLHelpWindow
                 }
 
                 Selected += Tvi_Selected;
-
-                //
-                // add this HelpTreeViewItem to the dictionary so others can
-                // link to it.
-                //
-                dict.Add (SearchKey, this);
             }
 
             catch (Exception ex)
             {
-                Console.WriteLine ("Exception: " + ex.Message);
+                EventLog.WriteLine ("Exception: " + ex.Message);
             }
         }
 
         //********************************************************************************************
+
+        // Remove leading spaces from each line of the "Text" entry
 
         private string RemoveLeadingSpaces (string str)
         {
@@ -158,8 +154,6 @@ namespace PLHelpWindow
                 padding++;
             }
 
-         //   if (padding > 0) padding--;
-
             for (int i = 1; i<lines.Length; i++)
             {
                 string str2 = lines [i].Length > padding ? lines [i].Substring (padding) : lines [i];
@@ -171,7 +165,9 @@ namespace PLHelpWindow
 
         //********************************************************************************************
 
-        public void LookUpSubtopics ()
+        // Look-up each subtopic search key in the dictionary for this list
+
+        public void LookUpSubtopics (Dictionary<string, HelpTreeViewItem> dict)
         {
             foreach (string key in subtopicKeys)
             {
@@ -181,14 +177,14 @@ namespace PLHelpWindow
                     Items.Add (htvi);
                 }
 
-                catch (KeyNotFoundException ex)
+                catch (KeyNotFoundException)
                 {
-                    Console.WriteLine ("Key not found: " + key);
+                    EventLog.WriteLine ("HelpTopic Key not found, Topic: " + Header + ", Subtopic: " + key);
                 }
 
                 catch (Exception ex)
                 {
-                    Console.WriteLine ("Exception: " + ex.Message);
+                    Console.WriteLine ("Exception creating Help Window: " + ex.Message);
                 }
             }
         }
@@ -216,7 +212,7 @@ namespace PLHelpWindow
 
             catch (Exception ex)
             {
-                Console.WriteLine ("Exception in Tvi_Selected: " + ex.Message);
+                EventLog.WriteLine ("Exception in HelpWIndow Tvi_Selected: " + ex.Message);
             }
         }
     }

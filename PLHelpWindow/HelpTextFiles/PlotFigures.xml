@@ -1,1 +1,62 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?> 
+
+<!-- 
+    PlotFigures.xml
+      
+      Note: the code that reads these files has very little error checking
+-->
+
+<HelpTree>
+
+  <HelpTopic SearchKey="">
+    <Header>Plot Figures</Header>
+
+    <Content>
+      <Title>Plot Figures</Title>
+      
+      <Text>
+        Opening, closing and annotating plot figures
+      </Text>
+    </Content>
+
+    <SubTopics>
+      <SubTopic SearchKey="figure"/>
+      <SubTopic SearchKey="title"/>
+    </SubTopics>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="figure">
+    <Header>figure</Header>
+
+    <Content>
+      <Title>Create new figure or set existing figure to current</Title>
+
+      <Text>
+        Create a new figure, assign a number to it
+           h = figure; % new figure. returns figure number
+           
+        Set fig. 2 as current figure. If no fig. 2 exists, create it
+          figure (2); % set figure 2 to current figure
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="title">
+    <Header>title</Header>
+
+    <Content>
+      <Title>Add a Data Area Title to an open figure</Title>
+
+      <Text>
+        title ('The Title Here');
+      </Text>
+    </Content>
+  </HelpTopic>
+
+
+
+</HelpTree>

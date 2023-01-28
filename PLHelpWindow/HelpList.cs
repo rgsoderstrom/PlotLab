@@ -11,46 +11,20 @@ using System.IO;
 //      - builds a list of HelpTreeViewItems
 //
 
-//
-// https://stackoverflow.com/questions/2820384/reading-embedded-xml-file-c-sharp
-//
-
 namespace PLHelpWindow
 {
-    internal class HelpList : List<HelpTreeViewItem>
+    internal class HelpList
     {
-        //public string GetResourceTextFile (string filename)
-        //{
-        //    string result = string.Empty;
+        //
+        // List of all HelpTreeViewItems read from one file. The first one will be displayed
+        // as an item in the top-level Help tree. AFter that the order doesn't matter
+        //
+        public List<HelpTreeViewItem> lst = new List<HelpTreeViewItem> ();
 
-        //    //
-        //    // Get a list of all resources
-        //    //
-
-        //    //string[] allResources = GetType ().Assembly.GetManifestResourceNames ();
-
-        //    //foreach (string str in allResources)
-        //    //    Console.WriteLine (str);
-            
-        //    try
-        //    {
-        //       using (Stream stream = this.GetType ().Assembly.GetManifestResourceStream ("utHelpWindow3.HelpTextFiles." + filename))
-        //        {
-        //            using (StreamReader sr = new StreamReader (stream))
-        //            {
-        //                result = sr.ReadToEnd ();
-        //            }
-        //        }
-        //    }
-
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine ("Exception reading embedded xml help file: " + ex.Message);
-        //    }
-
-        //    return result;
-        //}
-
+        //
+        // Dictionary to find any HelpTopic in this HelpList if it is a subtopic of another topic
+        //
+        private Dictionary<string, HelpTreeViewItem> dict = new Dictionary<string, HelpTreeViewItem> ();
 
         public HelpList (string filename)
         {
@@ -61,6 +35,7 @@ namespace PLHelpWindow
                 //
                 XmlDocument xd = new XmlDocument ();
 
+                // from https://stackoverflow.com/questions/2820384/reading-embedded-xml-file-c-sharp
                 Stream str = GetType ().Assembly.GetManifestResourceStream ("PLHelpWindow.HelpTextFiles." + filename);
                 xd.Load (str);
 
@@ -90,7 +65,8 @@ namespace PLHelpWindow
                         case "HelpTopic":
                         {
                             HelpTreeViewItem ht = new HelpTreeViewItem (node);
-                            Add (ht);
+                            lst.Add (ht);
+                            dict.Add (ht.SearchKey, ht);
                         }
                         break;
 
@@ -98,6 +74,12 @@ namespace PLHelpWindow
                             break;
                     }
                 }
+
+                //
+                // Fill-in subtopic links for each topic
+                //
+                foreach (HelpTreeViewItem htvi in lst)
+                    htvi.LookUpSubtopics (dict);
             }
 
             catch (Exception ex)
