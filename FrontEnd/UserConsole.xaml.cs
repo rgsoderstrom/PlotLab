@@ -450,8 +450,9 @@ namespace FrontEnd
 
         private void HelpWindow_Click (object sender, RoutedEventArgs e)
         {
-            PLHelpWindow.HelpWindow win = new PLHelpWindow.HelpWindow ();
-            win.Show ();
+            PLHelpWindow.HelpWindowManager.LaunchNewHelpWindow ();
+            //PLHelpWindow.HelpWindow win = new PLHelpWindow.HelpWindow ();
+            //win.Show ();
         }
 
         //****************************************************************************************************

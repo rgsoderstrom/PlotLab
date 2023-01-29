@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PLHelpWindow"
         mc:Ignorable="d"
-        Title="Help" Height="450" Width="900" Loaded="Window_Loaded">
+        Title="Help" Height="450" Width="900" Loaded="Window_Loaded" Closed="Window_Closed">
     <Grid HorizontalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>

@@ -17,9 +17,8 @@ using Common;
 
 namespace PLHelpWindow
 {
-    public partial class HelpWindow : Window
+    partial class HelpWindow : Window
     {
-
         List<string> helpTextFiles = new List<string> ()
         {
             "GeneralPlotting.xml",
@@ -27,23 +26,13 @@ namespace PLHelpWindow
             "MathFunctions.xml",
         };
 
-        public HelpWindow ()
+        internal HelpWindow ()
         {
             InitializeComponent ();
         }
 
-        string InitialTopic = null;
-
-        public HelpWindow (string topic)
+        internal bool SearchFor (string str)
         {
-            InitializeComponent ();
-            InitialTopic = topic;
-        }
-
-        private void SearchFor (string str)
-        {
-            EventLog.WriteLine ("search for " + str);
-
             List<HelpTreeViewItem> path = new List<HelpTreeViewItem> ();
             bool found = false;
 
@@ -56,13 +45,13 @@ namespace PLHelpWindow
 
             if (found == true)
             {
-                EventLog.WriteLine ("found");
-
                 foreach (HelpTreeViewItem htvi in path)
                     htvi.IsExpanded = true;
 
                 path [path.Count - 1].IsSelected = true;
             }
+
+            return found;
         }
 
         private void Window_Loaded (object sender, RoutedEventArgs e)
@@ -78,15 +67,8 @@ namespace PLHelpWindow
                 foreach (string filename in helpTextFiles)
                     lst.Add (new HelpList (filename));
 
-                //foreach (HelpList hl in lst)
-                //    foreach (HelpTreeViewItem htvi in hl)
-                //        htvi.LookUpSubtopics ();
-
                 foreach (HelpList hl in lst)
                     TreeView.Items.Add (hl.lst [0]);
-
-                if (InitialTopic != null)
-                    SearchFor (InitialTopic);
             }
 
             catch (Exception ex)
@@ -100,6 +82,11 @@ namespace PLHelpWindow
             HelpTextBlock.Inlines.Clear ();
             HelpTextClearButton.IsEnabled = false;
             (TreeView.SelectedItem as TreeViewItem).IsSelected = false;
+        }
+
+        private void Window_Closed (object sender, EventArgs e)
+        {
+            HelpWindowManager.DeleteWindow (this);
         }
     }
 }

@@ -345,21 +345,22 @@ namespace FrontEnd
 
         public static PLVariable HelpWindow (PLVariable _topic)
         {
+            PLVariable status = new PLNull ();
+
             if ((_topic is PLString) && (_topic as PLString).Text != null && (_topic as PLString).Text.Length > 0)
             {
                 string topic = (_topic as PLString).Text;
 
-                PLHelpWindow.HelpWindow win = new PLHelpWindow.HelpWindow (topic);
-                win.Show ();
+                if (PLHelpWindow.HelpWindowManager.DisplayHelpTopic (topic) == false)
+                    status = new PLString ("Not found");
             }
 
             else
             {
-                PLHelpWindow.HelpWindow win = new PLHelpWindow.HelpWindow ();
-                win.Show ();
+                PLHelpWindow.HelpWindowManager.LaunchNewHelpWindow ();
             }
 
-            return new PLNull ();
+            return status;
         }
     }
 }
