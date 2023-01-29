@@ -212,8 +212,32 @@ namespace PLHelpWindow
 
             catch (Exception ex)
             {
-                EventLog.WriteLine ("Exception in HelpWIndow Tvi_Selected: " + ex.Message);
+                EventLog.WriteLine ("Exception in HelpWindow Tvi_Selected: " + ex.Message);
             }
+        }
+
+        //********************************************************************************************
+
+        internal bool Contains (string searchTarget, ref List<HelpTreeViewItem> path)
+        {
+            path.Add (this);
+
+            if (string.Compare (SearchKey, searchTarget, true) == 0) // non case-sensitive equality
+            {
+                return true;
+            }
+
+            else
+            {
+                foreach (HelpTreeViewItem htvi in Items)
+                {
+                    if (htvi.Contains (searchTarget, ref path))
+                        return true;
+                }
+            }
+
+            path.Remove (this);
+            return false;
         }
     }
 }

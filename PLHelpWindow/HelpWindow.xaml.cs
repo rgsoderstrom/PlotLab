@@ -43,6 +43,26 @@ namespace PLHelpWindow
         private void SearchFor (string str)
         {
             EventLog.WriteLine ("search for " + str);
+
+            List<HelpTreeViewItem> path = new List<HelpTreeViewItem> ();
+            bool found = false;
+
+            foreach (HelpTreeViewItem htvi in TreeView.Items)
+            {
+                found = htvi.Contains (str, ref path);
+                if (found == true)
+                    break;
+            }
+
+            if (found == true)
+            {
+                EventLog.WriteLine ("found");
+
+                foreach (HelpTreeViewItem htvi in path)
+                    htvi.IsExpanded = true;
+
+                path [path.Count - 1].IsSelected = true;
+            }
         }
 
         private void Window_Loaded (object sender, RoutedEventArgs e)
