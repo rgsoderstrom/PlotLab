@@ -77,21 +77,18 @@ namespace PLHelpWindow
 
 
 
+                foreach (HelpList hl in lst)
+                    TreeView.Items.Add (hl.lst [0]);
+
+
+
+
                 TreeViewItem tvi = new TreeViewItem ();
-                tvi.Header = "Table of Contents";
+                tvi.Header = "Contents";
                 TreeView.Items.Add (tvi);
 
                 foreach (HelpList hl in lst)
                     tvi.Items.Add (hl.TableOfContents ());
-
-
-
-
-
-
-
-                foreach (HelpList hl in lst)
-                    TreeView.Items.Add (hl.lst [0]);
             }
 
             catch (Exception ex)
