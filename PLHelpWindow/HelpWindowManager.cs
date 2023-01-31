@@ -10,10 +10,16 @@ namespace PLHelpWindow
     {
         static List<HelpWindow> HelpWindows = new List<HelpWindow> ();
 
+        static double left = 10;
+        static double top = 10;
+
         static public void LaunchNewHelpWindow ()
         {
             HelpWindow win = new HelpWindow ();
             HelpWindows.Add (win);
+            win.Left = left;
+            win.Top = top;
+            left += 20; top += 20;
             win.Show ();
         }
 

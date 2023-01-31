@@ -17,7 +17,7 @@
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
-        <TreeView Grid.Column="0" Margin="10,10,0,10" Padding="0,0,20,0" FontSize="16" x:Name="TreeView" BorderBrush="Black" BorderThickness="1"></TreeView>
+        <TreeView MaxWidth="300" Grid.Column="0" Margin="10,10,0,10" Padding="0,0,20,0" FontSize="16" x:Name="TreeView" BorderBrush="Black" BorderThickness="1"></TreeView>
 
         <Border BorderBrush="Black" BorderThickness="1" Grid.Column="1" Margin="10">
             <ScrollViewer Name="HelpTextScroller" HorizontalScrollBarVisibility="Auto">
@@ -25,10 +25,11 @@
             </ScrollViewer>
         </Border>
 
-        <Border BorderBrush="Black" BorderThickness="1" Grid.Column="2" Margin="0,10,10,10" Padding="10">
+        
+        <!--Border BorderBrush="Black" BorderThickness="1" Grid.Column="2" Margin="0,10,10,10" Padding="10">
             <StackPanel Orientation="Vertical">
                 <Button Name="HelpTextClearButton" Margin="10" Click="HelpTextClearButton_Click" MinWidth="60" FontSize="16" IsEnabled="False">Clear Help Text</Button>
             </StackPanel>
-        </Border>
+        </Border -->
     </Grid>
 </Window>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.IO;
+using System.Windows.Controls;
 
 //
 // HelpList - a list of help tree topics
@@ -25,6 +26,8 @@ namespace PLHelpWindow
         // Dictionary to find any HelpTopic in this HelpList if it is a subtopic of another topic
         //
         private Dictionary<string, HelpTreeViewItem> dict = new Dictionary<string, HelpTreeViewItem> ();
+
+        //*********************************************************************************************
 
         public HelpList (string filename)
         {
@@ -87,5 +90,43 @@ namespace PLHelpWindow
                 Console.WriteLine ("Exception reading Help File " + filename + ": " + ex.Message);
             }
         }
+
+        //*********************************************************************************************
+
+        // Return Table Of Contents for this file
+
+        public TreeViewItem TableOfContents ()
+        {
+            TreeViewItem t1 = new TreeViewItem ();
+            t1.Header = lst [0].Title;
+
+            for (int i=1; i<lst.Count; i++)
+            {
+                TreeViewItem t2 = new TreeViewItem ();
+                t2.Header = lst [i].Title;
+                t2.Tag = lst [i].SearchKey;
+                t2.Selected += T2_Selected;
+                t1.Items.Add (t2);
+            }
+
+            return t1;
+        }
+
+        private void T2_Selected (object sender, System.Windows.RoutedEventArgs e)
+        {
+            //(TreeView.SelectedItem as TreeViewItem).IsSelected = false;
+            //(HelpTreeViewItem.win.TreeView.SelectedItem as TreeViewItem).IsSelected = false;
+
+
+            TreeViewItem tvi = sender as TreeViewItem;
+            string       key = tvi.Tag as string;
+
+            HelpTreeViewItem.win.SearchFor (key);
+        }
     }
 }
+
+
+
+
+

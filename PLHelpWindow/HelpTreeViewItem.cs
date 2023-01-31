@@ -50,11 +50,12 @@ namespace PLHelpWindow
         //
         // Static 
         //
-        
+
         // WPF items in HelpWindow
+        public static HelpWindow   win;
         public static TextBlock    textPane;
         public static ScrollViewer scrollViewer;
-        public static Button       clearButton;
+      //  public static Button       clearButton;
 
         //*****************************************************************************************
         //*****************************************************************************************
@@ -207,7 +208,7 @@ namespace PLHelpWindow
                 textPane.Inlines.Add (run);
 
                 scrollViewer.ScrollToBottom ();
-                clearButton.IsEnabled = true;
+                //clearButton.IsEnabled = true;
             }
 
             catch (Exception ex)
