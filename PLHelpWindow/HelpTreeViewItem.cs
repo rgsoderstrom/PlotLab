@@ -185,7 +185,7 @@ namespace PLHelpWindow
 
                 catch (Exception ex)
                 {
-                    Console.WriteLine ("Exception creating Help Window: " + ex.Message);
+                    EventLog.WriteLine ("Exception creating Help Window: " + ex.Message);
                 }
             }
         }

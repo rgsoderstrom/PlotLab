@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml;
 using System.IO;
 using System.Windows.Controls;
+using Common;
 
 //
 // HelpList - a list of help tree topics
@@ -87,7 +88,7 @@ namespace PLHelpWindow
 
             catch (Exception ex)
             {
-                Console.WriteLine ("Exception reading Help File " + filename + ": " + ex.Message);
+                EventLog.WriteLine ("Exception reading Help File " + filename + ": " + ex.Message);
             }
         }
 
