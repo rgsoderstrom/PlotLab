@@ -202,7 +202,7 @@ namespace FunctionLibrary
 
                 // set all to default values
                 List<double> levels = new List<double> ();
-                ContourPlotView.ShowGradientArrows    = false;
+                ContourPlotView.ShowGradientArrows    = false; // these are all static and not set by the ContourPlotView ctor
                 ContourPlotView.LabelLines            = false;
                 ContourPlotView.ShowColoredBackground = false;
                 ContourPlotView.DrawLines             = true;
