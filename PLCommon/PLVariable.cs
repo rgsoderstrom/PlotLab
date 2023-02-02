@@ -18,6 +18,22 @@ namespace PLCommon
 
         public abstract string ToString (string fmt);
 
+        public static double ToNumber (PLVariable plv, ref bool failFlag)
+        {
+            if (plv is PLDouble)  return (plv as PLDouble).Data;
+            if (plv is PLInteger) return (plv as PLInteger).Data;
+
+            if (plv is PLMatrix)
+            {
+                PLMatrix mat = plv as PLMatrix;
+                if (mat.Rows == 1 && mat.Cols == 1)
+                    return mat [0, 0];
+            }
+
+            failFlag = true;
+            return 0;
+        }
+
         public static PLVariable operator+ (PLVariable op1, PLVariable op2)
         {
             if (op1 is PLDouble  && op2 is PLDouble)  return (op1 as PLDouble)  + (op2 as PLDouble);

@@ -220,19 +220,18 @@ namespace PLKernel
 
         private void Operator_EqualityTest ()
         {
-            if (Operands.Count != 2) throw new Exception ("Equality test requires two operands");
-            bool val;
+            if (Operands.Count != 2) 
+                throw new Exception ("Equality test requires two operands");
+            
+            bool failFlag = false;
 
-            PLBool   op1B = Operands [0].Value as PLBool;
-            PLBool   op2B = Operands [1].Value as PLBool;
-            PLDouble op1D = Operands [0].Value as PLDouble;
-            PLDouble op2D = Operands [1].Value as PLDouble;
+            double v1 = PLVariable.ToNumber (Operands [0].Value, ref failFlag);
+            double v2 = PLVariable.ToNumber (Operands [1].Value, ref failFlag);
 
-            if      (op1B != null && op2B != null) val = (op1B.Data == op2B.Data);
-            else if (op1D != null && op2D != null) val = (op1D.Data == op2D.Data);
-            else throw new Exception ("Equality test argument type error");
+            if (failFlag == true)
+                throw new Exception ("Inequality test argument type error");
 
-            Value = new PLBool (val);
+            Value = new PLBool (v1 == v2);
         }
         
         //*******************************************************************************************
@@ -240,19 +239,18 @@ namespace PLKernel
 
         private void Operator_Inequality ()
         {
-            if (Operands.Count != 2) throw new Exception ("Inequality test requires two operands");
-            bool val;
+            if (Operands.Count != 2) 
+                throw new Exception ("Inequality test requires two operands");
+            
+            bool failFlag = false;
 
-            PLBool   op1B = Operands [0].Value as PLBool;
-            PLBool   op2B = Operands [1].Value as PLBool;
-            PLDouble op1D = Operands [0].Value as PLDouble;
-            PLDouble op2D = Operands [1].Value as PLDouble;
+            double v1 = PLVariable.ToNumber (Operands [0].Value, ref failFlag);
+            double v2 = PLVariable.ToNumber (Operands [1].Value, ref failFlag);
 
-            if      (op1B != null && op2B != null) val = (op1B.Data != op2B.Data);
-            else if (op1D != null && op2D != null) val = (op1D.Data != op2D.Data);
-            else throw new Exception ("Inequality test argument type error");
+            if (failFlag == true)
+                throw new Exception ("Inequality test argument type error");
 
-            Value = new PLBool (val);
+            Value = new PLBool (v1 != v2);
         }
 
         //*******************************************************************************************
@@ -316,16 +314,18 @@ namespace PLKernel
 
         private void Operator_GreaterTest ()
         {
-            if (Operands.Count != 2) throw new Exception ("GT test requires two operands");
-            bool val;
+            if (Operands.Count != 2) 
+                throw new Exception ("GT test requires two operands");
+            
+            bool failFlag = false;
 
-            PLDouble op1D = Operands [0].Value as PLDouble;
-            PLDouble op2D = Operands [1].Value as PLDouble;
+            double v1 = PLVariable.ToNumber (Operands [0].Value, ref failFlag);
+            double v2 = PLVariable.ToNumber (Operands [1].Value, ref failFlag);
 
-            if      (op1D != null && op2D != null) val = (op1D.Data > op2D.Data);
-            else throw new Exception ("GT test argument type error");
+            if (failFlag == true)
+                throw new Exception ("GT test argument type error");
 
-            Value = new PLBool (val);
+            Value = new PLBool (v1 > v2);
         }
 
         //*******************************************************************************************
@@ -333,16 +333,18 @@ namespace PLKernel
 
         private void Operator_GreaterOrEqualTest ()
         {
-            if (Operands.Count != 2) throw new Exception ("GE test requires two operands");
-            bool val;
+            if (Operands.Count != 2) 
+                throw new Exception ("GE test requires two operands");
+            
+            bool failFlag = false;
 
-            PLDouble op1D = Operands [0].Value as PLDouble;
-            PLDouble op2D = Operands [1].Value as PLDouble;
+            double v1 = PLVariable.ToNumber (Operands [0].Value, ref failFlag);
+            double v2 = PLVariable.ToNumber (Operands [1].Value, ref failFlag);
 
-            if      (op1D != null && op2D != null) val = (op1D.Data >= op2D.Data);
-            else throw new Exception ("GE test argument type error");
+            if (failFlag == true)
+                throw new Exception ("GE test argument type error");
 
-            Value = new PLBool (val);
+            Value = new PLBool (v1 >= v2);
         }
 
         //*******************************************************************************************
@@ -350,16 +352,18 @@ namespace PLKernel
 
         private void Operator_LessTest ()
         {
-            if (Operands.Count != 2) throw new Exception ("LT test requires two operands");
-            bool val;
+            if (Operands.Count != 2) 
+                throw new Exception ("LT test requires two operands");
+            
+            bool failFlag = false;
 
-            PLDouble op1D = Operands [0].Value as PLDouble;
-            PLDouble op2D = Operands [1].Value as PLDouble;
+            double v1 = PLVariable.ToNumber (Operands [0].Value, ref failFlag);
+            double v2 = PLVariable.ToNumber (Operands [1].Value, ref failFlag);
 
-            if      (op1D != null && op2D != null) val = (op1D.Data < op2D.Data);
-            else throw new Exception ("LT test argument type error");
+            if (failFlag == true)
+                throw new Exception ("LT test argument type error");
 
-            Value = new PLBool (val);
+            Value = new PLBool (v1 < v2);
         }
 
         //*******************************************************************************************
@@ -367,19 +371,18 @@ namespace PLKernel
 
         private void Operator_LessOrEqualTest ()
         {
-            if (Operands.Count != 2) throw new Exception ("LE test requires two operands");
-            double val1, val2;
+            if (Operands.Count != 2) 
+                throw new Exception ("LE test requires two operands");
+            
+            bool failFlag = false;
 
-            PLDouble  op1D = Operands [0].Value as PLDouble;
-            PLInteger op1I = Operands [0].Value as PLInteger;
+            double v1 = PLVariable.ToNumber (Operands [0].Value, ref failFlag);
+            double v2 = PLVariable.ToNumber (Operands [1].Value, ref failFlag);
 
-            PLDouble  op2D = Operands [1].Value as PLDouble;
-            PLInteger op2I = Operands [1].Value as PLInteger;
+            if (failFlag == true)
+                throw new Exception ("LE test argument type error");
 
-            if (op1D != null) val1 = op1D.Data; else if (op1I != null) val1 = op1I.Data; else throw new Exception ("LE test argument type error");
-            if (op2D != null) val2 = op2D.Data; else if (op2I != null) val2 = op2I.Data; else throw new Exception ("LE test argument type error");
-
-            Value = new PLBool (val1 <= val2);
+            Value = new PLBool (v1 <= v2);
         }
 
         //*******************************************************************************************
