@@ -35,6 +35,7 @@ namespace FunctionLibrary
                 {"plot",         Plot},
                 {"text",         Text},
                 {"PlotVector",   PlotVector2D},
+                {"PlotVector2D", PlotVector2D},
                 {"PlotVector3D", PlotVector3D},
                 {"quiver",       PlotVectorField},
                 {"arrow",        PlotVector2D},

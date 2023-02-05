@@ -194,6 +194,9 @@ namespace FunctionLibrary
 
                 CommonMath.Matrix z = zz.Data;
 
+                if (z.Rows != y.Count || z.Cols != x.Count)
+                    throw new Exception ("Z Matrix size error");
+
                 //
                 // display options
                 //  - must be pairs of string-value
