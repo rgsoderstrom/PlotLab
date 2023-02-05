@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- 
+  SpecializedPlots.xml
+  
+    Note: the code that reads these files has very little error checking
+-->
+
+<HelpTree>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="VectorPlots3D"> 
+    <Header>Vector Plots, 3D</Header>
+
+    <Content>
+      <Title>Vectors in 3D</Title>
+
+      <Text>
+          Vectors in 3D.
+      </Text>
+    </Content>
+
+    <SubTopics>
+      <SubTopic SearchKey="oneVector"/>
+      <!--SubTopic SearchKey="vectorField"/-->
+    </SubTopics>
+  </HelpTopic>
+
+  <!-- ******************************************************************** -->
+
+  <HelpTopic SearchKey="oneVector">
+    <Header>Single 3D Vector</Header>
+
+    <Content>
+      <Title>Plot a single 3D Vector</Title>
+
+      <Text>
+        PlotVector3D ()
+        
+        PlotVector3D (Vect);                        - std basis, tail at origin, default color
+        PlotVector3D (Vect, 'style');               - std basis, tail at origin
+        PlotVector3D (tail, Vect, 'style');         - std basis
+        PlotVector3D (Vect, basis, 'style');        - tail at origin
+        PlotVector3D (tail, Vect, basis, 'style');
+        
+        'tail' and 'Vect' are columns, 3 elements
+        'basis' is matrix, 3x3
+        'style' optional, must be last arg if present
+      </Text>
+    </Content>
+      
+    <SubTopics>
+      <SubTopic SearchKey="oneVectorStyle"/>
+    </SubTopics>
+  </HelpTopic>
+
+  <!-- ******************************************************************** -->
+
+  <HelpTopic SearchKey="oneVectorStyle">
+    <Header>Single 3D Vector options</Header>
+
+    <Content>
+      <Title>Plot options for a single 2D Vector</Title>
+
+      <Text>
+        'r' Color = Red
+        'o' Color = Orange 
+        'y' Color = Yellow 
+        'g' Color = Green 
+        'b' Color = Blue 
+        'k' Color = Black 
+        '-' Style = Dashes
+        '.' Style = Dots; 
+        'c' showComponents = true; 
+      </Text>
+    </Content>
+  </HelpTopic>
+  
+  <!-- ******************************************************************** -->
+
+  <!-- 
+  <HelpTopic SearchKey="vectorField">
+    <Header>Field of 2D Vectors</Header>
+
+    <Content>
+      <Title>quiver - field of 2D Vector</Title>
+
+      <Text>
+        quiver (tails, vects);
+          where tails and vects both 2xN matrices
+      </Text>
+    </Content>
+  </HelpTopic>
+  -->
+
+</HelpTree>

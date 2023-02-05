@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- 
+  SpecializedPlots.xml
+  
+    Note: the code that reads these files has very little error checking
+-->
+
+<HelpTree>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="VectorPlots2D"> 
+    <Header>Vector Plots, 2D</Header>
+
+    <Content>
+      <Title>Vectors and vectors fields</Title>
+
+      <Text>
+          Vectors and vector fields in 2D.
+      </Text>
+    </Content>
+
+    <SubTopics>
+      <SubTopic SearchKey="oneVector"/>
+      <SubTopic SearchKey="vectorField"/>
+    </SubTopics>
+  </HelpTopic>
+
+  <!-- ******************************************************************** -->
+
+  <HelpTopic SearchKey="oneVector">
+    <Header>Single 2D Vector</Header>
+
+    <Content>
+      <Title>Plot a single 2D Vector</Title>
+
+      <Text>
+        There are 3 synonyms for the same function
+        PlotVector ()
+        PlotVector2D ()
+        arrow ()
+        
+        PlotVector (Vect);                        - std basis, tail at origin, default color
+        PlotVector (Vect, 'style');               - std basis, tail at origin
+        PlotVector (tail, Vect, 'style');         - std basis
+        PlotVector (Vect, basis, 'style');        - tail at origin
+        PlotVector (tail, Vect, basis, 'style');
+        
+        'tail' and 'Vect' are columns, 2 elements
+        'basis' is matrix, 2x2
+        'style' optional, must be last arg if present
+      </Text>
+    </Content>
+      
+    <SubTopics>
+      <SubTopic SearchKey="oneVectorStyle"/>
+    </SubTopics>
+  </HelpTopic>
+
+  <!-- ******************************************************************** -->
+
+  <HelpTopic SearchKey="oneVectorStyle">
+    <Header>Single 2D Vector options</Header>
+
+    <Content>
+      <Title>Plot options for a single 2D Vector</Title>
+
+      <Text>
+        'r' Color = Red
+        'o' Color = Orange 
+        'y' Color = Yellow 
+        'g' Color = Green 
+        'b' Color = Blue 
+        'k' Color = Black 
+        '-' Style = Dashes
+        '.' Style = Dots; 
+        'c' showComponents = true; 
+      </Text>
+    </Content>
+  </HelpTopic>
+  
+  <!-- ******************************************************************** -->
+
+  <HelpTopic SearchKey="vectorField">
+    <Header>Field of 2D Vectors</Header>
+
+    <Content>
+      <Title>quiver - field of 2D Vector</Title>
+
+      <Text>
+        quiver (tails, vects);
+          where tails and vects both 2xN matrices
+      </Text>
+    </Content>
+  </HelpTopic>
+  
+</HelpTree>

@@ -84,6 +84,10 @@ namespace PLHelpWindow
 
         public string SearchKey = "??";
 
+        //*****************************************************************************************
+        //
+        // Constructor
+        //
         internal HelpTreeViewItem (XmlNode xml)
         {
             try
@@ -130,7 +134,8 @@ namespace PLHelpWindow
 
             catch (Exception ex)
             {
-                EventLog.WriteLine ("Exception: " + ex.Message);
+                EventLog.WriteLine ("HelpTreeViewItem Exception: " + ex.Message);
+                //EventLog.WriteLine ("HelpTreeViewItem Exception: " + ex.StackTrace);
             }
         }
 
@@ -144,6 +149,11 @@ namespace PLHelpWindow
             string [] sep = new string [] { "\r\n" };
 
             string [] lines = str.Split (sep, StringSplitOptions.None);
+
+            if (lines.Length < 2)
+            {
+                return str; // probably an xml file format error
+            }
 
             int padding = 0;
 

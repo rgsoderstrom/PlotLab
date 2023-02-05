@@ -22,6 +22,9 @@ namespace PLHelpWindow
         List<string> helpTextFiles = new List<string> ()
         {
             "GeneralPlotting.xml",
+            "ContourPlots.xml",
+            "VectorPlots2D.xml",
+            "VectorPlots3D.xml",
             "PlotFigures.xml",
             "MathFunctions.xml",
         };
@@ -78,7 +81,8 @@ namespace PLHelpWindow
 
 
                 foreach (HelpList hl in lst)
-                    TreeView.Items.Add (hl.lst [0]);
+                    if (hl.lst.Count > 0)
+                        TreeView.Items.Add (hl.lst [0]);
 
 
 
@@ -88,7 +92,8 @@ namespace PLHelpWindow
                 TreeView.Items.Add (tvi);
 
                 foreach (HelpList hl in lst)
-                    tvi.Items.Add (hl.TableOfContents ());
+                    if (hl.lst.Count > 0)
+                        tvi.Items.Add (hl.TableOfContents ());
             }
 
             catch (Exception ex)

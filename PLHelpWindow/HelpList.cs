@@ -41,6 +41,10 @@ namespace PLHelpWindow
 
                 // from https://stackoverflow.com/questions/2820384/reading-embedded-xml-file-c-sharp
                 Stream str = GetType ().Assembly.GetManifestResourceStream ("PLHelpWindow.HelpTextFiles." + filename);
+
+                if (str == null)
+                    throw new FileNotFoundException (filename);
+
                 xd.Load (str);
 
                 string topNodeName = "HelpTree";
@@ -84,6 +88,11 @@ namespace PLHelpWindow
                 //
                 foreach (HelpTreeViewItem htvi in lst)
                     htvi.LookUpSubtopics (dict);
+            }
+
+            catch (FileNotFoundException)
+            {
+                EventLog.WriteLine ("Help File not found: " + filename);
             }
 
             catch (Exception ex)

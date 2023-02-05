@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- 
+  SpecializedPlots.xml
+  
+    Note: the code that reads these files has very little error checking
+-->
+
+<HelpTree>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="ContourPlots"> 
+    <Header>Contour Plots</Header>
+
+    <Content>
+      <Title>Contour plots in 2D</Title>
+
+      <Text>
+        contour (xCoordinates, yCoordinates, zValues);
+           - xCoordinates and yCoordinates can both be row or both be column vectors.
+           - zValues is a matrix
+		     - default is to draw 5 equally spaced contour lines
+		   
+        contour (xCoords, yCoords, zData, DisplayOptions); % see Subtopics		
+      </Text>
+    </Content>
+
+    <SubTopics>
+      <SubTopic SearchKey ="ConLevels"/>
+      <SubTopic SearchKey ="ConLinesOff"/>
+      <SubTopic SearchKey ="ConGradArrows"/>
+      <SubTopic SearchKey ="ConLineLabels"/>
+      <SubTopic SearchKey ="ConLineColors"/>
+      <SubTopic SearchKey ="ConBackground"/>
+    </SubTopics>
+  </HelpTopic>
+
+  <!-- ******************************************************************** -->
+  
+  <HelpTopic SearchKey="ConLevels">
+    <Header>Contour Levels</Header>
+
+    <Content>
+      <Title>Specify contour line levels</Title>
+
+      <Text>
+        contour (x, y, z, N);      % a single number as first display option draws N levels 
+        contour (x, y, z, 1:3:20); % row vector specifies what levels to draw			
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ***************************************************************** -->
+  
+  <HelpTopic SearchKey="ConLinesOff">
+    <Header>Supress contour lines</Header>
+
+    <Content>
+      <Title>Supress lines</Title>
+
+      <Text>
+        Contour lines can be turned off, typically when 'ShowBackground'
+          is enabled
+        'DrawContourLines', 0,
+        'DrawContourLines', 'false',
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ***************************************************************** -->
+  
+  <HelpTopic SearchKey="ConGradArrows">
+    <Header>Gradient Arrows</Header>
+
+    <Content>
+      <Title>Draw gradient arrows next to lines</Title>
+
+      <Text>
+        'DrawArrows', 1
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="ConLineLabels">
+    <Header>Line Labels</Header>
+
+    <Content>
+      <Title>Labels on contour lines</Title>
+
+      <Text>  
+        'LabelLines', 'true', 'LabelFontSize', 0.1
+      </Text>
+    </Content>
+
+    <SubTopics>
+      <SubTopic SearchKey="conLabelFontSize"/>
+    </SubTopics>
+  </HelpTopic>
+
+  <!-- ******************************************************************** -->
+
+  <HelpTopic SearchKey="conLabelFontSize">
+    <Header>Line label font size</Header>
+
+    <Content>
+      <Title>Specify font size for contour line labels</Title>
+
+      <Text>
+        Font size is in same units as contour levels
+        'LabelFontSize', 8
+      </Text>
+    </Content>
+  </HelpTopic>
+  
+  <!-- ******************************************************************** -->
+
+  <HelpTopic SearchKey="ConLineColors">
+    <Header>Contour Line Colors</Header>
+
+    <Content>
+      <Title>Draw colored contour lines</Title>
+
+      <Text>
+        'DrawLinesInColors', 1
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ******************************************************************** -->
+
+  <HelpTopic SearchKey="ConBackground">
+    <Header>Background coloring</Header>
+
+    <Content>
+      <Title>Draw background colors</Title>
+
+      <Text>
+        'ShowBackground', 1
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ******************************************************************** -->
+
+</HelpTree>
