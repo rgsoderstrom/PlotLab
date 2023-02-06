@@ -171,6 +171,7 @@ namespace FrontEnd
                 switch (words [0].Trim ())
                 {
                     case "return":
+                    case "return;":
                         return ScriptTerminationReason.Complete;
 
 
