@@ -116,8 +116,10 @@ namespace PLHelpWindow
                         case "SubTopics":
                             XmlNodeList ch = childNode.ChildNodes;
 
-                            foreach (XmlNode xn in ch)
-                                subtopicKeys.Add (xn.Attributes [0].InnerText);
+                            if (ch != null)
+                                foreach (XmlNode xn in ch)
+                                    if (xn.Attributes != null)
+                                        subtopicKeys.Add (xn.Attributes [0].InnerText);
 
                             break;
 
@@ -135,7 +137,7 @@ namespace PLHelpWindow
             catch (Exception ex)
             {
                 EventLog.WriteLine ("HelpTreeViewItem Exception: " + ex.Message);
-                //EventLog.WriteLine ("HelpTreeViewItem Exception: " + ex.StackTrace);
+                EventLog.WriteLine ("HelpTreeViewItem Exception: " + ex.StackTrace);
             }
         }
 
