@@ -49,6 +49,7 @@ namespace FunctionLibrary
                 {"CameraCenter", CameraCenter},
                 {"CameraAbsPos", CameraPosition},
                 {"CameraRelPos", CameraRelPosition},
+                {"grid",         Grid},
             };
         }
 

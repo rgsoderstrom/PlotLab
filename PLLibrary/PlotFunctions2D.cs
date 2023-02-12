@@ -123,6 +123,25 @@ namespace FunctionLibrary
             throw new Exception ("Set function argument error");
         }
 
+        //*********************************************************************************************
+        //*********************************************************************************************
+        //*********************************************************************************************
+
+        static public PLVariable Grid (PLVariable arg)
+        {
+            if (CurrentFigure != null && CurrentFigure is Plot2D)
+            {
+                if (arg is PLString)
+                {
+                    string str = (arg as PLString).Data;
+
+                    if (str == "on")  (CurrentFigure as Plot2D).RectangularGridOn = true;
+                    if (str == "off") (CurrentFigure as Plot2D).RectangularGridOn = false;
+                }
+            }
+
+            return new PLNull ();
+        }
 
         //*********************************************************************************************
         //*********************************************************************************************

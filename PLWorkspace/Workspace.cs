@@ -43,6 +43,8 @@ namespace PLWorkspace
             Constants.Add ("tight",  new PLString ("tight"));
             Constants.Add ("frozen", new PLString ("frozen"));
             Constants.Add ("auto",   new PLString ("auto"));
+            Constants.Add ("on",     new PLString ("on"));
+            Constants.Add ("off",    new PLString ("off"));
         }
 
     //***************************************************************************************************
