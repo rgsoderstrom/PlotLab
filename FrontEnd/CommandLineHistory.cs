@@ -18,13 +18,13 @@ namespace FrontEnd
         static int NextBack = -1;
         static int Newest {get {return history.Count - 1;}}
 
-        static string historyFileName = @"..\..\CommandHistory.txt";
+        static string historyFileName = "CommandHistory.txt";
 
-        static CommandLineHistory ()
+        public static void Open ()
         {
             try
             {
-                StreamReader file = new StreamReader (historyFileName);
+                StreamReader file = new StreamReader (UserConsole.HistoryFileDirectory + "\\" + historyFileName);
                 string raw;
 
                 while ((raw = file.ReadLine ()) != null)
@@ -39,6 +39,11 @@ namespace FrontEnd
 
                 NextBack = Newest;
                 NextFwd = NextBack + 2;
+            }
+
+            catch (FileNotFoundException)
+            {
+
             }
 
             catch (Exception)
@@ -57,7 +62,7 @@ namespace FrontEnd
         {
             try
             {
-                StreamWriter file = new StreamWriter (historyFileName);
+                StreamWriter file = new StreamWriter (UserConsole.HistoryFileDirectory + "\\" + historyFileName);
                 List<string> writeList;
 
                 if (writeOption == CommandHistoryWriteOptions.WriteAll)

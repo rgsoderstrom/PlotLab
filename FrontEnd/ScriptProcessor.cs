@@ -128,6 +128,9 @@ namespace FrontEnd
                 bool writeDebugFile = false;
                 expanded = spp.Run (fullName, writeDebugFile);
 
+                if (expanded.Count == 0)
+                    return ScriptTerminationReason.Complete; // nothing to run
+
                 int start = expanded.FirstLineNumber;
                 int finish = expanded.LastLineNumber;
 

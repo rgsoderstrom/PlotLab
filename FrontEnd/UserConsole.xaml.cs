@@ -9,6 +9,7 @@ using PLCommon;
 using PLWorkspace;
 using static FrontEnd.Utils;
 using System.Net.NetworkInformation;
+using System.Linq;
 
 namespace FrontEnd
 {
@@ -17,13 +18,23 @@ namespace FrontEnd
         internal static UserConsole thisConsole = null;
         Workspace userWorkspace = new Workspace ();
 
+        // record any startup error messages generated until the window is ready to display them
+        List<string> StartupMessages = new List<string> ();
+
         public UserConsole ()
         {
-            EventLog.Open (@"../../Log.txt", true); // false);
+            CheckDocumentDirectories ("PlotLabV1", StartupMessages);
+            EventLog.Open (UserConsole.LogFileDirectory + "\\Log.txt", true); // false);
+            FileSearch.Open ();
+            CommandLineHistory.Open ();
+
             InitializeComponent ();
             thisConsole = this;
 
             TextPane.AddHandler (CommandManager.PreviewExecutedEvent, new RoutedEventHandler (CommandPreview), true);
+
+            foreach (string str in StartupMessages)
+                Print (str + "\n");
         }
 
         private void Window_Loaded (object sender, RoutedEventArgs e)
@@ -43,10 +54,53 @@ namespace FrontEnd
             catch (Exception ex)
             {
                 Print ("Startup error: " + ex.Message + "\n");
+                //Print ("Startup error: " + ex.StackTrace + "\n");
             }
 
             Print (Utils.Prompt);
         }
+
+        //*****************************************************************************************
+
+        public static string LogFileDirectory = "";
+        public static string HistoryFileDirectory = "";
+        public static string ScriptsDirectory = "";
+
+        private void CheckDocumentDirectories (string baseDirName, List<string> msgs)
+        {
+            try
+            {
+                string myDocs = Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments);
+
+                if (myDocs == null)
+                    throw new Exception ("Can't find user's \"Documents\" folder");
+
+                string fullPathAndName = myDocs + "\\" + baseDirName;
+                ScriptsDirectory = fullPathAndName + "\\" + "Scripts";
+                string startup = ScriptsDirectory + "\\startup.m";
+
+                if (Directory.Exists (fullPathAndName) == false)
+                {
+                    msgs.Add ("Creating folder " + baseDirName + " in user's Documents folder");
+                    Directory.CreateDirectory (fullPathAndName);
+                    Directory.CreateDirectory (ScriptsDirectory);
+
+                    StreamWriter str = File.CreateText (startup);
+                    str.Write ("% startup.m - this script runs automatically on start up");
+                    str.Close ();
+                }
+
+                LogFileDirectory = fullPathAndName;
+                HistoryFileDirectory = fullPathAndName;
+            }
+
+            catch (Exception ex)
+            {
+                msgs.Add ("Startup exception: " + ex.Message);
+            }
+        }
+
+        //*****************************************************************************************
 
         private void Window_Closed (object sender, EventArgs e)
         {
