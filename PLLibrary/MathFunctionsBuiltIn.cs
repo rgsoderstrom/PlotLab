@@ -26,9 +26,13 @@ namespace FunctionLibrary
                 {"linspace", Linspace},
                 {"zeros", Zeros},
                 {"ones", Ones},
-                {"sin", Sin},
-                {"cos", Cos},
-                {"abs", Abs},
+                {"sin",  Sin},
+                {"cos",  Cos},
+                {"tan",  Tan},
+                {"sinh", Sinh},
+                {"cosh", Cosh},
+                {"tanh", Tanh},
+                {"abs",  Abs},
                 {"sqrt", Sqrt},
                 {"inv",  Inverse},
                 {"atan2", Atan2},
@@ -388,10 +392,14 @@ namespace FunctionLibrary
 
         static public PLVariable Sin  (PLVariable arg) {return MathFunction (Math.Sin,  "sin",  arg);}
         static public PLVariable Cos  (PLVariable arg) {return MathFunction (Math.Cos,  "cos",  arg);}
+        static public PLVariable Tan  (PLVariable arg) {return MathFunction (Math.Tan,  "tan",  arg);}
         static public PLVariable Sqrt (PLVariable arg) {return MathFunction (Math.Sqrt, "sqrt", arg);}
         static public PLVariable Abs  (PLVariable arg) {return MathFunction (Math.Abs,  "abs",  arg);}
         static public PLVariable Log  (PLVariable arg) {return MathFunction (Math.Log,  "log",  arg);}
         static public PLVariable Exp  (PLVariable arg) {return MathFunction (Math.Exp,  "exp",  arg);}
+        static public PLVariable Sinh (PLVariable arg) {return MathFunction (Math.Sinh, "sinh",  arg);}
+        static public PLVariable Cosh (PLVariable arg) {return MathFunction (Math.Cosh, "cosh",  arg);}
+        static public PLVariable Tanh (PLVariable arg) {return MathFunction (Math.Tanh, "tanh",  arg);}
 
         //*********************************************************************************************
         //*********************************************************************************************
