@@ -22,6 +22,9 @@
     <SubTopics>
       <SubTopic SearchKey="figure"/>
       <SubTopic SearchKey="title"/>
+      <SubTopic SearchKey="axis"/>
+      <SubTopic SearchKey="set"/>
+      <SubTopic SearchKey="get"/>
     </SubTopics>
   </HelpTopic>
 
@@ -53,6 +56,67 @@
 
       <Text>
         title ('The Title Here');
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="axis">
+    <Header>axis</Header>
+
+    <Content>
+      <Title>Get or set 2D plot axes</Title>
+
+      <Text>
+        axis tight
+        axis equal
+        axis frozen
+        axis auto
+        axis ([XMin XMax YMin YMax])
+        v = axis % return current values
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="set">
+    <Header>set</Header>
+
+    <Content>
+      <Title>set 2D figure or object properties</Title>
+
+      <Text>
+        set (handle, 'property', value, ...)
+          if handle is a CanvasObject, properties are 'thickness' and 'size'
+            h = plot (1:10);
+            set (h, 'Thickness', 4)
+            
+          if handle is a number it is treated as a figure
+            h = figure;
+            set (h, 'Left', 100);
+            set (h, 'Top',  100);
+            set (h, 'Width',  100);
+            set (h, 'Height', 100);
+            set (h, 'Position', [Left Top Width Height])
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="get">
+    <Header>get</Header>
+
+    <Content>
+      <Title>get 2D figure or object properties</Title>
+
+      <Text>
+        v = get (handle, 'property')
+          Only supported option is 'Position' for a figure 
+            h = figure;
+            pos = get (h, 'Position');
       </Text>
     </Content>
   </HelpTopic>

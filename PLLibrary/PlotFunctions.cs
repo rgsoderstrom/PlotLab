@@ -41,6 +41,7 @@ namespace FunctionLibrary
                 {"arrow",        PlotVector2D},
                 {"contour",      ContourPlotFunctions.ContourPlot},
                 {"set",          Set},
+                {"get",          Get},
                 {"axis",         PlotLimits}, // a = axis; 
                 {"figure",       Figure},
                 {"clf",          ClearFigure},

@@ -73,6 +73,9 @@ namespace FunctionLibrary
 
             if (mat != null)
             {
+                fig.AxesEqual  = false;
+                fig.AxesFrozen = false;
+                fig.AxesTight  = false;
                 fig.SetAxes (mat [0, 0], mat [0, 1], mat [0, 2], mat [0, 3]);
                 return new PLNull ();
             }
@@ -121,6 +124,69 @@ namespace FunctionLibrary
                 return SetFigure (args);
 
             throw new Exception ("Set function argument error");
+        }
+
+        //*********************************************************************************************
+        //*********************************************************************************************
+        //*********************************************************************************************
+
+        //
+        // Get - read a plot option
+        //
+
+        //
+        // get (handle, 'property')
+        //
+
+        // Only supported propery is 'Position'
+
+        static public PLVariable Get (PLVariable input)
+        {
+            // ensure input is a list
+            PLList args = input as PLList;
+
+            int figureID;
+            string option = null;
+            IPlotCommon figure = null;
+            bool found = false;
+
+            if (args [0] is PLInteger)
+                figureID = (args [0] as PLInteger).Data;
+
+            else if (args [0] is PLDouble)
+                figureID = (int)(args [0] as PLDouble).Data;
+
+            else
+                throw new Exception ("Figure " + args [0].ToString () + " not found");
+
+            // look for that id. if found make it the current figure
+            foreach (Window w in Figures)
+            {
+                PlotFigure pf = w as PlotFigure; if (pf != null) { if (pf.ID == figureID) { found = true; figure = pf; break; } }
+                Plot2D p2 = w as Plot2D; if (p2 != null) { if (p2.ID == figureID) { found = true; figure = p2; break; } }
+                Plot3D p3 = w as Plot3D; if (p3 != null) { if (p3.ID == figureID) { found = true; CurrentFigure = p3; break; } }
+            }
+
+            if (found == false || figure == null)
+                throw new Exception ("Figure " + args [0].ToString () + " not found");
+
+            option = (args [1] as PLString).Data;
+
+            switch (option)
+            {
+                case "'Position'":
+                case "'position'":
+                    CommonMath.Matrix size = new CommonMath.Matrix (1, 4);
+                    size [0, 0] = figure.Left;
+                    size [0, 1] = figure.Top;
+                    size [0, 2] = figure.Width;
+                    size [0, 3] = figure.Height;
+
+                    return new PLMatrix (size);
+
+                default:
+                    throw new Exception ("Get option not supported");
+            }
         }
 
         //*********************************************************************************************
