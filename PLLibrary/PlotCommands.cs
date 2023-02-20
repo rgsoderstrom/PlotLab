@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 using PLCommon;
 using PlottingLib;
+using System.Windows.Documents;
 
 namespace FunctionLibrary
 {
@@ -83,23 +84,15 @@ namespace FunctionLibrary
 
         //*********************************************************************************************
 
-        static PLVariable Title (PLVariable arg)
+        static string ExtractOneString (PLVariable arg, string name = "")
         {
-            if (CurrentFigure == null)
-                return new PLNull ();
-
-            IPlotDrawable fig = CurrentFigure as IPlotDrawable;
-
-            if (fig == null)
-                return new PLNull ();
-
             PLString str = arg as PLString;
             PLList   lst = arg as PLList;
             PLString tstr;
 
             if      (str != null) tstr = str;
             else if (lst != null) tstr = lst [0] as PLString;
-            else throw new Exception ("title argument error");
+            else throw new Exception (name + " argument error");
 
             string txt = tstr.Data;
             if (txt [0] == '\'') txt = txt.Remove (0, 1);
@@ -123,11 +116,68 @@ namespace FunctionLibrary
                     break;
             }
 
+            return txt;
+        }
+
+        //*********************************************************************************************
+
+        static PLVariable Title (PLVariable arg)
+        {
+            if (CurrentFigure == null)
+                return new PLNull ();
+
+            IPlotDrawable fig = CurrentFigure as IPlotDrawable;
+
+            if (fig == null)
+                return new PLNull ();
+
+            string txt = ExtractOneString (arg, "title");
+
             if (fig is Plot2D)
                 (fig as Plot2D).DataAreaTitle = txt;
 
             if (fig is Plot3D)
                 (fig as Plot3D).DataAreaTitle = txt;
+
+            return new PLNull ();
+        }
+
+        //*********************************************************************************************
+
+        static PLVariable XLabel (PLVariable arg)
+        {
+            if (CurrentFigure == null)
+                return new PLNull ();
+
+            IPlotDrawable fig = CurrentFigure as IPlotDrawable;
+
+            if (fig == null)
+                return new PLNull ();
+
+            string txt = ExtractOneString (arg, "xlabel");
+
+            if (fig is Plot2D)
+                (fig as Plot2D).XAxisLabel = txt;
+
+            return new PLNull ();
+        }
+
+        //*********************************************************************************************
+
+        static PLVariable YLabel (PLVariable arg)
+        {
+            if (CurrentFigure == null)
+                return new PLNull ();
+
+            IPlotDrawable fig = CurrentFigure as IPlotDrawable;
+
+            if (fig == null)
+                return new PLNull ();
+
+            string txt = ExtractOneString (arg, "ylabel");
+
+            if (fig is Plot2D)
+                (fig as Plot2D).YAxisLabel = txt;
 
             return new PLNull ();
         }
