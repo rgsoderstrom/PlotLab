@@ -213,6 +213,48 @@ namespace FunctionLibrary
         //*********************************************************************************************
         //*********************************************************************************************
 
+        static public PLVariable Axes (PLVariable arg)
+        {
+            if (CurrentFigure == null || CurrentFigure is Plot3D)
+                return new PLNull ();
+
+            double xmin = -1, xmax = 1, ymin = -1, ymax = 1;
+            (CurrentFigure as Plot2D).GetAxes (ref xmin, ref xmax, ref ymin, ref ymax);
+
+            double length = xmax;
+            double firstTic = 5;
+            double ticStep = 5;
+
+            if (arg is PLString)
+            {
+                string str = (arg as PLString).Data;
+
+                if (str == "on" && CurrentFigure is Plot2D)
+                {
+                    CoordinateAxesView cv = new CoordinateAxesView (length, length, firstTic, ticStep);
+                    (CurrentFigure as Plot2D).Plot (cv);
+                }
+                if (str == "off") return new PLString ("Not supported");
+            }
+
+            else if (arg is PLList)
+            {
+                List<PLVariable> lst = (arg as PLList).Data;
+                if (lst.Count > 0) length   = (lst [0] as PLDouble).Data;
+                if (lst.Count > 1) firstTic = (lst [1] as PLDouble).Data;
+                if (lst.Count > 2) ticStep  = (lst [2] as PLDouble).Data;
+
+                CoordinateAxesView cv = new CoordinateAxesView (length, length, firstTic, ticStep);
+                (CurrentFigure as Plot2D).Plot (cv);
+            }
+
+            return new PLNull ();
+        }
+
+        //*********************************************************************************************
+        //*********************************************************************************************
+        //*********************************************************************************************
+
         //
         // Plot a single vector arrow
         //

@@ -43,6 +43,7 @@ namespace FunctionLibrary
                 {"set",          Set},
                 {"get",          Get},
                 {"axis",         PlotLimits}, // a = axis; 
+                {"axes",         Axes},
                 {"figure",       Figure},
                 {"clf",          ClearFigure},
                 {"title",        Title},
