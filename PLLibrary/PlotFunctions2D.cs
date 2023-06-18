@@ -393,8 +393,9 @@ namespace FunctionLibrary
             Plot2D fig = CurrentFigure as Plot2D;
             fig.Hold = true;
             fig.AxesEqual = true;
-            Draw2DObject (VV [1]);
-            Draw2DObject (VV [2]);
+
+            for (int i = 1; i<VV.Count; i++)
+                Draw2DObject (VV [i]);
 
             PLList list = new PLList ();
 
