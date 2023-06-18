@@ -123,15 +123,22 @@ namespace FunctionLibrary
 
         static PLVariable Title (PLVariable arg)
         {
+            string txt = ExtractOneString (arg, "title");
+
             if (CurrentFigure == null)
                 return new PLNull ();
+
+            if (CurrentFigure is PlotFigure)
+                (CurrentFigure as PlotFigure).DataAreaTitle = txt;
+
 
             IPlotDrawable fig = CurrentFigure as IPlotDrawable;
 
             if (fig == null)
                 return new PLNull ();
 
-            string txt = ExtractOneString (arg, "title");
+            //if (fig is PlotFigure)
+            //    (fig as PlotFigure).DataAreaTitle = txt;
 
             if (fig is Plot2D)
                 (fig as Plot2D).DataAreaTitle = txt;
