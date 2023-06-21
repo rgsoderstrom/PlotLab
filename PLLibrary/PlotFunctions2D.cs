@@ -465,35 +465,60 @@ namespace FunctionLibrary
             {
                 PLList lst = input as PLList;
 
-                PLDouble xd  = lst [0] as PLDouble;
-                PLDouble yd  = lst [1] as PLDouble;
-                PLMatrix mat = lst [0] as PLMatrix;
-
-                double x, y;
+                double x;
+                double y;
                 string txt;
+                double fontSize = 0.2;
 
-                if (xd != null && yd != null)
+                switch (lst.Count)
                 {
-                    x = xd.Data;
-                    y = yd.Data;
-                    txt = (lst [2] as PLString).Data;
+                    case 2: // must be (colVector, text)
+                    {
+                        PLMatrix mat = lst [0] as PLMatrix;
+                        x   = mat.Data [0, 0];
+                        y   = mat.Data [1, 0];
+                        txt = (lst [1] as PLString).Text;
+                    }
+                    break;
+
+                    case 3: // (colVector, text, size) or (x, y, text)
+                    {
+                        if (lst [0] is PLMatrix)
+                        {
+                            PLMatrix mat = lst [0] as PLMatrix;
+                            x        = mat.Data [0, 0];
+                            y        = mat.Data [1, 0];
+                            txt      = (lst [1] as PLString).Text;
+                            fontSize = (lst [2] as PLDouble).Data;
+                        }
+
+                        else if (lst [0] is PLDouble)
+                        {
+                            x   = (lst [0] as PLDouble).Data;
+                            y   = (lst [1] as PLDouble).Data;
+                            txt = (lst [2] as PLString).Text;
+                        }
+
+                        else
+                            throw new Exception ("text function arg error");    
+                    }
+                    break;
+
+                    case 4: // (x, y, text, size)
+                    { 
+                        x        = (lst [0] as PLDouble).Data;
+                        y        = (lst [1] as PLDouble).Data;
+                        txt      = (lst [2] as PLString).Text;
+                        fontSize = (lst [3] as PLDouble).Data;
+                    }
+                    break;
+
+                    default:
+                        throw new Exception ("text function arg error");    
                 }
-
-                else if (mat != null && mat.IsColVector == true)
-                {
-                    x = mat.Data [0, 0];
-                    y = mat.Data [1, 0];
-                    txt = (lst [1] as PLString).Data;
-                }
-
-                else
-                    throw new Exception ("text function arg error");
-
-                if (txt [0] == '\'') txt = txt.Remove (0, 1);
-                if (txt [txt.Length - 1] == '\'') txt = txt.Remove (txt.Length - 1);
 
                 TextView tv = new TextView (new Point (x, y), txt);
-                tv.FontSizeAppInUnits = 0.2;
+                tv.FontSizeAppInUnits = fontSize;
                 tv.Color = Brushes.Blue;
 
                 Draw2DObject (tv);

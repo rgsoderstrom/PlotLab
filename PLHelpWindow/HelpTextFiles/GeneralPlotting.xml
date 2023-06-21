@@ -24,6 +24,7 @@
     <SubTopics>
       <SubTopic SearchKey="plot2dLines"/>
       <SubTopic SearchKey="plot2dPoints"/>
+      <SubTopic SearchKey="text2d"/>
       <SubTopic SearchKey="plot3dLines"/>
       <SubTopic SearchKey="plot3dPoints"/>
       <SubTopic SearchKey="camera3d"/>
@@ -163,7 +164,21 @@
       </Text>
     </Content>
   </HelpTopic>
+  
+  <!-- ******************************************************************** -->
 
+  <HelpTopic SearchKey="text2d">
+    <Header>Text 2D</Header>
+
+    <Content>
+      <Title>Text on 2D plot</Title>
+
+      <Text>
+        text (colVector, text, fontSize);  % fontSize is optional. Default is 0.2
+        text (x, y, text);
+      </Text>
+    </Content>
+  </HelpTopic>
 
   <!-- ******************************************************************** -->
 
