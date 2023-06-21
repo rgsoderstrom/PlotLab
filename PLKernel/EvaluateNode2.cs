@@ -392,8 +392,9 @@ namespace PLKernel
         {
             if (AllOperandsSameSize (out int rows, out int cols, workspace))
             {
-                if (rows == 1 && cols == 1) Value = new PLDouble (0);
-                else                        Value = new PLMatrix (rows, cols);
+                if (Operands [0].Value is PLString) Value = new PLString ("");
+                else if (rows == 1 && cols == 1)    Value = new PLDouble (0);
+                else                                Value = new PLMatrix (rows, cols);
 
                 foreach (ExpressionTreeNode op in Operands)
                     Value += op.Value;

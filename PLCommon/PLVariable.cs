@@ -42,8 +42,8 @@ namespace PLCommon
             if (op1 is PLMatrix  && op2 is PLDouble)  return (op1 as PLMatrix)  + (op2 as PLDouble);
 
             if (op1 is PLDouble  && op2 is PLMatrix)  return (op2 as PLMatrix)  + (op1 as PLDouble);
-
-            if (op1 is PLString  && op2 is PLString)  return (op1 as PLString)  + (op2 as PLString);
+            if (op1 is PLString  && op2 is PLString)  return new PLString ((op1 as PLString).Text + (op2 as PLString).Text);
+           
             throw new Exception ("Addition of " + op1.GetType () + " and " + op2.GetType () + " not implemented");
         }
 
