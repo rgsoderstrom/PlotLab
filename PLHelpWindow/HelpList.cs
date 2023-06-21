@@ -92,12 +92,12 @@ namespace PLHelpWindow
 
             catch (FileNotFoundException)
             {
-                EventLog.WriteLine ("Help File not found: " + filename);
+                EventLog.WriteLine ("Help File not found in Embedded Resources: " + filename);
             }
 
             catch (Exception ex)
             {
-                EventLog.WriteLine ("Exception reading Help File " + filename + ": " + ex.Message);
+                EventLog.WriteLine ("Exception reading Embedded Resource Help File " + filename + ": " + ex.Message);
             }
         }
 

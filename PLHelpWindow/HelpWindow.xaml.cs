@@ -26,6 +26,7 @@ namespace PLHelpWindow
             "VectorPlots2D.xml",
             "VectorPlots3D.xml",
             "PlotFigures.xml",
+            "DisplayingText.xml",
             "MathFunctions.xml",
         };
 

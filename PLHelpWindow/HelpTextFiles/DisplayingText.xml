@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+
+<!-- 
+    DisplayingText.xml
+      
+      Note: the code that reads these files has very little error checking
+-->
+
+<HelpTree>
+
+  <HelpTopic SearchKey="">
+    <Header>Printing to console</Header>
+
+    <Content>
+      <Title>Writing text to console window</Title>
+      
+      <Text>
+        Formatting and displaying text in the console window.
+      </Text>
+    </Content>
+
+    <SubTopics>
+      <SubTopic SearchKey="disp"/>
+      <SubTopic SearchKey="sprintf"/>
+    </SubTopics>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="disp">
+    <Header>disp</Header>
+
+    <Content>
+      <Title>Display a string in console window</Title>
+
+      <Text>
+        disp ('abc');
+        disp (sprintf ('A = %0.7d', 123));
+        
+        A = rand (3, 4);
+        disp (A);
+        disp (sprintf ('%6.1f', A));
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="sprintf">
+    <Header>sprintf</Header>
+
+    <Content>
+      <Title>Formatted print to a string</Title>
+
+      <Text>
+        s = sprintf ('L = %3.2f meters', 123.4567);
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+</HelpTree>
+
+
