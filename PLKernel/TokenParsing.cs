@@ -211,7 +211,12 @@ namespace PLKernel
             bool escaped = current.text.Length > 2 ? (current.text [current.text.Length - 2] == '\\' ? true : false) : false;
 
             // test exit criteria
-            if (TokenUtils.IsSingleQuote (status.currentChar) && escaped == false)
+            if (TokenUtils.IsSingleQuote (status.currentChar) && escaped == true)
+            {
+                current.text = current.text.Remove (current.text.Length - 2, 1);
+            }
+            
+            else if (TokenUtils.IsSingleQuote (status.currentChar) && escaped == false)
             {
                 status.state = ParsingState.Between;
                 tokens.Add (current);
