@@ -14,12 +14,14 @@ namespace FrontEnd
         Workspace workspace;
         PrintFunction Print;
         Button ResumeButton;
+    //    UserConsole userConsole;
 
-        public InputLineProcessor (Workspace ws, PrintFunction pr, Button res)
+        public InputLineProcessor (Workspace ws, PrintFunction pr, Button res) //, UserConsole uc)
         {
             workspace = ws;
             Print = pr;
             ResumeButton = res;
+       //   userConsole = uc;
         }
 
         public InputLineProcessor (Workspace ws)
@@ -27,6 +29,7 @@ namespace FrontEnd
             workspace = ws;
             Print = null;
             ResumeButton = null;
+       //   userConsole = null;
         }
 
         /// <summary>
@@ -68,6 +71,37 @@ namespace FrontEnd
             {
                 forcePrint = true;
             }
+
+
+
+
+
+
+            //if (firstWord [0] == '!')
+            //{
+            //    try
+            //    {
+            //        string [] tokens = firstWord.Split (new char [] { '!', ':' }, StringSplitOptions.RemoveEmptyEntries);
+            //        int index = Convert.ToInt16 (tokens [0]);
+            //        string recalled = CommandLineHistory.History [index - 1];
+
+            //        //userConsole.HistoryRecallHandler (recalled);
+                    
+
+
+            //        //ProcessOneStatement (ref results, recalled, ref forcePrint);
+            //        return;
+            //    }
+
+            //    catch (Exception ex)
+            //    {
+            //        Print ("Exception: " + ex.Message);
+            //        return;
+            //    }
+            //}
+
+
+
 
             //
             // Test for system command (e.g. cd, ls, path)

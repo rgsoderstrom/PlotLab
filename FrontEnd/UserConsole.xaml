@@ -27,6 +27,7 @@
 
             <Button Name="ClearConsole" Content="Clear Text Pane" Margin="2,10,2,0" IsEnabled="True" Click="ClearConsole_Click"/>
             <Button Name="ClearInput"   Content="Clear Input"     Margin="2,6, 2,0" IsEnabled="True" Click="ClearInput_Click"/>
+            <Button Name="ShowHistory"  Content="Show History"    Margin="2,10,2,0" IsEnabled="True" Click="ShowHistory_Click"/>
             <Button Name="ClearHistory" Content="Clear History"   Margin="2,6, 2,0" IsEnabled="True" Click="ClearHistory_Click"/>
             <Button Name="HelpWindow"   Content="Help Window"     Margin="2,20,2,0" IsEnabled="True" Click="HelpWindow_Click"/>
 

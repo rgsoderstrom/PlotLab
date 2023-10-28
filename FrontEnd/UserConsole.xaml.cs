@@ -10,6 +10,7 @@ using PLWorkspace;
 using static FrontEnd.Utils;
 using System.Net.NetworkInformation;
 using System.Linq;
+using System.Resources;
 
 namespace FrontEnd
 {
@@ -229,6 +230,44 @@ namespace FrontEnd
                 caretLowerLimit     = TextPane.CaretIndex;
 
                 InputLineProcessor ip = new InputLineProcessor (userWorkspace, Print, ResumeScript_Button);
+
+
+
+                if (raw [0] == '!')
+                {
+                    try
+                    {
+                        string [] tokens = raw.Split (new char [] { '!', ':' }, StringSplitOptions.RemoveEmptyEntries);
+                        int index = Convert.ToInt16 (tokens [0]);
+                        string recalled = CommandLineHistory.History [index - 1];
+                        raw = recalled;
+                        Print (raw + "\n");
+                        CommandLineHistory.Add (raw);
+                        EventLog.WriteLine (raw);
+
+                        if (tokens.Length > 1)
+                        {
+                            if (tokens [1] [0] == 'p')
+                            {
+                                return;
+                            }
+                            else
+                            {
+                                throw new Exception ("Only history option supported is \'p\', for Print. e.g.: !12:p");
+                            }
+                        }
+                    }
+
+                    catch (Exception ex)
+                    {
+                        Print ("Exception: " + ex.Message);
+                        return;
+                    }
+                }
+
+
+
+
 
                 Utils.CleanupRawInput (raw, inputLines, ref nestingLevel);
 
@@ -493,6 +532,19 @@ namespace FrontEnd
         }
 
         //****************************************************************************************************
+
+        private void ShowHistory_Click (object sender, RoutedEventArgs e)
+        {
+            PLVariable hist = SystemFunctions.History (new PLNull ());
+            PLList lst = hist as PLList;
+
+            foreach (PLString str in lst)
+                Print (str.ToString () + '\n');
+
+            Print ('\n' + Utils.Prompt);
+            ClearInputLine ();
+            TextPane.Focus ();
+        }
 
         private void ClearHistory_Click (object sender, RoutedEventArgs e)
         {

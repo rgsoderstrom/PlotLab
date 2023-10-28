@@ -88,7 +88,8 @@ namespace FrontEnd
                     writeList.RemoveRange (0, writeList.Count - maxLineCount);
 
                 foreach (string str in writeList)
-                    file.WriteLine (str);
+                    if (str [0] != '!')   // don't write history recalls to file
+                        file.WriteLine (str);
 
                 file.Close ();
             }
