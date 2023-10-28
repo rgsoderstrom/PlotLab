@@ -583,7 +583,8 @@ namespace PLCommon
 
             foreach (PLVariable var in Data)
             {
-                str += "(" + var.ToString () + ")" + "\n";
+                str += var.ToString () + "\n";
+              //str += "(" + var.ToString () + ")" + "\n";
             }
 
             return str;

@@ -13,6 +13,7 @@ namespace FrontEnd
     {
      //   readonly string prompt;
         static List<string> history = new List<string> ();
+        static public List<string> History {get {return history;}}
 
         static int NextFwd = 1;
         static int NextBack = -1;
@@ -76,7 +77,7 @@ namespace FrontEnd
                 }
 
                 else // write latest unique
-                {
+                { 
                     List<string> hist = history.ToList ();
                     hist.Reverse ();
                     writeList = hist.Distinct ().ToList ();

@@ -37,6 +37,7 @@ namespace FrontEnd
                 {"clc",   Clc },
                 {"path",  Path},
                 {"addpath", AddPath},
+                {"history", History},
                 {"help",    HelpWindow},
             };
         }
@@ -67,6 +68,27 @@ namespace FrontEnd
             }
             else
                 throw new Exception ("Command " + name + " not found");
+        }
+
+        //*********************************************************************************************
+        //*********************************************************************************************
+        //*********************************************************************************************
+
+        public static PLVariable History (PLVariable args)
+        {
+            //bool A = (args is PLList);
+            //bool B = (args is PLInteger);
+            //bool C = (args is PLScalar);
+            //bool D = (args is PLMatrix);
+            //bool E = (args is PLString);
+
+            PLList hist = new PLList ();
+            int count = 1;
+
+            foreach (string s in CommandLineHistory.History)
+                hist.Add (new PLString (count++ + ": " + s));
+
+            return hist;
         }
 
         //*********************************************************************************************
