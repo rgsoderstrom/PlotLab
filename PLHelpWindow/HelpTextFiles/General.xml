@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- 
+    MathFunctions.xml
+      
+      Note: the code that reads these files has very little error checking
+-->
+
+<HelpTree>
+
+  <HelpTopic SearchKey="">
+    <Header>System</Header>
+
+    <Content>
+      <Title>General System Function</Title>
+      
+      <Text>
+        System function etc.
+      </Text>
+    </Content>
+
+    <SubTopics>
+      <SubTopic SearchKey="history"/>
+      <SubTopic SearchKey="help"/>
+      <SubTopic SearchKey="edit"/>
+      <SubTopic SearchKey="cd"/>
+      <SubTopic SearchKey="pwd"/>
+      <SubTopic SearchKey="ls"/>
+    </SubTopics>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="history">
+    <Header>history</Header>
+
+    <Content>
+      <Title>Display and optionally run recent commands in console window</Title>
+
+      <Text>
+        history           - list recently entered commands, with an identifying number
+        up or down arrows - scroll through command history
+        !5                - run command 5
+        !5:p              - print command 5 but do not run it
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="help">
+    <Header>help</Header>
+
+    <Content>
+      <Title>Opens help window, optionally showing help for a specified command</Title>
+
+      <Text>
+        help --- opens "help" window
+        help plot
+        help sin
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="edit">
+    <Header>edit</Header>
+
+    <Content>
+      <Title>Edit a file in Notepad++</Title>
+
+      <Text>
+        edit filename
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="cd">
+    <Header>cd</Header>
+
+    <Content>
+      <Title>Change directory</Title>
+
+      <Text>
+        cd ..
+        cd subdir
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="ls">
+    <Header>ls</Header>
+
+    <Content>
+      <Title>List directory</Title>
+
+      <Text>
+        ls
+      </Text>
+      
+    </Content>
+  </HelpTopic>
+</HelpTree>
+
+

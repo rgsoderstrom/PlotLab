@@ -538,6 +538,7 @@ namespace FrontEnd
             PLVariable hist = SystemFunctions.History (new PLNull ());
             PLList lst = hist as PLList;
 
+            Print ("\n");
             foreach (PLString str in lst)
                 Print (str.ToString () + '\n');
 

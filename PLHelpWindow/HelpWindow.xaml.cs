@@ -21,6 +21,7 @@ namespace PLHelpWindow
     {
         List<string> helpTextFiles = new List<string> ()
         {
+            "General.xml",
             "GeneralPlotting.xml",
             "ContourPlots.xml",
             "VectorPlots2D.xml",
