@@ -25,6 +25,7 @@
       <SubTopic SearchKey="plot2dLines"/>
       <SubTopic SearchKey="plot2dPoints"/>
       <SubTopic SearchKey="text2d"/>
+      <SubTopic SearchKey="plot3dSurfaces"/>
       <SubTopic SearchKey="plot3dLines"/>
       <SubTopic SearchKey="plot3dPoints"/>
       <SubTopic SearchKey="camera3d"/>
@@ -178,6 +179,30 @@
         text (x, y, text);
       </Text>
     </Content>
+  </HelpTopic>
+
+  <!-- ******************************************************************** -->
+
+  <HelpTopic SearchKey="plot3dSurfaces">
+    <Header>3D Surfaces</Header>
+
+    <Content>
+      <Title>Plotting 3D Surfaces</Title>
+
+      <Text>
+        Plot a surface where z = f (x, y)
+        
+        plot (xCoordinates, yCoordinates, zValues);
+           xCoordinates, yCoordinates - can both be row or both be column vectors.
+           zValues - 2D matrix of z values
+
+        plot (xCoords, yCoords, zValues);
+      </Text>
+    </Content>
+
+    <SubTopics>
+    </SubTopics>
+
   </HelpTopic>
 
   <!-- ******************************************************************** -->

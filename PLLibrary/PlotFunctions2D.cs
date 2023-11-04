@@ -195,17 +195,23 @@ namespace FunctionLibrary
 
         static public PLVariable Grid (PLVariable arg)
         {
-            if (CurrentFigure != null && CurrentFigure is Plot2D)
+            if (CurrentFigure != null)
             {
-                if (arg is PLString)
-                {
-                    string str = (arg as PLString).Data;
+                bool flag;
+                string str = (arg as PLString).Data;
 
-                    if (str == "on")  (CurrentFigure as Plot2D).RectangularGridOn = true;
-                    if (str == "off") (CurrentFigure as Plot2D).RectangularGridOn = false;
-                }
+                if      (str == "on")  flag = true;
+                else if (str == "off") flag = false;
+                else throw new Exception ("Unrecognized option: " + str);
+
+          //      bool wasFrozen = (CurrentFigure as IPlotDrawable).AxesFrozen;
+                (CurrentFigure as IPlotDrawable).AxesFrozen = true;
+                
+                if (CurrentFigure is Plot2D)      (CurrentFigure as Plot2D).RectangularGridOn = flag;
+                else if (CurrentFigure is Plot3D) (CurrentFigure as Plot3D).RectangularGridOn = flag;
+
+         //       (CurrentFigure as IPlotDrawable).AxesFrozen = wasFrozen;
             }
-
             return new PLNull ();
         }
 
