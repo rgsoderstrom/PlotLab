@@ -71,6 +71,38 @@ namespace FrontEnd
             return false;
         }
 
+        public static List<string> PartialNameSearch (string name)
+        {
+            List<string> matches = new List<string> ();
+
+            string wildCardName = name + "*.m";
+           // string wildCardName = name.ToLower () + "*.m";
+
+            DirectoryInfo dir = new DirectoryInfo (currentDirectory);
+            FileInfo [] files = dir.GetFiles(wildCardName, SearchOption.TopDirectoryOnly);
+
+            foreach (FileInfo fi in files)
+            {
+                int index = fi.Name.IndexOf (".m");
+                matches.Add (fi.Name.Remove (index)); // + " ");
+            }
+
+            foreach (string d in searchPath)
+            {
+                dir = new DirectoryInfo (d);
+                files = dir.GetFiles(wildCardName, SearchOption.TopDirectoryOnly);
+
+                foreach (FileInfo fi in files)
+                {
+                    int index = fi.Name.IndexOf (".m");
+                    matches.Add (fi.Name.Remove (index) + " ");
+                }
+            }
+
+            //if (matches.Count > 0) matches.Add ("\n");
+            return matches;
+        }
+
         //******************************************************************************************
 
         public static List<string> GetPathCopy ()
@@ -96,45 +128,8 @@ namespace FrontEnd
                 fileType = SymbolicNameTypes.ScriptFile;
 
             return fileType;
-
-
-            //foreach (string d in searchPath)
-            //{
-            //    string fullName = d + "\\" + name + ".m";
-
-            //    if (File.Exists (fullName))
-            //    {
-            //        // find first word outside of comments
-            //        string line;
-
-            //        StreamReader file = new StreamReader (fullName);
-
-            //        while ((line = file.ReadLine ()) != null)
-            //        {
-            //            if (line.Length > 0)
-            //            {
-            //                string [] words = line.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-            //                if (words.Length > 0)
-            //                {
-            //                    if (words [0].Contains ("%") == false)
-            //                    {
-            //                        if (words [0] == "function")
-            //                            fileType = SymbolicNameTypes.FunctionFile;
-            //                        else
-            //                            fileType = SymbolicNameTypes.ScriptFile;
-
-            //                        break;
-            //                    }
-            //                }
-            //            }
-            //        }
-
-            //        file.Close ();
-            //    }
-            //}
-
-            //return fileType;
         }
+
+
     }
 }

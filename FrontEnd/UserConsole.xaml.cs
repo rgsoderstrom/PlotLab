@@ -11,6 +11,7 @@ using static FrontEnd.Utils;
 using System.Net.NetworkInformation;
 using System.Linq;
 using System.Resources;
+using PLLibrary;
 
 namespace FrontEnd
 {
@@ -352,6 +353,21 @@ namespace FrontEnd
             EventLog.Write (str);
         }
 
+        //
+        // Used by Tab Completions to append text and still allow previous text to be editted
+        //
+        private void EditableAppend (string str)
+        {
+            lock (TextBoxLock)
+            {
+                TextPane.Text += str;
+                TextPane.ScrollToEnd ();
+                TextPane.CaretIndex = TextPane.Text.Length;
+            }
+
+            EventLog.Write (str);
+        }
+
         //***************************************************************************************
         //
 
@@ -373,6 +389,25 @@ namespace FrontEnd
 
         //***************************************************************************************
         //
+        // Tab Completions
+        //
+        
+        List<string> TabCompletions (string typedIn)
+        {
+            List<string> lines = new List<string> ();
+
+            if (typedIn.Length > 1)
+            {
+                lines.AddRange (SystemFunctions.PartialMatch (typedIn));
+                lines.AddRange (FileSearch.PartialNameSearch (typedIn));
+                lines.AddRange (LibraryManager.PartialMatch  (typedIn));
+            }
+
+            return lines;
+        }
+
+        //***************************************************************************************
+        //
         // raw input cleaned up and possibly concatenated into inputLine
         //
 
@@ -382,12 +417,65 @@ namespace FrontEnd
         {
             try
             {
+                //
+                // try Tab Completions
+                //
                 if (e.Key == Key.Tab)
                 {
+                    if (typedIn.Length > 1) // require at least 2 characters
+                    {
+                        List<string> Completions = TabCompletions (typedIn);
+
+                        if (Completions.Count == 1)
+                        {
+                            EditableAppend (Completions [0].Substring (typedIn.Length).TrimEnd ());
+                        }
+
+                        else if (Completions.Count > 1)
+                        {
+                            Print ("\n\n");
+
+                            for (int i = 0; i<Completions.Count; i++)
+                                Print (Completions [i]);
+
+                            //
+                            // if all completions share any starting letters add those to typedIn
+                            //
+                            int matchingCharCount = Completions [0].Length;
+
+                            for (int i=1; i<Completions.Count; i++)
+                            {
+                                int length = Math.Min (Completions [0].Length, Completions [i].Length);
+
+                                for (int j=0; j<length; j++)
+                                {
+                                    if (Completions [0][j] != Completions [i][j])
+                                    {
+                                        matchingCharCount = j;
+                                        break;
+                                    }
+                                }
+
+                                if (matchingCharCount <= typedIn.Length)
+                                    break;
+                            }
+
+                            typedIn = Completions [0].Substring (0, matchingCharCount);
+
+
+
+                            Print ("\n\n" + Prompt);
+                            EditablePrint (typedIn);
+                        }
+                    }
+
                     e.Handled = true;
                     return;
                 }
 
+                //
+                // Ignore control keys
+                //
                 if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
                     return;
 

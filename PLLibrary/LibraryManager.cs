@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using PLCommon;
 
 namespace PLLibrary
@@ -81,6 +80,21 @@ namespace PLLibrary
 
             return type;
         }
+
+
+        public static List<string> PartialMatch (string str)
+        {
+            List<string> matches = new List<string> ();
+
+            foreach (string cmd in PlotCommands.Keys)  {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
+            foreach (string cmd in MathFunctions.Keys) {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
+            foreach (string cmd in IOFunctions.Keys)   {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
+            foreach (string cmd in PlotFunctions.Keys) {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
+
+            //if (matches.Count > 0) matches.Add ("\n");
+            return matches;
+        }
+
 
         //***************************************************************************************************
         //***************************************************************************************************

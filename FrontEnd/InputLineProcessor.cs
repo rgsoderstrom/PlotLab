@@ -74,35 +74,6 @@ namespace FrontEnd
 
 
 
-
-
-
-            //if (firstWord [0] == '!')
-            //{
-            //    try
-            //    {
-            //        string [] tokens = firstWord.Split (new char [] { '!', ':' }, StringSplitOptions.RemoveEmptyEntries);
-            //        int index = Convert.ToInt16 (tokens [0]);
-            //        string recalled = CommandLineHistory.History [index - 1];
-
-            //        //userConsole.HistoryRecallHandler (recalled);
-                    
-
-
-            //        //ProcessOneStatement (ref results, recalled, ref forcePrint);
-            //        return;
-            //    }
-
-            //    catch (Exception ex)
-            //    {
-            //        Print ("Exception: " + ex.Message);
-            //        return;
-            //    }
-            //}
-
-
-
-
             //
             // Test for system command (e.g. cd, ls, path)
             //

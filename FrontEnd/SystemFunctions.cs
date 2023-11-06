@@ -55,6 +55,20 @@ namespace FrontEnd
             return type;
         }
 
+        public static List<string> PartialMatch (string str)
+        {
+            List<string> matches = new List<string> ();
+
+            foreach (string cmd in SystemCommands.Keys)
+            {                
+                if (cmd.StartsWith (str))
+                    matches.Add (cmd + " ");
+            }
+
+            //if (matches.Count > 0) matches.Add ("\n");
+            return matches;
+        }
+
         //***************************************************************************************************
         //***************************************************************************************************
         //***************************************************************************************************
