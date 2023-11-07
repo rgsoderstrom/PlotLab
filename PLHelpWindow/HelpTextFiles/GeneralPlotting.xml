@@ -339,15 +339,15 @@
     </Content>
     
     <SubTopics>
-      <SubTopic SearchKey ="cameraAbsPosition"/>
-      <SubTopic SearchKey ="cameraRelPosition"/>
+      <SubTopic SearchKey ="cameraAbsPos"/>
+      <SubTopic SearchKey ="cameraRelPos"/>
       <SubTopic SearchKey ="cameraCenter"/>
     </SubTopics>
   </HelpTopic>
 
   <!-- ********************************************************************-->
 
-  <HelpTopic SearchKey="cameraAbsPosition">
+  <HelpTopic SearchKey="cameraAbsPos">
     <Header>Position</Header>
 
     <Content>
@@ -362,7 +362,7 @@
 
   <!-- ********************************************************************-->
 
-  <HelpTopic SearchKey="cameraRelPosition">
+  <HelpTopic SearchKey="cameraRelPos">
     <Header>Relative Position</Header>
 
     <Content>
