@@ -119,7 +119,7 @@ namespace FrontEnd
                 args.Add (new PLString (tok [i].text));
             
             //
-            // PlotCommand act on figures, they don't plat any data
+            // PlotCommand act on figures, they don't plot any data
             //
             if (LibraryManager.WhatIs (firstWord) == SymbolicNameTypes.PlotCommand)
             {
