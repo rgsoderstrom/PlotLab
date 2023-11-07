@@ -56,7 +56,7 @@ namespace FrontEnd
         //*****************************************************************************************
 
         enum CommandHistoryWriteOptions {WriteAll, WriteUnique, WriteLatestUnique};
-        private static readonly CommandHistoryWriteOptions writeOption = CommandHistoryWriteOptions.WriteLatestUnique;
+        private static readonly CommandHistoryWriteOptions writeOption = CommandHistoryWriteOptions.WriteUnique;
         private static readonly int maxLineCount = 100; // don't write more than this many lines
 
         static public void Close ()
