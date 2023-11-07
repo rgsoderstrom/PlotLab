@@ -11,7 +11,6 @@ namespace ScriptPreprocess
     {
         List<string>   raw;          // as read from file, tabs expanded to spaces
         List<string>   streamlined;  // delete comments and blank lines
-        List<string>   paused;       // any 'pause' stmts expanded
 
         NumberedScript numbered;     // line numbers added        
         NumberedScript expanded;     // 
@@ -68,11 +67,8 @@ namespace ScriptPreprocess
             // delete comments and blank lines
             streamlined = Cleanup (raw);
 
-            // expand any 'pause' statements
-            paused = ExpandPauses (streamlined);
-
             // add line numbers
-            numbered = new NumberedScript (paused);
+            numbered = new NumberedScript (streamlined);
             expanded = new NumberedScript (numbered); // deep copy
 
             // match-up if-else-end, for-end sets, etc
@@ -160,38 +156,6 @@ namespace ScriptPreprocess
                 ostr = ostr.Trim ();
 
                 if (ostr.Length > 0) output.Add (ostr);
-            }
-
-            return output;
-        }
-
-        //*******************************************************************************
-        //
-        // Expand Pause
-        //
-        List<string> ExpandPauses (List<string> input)
-        {
-            List<string> output = new List<string> ();
-
-            foreach (string str in input)
-            {
-                if (str.Length >= 5)
-                {
-                    if (str.Substring (0, 5) == "pause")
-                    {
-                        string text = str.Substring (5);
-                        if (text.Length == 0) text = "('paused')";
-                        string ostr = "disp " + text;
-                        output.Add (ostr);
-                        output.Add ("PAUSE");
-                    }
-
-                    else
-                        output.Add (str);
-                }
-
-                else
-                    output.Add (str);
             }
 
             return output;

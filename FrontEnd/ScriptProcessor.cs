@@ -16,7 +16,6 @@ namespace FrontEnd
     {
         PrintFunction print = null;
         Workspace workspace = null;
-        //Button resume = null;
 
         NumberedScript expanded = null; // preprocessor output
 
@@ -238,7 +237,7 @@ namespace FrontEnd
         void RunOneScriptLine (string raw)
         {
             bool unused = false;
-            InputLineProcessor ip = new InputLineProcessor (workspace, print); //, resume);
+            InputLineProcessor ip = new InputLineProcessor (workspace, print);
             Utils.CleanupRawInput (raw, inputLines, ref nestingLevel);
 
             int startIndex = 0;

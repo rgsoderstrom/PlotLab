@@ -49,7 +49,7 @@ namespace FrontEnd
             {
                 PLVariable ans = new PLNull ();
                 bool fp = false;
-                InputLineProcessor ip = new InputLineProcessor (userWorkspace, Print); //, ResumeScript_Button);
+                InputLineProcessor ip = new InputLineProcessor (userWorkspace, Print);
                 ip.ProcessOneStatement (ref ans, "startup", ref fp);
             }
 
@@ -176,7 +176,7 @@ namespace FrontEnd
                                 foreach (string str2 in scriptLines)
                                     TextPane.Text += str2 + '\n';
 
-                                ScriptProcessor sp = new ScriptProcessor (userWorkspace, Print); //, ResumeScript_Button);
+                                ScriptProcessor sp = new ScriptProcessor (userWorkspace, Print);
                                 sp.RunScriptLines (scriptLines);
                             }
 
@@ -230,7 +230,7 @@ namespace FrontEnd
                 TextPane.CaretIndex = TextPane.Text.Length;
                 caretLowerLimit     = TextPane.CaretIndex;
 
-                InputLineProcessor ip = new InputLineProcessor (userWorkspace, Print); //, ResumeScript_Button);
+                InputLineProcessor ip = new InputLineProcessor (userWorkspace, Print);
 
                 //
                 // Look for bang (i.e. !) followed by a number and maybe the letter 'p'. Number is index of command
