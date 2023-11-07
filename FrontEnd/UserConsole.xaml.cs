@@ -232,8 +232,10 @@ namespace FrontEnd
 
                 InputLineProcessor ip = new InputLineProcessor (userWorkspace, Print, ResumeScript_Button);
 
-
-
+                //
+                // Look for bang (i.e. !) followed by a number and maybe the letter 'p'. Number is index of command
+                // to recall. It is executed unless followed by :p. If so it is just printed for editting
+                //
                 if (raw [0] == '!')
                 {
                     try
@@ -445,7 +447,8 @@ namespace FrontEnd
 
                             for (int i=1; i<Completions.Count; i++)
                             {
-                                int length = Math.Min (Completions [0].Length, Completions [i].Length);
+                                int length = Math.Min (matchingCharCount, Completions [i].Length);
+                                //int length = Math.Min (Completions [0].Length, Completions [i].Length);
 
                                 for (int j=0; j<length; j++)
                                 {
@@ -610,7 +613,7 @@ namespace FrontEnd
             Print ('\n' + Utils.Prompt);
             ClearInputLine ();
             TextPane.Focus ();
-           // textPaneHasFocus = true;
+            // textPaneHasFocus = true;
         }
 
         internal static void ClearInputLine ()
