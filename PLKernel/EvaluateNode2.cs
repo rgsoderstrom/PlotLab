@@ -275,8 +275,30 @@ namespace PLKernel
                         PLDouble overwrite1 = overwriteData as PLDouble;
                         PLMatrix overwrite2 = overwriteData as PLMatrix;
 
-                        PLVariable r = Operands [0].Operands [0].Value; // rows to overwrite
-                        PLVariable c = Operands [0].Operands [1].Value; // cols to overwrite
+
+                        PLVariable r; // rows to overwrite
+                        PLVariable c; // cols to overwrite
+
+                        if (Operands [0].Operands.Count == 1 && LeftSide.Rows == 1)
+                        {
+                            r = new PLDouble (1);
+                            c = Operands [0].Operands [0].Value;
+                        }
+
+                        else if (Operands [0].Operands.Count == 1 && LeftSide.Cols == 1)
+                        {
+                            r = Operands [0].Operands [0].Value;
+                            c = new PLDouble (1);
+                        }
+
+                        else if (Operands [0].Operands.Count == 2)
+                        {
+                            r = Operands [0].Operands [0].Value; // rows to overwrite
+                            c = Operands [0].Operands [1].Value; // cols to overwrite
+                        }
+
+                        else
+                            throw new Exception ("Left size operand error");
 
                         PLDouble rr  = r as PLDouble;
                         PLDouble cc  = c as PLDouble;
