@@ -49,7 +49,7 @@ namespace FrontEnd
             {
                 PLVariable ans = new PLNull ();
                 bool fp = false;
-                InputLineProcessor ip = new InputLineProcessor (userWorkspace, Print, ResumeScript_Button);
+                InputLineProcessor ip = new InputLineProcessor (userWorkspace, Print); //, ResumeScript_Button);
                 ip.ProcessOneStatement (ref ans, "startup", ref fp);
             }
 
@@ -176,7 +176,7 @@ namespace FrontEnd
                                 foreach (string str2 in scriptLines)
                                     TextPane.Text += str2 + '\n';
 
-                                ScriptProcessor sp = new ScriptProcessor (userWorkspace, Print, ResumeScript_Button);
+                                ScriptProcessor sp = new ScriptProcessor (userWorkspace, Print); //, ResumeScript_Button);
                                 sp.RunScriptLines (scriptLines);
                             }
 
@@ -230,7 +230,7 @@ namespace FrontEnd
                 TextPane.CaretIndex = TextPane.Text.Length;
                 caretLowerLimit     = TextPane.CaretIndex;
 
-                InputLineProcessor ip = new InputLineProcessor (userWorkspace, Print, ResumeScript_Button);
+                InputLineProcessor ip = new InputLineProcessor (userWorkspace, Print); //, ResumeScript_Button);
 
                 //
                 // Look for bang (i.e. !) followed by a number and maybe the letter 'p'. Number is index of command
@@ -608,14 +608,6 @@ namespace FrontEnd
 
         //****************************************************************************************************
 
-        private void ClearInput_Click (object sender, RoutedEventArgs e)
-        {
-            Print ('\n' + Utils.Prompt);
-            ClearInputLine ();
-            TextPane.Focus ();
-            // textPaneHasFocus = true;
-        }
-
         internal static void ClearInputLine ()
         {
             thisConsole.inputLines.Clear ();
@@ -650,72 +642,6 @@ namespace FrontEnd
         {
             PLHelpWindow.HelpWindowManager.LaunchNewHelpWindow ();
             TextPane.Focus ();
-        }
-
-        //****************************************************************************************************
-
-        //bool firstClick = true;
-
-        private void ScriptFile_TextBox_GotFocus (object sender, RoutedEventArgs e)
-        {
-            //if (firstClick)
-            //    ScriptFile_TextBox.Text = "";
-            //firstClick = false;
-        }
-
-        //****************************************************************************************************
-
-        private void OpenScript_Button_Click (object sender, RoutedEventArgs e)
-        {
-        }
-
-        //****************************************************************************************************
-
-        private void StepScript_Button_Click (object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        //****************************************************************************************************
-
-        private void RunScript_Button_Click (object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        //****************************************************************************************************
-
-        private void CloseScript_Button_Click (object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        //****************************************************************************************************
-
-        private void AbortScript_Button_Click (object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        //****************************************************************************************************
-
-        private void ResumeScript_Button_Click (object sender, RoutedEventArgs e)
-        {
-            TextPane.Focus ();
-
-            try
-            {
-                ResumeScript_Button.IsEnabled = ScriptProcessor.ResumePausedScript ();
-            }
-
-            catch (Exception ex)
-            {
-                ResumeScript_Button.IsEnabled = false;
-                Print (ex.Message);
-            }
-
-            Print ("\n");
-            Print (Utils.Prompt);
         }
     }
 }

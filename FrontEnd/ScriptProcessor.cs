@@ -16,51 +16,21 @@ namespace FrontEnd
     {
         PrintFunction print = null;
         Workspace workspace = null;
-        Button resume = null;
+        //Button resume = null;
 
         NumberedScript expanded = null; // preprocessor output
 
-        public enum ScriptTerminationReason {Complete, Paused};
+        public enum ScriptTerminationReason {Complete, Failed};
 
-        public ScriptProcessor (Workspace ws, PrintFunction pf, Button res)
+        public ScriptProcessor (Workspace ws, PrintFunction pf)
         {
             workspace = ws;
             print = pf;
-            resume = res;
         }
         
         //***************************************************************************************************************
 
-        static internal List<ScriptProcessor> PausedScripts = new List<ScriptProcessor> ();
-
-        static internal bool ResumePausedScript ()
-        {
-            try
-            {
-                if (PausedScripts.Count > 0)
-                {
-                    ScriptProcessor sp = PausedScripts [PausedScripts.Count - 1];
-                    PausedScripts.RemoveAt (PausedScripts.Count - 1);
-
-                    ScriptTerminationReason reason = sp.ResumeScript ();
-
-                    if (reason == ScriptTerminationReason.Paused)
-                        PausedScripts.Add (sp);
-                }
-            }
-
-            catch (Exception ex)
-            {
-                PausedScripts.Clear ();
-                throw ex;
-            }
-
-            return (PausedScripts.Count > 0); // "true" will keep "resume" button enabled
-        }
-
-        //***************************************************************************************************************
-
-        // passed lines to run as a script. 
+        // passed lines to run as a script. Typically copied and pasted in
 
         internal ScriptTerminationReason RunScriptLines (List<string> scriptLines)
         {
@@ -145,19 +115,6 @@ namespace FrontEnd
 
         //***********************************************************************************
 
-        NumberedScript PausedScript;
-        int ResumeFromLineNumber = 0;
-        int ResumeToLineNumber = 0;
-
-        //***********************************************************************************
-
-        public ScriptTerminationReason ResumeScript ()
-        {           
-            return RunScriptLines (PausedScript, ResumeFromLineNumber, ResumeToLineNumber);
-        }
-
-        //***********************************************************************************
-
         ScriptTerminationReason RunScriptLines (NumberedScript script, int from, int to)
         {
             if (from == 0 || to == 0)
@@ -176,15 +133,6 @@ namespace FrontEnd
                     case "return":
                     case "return;":
                         return ScriptTerminationReason.Complete;
-
-
-
-                    case "PAUSE":
-                        PausedScript = script;
-                        ResumeFromLineNumber = lineNumber + NumberedScript.lineNumberIncr;
-                        ResumeToLineNumber = to;
-                        return ScriptTerminationReason.Paused;
-                        
 
                     case "ASSN": // assignment
                     {
@@ -284,21 +232,13 @@ namespace FrontEnd
 
         //***********************************************************************************
 
-
-
-
-
         List<Utils.InputLine> inputLines = new List<Utils.InputLine> (); 
         Utils.NestingLevel nestingLevel = new Utils.NestingLevel ();
-
-
-
-
 
         void RunOneScriptLine (string raw)
         {
             bool unused = false;
-            InputLineProcessor ip = new InputLineProcessor (workspace, print, resume);
+            InputLineProcessor ip = new InputLineProcessor (workspace, print); //, resume);
             Utils.CleanupRawInput (raw, inputLines, ref nestingLevel);
 
             int startIndex = 0;
@@ -344,8 +284,6 @@ namespace FrontEnd
             {
                 inputLines.RemoveRange (0, endIndex + 1);
             }
-
-
         }
 
         //*******************************************************************************************************

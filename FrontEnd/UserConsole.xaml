@@ -8,41 +8,20 @@
         Title="Plot Lab, Ver. 1" Height="450" Width="1000" Left="10" Top="550" Loaded="Window_Loaded" Closed="Window_Closed">
     <DockPanel>
         <StackPanel Orientation="Vertical" Margin="5">
-
-            <Border BorderBrush="Gray" BorderThickness="1" Margin="2,2,2,0">
-                <StackPanel Orientation="Vertical">
-
-                    <!--
-                    <TextBox Name="ScriptFile_TextBox" HorizontalContentAlignment="Center" Margin="2,2,2,0" MinWidth="100" Text="Script Name" GotFocus="ScriptFile_TextBox_GotFocus"/>
-                    <Button  Name="OpenScript_Button"  Content="Open Script"    Margin="2,2,2,0" IsEnabled="True"  Click="OpenScript_Button_Click"/>
-                    <Button  Name="StepScript_Button"  Content="Step Script"    Margin="2,2,2,0" IsEnabled="False" Click="StepScript_Button_Click"/>
-                    <Button  Name="RunScript_Button"   Content="Run Script"     Margin="2,2,2,0" IsEnabled="False" Click="RunScript_Button_Click"/>
-                    <Button  Name="CloseScript_Button" Content="Exit Script"    Margin="2,2,2,2" IsEnabled="False" Click="CloseScript_Button_Click"/>                    
-                    -->
-                    <Button  Name="ResumeScript_Button" Background="LightGreen" Content="Resume Script" Margin="2,2,2,2" IsEnabled="False" Click="ResumeScript_Button_Click"/>
-                    <Button  Name="AbortScript_Button"  Background="LightGreen" Content="Abort Script" Margin="2,2,2,2" IsEnabled="False" Click="AbortScript_Button_Click"/>
-
-                </StackPanel>
-            </Border>
-
-            <Button Name="ClearConsole" Content="Clear Text Pane" Margin="2,10,2,0" IsEnabled="True" Click="ClearConsole_Click"/>
-            <Button Name="ClearInput"   Content="Clear Input"     Margin="2,6, 2,0" IsEnabled="True" Click="ClearInput_Click"/>
-
             <GroupBox Header="History" BorderBrush="Green" BorderThickness="2" Margin="2,2,2,0">
                 <StackPanel Orientation="Vertical">
                     <Button Name="ShowHistory"  Content="Show History"    Margin="2,2,2,0" IsEnabled="True" Click="ShowHistory_Click"/>
                     <Button Name="ClearHistory" Content="Clear History"   Margin="2,2,2,0" IsEnabled="True" Click="ClearHistory_Click"/>
                 </StackPanel>
             </GroupBox>
-        
-            <Button Name="HelpWindow"   Content="Help Window"     Margin="2,20,2,0" IsEnabled="True" Click="HelpWindow_Click"/>
 
+            <Button Name="ClearConsole" Content="Clear Console" Margin="2,10,2,0" IsEnabled="True" Click="ClearConsole_Click"/>
+            <Button Name="HelpWindow"   Content="Help Window"   Margin="2,6,2,0"  IsEnabled="True" Click="HelpWindow_Click"/>
         </StackPanel>
 
         <TextBox MinHeight="100" Margin="5" Name="TextPane" FontSize="14" VerticalScrollBarVisibility="Visible" 
                  HorizontalScrollBarVisibility="Auto" AcceptsReturn="True" TextWrapping="Wrap" PreviewKeyDown="TextPane_PreviewKeyDown"
                  PreviewMouseLeftButtonDown="TextPane_PreviewMouseLeftButtonDown" KeyUp="TextPane_KeyUp" LostKeyboardFocus="TextPane_LostFocus" GotKeyboardFocus="TextPane_GotKeyboardFocus">
         </TextBox>
-
     </DockPanel>
 </Window>

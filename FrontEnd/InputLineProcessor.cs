@@ -13,23 +13,17 @@ namespace FrontEnd
     {
         Workspace workspace;
         PrintFunction Print;
-        Button ResumeButton;
-    //    UserConsole userConsole;
 
-        public InputLineProcessor (Workspace ws, PrintFunction pr, Button res) //, UserConsole uc)
+        public InputLineProcessor (Workspace ws, PrintFunction pr) //, Button res) //, UserConsole uc)
         {
             workspace = ws;
             Print = pr;
-            ResumeButton = res;
-       //   userConsole = uc;
         }
 
         public InputLineProcessor (Workspace ws)
         {
             workspace = ws;
             Print = null;
-            ResumeButton = null;
-       //   userConsole = null;
         }
 
         /// <summary>
@@ -88,17 +82,10 @@ namespace FrontEnd
             //
             if (FileSearch.WhatIs (firstWord) == SymbolicNameTypes.ScriptFile)
             {
-                ScriptProcessor sp = new ScriptProcessor (workspace, Print, ResumeButton);
+                ScriptProcessor sp = new ScriptProcessor (workspace, Print);
                 ScriptProcessor.ScriptTerminationReason reason = sp.FindAndRunScript (firstWord);
 
-                if (reason == ScriptProcessor.ScriptTerminationReason.Paused)
-                {
-                    if (ResumeButton != null) ResumeButton.IsEnabled = true;
-                    ScriptProcessor.PausedScripts.Add (sp);
-                    Print ("Paused, click \"Resume Script\" to continue\n");
-                }
-
-                else if (reason != ScriptProcessor.ScriptTerminationReason.Complete)
+                if (reason == ScriptProcessor.ScriptTerminationReason.Failed)
                     throw new Exception ("Script error");
 
                 return;
