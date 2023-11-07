@@ -13,8 +13,9 @@ plot (pts);
 title ('Random Points')
 
 %PlotCenter (1, 2, 3);
-PlotCenter (pts (:, 2));
+PlotCenter (pts (:, N));
 %PlotCenter (pts (1, 1), pts (2, 1), pts (3, 1));
 
-CameraPos (8, 4, -2);
+%CameraAbsPos (2, 2, 2);
+CameraRelPos (2, 2, 2);
 

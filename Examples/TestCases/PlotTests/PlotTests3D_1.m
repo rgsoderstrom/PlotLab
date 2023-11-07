@@ -9,15 +9,14 @@
 
 % title ('Random points, different sizes')
 
-clf
-
 t = 1 : 0.1 : 8 * pi;
 x = (6 - t/8) .* cos (t);
 y = (5 - t/8) .* sin (t);
 z = 3 * log (t);
 
 pts = [x ; y ; z];
-figure (2) % ; plot (pts);
+%figure (2) % ; plot (pts);
+figure % ; plot (pts);
 
 hold on
 

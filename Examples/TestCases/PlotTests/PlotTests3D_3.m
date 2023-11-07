@@ -13,4 +13,5 @@ ym2 = ym .^ 2;
 z = 0.25 * (xm2 + ym2 - 6) - 1;
 
 plot (x, y, z);
+title ('Paraboloid');
 
