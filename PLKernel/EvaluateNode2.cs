@@ -298,7 +298,7 @@ namespace PLKernel
                         }
 
                         else
-                            throw new Exception ("Left size operand error");
+                            throw new Exception ("Left side operand error");
 
                         PLDouble rr  = r as PLDouble;
                         PLDouble cc  = c as PLDouble;
