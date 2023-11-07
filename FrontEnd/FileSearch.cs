@@ -84,7 +84,7 @@ namespace FrontEnd
             foreach (FileInfo fi in files)
             {
                 int index = fi.Name.IndexOf (".m");
-                matches.Add (fi.Name.Remove (index)); // + " ");
+                matches.Add (fi.Name.Remove (index) + " ");
             }
 
             foreach (string d in searchPath)
