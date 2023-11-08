@@ -400,6 +400,7 @@ namespace FrontEnd
 
             if (typedIn.Length > 1)
             {
+                lines.AddRange (userWorkspace.PartialMatch (typedIn));
                 lines.AddRange (SystemFunctions.PartialMatch (typedIn));
                 lines.AddRange (FileSearch.PartialNameSearch (typedIn));
                 lines.AddRange (LibraryManager.PartialMatch  (typedIn));

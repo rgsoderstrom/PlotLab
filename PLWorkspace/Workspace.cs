@@ -148,6 +148,19 @@ namespace PLWorkspace
             return type;
         }
 
+        public List<string> PartialMatch (string str)
+        {
+            List<string> matches = new List<string> ();
+
+            foreach (string cmd in Variables.Keys) {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
+            foreach (string cmd in Constants.Keys) {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
+            foreach (string cmd in Commands.Keys)  {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
+            foreach (string cmd in Functions.Keys) {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
+
+            //if (matches.Count > 0) matches.Add ("\n");
+            return matches;
+        }
+
         //*****************************************************************************************
         //
         // Add or change a variable
