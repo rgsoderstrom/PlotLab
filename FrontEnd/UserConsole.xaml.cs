@@ -394,17 +394,17 @@ namespace FrontEnd
         // Tab Completions
         //
         
-        List<string> TabCompletions (string typedIn)
+        List<string> FindTabCompletions (string token)
         {
             List<string> lines = new List<string> ();
 
-            if (typedIn.Length > 1)
-            {
-                lines.AddRange (userWorkspace.PartialMatch (typedIn));
-                lines.AddRange (SystemFunctions.PartialMatch (typedIn));
-                lines.AddRange (FileSearch.PartialNameSearch (typedIn));
-                lines.AddRange (LibraryManager.PartialMatch  (typedIn));
-            }
+            if (token.Length < 2) // need at least 2 chars to search
+                return lines;
+
+            lines.AddRange (userWorkspace.PartialMatch   (token));
+            lines.AddRange (SystemFunctions.PartialMatch (token));
+            lines.AddRange (FileSearch.PartialNameSearch (token));
+            lines.AddRange (LibraryManager.PartialMatch  (token));
 
             return lines;
         }
@@ -427,11 +427,17 @@ namespace FrontEnd
                 {
                     if (typedIn.Length > 1) // require at least 2 characters
                     {
-                        List<string> Completions = TabCompletions (typedIn);
+                        string[] tokens = typedIn.Split (new char [] { ' ', '=' }, StringSplitOptions.RemoveEmptyEntries);
+                        int last = tokens.Length - 1;
+                        string searchToken = tokens [last];
+                        
+                        List<string> Completions = FindTabCompletions (searchToken);
 
                         if (Completions.Count == 1)
                         {
-                            EditableAppend (Completions [0].Substring (typedIn.Length).TrimEnd ());
+                            // append the completion chars that the user has not already typed
+                            string tabAddedChars = Completions [0].Substring (searchToken.Length);
+                            EditableAppend (tabAddedChars.TrimEnd ());
                         }
 
                         else if (Completions.Count > 1)
@@ -442,14 +448,13 @@ namespace FrontEnd
                                 Print (Completions [i]);
 
                             //
-                            // if all completions share any starting letters add those to typedIn
+                            // if all completions share any starting letters will add those in common to typedIn
                             //
                             int matchingCharCount = Completions [0].Length;
 
                             for (int i=1; i<Completions.Count; i++)
                             {
                                 int length = Math.Min (matchingCharCount, Completions [i].Length);
-                                //int length = Math.Min (Completions [0].Length, Completions [i].Length);
 
                                 for (int j=0; j<length; j++)
                                 {
@@ -464,12 +469,15 @@ namespace FrontEnd
                                     break;
                             }
 
-                            typedIn = Completions [0].Substring (0, matchingCharCount);
+                            // get the leading characters common to all completions
+                            string commonCharacters = Completions [0].Substring (0, matchingCharCount);
 
-
+                            // and remove the ones the user has already typed
+                            string tabAddedChars = commonCharacters.Substring (searchToken.Length);
 
                             Print ("\n\n" + Prompt);
                             EditablePrint (typedIn);
+                            EditableAppend (tabAddedChars);
                         }
                     }
 
