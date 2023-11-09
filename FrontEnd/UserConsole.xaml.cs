@@ -662,11 +662,13 @@ namespace FrontEnd
         private void ShowParse_Click (object sender, RoutedEventArgs e)
         {
             EntryPoint.ShowParsingTokens = (bool) (e.OriginalSource as CheckBox).IsChecked;
+            TextPane.Focus ();
         }
 
         private void ShowTree_Click (object sender, RoutedEventArgs e)
         {
             EntryPoint.ShowExprTree = (bool) (e.OriginalSource as CheckBox).IsChecked;
+            TextPane.Focus ();
         }
     }
 }

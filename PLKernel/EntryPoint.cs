@@ -24,16 +24,21 @@ namespace PLKernel
 
                 if (ShowParsingTokens)
                 {
+                    // this runs a copy of the actual parsing code
                     TokenParsing parsing = new TokenParsing ();
-                    List<Token> passOneTokens = parsing.ParsingPassOne (expression);
-                    List<Token> passTwoTokens = parsing.ParsingPassTwo (passOneTokens, workspace);
-
                     Window win = new Window ();
                     TextBox tb = new TextBox ();
+
+                    // first pass
+                    List<Token> tokens = parsing.ParsingPassOne (expression);
                     tb.Text += "First pass:\n";
-                    foreach (Token tok in passOneTokens) tb.Text += tok.ToString () + "\n";
+                    foreach (Token tok in tokens) tb.Text += tok.ToString () + "\n";
+
+                    // second pass
+                    tokens = parsing.ParsingPassTwo (tokens, workspace);
                     tb.Text += "\nSecond pass:\n";
-                    foreach (Token tok in passTwoTokens) tb.Text += tok.ToString () + "\n";
+                    foreach (Token tok in tokens) tb.Text += tok.ToString () + "\n";
+
                     win.Content = tb;
                     win.Title = "Parsing " + Counter;
                     win.Width = 400;
