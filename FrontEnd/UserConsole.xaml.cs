@@ -12,6 +12,8 @@ using System.Net.NetworkInformation;
 using System.Linq;
 using System.Resources;
 using PLLibrary;
+using PLKernel;
+using System.Windows.Controls;
 
 namespace FrontEnd
 {
@@ -651,6 +653,16 @@ namespace FrontEnd
         {
             PLHelpWindow.HelpWindowManager.LaunchNewHelpWindow ();
             TextPane.Focus ();
+        }
+
+        private void ShowParse_Click (object sender, RoutedEventArgs e)
+        {
+            EntryPoint.ShowParsingTokens = (bool) (e.OriginalSource as CheckBox).IsChecked;
+        }
+
+        private void ShowTree_Click (object sender, RoutedEventArgs e)
+        {
+            EntryPoint.ShowExprTree = (bool) (e.OriginalSource as CheckBox).IsChecked;
         }
     }
 }
