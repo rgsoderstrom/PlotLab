@@ -39,6 +39,10 @@ namespace FrontEnd
 
             foreach (string str in StartupMessages)
                 Print (str + "\n");
+
+            // get initial state of check boxes
+            EntryPoint.ShowParsingTokens = (bool) ShowParse_Checkbox.IsChecked;
+            EntryPoint.ShowExprTree      = (bool) ShowTree_Checkbox.IsChecked;
         }
 
         private void Window_Loaded (object sender, RoutedEventArgs e)
