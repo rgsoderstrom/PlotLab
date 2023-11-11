@@ -82,7 +82,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="FileSearch.cs" />
-    <Compile Include="ScriptStack.cs" />
     <Compile Include="SystemFunctions.cs" />
     <Compile Include="InputLineProcessor.cs" />
     <Compile Include="ScriptPreprocessor.cs" />

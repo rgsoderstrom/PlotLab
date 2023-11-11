@@ -46,12 +46,32 @@ namespace PLKernel
                     Evaluate_Function (workspace);
                     break;
 
+                case TokenType.FunctionFile:
+                    Evaluate_MFileFunction ();
+                    break;
+
 
                 default: throw new Exception ("Not found: " + Operator.ToString ());
                 //default: throw new Exception ("Evaluate: node type not supported: " + NodeType.ToString ());
             }
 
             return Value;
+        }
+
+        //*********************************************************************************
+        //*********************************************************************************
+
+        PLVariable Evaluate_MFileFunction ()
+        {
+       //   Value = new PLDouble (456);
+
+            PLDouble num = (PLDouble) Operands [0].Evaluate (workspace);
+            PLDouble den = (PLDouble) Operands [1].Evaluate (workspace);
+
+            Value = new PLDouble (num.Data / den.Data);
+
+
+            return new PLNull ();
         }
 
         //*********************************************************************************

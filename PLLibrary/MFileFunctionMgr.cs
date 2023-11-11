@@ -6,6 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+
+        // ENHANCEMENT: add a cache of previously found files so I don't have to
+        //              search for the same file twice
+
+
+
 namespace PLLibrary
 {
     static public class MFileFunctionMgr
@@ -34,11 +41,6 @@ namespace PLLibrary
             }
         }
 
-
-        // ENHANCEMENT: add a cache of previously found files so I don't have to
-        //              search for the same file twice
-
-
         //*****************************************************************************
         //
         // IsMFile - search current dir and all path dirs for a function file
@@ -46,11 +48,22 @@ namespace PLLibrary
         //
         public static bool IsMFileFunction (string name)
         {
+            string unused = null;
+            return IsMFileFunction (name, ref unused);
+        }
+
+        public static bool IsMFileFunction (string name, ref string fullPath)
+        {
             string full = CurrentDir + "\\" + name + ".m";
+            fullPath = null;
 
             if (File.Exists (full))
             {
-                return IsFunctionFile (full);
+                if (IsFunctionFile (full))
+                {
+                    fullPath = full;
+                    return true;
+                }
             }
 
             foreach (string d in SearchPathCopy)
@@ -59,7 +72,11 @@ namespace PLLibrary
 
                 if (File.Exists (full))
                 {
-                    return IsFunctionFile (full);
+                    if (IsFunctionFile (full))
+                    {
+                        fullPath = full;
+                        return true;
+                    }
                 }
             }
            

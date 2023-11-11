@@ -393,7 +393,11 @@ namespace FunctionLibrary
 
         // the "name" string here is only for error reporting
 
-        static public PLVariable Sin    (PLVariable arg) {return MathFunction (Math.Sin,  "sin",    arg);}
+        static public PLVariable Sin    (PLVariable arg) 
+        {
+            return MathFunction (Math.Sin,  "sin",    arg);
+        }
+
         static public PLVariable Cos    (PLVariable arg) {return MathFunction (Math.Cos,  "cos",    arg);}
         static public PLVariable Tan    (PLVariable arg) {return MathFunction (Math.Tan,  "tan",    arg);}
         static public PLVariable Sqrt   (PLVariable arg) {return MathFunction (Math.Sqrt, "sqrt",   arg);}
