@@ -5,6 +5,7 @@ using System.Windows;
 using System.IO;
 
 using PLCommon;
+using PLLibrary;
 
 namespace FrontEnd
 {
@@ -211,7 +212,10 @@ namespace FrontEnd
                 }
 
                 if (Directory.Exists (nextCurrentDir))
+                {
                     FileSearch.CurrentDirectory = nextCurrentDir;
+                    MFileFunctionMgr.CurrentDir = nextCurrentDir;
+                }
                 else
                     throw new Exception ("Directory " + nextCurrentDir + " doesn't exist");
             }
@@ -356,6 +360,7 @@ namespace FrontEnd
                 if (path [path.Length - 1] == '\'') path = path.Substring (0, path.Length - 1);
 
                 FileSearch.AddPath (path);
+                MFileFunctionMgr.SearchPathCopy = FileSearch.GetPathCopy ();
             }
 
             return new PLNull ();

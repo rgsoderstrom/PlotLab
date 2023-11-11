@@ -73,10 +73,11 @@ namespace PLLibrary
         {
             SymbolicNameTypes type = SymbolicNameTypes.Unknown;
 
-            if      (PlotCommands.ContainsKey  (str)) {type = SymbolicNameTypes.PlotCommand;}
-            else if (MathFunctions.ContainsKey (str)) {type = SymbolicNameTypes.Function;}
-            else if (IOFunctions.ContainsKey   (str)) {type = SymbolicNameTypes.Function;}
-            else if (PlotFunctions.ContainsKey (str)) {type = SymbolicNameTypes.Function;}
+            if      (PlotCommands.ContainsKey         (str)) {type = SymbolicNameTypes.PlotCommand;}
+            else if (MathFunctions.ContainsKey        (str)) {type = SymbolicNameTypes.Function;}
+            else if (IOFunctions.ContainsKey          (str)) {type = SymbolicNameTypes.Function;}
+            else if (PlotFunctions.ContainsKey        (str)) {type = SymbolicNameTypes.Function;}
+            else if (MFileFunctionMgr.IsMFileFunction (str)) {type = SymbolicNameTypes.FunctionFile;}
 
             return type;
         }

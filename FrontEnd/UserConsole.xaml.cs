@@ -57,6 +57,9 @@ namespace FrontEnd
                 bool fp = false;
                 InputLineProcessor ip = new InputLineProcessor (userWorkspace, Print);
                 ip.ProcessOneStatement (ref ans, "startup", ref fp);
+
+                MFileFunctionMgr.CurrentDir = FileSearch.CurrentDirectory;
+                MFileFunctionMgr.SearchPathCopy = FileSearch.GetPathCopy ();
             }
 
             catch (Exception ex)

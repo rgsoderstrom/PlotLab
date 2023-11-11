@@ -44,7 +44,7 @@ namespace FrontEnd
 
         //*******************************************************************************************
         //
-        // Check cwd and path to see if file exists. if so, return its "path + name + ext"
+        // Check cwd and search path to see if file exists. if so, return its "path + name + ext"
         //
 
         public static bool NameSearch (string name, ref string fullName)
