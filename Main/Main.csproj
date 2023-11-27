@@ -59,7 +59,9 @@
     <Compile Include="TokenParsing2.cs" />
     <Compile Include="TokenUtils.cs" />
     <Compile Include="TokenUtils2.cs" />
-    <Compile Include="UserConsole.xaml.cs" />
+    <Compile Include="UserConsole.xaml.cs">
+		<DependentUpon>UserConsole.xaml</DependentUpon>
+	</Compile>
     <Compile Include="Utils.cs" />
     <Compile Include="Utils2.cs" />
   </ItemGroup>
