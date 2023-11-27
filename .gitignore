@@ -1,0 +1,12 @@
+.vs/
+.editorconfig
+bin/
+obj/
+packages/
+PLLibrary/_*.txt
+*.mpp
+utHelpWindow*/
+FrontEnd/
+PLKernel/
+
+

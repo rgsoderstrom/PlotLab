@@ -214,7 +214,7 @@ namespace FrontEnd
                 if (Directory.Exists (nextCurrentDir))
                 {
                     FileSearch.CurrentDirectory = nextCurrentDir;
-                    MFileFunctionMgr.CurrentDir = nextCurrentDir;
+                   // MFileFunctionMgr.CurrentDir = nextCurrentDir;
                 }
                 else
                     throw new Exception ("Directory " + nextCurrentDir + " doesn't exist");

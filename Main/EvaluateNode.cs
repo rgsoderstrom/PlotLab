@@ -47,7 +47,7 @@ namespace Main
                     break;
 
                 case TokenType.FunctionFile:
-                    Evaluate_MFileFunction (workspace);
+                    Evaluate_MFileFunction (workspace, expression);
                     break;
 
 
@@ -61,29 +61,115 @@ namespace Main
         //*********************************************************************************
         //*********************************************************************************
 
-        PLVariable Evaluate_MFileFunction (Workspace global)
+        PLVariable Evaluate_MFileFunction (Workspace callersWorkspace, string expression)
         {
-       //   Value = new PLDouble (456);
 
-            PLDouble num = (PLDouble) Operands [0].Evaluate (workspace);
-            PLDouble den = (PLDouble) Operands [1].Evaluate (workspace);
-
-            Value = new PLDouble (num.Data / den.Data);
-
-
-            // Create new (empty) workspace
-            // Copy passed-in operands into local workspace, with names of input parameters (from m-file)
+            // Create new (empty) local workspace
+            // Copy passed-in operands into that workspace, with names of input parameters (from m-file)
             // Pass function lines to ScriptProcessor
-            // Copy output parameters from local workspace to global
+            // Copy output parameters to Value, as ordered list
+            //  - PLList
 
 
-            Workspace local = new Workspace ();
-            ScriptProcessor sp = new ScriptProcessor (local, PF);
+            Workspace functionsWorkspace = new Workspace ();
+            ScriptProcessor sp = new ScriptProcessor (functionsWorkspace, PF);
+
+            string funcName = Operator; // a = f1 (b); 
+            string fullName = ""; // full path to f1.m, filled-in below
+
+            try
+            {
+                if (MFileFunctionMgr.IsMFileFunction (funcName, ref fullName))
+                {
+                    //***********************************************************
+                    //
+                    // Split the m-file into inputs, executable and outputs
+                    //
+
+                    try
+                    {
+                        MFileFunctionMgr.ParseMFile (funcName, fullName);
+                    }
+
+                    catch (Exception ex)
+                    {
+                        PF ("Error parsing m-file: " + ex.Message);
+                    }
+
+                    //*****************************************************************************************
+                    //
+                    // evaluate the arguments passed to the function using the caller's workspace and get them in one list
+                    //
+                    List<PLVariable> inputArguments = new List<PLVariable> ();
+
+                    foreach (ExpressionTreeNode etn in Operands)
+                        inputArguments.Add (etn.Evaluate (callersWorkspace));
+
+                    //
+                    // attach the names to the values and put into the function's local workspace
+                    //
+                    for (int i=0; i<inputArguments.Count; i++)
+                    {
+                        inputArguments [i].Name = MFileFunctionMgr.InputFormalParams [i];
+                        functionsWorkspace.Add (inputArguments [i]);
+                    }
+
+                    //
+                    // run the executable lines just like a script
+                    //
+                    ScriptProcessor scriptProcessor = new ScriptProcessor (functionsWorkspace, PF);
+                    scriptProcessor.RunScriptLines (MFileFunctionMgr.ExecutableScript);
+
+
+                    //
+                    // place the output variables in the caller's workspace ...
+                    //
+
+                    if (MFileFunctionMgr.OutputFormalParams.Count > 1)
+                    {
+                        // output parameters in the original expression are between square brackets
+                        string [] tokens = expression.Split (new char [] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
+
+                        string [] outputs = tokens [0].Split (new char [] {' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+
+
+                        for (int i = 0; i<MFileFunctionMgr.OutputFormalParams.Count; i++)
+                        {
+                            PLDouble dbl = new PLDouble (functionsWorkspace.Get (MFileFunctionMgr.OutputFormalParams [i]));
+                            dbl.Name = outputs [i];
+                            callersWorkspace.Add (dbl);
+                        }
+                    }
 
 
 
 
+                    //
+                    // ... and in this node's Value field
+                    //
 
+                    if (MFileFunctionMgr.OutputFormalParams.Count == 1)
+                    {
+                        Value = functionsWorkspace.Get (MFileFunctionMgr.OutputFormalParams [0]);
+                    }
+
+                    else
+                    {
+                        Value = new PLList ();
+
+                        foreach (string str in MFileFunctionMgr.OutputFormalParams)
+                        {
+                            (Value as PLList).Add (functionsWorkspace.Get (str));
+                        }
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                throw new Exception ("Error evaluating m-file function " + funcName + ": " + ex.Message);
+            }
 
 
 

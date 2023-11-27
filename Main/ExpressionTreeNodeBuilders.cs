@@ -66,8 +66,8 @@ namespace Main
                 if (i > index) right.Add (tokens [i]);
             }
 
-            Operands.Add (new ExpressionTreeNode (left, workspace));
-            Operands.Add (new ExpressionTreeNode (right, workspace));
+            Operands.Add (new ExpressionTreeNode (left,  workspace, expression));
+            Operands.Add (new ExpressionTreeNode (right, workspace, expression));
         }
 
         //*************************************************************************************************
@@ -265,7 +265,7 @@ namespace Main
                 case TokenType.Pair:
                 {
                     List<Token> tok = new List<Token> () { tokens.t1 };
-                    Operands.Add (new ExpressionTreeNode (tok, workspace));
+                    Operands.Add (new ExpressionTreeNode (tok, workspace, expression));
                 }
                 break;
 

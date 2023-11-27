@@ -12,6 +12,7 @@ namespace Main
 {
     internal partial class ExpressionTreeNode
     {
+        public string expression; // keep a copy of original expr
         public string Operator = "";
         public TokenType NodeType = TokenType.None;
 
@@ -49,6 +50,7 @@ namespace Main
         //
         public ExpressionTreeNode (string expr, Workspace ws)
         {
+            expression = expr;
             workspace = ws;
             TokenParsing parsing = new TokenParsing ();
             List<Token> tokens = parsing.StringToTokens (expr, workspace);
@@ -59,8 +61,9 @@ namespace Main
         //
         // private ctor
         //
-        ExpressionTreeNode (List<Token> tokens, Workspace ws)
+        ExpressionTreeNode (List<Token> tokens, Workspace ws, string expr)
         {
+            expression = expr;
             workspace = ws;
             ConstructorCommon (tokens);
         }

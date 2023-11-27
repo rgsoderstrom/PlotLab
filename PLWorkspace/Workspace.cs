@@ -286,7 +286,15 @@ namespace PLWorkspace
                             break;
                         }
 
-                        Variables.Remove (str.Data);
+                        try
+                        {
+                            Variables.Remove (str.Data);
+                        }
+
+                        catch (KeyNotFoundException)
+                        {
+
+                        }
                     }
                 }
             }

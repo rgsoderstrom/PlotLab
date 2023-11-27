@@ -4,12 +4,10 @@ PlotLab Repository
 
 PlotLab is a scripting environment that uses the plotting tools in the PlotxD_Embedded and PlottingLib. Syntax is similar to Matlab.
 
-FrontEnd - user interface and script processing
+Main - user interface and script processing. Expression evaluator and functions to support it.
 
 PLCommon - defines the "PL" variables used in most of the other code. Top level
 		   abstract class is PLVariable and all other derived from it.
-
-PLKernel - expression evaluator and functions to support it.
 
 PLLibrary - implementations of most functions invoked by user's script (e.g. sin, plot, etc)
 
@@ -22,5 +20,10 @@ ut directories - unit tests of various modules
 zDocumentation - start of documentation. NOT MAINTAINED, LIKELY NO LONGER ACCURATE.
 
 PetzoldMedia3D - available at http://www.charlespetzold.com/3D/
+
+
+Combined into "Main" and individual projects removed:
+FrontEnd - user interface and script processing
+PLKernel - expression evaluator and functions to support it.
 
 

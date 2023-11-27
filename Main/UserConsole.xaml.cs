@@ -7,12 +7,7 @@ using System.Windows.Input;
 using Common;
 using PLCommon;
 using PLWorkspace;
-//using static FrontEnd.Utils;
-using System.Net.NetworkInformation;
-using System.Linq;
-using System.Resources;
 using PLLibrary;
-//using PLKernel;
 using System.Windows.Controls;
 
 namespace Main
@@ -27,7 +22,7 @@ namespace Main
 
         public UserConsole ()
         {
-            CheckDocumentDirectories ("PlotLabV1", StartupMessages);
+            CheckDocumentDirectories ("PlotLabV1", StartupMessages);  //---------------------------- CHANGE TO V2
             EventLog.Open (UserConsole.LogFileDirectory + "\\Log.txt", true); // false);
             FileSearch.Open ();
             CommandLineHistory.Open ();
