@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 
 using PLCommon;
+using PLLibrary;
 
 namespace Main
 {
@@ -121,15 +122,18 @@ namespace Main
 
         public static SymbolicNameTypes WhatIs (string name)
         {
+            string fullName = "";
             SymbolicNameTypes fileType = SymbolicNameTypes.Unknown;
-            string unused = "";
 
-            if (NameSearch (name, ref unused) == true)
-                fileType = SymbolicNameTypes.ScriptFile;
+            if (NameSearch (name, ref fullName) == true)
+            {
+                if (MFileFunctionMgr.IsMFileFunction (name, ref fullName))
+                    fileType = SymbolicNameTypes.FunctionFile;
+                else
+                    fileType = SymbolicNameTypes.ScriptFile;
+            }
 
             return fileType;
         }
-
-
     }
 }

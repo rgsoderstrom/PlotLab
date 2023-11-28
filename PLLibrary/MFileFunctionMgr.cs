@@ -59,16 +59,19 @@ namespace PLLibrary
                 }
             }
 
-            foreach (string d in SearchPathCopy)
+            if (SearchPathCopy != null)
             {
-                full = d + "\\" + name + ".m";
-
-                if (File.Exists (full))
+                foreach (string d in SearchPathCopy)
                 {
-                    if (IsFunctionFile (full))
+                    full = d + "\\" + name + ".m";
+
+                    if (File.Exists (full))
                     {
-                        fullPath = full;
-                        return true;
+                        if (IsFunctionFile (full))
+                        {
+                            fullPath = full;
+                            return true;
+                        }
                     }
                 }
             }
