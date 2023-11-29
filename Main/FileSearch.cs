@@ -123,11 +123,12 @@ namespace Main
         public static SymbolicNameTypes WhatIs (string name)
         {
             string fullName = "";
+            MFileFunctionProcessor proc = null;
             SymbolicNameTypes fileType = SymbolicNameTypes.Unknown;
 
             if (NameSearch (name, ref fullName) == true)
             {
-                if (MFileFunctionMgr.IsMFileFunction (name, ref fullName))
+                if (MFileFunctionMgr.IsMFileFunction (name, ref fullName, ref proc))
                     fileType = SymbolicNameTypes.FunctionFile;
                 else
                     fileType = SymbolicNameTypes.ScriptFile;

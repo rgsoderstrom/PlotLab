@@ -283,6 +283,7 @@ namespace PLWorkspace
                         if (str.Data == "all")
                         {
                             Variables.Clear ();
+                            PLLibrary.MFileFunctionMgr.ClearCache ();
                             break;
                         }
 

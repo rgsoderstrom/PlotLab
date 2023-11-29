@@ -76,26 +76,23 @@ namespace Main
 
             string funcName = Operator; // a = f1 (b); 
             string fullName = ""; // full path to f1.m, filled-in below
+            MFileFunctionProcessor mfileProc = null;
 
             try
             {
-                if (MFileFunctionMgr.IsMFileFunction (funcName, ref fullName))
+                if (MFileFunctionMgr.IsMFileFunction (funcName, ref fullName, ref mfileProc))
                 {
-                    MFileFunctionProcessor mfileProc = null;
-
-                    //***********************************************************
-                    //
-                    // Split the m-file into inputs, executable and outputs
-                    //
-
-                    try
+                    if (mfileProc == null)
                     {
-                        mfileProc = MFileFunctionMgr.ParseMFile (funcName, fullName);
-                    }
+                        try
+                        {
+                            mfileProc = MFileFunctionMgr.ParseMFile (funcName, fullName); // Split the m-file into inputs, executable and outputs
+                        }
 
-                    catch (Exception ex)
-                    {
-                        PF ("Error parsing m-file: " + ex.Message);
+                        catch (Exception ex)
+                        {
+                            PF ("Error parsing m-file: " + ex.Message);
+                        }
                     }
 
                     //*****************************************************************************************

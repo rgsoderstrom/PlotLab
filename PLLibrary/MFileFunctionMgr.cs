@@ -1,18 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
-using System.IO.Pipes;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-
-
-        // ENHANCEMENT: add a cache of previously found files so I don't have to
-        //              search for the same file twice
-
-
 
 namespace PLLibrary
 {
@@ -38,33 +26,54 @@ namespace PLLibrary
         //*****************************************************************************
         //*****************************************************************************
 
-        static List<MFileFunctionProcessor> MFiles = new List<MFileFunctionProcessor> (); // SHOUD BE A DICTIONARY<>
+        static Dictionary<string, MFileFunctionProcessor> MFileCache = new Dictionary<string, MFileFunctionProcessor> ();
 
         public static MFileFunctionProcessor ParseMFile (string funcName, string fullName)
         {
             MFileFunctionProcessor proc = new MFileFunctionProcessor (funcName, fullName);
-            MFiles.Add (proc);
+            MFileCache.Add (funcName, proc);
             return proc;
         }
 
-
-
+        public static void ClearCache ()
+        {
+            MFileCache.Clear ();
+        }
 
         //*****************************************************************************
         //
-        // IsMFile - search current dir and all path dirs for a function file
-        //           of this name
+        // IsMFile - search:
+        //            - MFileCache
+        //            - current dir
+        //            - path dirs
+        //           for a function file of this name
         //
+
         public static bool IsMFileFunction (string name)
         {
             string unused = null;
-            return IsMFileFunction (name, ref unused);
+            MFileFunctionProcessor unused2 = null;
+            return IsMFileFunction (name, ref unused, ref unused2);
         }
 
-        public static bool IsMFileFunction (string name, ref string fullPath)
+        //
+        // IsMFileFunction
+        //      - fills in fullPath or proc if "name" is found
+        //
+        public static bool IsMFileFunction (string name, ref string fullPath, ref MFileFunctionProcessor proc)
         {
-            string full = CurrentDir + "\\" + name + ".m";
             fullPath = null;
+            proc = null;
+
+            // check cache
+            if (MFileCache.ContainsKey (name))
+            {
+                proc = MFileCache [name];
+                return true;
+            }
+
+            // check current directory
+            string full = CurrentDir + "\\" + name + ".m";
 
             if (File.Exists (full))
             {
@@ -75,6 +84,7 @@ namespace PLLibrary
                 }
             }
 
+            // check all directories in search path
             if (SearchPathCopy != null)
             {
                 foreach (string d in SearchPathCopy)
@@ -113,7 +123,7 @@ namespace PLLibrary
                 {
                     string [] tokens = raw.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                    if (tokens [0] [0] == '%')
+                    if (tokens [0][0] == '%')
                         continue;
 
                     if (tokens [0] == "function")
