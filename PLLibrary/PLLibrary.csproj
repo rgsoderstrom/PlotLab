@@ -73,6 +73,7 @@
     <Compile Include="MathFunctionsBuiltIn.cs" />
     <Compile Include="MathFunctionsUserDefined.cs" />
     <Compile Include="MFileFunctionMgr.cs" />
+    <Compile Include="MFileFunctionProcessor.cs" />
     <Compile Include="PlotCommands.cs" />
     <Compile Include="PlotFormatArgs.cs" />
     <Compile Include="PlotFunctions.cs" />

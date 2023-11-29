@@ -22,7 +22,7 @@ namespace Main
 
         public UserConsole ()
         {
-            CheckDocumentDirectories ("PlotLabV1", StartupMessages);  //---------------------------- CHANGE TO V2
+            CheckDocumentDirectories ("PlotLabV1", StartupMessages);  //-------------------------- CHANGE TO V2
             EventLog.Open (UserConsole.LogFileDirectory + "\\Log.txt", true); // false);
             FileSearch.Open ();
             CommandLineHistory.Open ();

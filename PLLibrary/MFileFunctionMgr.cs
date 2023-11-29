@@ -35,6 +35,22 @@ namespace PLLibrary
         }
 
         //*****************************************************************************
+        //*****************************************************************************
+        //*****************************************************************************
+
+        static List<MFileFunctionProcessor> MFiles = new List<MFileFunctionProcessor> (); // SHOUD BE A DICTIONARY<>
+
+        public static MFileFunctionProcessor ParseMFile (string funcName, string fullName)
+        {
+            MFileFunctionProcessor proc = new MFileFunctionProcessor (funcName, fullName);
+            MFiles.Add (proc);
+            return proc;
+        }
+
+
+
+
+        //*****************************************************************************
         //
         // IsMFile - search current dir and all path dirs for a function file
         //           of this name
@@ -111,78 +127,6 @@ namespace PLLibrary
             return isFunction;
         }
 
-        //*****************************************************************************
-        //
-        // ParseMFile - serparate into:
-        //      - input formal parameters
-        //      - executable script
-        //      - output format parameters
-        //
-        
-        public static List<string> InputFormalParams  = new List<string> ();
-        public static List<string> ExecutableScript   = new List<string> ();
-        public static List<string> OutputFormalParams = new List<string> ();
-
-        enum ParseState {LookingForStart, InExecutable};
-        static ParseState ps = ParseState.LookingForStart;
-
-        public static void ParseMFile (string funcName, string fullName)
-        {
-            InputFormalParams.Clear ();
-            ExecutableScript.Clear ();
-            OutputFormalParams.Clear ();
-            ps = ParseState.LookingForStart;
-
-            using (StreamReader reader = new StreamReader (fullName))
-            {
-                string line;
-
-                while ((line = reader.ReadLine()) != null)
-                {
-                    if (line.Length > 0)
-                    {
-                        string [] tokens = line.Split (new char [] { ' ', ',', '[', ']', '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
-
-                        if (tokens [0][0] == '%')
-                            continue;
-
-                        if (ps == ParseState.LookingForStart)
-                        {
-                            if (tokens [0] == "function")
-                            {
-                                // find token that is just an "equal" sign
-                                // all before it are output formal parameters
-                                // one immediately after is function name
-                                // all after that are input parameter names
-
-                                int equalIndex = -1;
-
-                                for (int i = 0; i<tokens.Length; i++) { if (tokens [i] == "=") {equalIndex = i; break; } }
-
-                                if (equalIndex == -1) // not found
-                                    throw new Exception ("Function syntax error, equal sign not found in " + funcName);
-
-                                if (tokens [equalIndex + 1].ToLower () != funcName.ToLower ()) // ignore case
-                                    throw new Exception ("Function name doesn't match file name in file " + funcName);
-
-                                for (int i = 1; i<equalIndex; i++)
-                                    OutputFormalParams.Add (tokens [i]);
-
-                                for (int i = equalIndex + 2; i<tokens.Length; i++)
-                                    InputFormalParams.Add (tokens [i]);
-
-                                ps = ParseState.InExecutable;
-                            }
-                        }
-
-                        else if (ps == ParseState.InExecutable)
-                        {
-                            ExecutableScript.Add (line);
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 

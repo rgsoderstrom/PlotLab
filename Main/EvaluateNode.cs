@@ -81,6 +81,8 @@ namespace Main
             {
                 if (MFileFunctionMgr.IsMFileFunction (funcName, ref fullName))
                 {
+                    MFileFunctionProcessor mfileProc = null;
+
                     //***********************************************************
                     //
                     // Split the m-file into inputs, executable and outputs
@@ -88,7 +90,7 @@ namespace Main
 
                     try
                     {
-                        MFileFunctionMgr.ParseMFile (funcName, fullName);
+                        mfileProc = MFileFunctionMgr.ParseMFile (funcName, fullName);
                     }
 
                     catch (Exception ex)
@@ -110,7 +112,7 @@ namespace Main
                     //
                     for (int i=0; i<inputArguments.Count; i++)
                     {
-                        inputArguments [i].Name = MFileFunctionMgr.InputFormalParams [i];
+                        inputArguments [i].Name = mfileProc.InputFormalParams [i];
                         functionsWorkspace.Add (inputArguments [i]);
                     }
 
@@ -118,47 +120,51 @@ namespace Main
                     // run the executable lines just like a script
                     //
                     ScriptProcessor scriptProcessor = new ScriptProcessor (functionsWorkspace, PF);
-                    scriptProcessor.RunScriptLines (MFileFunctionMgr.ExecutableScript);
-
+                    scriptProcessor.RunScriptLines (mfileProc.ExecutableScript);
 
                     //
-                    // place the output variables in the caller's workspace ...
+                    // If there is more than one output we place the outputs in the caller's workspace, using the names
+                    // the caller specifies.
+                    //
+                    // Caller must specify either 0 outputs or the same number as the number of formal output arguments
                     //
 
-                    if (MFileFunctionMgr.OutputFormalParams.Count > 1)
+                    // look for an equal sign
+                    int equalIndex = -1;
+
+                    for (int i = 0; i<expression.Length; i++) {if (expression [i] == '=') {equalIndex = i; break;}}
+
+                    if (equalIndex != -1) // then some outputs were specified
                     {
-                        // output parameters in the original expression are between square brackets
-                        string [] tokens = expression.Split (new char [] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
+                        string [] outputsAsTokens = expression.Substring (0, equalIndex - 1).Split (new char [] { '[', ']', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                        string [] outputs = tokens [0].Split (new char [] {' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        if (outputsAsTokens.Length != mfileProc.OutputFormalParams.Count)
+                            throw new Exception ("Function call must have 0 outputs or the same number as function formal param list: " + funcName);
 
-
-
-                        for (int i = 0; i<MFileFunctionMgr.OutputFormalParams.Count; i++)
+                        if (mfileProc.OutputFormalParams.Count > 1)
                         {
-                            PLDouble dbl = new PLDouble (functionsWorkspace.Get (MFileFunctionMgr.OutputFormalParams [i]));
-                            dbl.Name = outputs [i];
-                            callersWorkspace.Add (dbl);
+                            for (int i = 0; i<mfileProc.OutputFormalParams.Count; i++)
+                            {
+                                PLDouble dbl = new PLDouble (functionsWorkspace.Get (mfileProc.OutputFormalParams [i]));
+                                dbl.Name = outputsAsTokens [i];
+                                callersWorkspace.Add (dbl);
+                            }
                         }
                     }
-
-
-
 
                     //
                     // ... and in this node's Value field
                     //
 
-                    if (MFileFunctionMgr.OutputFormalParams.Count == 1)
+                    if (mfileProc.OutputFormalParams.Count == 1)
                     {
-                        Value = functionsWorkspace.Get (MFileFunctionMgr.OutputFormalParams [0]);
+                        Value = functionsWorkspace.Get (mfileProc.OutputFormalParams [0]);
                     }
-
                     else
                     {
                         Value = new PLList ();
 
-                        foreach (string str in MFileFunctionMgr.OutputFormalParams)
+                        foreach (string str in mfileProc.OutputFormalParams)
                         {
                             (Value as PLList).Add (functionsWorkspace.Get (str));
                         }
@@ -170,8 +176,6 @@ namespace Main
             {
                 throw new Exception ("Error evaluating m-file function " + funcName + ": " + ex.Message);
             }
-
-
 
             return new PLNull ();
         }
