@@ -16,7 +16,7 @@ namespace Main
         static public bool ShowExprTree      = false;
         static int Counter = 1;
 
-        public void ProcessArithmeticExpression (ref PLVariable answer, string expression, Workspace workspace)
+        public void ProcessArithmeticExpression (ref PLVariable answer, string expression, Workspace workspace, PrintFunction pf)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace Main
                     win.Show ();
                 }
 
-                ExpressionTree tree = new ExpressionTree (expression, workspace);
+                ExpressionTree tree = new ExpressionTree (expression, workspace, pf);
 
                 if (ShowExprTree)
                 {

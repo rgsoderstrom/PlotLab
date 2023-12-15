@@ -145,7 +145,7 @@ namespace Main
                         PLVariable results = new PLNull ();
 
                         foreach (string str in stmts)
-                            ep.ProcessArithmeticExpression (ref results, str, workspace);
+                            ep.ProcessArithmeticExpression (ref results, str, workspace, print);
 
                         lineNumber = script.NextLineNumber (lineNumber);
                     }
@@ -157,7 +157,7 @@ namespace Main
                         TestParsing tp = ParseTEST (words);
 
                         EntryPoint ep = new EntryPoint ();
-                        ep.ProcessArithmeticExpression (ref results, tp.expression, workspace);
+                        ep.ProcessArithmeticExpression (ref results, tp.expression, workspace, print);
 
                         //PLBool res = results as PLBool;
                         PLBool res = new PLBool (results);

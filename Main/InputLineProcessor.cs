@@ -128,7 +128,7 @@ namespace Main
             // Most arithmetic, plotting and function statements will come here
             //
             EntryPoint kernel = new EntryPoint ();
-            kernel.ProcessArithmeticExpression (ref results, text, workspace);
+            kernel.ProcessArithmeticExpression (ref results, text, workspace, Print);
         }
     }
 }

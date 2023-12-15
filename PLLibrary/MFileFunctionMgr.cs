@@ -26,18 +26,18 @@ namespace PLLibrary
         //*****************************************************************************
         //*****************************************************************************
 
-        static Dictionary<string, MFileFunctionProcessor> MFileCache = new Dictionary<string, MFileFunctionProcessor> ();
+     //   static Dictionary<string, MFileFunctionProcessor> MFileCache = new Dictionary<string, MFileFunctionProcessor> ();
 
         public static MFileFunctionProcessor ParseMFile (string funcName, string fullName)
         {
             MFileFunctionProcessor proc = new MFileFunctionProcessor (funcName, fullName);
-            MFileCache.Add (funcName, proc);
+     //     MFileCache.Add (funcName, proc);
             return proc;
         }
 
         public static void ClearCache ()
         {
-            MFileCache.Clear ();
+      //      MFileCache.Clear ();
         }
 
         //*****************************************************************************
@@ -66,11 +66,11 @@ namespace PLLibrary
             proc = null;
 
             // check cache
-            if (MFileCache.ContainsKey (name))
-            {
-                proc = MFileCache [name];
-                return true;
-            }
+            //if (MFileCache.ContainsKey (name))
+            //{
+            //    proc = MFileCache [name];
+            //    return true;
+            //}
 
             // check current directory
             string full = CurrentDir + "\\" + name + ".m";
