@@ -8,5 +8,8 @@ PLLibrary/_*.txt
 utHelpWindow*/
 FrontEnd/
 PLKernel/
+*.lnk
+*.pdf
+
 
 
