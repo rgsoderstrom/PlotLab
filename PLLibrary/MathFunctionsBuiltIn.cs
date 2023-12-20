@@ -26,6 +26,7 @@ namespace FunctionLibrary
                 {"linspace", Linspace},
                 {"zeros", Zeros},
                 {"ones", Ones},
+                {"ceil", Ceil},
                 {"square", Square},
                 {"sin",  Sin},
                 {"cos",  Cos},
@@ -39,7 +40,8 @@ namespace FunctionLibrary
                 {"atan2", Atan2},
                 {"rand", Rand},
                 {"Transpose", Transpose},
-                {"log", Log},
+                {"log",  Log},
+                {"log2", Log2},
                 {"exp", Exp},
                 {"max", Max},
                 {"min", Min},
@@ -408,6 +410,20 @@ namespace FunctionLibrary
         static public PLVariable Cosh   (PLVariable arg) {return MathFunction (Math.Cosh, "cosh",   arg);}
         static public PLVariable Tanh   (PLVariable arg) {return MathFunction (Math.Tanh, "tanh",   arg);}
         static public PLVariable Square (PLVariable arg) {return MathFunction (_Square,   "square", arg);}
+
+        static public PLVariable Log2 (PLVariable arg) 
+        {
+            double d = (arg as PLDouble).Data;
+            PLDouble dd = new PLDouble (Math.Log (d, 2));
+            return dd;
+        }
+
+        static public PLVariable Ceil (PLVariable arg) 
+        {
+            double d = (arg as PLDouble).Data;
+            PLDouble dd = new PLDouble (Math.Ceiling (d));
+            return dd;
+        }
 
         // for generating square waves
         static private double _Square (double arg)
