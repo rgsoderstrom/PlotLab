@@ -3,21 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FunctionLibrary;
 using PLCommon;
 
 namespace PLLibrary
 {
     static public class LibraryManager
     {
-        static readonly Dictionary<string, PLFunction>  MathFunctions = new Dictionary<string, PLFunction> ();
-        static readonly Dictionary<string, PLFunction>  IOFunctions   = new Dictionary<string, PLFunction> ();
-        static readonly Dictionary<string, PLFunction>  PlotFunctions = new Dictionary<string, PLFunction> ();
-        static readonly Dictionary<string, PLFunction>  PlotCommands  = new Dictionary<string, PLFunction> ();
+        static readonly Dictionary<string, PLFunction>  SigProcFunctions = new Dictionary<string, PLFunction> ();
+        static readonly Dictionary<string, PLFunction>  MathFunctions    = new Dictionary<string, PLFunction> ();
+        static readonly Dictionary<string, PLFunction>  IOFunctions      = new Dictionary<string, PLFunction> ();
+        static readonly Dictionary<string, PLFunction>  PlotFunctions    = new Dictionary<string, PLFunction> ();
+        static readonly Dictionary<string, PLFunction>  PlotCommands     = new Dictionary<string, PLFunction> ();
 
         static readonly List<string> ZeroArgFunctions = new List<string> (); // functions that can be invoked with no arguments
 
         static LibraryManager ()
         {
+            //
+            // Signal Processing functions
+            //
+            Dictionary<string, PLFunction> sigProcFuncts = FunctionLibrary.SignalProcessing.GetSignalProcessingContents ();
+            foreach (string str in sigProcFuncts.Keys) SigProcFunctions.Add (str, sigProcFuncts [str]);
+
             //
             // Math functions
             //
@@ -75,6 +83,7 @@ namespace PLLibrary
 
             if      (PlotCommands.ContainsKey         (str)) {type = SymbolicNameTypes.PlotCommand;}
             else if (MathFunctions.ContainsKey        (str)) {type = SymbolicNameTypes.Function;}
+            else if (SigProcFunctions.ContainsKey     (str)) {type = SymbolicNameTypes.Function;}
             else if (IOFunctions.ContainsKey          (str)) {type = SymbolicNameTypes.Function;}
             else if (PlotFunctions.ContainsKey        (str)) {type = SymbolicNameTypes.Function;}
             else if (MFileFunctionMgr.IsMFileFunction (str)) {type = SymbolicNameTypes.FunctionFile;}
@@ -87,10 +96,11 @@ namespace PLLibrary
         {
             List<string> matches = new List<string> ();
 
-            foreach (string cmd in PlotCommands.Keys)  {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
-            foreach (string cmd in MathFunctions.Keys) {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
-            foreach (string cmd in IOFunctions.Keys)   {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
-            foreach (string cmd in PlotFunctions.Keys) {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
+            foreach (string cmd in PlotCommands.Keys)     {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
+            foreach (string cmd in MathFunctions.Keys)    {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
+            foreach (string cmd in SigProcFunctions.Keys) {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
+            foreach (string cmd in IOFunctions.Keys)      {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
+            foreach (string cmd in PlotFunctions.Keys)    {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
 
             //if (matches.Count > 0) matches.Add ("\n");
             return matches;
@@ -106,6 +116,9 @@ namespace PLLibrary
         
         public static bool Contains (PLString name) 
         {
+            if (SigProcFunctions.ContainsKey (name.Text))
+                return true;
+
             if (MathFunctions.ContainsKey (name.Text))
                 return true;
 
@@ -120,6 +133,12 @@ namespace PLLibrary
 
         public static PLVariable Evaluate (PLString name, PLVariable args, ref bool forcePrint)
         {
+            if (SigProcFunctions.ContainsKey (name.Text))
+            {
+                PLFunction func = SigProcFunctions [name.Text];
+                return func (args);
+            }
+
             if (MathFunctions.ContainsKey (name.Text))
             {
                 PLFunction func = MathFunctions [name.Text];

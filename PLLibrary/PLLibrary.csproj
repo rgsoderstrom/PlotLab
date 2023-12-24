@@ -39,6 +39,15 @@
     <Reference Include="CommonMath">
       <HintPath>..\..\CommonMath\bin\Debug\CommonMath.dll</HintPath>
     </Reference>
+    <Reference Include="MathNet.Filtering">
+      <HintPath>..\..\Math.Net\MathNet.Iridium-2008.8.16.470\Tests\PerformanceAnalysis\packages\MathNet.Filtering.0.7.0\lib\net461\MathNet.Filtering.dll</HintPath>
+    </Reference>
+    <Reference Include="MathNet.Iridium">
+      <HintPath>..\..\Math.Net\MathNet.Iridium-2008.8.16.470\Binaries\Debug\MathNet.Iridium.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\Math.Net\MathNet.Iridium-2008.8.16.470\Binaries\Debug\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="Petzold.Media3D, Version=0.9.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\PetzoldMedia3D\Petzold.Media3D\bin\Debug\Petzold.Media3D.dll</HintPath>
@@ -82,6 +91,9 @@
     <Compile Include="PlotFunctions3D.cs" />
     <Compile Include="PlotVariables.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SignalProcessing.cs" />
+    <Compile Include="SignalProcessing2.cs" />
+    <Compile Include="SignalProcessing3.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="_ContourPlot.txt" />
