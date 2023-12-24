@@ -437,9 +437,9 @@ namespace PLCommon
         public static PLComplex operator + (PLComplex op1, PLDouble op2)  {return new PLComplex (op1.Real + op2.Data, op1.Imag);}
         public static PLComplex operator + (PLDouble  op1, PLComplex op2) {return new PLComplex (op1.Data + op2.Real, op2.Imag);}
 
-        public static PLComplex operator - (PLComplex op1, PLComplex op2) {return new PLComplex (op1.Real - op2.Real, op1.Imag - op2.Imag);}
-        public static PLComplex operator - (PLComplex op1, PLDouble op2)  {return new PLComplex (op1.Real - op2.Data, op1.Imag);}
-        public static PLComplex operator - (PLDouble  op1, PLComplex op2) {return new PLComplex (op1.Data - op2.Real, op2.Imag);}
+        public static PLComplex operator - (PLComplex op1, PLComplex op2) {return new PLComplex (op1.Real - op2.Real,  op1.Imag - op2.Imag);}
+        public static PLComplex operator - (PLComplex op1, PLDouble op2)  {return new PLComplex (op1.Real - op2.Data,  op1.Imag);}
+        public static PLComplex operator - (PLDouble  op1, PLComplex op2) {return new PLComplex (op1.Data - op2.Real, -op2.Imag);}
 
         public static PLComplex operator * (PLComplex op1, PLComplex op2) 
             {return new PLComplex (op1.Real * op2.Real - op1.Imag * op2.Imag, op1.Real * op2.Imag + op1.Imag * op2.Real);}
