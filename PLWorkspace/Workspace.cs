@@ -39,6 +39,9 @@ namespace PLWorkspace
             PLBool TRUE  = new PLBool (true);  TRUE.Name = "true";   Constants.Add ("true", TRUE);
             PLBool FALSE = new PLBool (false); FALSE.Name = "false"; Constants.Add ("false", FALSE);
 
+            PLComplex i = new PLComplex (0, 1); i.Name = "i"; Constants.Add ("i", i);
+            PLComplex j = new PLComplex (0, 1); j.Name = "j"; Constants.Add ("j", i);
+
             Constants.Add ("equal",  new PLString ("equal"));
             Constants.Add ("tight",  new PLString ("tight"));
             Constants.Add ("frozen", new PLString ("frozen"));

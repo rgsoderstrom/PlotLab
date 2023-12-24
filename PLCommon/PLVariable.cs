@@ -36,6 +36,10 @@ namespace PLCommon
 
         public static PLVariable operator+ (PLVariable op1, PLVariable op2)
         {
+            if (op1 is PLComplex && op2 is PLComplex) return (op1 as PLComplex) + (op2 as PLComplex);
+            if (op1 is PLComplex && op2 is PLDouble)  return (op1 as PLComplex) + (op2 as PLDouble);
+            if (op1 is PLDouble  && op2 is PLComplex) return (op1 as PLDouble)  + (op2 as PLComplex);
+
             if (op1 is PLDouble  && op2 is PLDouble)  return (op1 as PLDouble)  + (op2 as PLDouble);
             if (op1 is PLInteger && op2 is PLInteger) return (op1 as PLInteger) + (op2 as PLInteger);
             if (op1 is PLMatrix  && op2 is PLMatrix)  return (op1 as PLMatrix)  + (op2 as PLMatrix);
@@ -49,6 +53,10 @@ namespace PLCommon
 
         public static PLVariable operator- (PLVariable op1, PLVariable op2)
         {
+            if (op1 is PLComplex && op2 is PLComplex) return (op1 as PLComplex) - (op2 as PLComplex);
+            if (op1 is PLComplex && op2 is PLDouble)  return (op1 as PLComplex) - (op2 as PLDouble);
+            if (op1 is PLDouble  && op2 is PLComplex) return (op1 as PLDouble)  - (op2 as PLComplex);
+
             if (op1 is PLDouble  && op2 is PLDouble)  return (op1 as PLDouble)  - (op2 as PLDouble);
             if (op1 is PLInteger && op2 is PLInteger) return (op1 as PLInteger) - (op2 as PLInteger);
             if (op1 is PLMatrix  && op2 is PLMatrix)  return (op1 as PLMatrix)  - (op2 as PLMatrix);
@@ -63,6 +71,10 @@ namespace PLCommon
 
         public static PLVariable operator* (PLVariable op1, PLVariable op2)
         {
+            if (op1 is PLComplex && op2 is PLComplex) return (op1 as PLComplex) * (op2 as PLComplex);
+            if (op1 is PLComplex && op2 is PLDouble)  return (op1 as PLComplex) * (op2 as PLDouble);
+            if (op1 is PLDouble  && op2 is PLComplex) return (op1 as PLDouble)  * (op2 as PLComplex);
+
             if (op1 is PLDouble  && op2 is PLDouble)  return (op1 as PLDouble)  * (op2 as PLDouble);
             if (op1 is PLInteger && op2 is PLInteger) return (op1 as PLInteger) * (op2 as PLInteger);
             if (op1 is PLMatrix  && op2 is PLMatrix)  return (op1 as PLMatrix)  * (op2 as PLMatrix);
@@ -77,6 +89,9 @@ namespace PLCommon
 
         public static PLVariable operator/ (PLVariable op1, PLVariable op2)
         {
+            if (op1 is PLComplex && op2 is PLComplex) return (op1 as PLComplex) / (op2 as PLComplex);
+            if (op1 is PLComplex && op2 is PLDouble)  return (op1 as PLComplex) / (op2 as PLDouble);
+
             if (op1 is PLDouble && op2 is PLDouble) return (op1 as PLDouble) / (op2 as PLDouble);
             if (op1 is PLMatrix && op2 is PLDouble) return (op1 as PLMatrix) / (op2 as PLDouble);
 
@@ -373,6 +388,114 @@ namespace PLCommon
                 return (string.Format ("{0:E5}", Data));
             else
                 return (string.Format ("{0:#.#####}", Data));
+        }
+    }
+
+    //****************************************************************************************************
+    //****************************************************************************************************
+    //****************************************************************************************************
+
+    public class PLComplex : PLScalar
+    {
+        readonly public double Real, Imag;
+
+        public PLComplex (double re, double im)
+        {
+            Real = re;
+            Imag = im;
+        }
+
+        public PLComplex (PLVariable src)
+        {
+            if (src is PLDouble)
+            {
+                Real = (src as PLDouble).Data;
+                Imag = 0;
+            }
+
+            if (src is PLComplex)
+            {
+                Real = (src as PLComplex).Real;
+                Imag = (src as PLComplex).Imag;
+            }
+
+            else
+                throw new Exception ("Unsupported PLComplex ctor: " + src.GetType ().ToString ());
+        }
+
+        public double Magnitude
+        {
+            get {return Math.Sqrt (Real * Real + Imag * Imag);}
+        }
+
+        public double Angle // in radians
+        {
+            get {return Math.Atan2 (Imag, Real);}
+        }
+
+        public static PLComplex operator + (PLComplex op1, PLComplex op2) {return new PLComplex (op1.Real + op2.Real, op1.Imag + op2.Imag);}
+        public static PLComplex operator + (PLComplex op1, PLDouble op2)  {return new PLComplex (op1.Real + op2.Data, op1.Imag);}
+        public static PLComplex operator + (PLDouble  op1, PLComplex op2) {return new PLComplex (op1.Data + op2.Real, op2.Imag);}
+
+        public static PLComplex operator - (PLComplex op1, PLComplex op2) {return new PLComplex (op1.Real - op2.Real, op1.Imag - op2.Imag);}
+        public static PLComplex operator - (PLComplex op1, PLDouble op2)  {return new PLComplex (op1.Real - op2.Data, op1.Imag);}
+        public static PLComplex operator - (PLDouble  op1, PLComplex op2) {return new PLComplex (op1.Data - op2.Real, op2.Imag);}
+
+        public static PLComplex operator * (PLComplex op1, PLComplex op2) 
+            {return new PLComplex (op1.Real * op2.Real - op1.Imag * op2.Imag, op1.Real * op2.Imag + op1.Imag * op2.Real);}
+
+        public static PLComplex operator * (PLComplex op1, PLDouble op2) 
+            {return new PLComplex (op1.Real * op2.Data, op1.Imag * op2.Data);}
+
+        public static PLComplex operator * (PLDouble op1, PLComplex op2) 
+            {return new PLComplex (op1.Data * op2.Real, op1.Data * op2.Imag);}
+
+        public static PLComplex operator / (PLComplex op1, PLComplex op2) 
+        {
+            double mag = op1.Magnitude * op2.Magnitude;
+            double ang = op1.Angle - op2.Angle;
+            return new PLComplex (mag * Math.Cos (ang), mag * Math.Sin (ang));
+        }
+
+        public static PLComplex operator / (PLComplex op1, PLDouble op2) 
+        {
+            return new PLComplex (op1.Real / op2.Data, op1.Imag / op2.Data);
+        }
+
+        //public static PLDouble operator ^ (PLDouble op1, PLDouble op2) {return new PLDouble (Math.Pow (op1.Data, op2.Data));}
+
+
+        //*************************************************************************************
+
+        // %A.Bf - A is total width, B is number of chars after decimal
+
+        public override string ToString (string cfmt)
+        {
+            int a = 8, b = 5; // defaults
+
+            List<string> cfmtParts = SplitFormatString (cfmt);
+
+            if (cfmtParts.Count == 3)  // --------------------- use defaults if error in format
+            {
+                a = int.Parse (cfmtParts [0]);
+                b = int.Parse (cfmtParts [1]);
+            }
+
+            string fmt = "{0," + a + ":0.";
+            for (int i = 0; i<b; i++) fmt += '#';
+            fmt += "}";
+
+
+            return string.Format (fmt, 123); // Data);
+        }
+
+        public override string ToString ()
+        {
+            double mag2 = Real * Real + Imag * Imag;
+            if (Math.Abs (mag2) > 1e8 || Math.Abs (mag2) < 1e-8)
+                return (string.Format ("{(0:E5}, {1:E5)}", Real, Imag));
+            else
+                return (string.Format ("({0:0.####}, {1:0.####})", Real, Imag));
         }
     }
 
