@@ -404,11 +404,47 @@ namespace FunctionLibrary
         static public PLVariable Tan    (PLVariable arg) {return MathFunction (Math.Tan,  "tan",    arg);}
         static public PLVariable Abs    (PLVariable arg) {return MathFunction (Math.Abs,  "abs",    arg);}
         static public PLVariable Log    (PLVariable arg) {return MathFunction (Math.Log,  "log",    arg);}
-        static public PLVariable Exp    (PLVariable arg) {return MathFunction (Math.Exp,  "exp",    arg);}
         static public PLVariable Sinh   (PLVariable arg) {return MathFunction (Math.Sinh, "sinh",   arg);}
         static public PLVariable Cosh   (PLVariable arg) {return MathFunction (Math.Cosh, "cosh",   arg);}
         static public PLVariable Tanh   (PLVariable arg) {return MathFunction (Math.Tanh, "tanh",   arg);}
         static public PLVariable Square (PLVariable arg) {return MathFunction (_Square,   "square", arg);}
+
+        //*********************************************************************************
+
+        static public PLVariable Exp (PLVariable arg) 
+        {
+            if (arg is PLComplex)
+            {
+                double re = (arg as PLComplex).Real;
+                double im = (arg as PLComplex).Imag;
+
+                double mag = Math.Exp (re);
+                double re2 = Math.Cos (im);
+                double im2 = Math.Sin (im);
+
+                PLComplex results = new PLComplex (mag * re2, mag * im2);
+                return results;
+            }
+
+            else if (arg is PLList)
+            {
+                PLList lst = arg as PLList;
+
+                if (lst [0] is PLComplex)
+                {
+                    PLList results = new PLList ();
+
+                    foreach (PLComplex pc in lst)
+                        results.Add (Exp (pc));
+
+                    return results;
+                }
+            }
+
+            return MathFunction (Math.Exp, "exp", arg);
+        }
+
+        //**********************************************************************
 
         static public PLVariable Sqrt (PLVariable arg) 
         {
