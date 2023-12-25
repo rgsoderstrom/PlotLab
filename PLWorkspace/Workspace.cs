@@ -124,6 +124,12 @@ namespace PLWorkspace
                     printString += (string.Format ("    {0} x {1}", var.Rows, var.Cols));
                 }
 
+                if (val is PLCMatrix)
+                {
+                    PLCMatrix var = val as PLCMatrix;
+                    printString += (string.Format ("    {0} x {1}", var.Rows, var.Cols));
+                }
+
                 pf (printString);
                 pf ("\n");
             }

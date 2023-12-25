@@ -46,6 +46,10 @@ namespace FunctionLibrary
                 {"max", Max},
                 {"min", Min},
                 {"cross", CrossProduct},
+                {"real",  Real},
+                {"imag",  Imag},
+                {"mag",   Mag},
+                {"angle", Angle},
             };
         }
 
@@ -106,6 +110,100 @@ namespace FunctionLibrary
             }
 
             return result;
+        }
+
+        //*********************************************************************************************
+        //*********************************************************************************************
+        //*********************************************************************************************
+
+        // extract part of a complex number
+
+        static public PLVariable Real (PLVariable src)
+        {
+            if (src is PLComplex)
+            {
+                return new PLDouble ((src as PLComplex).Real);
+            }
+
+            else if (src is PLCMatrix)
+            {
+                PLCMatrix cmat = src as PLCMatrix;
+                PLMatrix results = new PLMatrix (cmat.Rows, cmat.Cols);
+
+                for (int i = 0; i<cmat.Rows; i++)
+                    for (int j = 0; j<cmat.Cols; j++)
+                        results [i, j] = cmat [i, j].Real;
+
+                return results;
+            }
+
+            throw new Exception ("Argument error, arg must be complex");
+        }
+
+        static public PLVariable Imag (PLVariable src)
+        {
+            if (src is PLComplex)
+            {
+                return new PLDouble ((src as PLComplex).Imag);
+            }
+
+            else if (src is PLCMatrix)
+            {
+                PLCMatrix cmat = src as PLCMatrix;
+                PLMatrix results = new PLMatrix (cmat.Rows, cmat.Cols);
+
+                for (int i = 0; i<cmat.Rows; i++)
+                    for (int j = 0; j<cmat.Cols; j++)
+                        results [i, j] = cmat [i, j].Imag;
+
+                return results;
+            }
+
+            throw new Exception ("Argument error, arg must be complex");
+        }
+
+        static public PLVariable Mag (PLVariable src)
+        {
+            if (src is PLComplex)
+            {
+                return new PLDouble ((src as PLComplex).Magnitude);
+            }
+
+            else if (src is PLCMatrix)
+            {
+                PLCMatrix cmat = src as PLCMatrix;
+                PLMatrix results = new PLMatrix (cmat.Rows, cmat.Cols);
+
+                for (int i = 0; i<cmat.Rows; i++)
+                    for (int j = 0; j<cmat.Cols; j++)
+                        results [i, j] = cmat [i, j].Magnitude;
+
+                return results;
+            }
+
+            throw new Exception ("Argument error, arg must be complex");
+        }
+
+        static public PLVariable Angle (PLVariable src)
+        {
+            if (src is PLComplex)
+            {
+                return new PLDouble ((src as PLComplex).Angle);
+            }
+
+            else if (src is PLCMatrix)
+            {
+                PLCMatrix cmat = src as PLCMatrix;
+                PLMatrix results = new PLMatrix (cmat.Rows, cmat.Cols);
+
+                for (int i = 0; i<cmat.Rows; i++)
+                    for (int j = 0; j<cmat.Cols; j++)
+                        results [i, j] = cmat [i, j].Angle;
+
+                return results;
+            }
+
+            throw new Exception ("Argument error, arg must be complex");
         }
 
         //*********************************************************************************************
@@ -426,19 +524,24 @@ namespace FunctionLibrary
                 return results;
             }
 
-            else if (arg is PLList)
+            else if (arg is PLCMatrix)
             {
-                PLList lst = arg as PLList;
+                PLCMatrix cmat = arg as PLCMatrix;
+                int rows = cmat.Rows;
+                int cols = cmat.Cols;
+                PLCMatrix results = new PLCMatrix (rows, cols);
 
-                if (lst [0] is PLComplex)
+                for (int r = 0; r<rows; r++)
                 {
-                    PLList results = new PLList ();
-
-                    foreach (PLComplex pc in lst)
-                        results.Add (Exp (pc));
-
-                    return results;
+                    for (int c = 0; c<cols; c++)
+                    {
+                        double re = cmat [r, c].Real;
+                        double im = cmat [r, c].Imag;
+                        results [r, c] = Math.Exp (re) * new PLComplex (Math.Cos (im), Math.Sin (im));
+                    }
                 }
+
+                return results;
             }
 
             return MathFunction (Math.Exp, "exp", arg);
