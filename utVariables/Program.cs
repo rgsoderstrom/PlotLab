@@ -13,65 +13,94 @@ namespace utVariables
     {
         static void Main (string [] args)
         {
-            Random rand = new Random ();
-
-            List<PLDouble> A = new List<PLDouble> ()
+            try
             {
-                new PLDouble (1000000 * 22.0 / 7),
-                new PLDouble (10000 * 22.0 / 7),
-                new PLDouble (100 * 22.0 / 7),
-                new PLDouble (10 * 22.0 / 7),
-                new PLDouble (1 * 22.0 / 7),
-                new PLDouble (0.1 * 22.0 / 7),
-                new PLDouble (0.001 * 22.0 / 7),
-                new PLDouble (0.00001 * 22.0 / 7),
-                new PLDouble (0.0000001 * 22.0 / 7),
-            };
+                //PLMatrix M1 = new PLMatrix (3, 4);
+
+                //for (int r = 0; r<M1.Rows; r++)
+                //    for (int c = 0; c<M1.Cols; c++)
+                //        M1 [r, c] = (r + 3) * (c + 1.2345);
+
+                //PLMatrix M2 = new PLMatrix (4, 2);
+
+                //for (int r = 0; r<M2.Rows; r++)
+                //    for (int c = 0; c<M2.Cols; c++)
+                //        M2 [r, c] = (r + 7) * (c + 7);
 
 
-            Console.WriteLine ();
+                //PLMatrix M3 = new PLMatrix (3, 4);
 
-            foreach (PLDouble a in A)
-            {
-                if (Math.Abs (a.Data) > 1e4 || Math.Abs (a.Data) < 1e-4)
-                    Console.WriteLine (string.Format ("{0:E5}", a.Data));
-                else
-                    Console.WriteLine (string.Format ("{0:#.#####}", a.Data));
+                //for (int r = 0; r<M3.Rows; r++)
+                //    for (int c = 0; c<M3.Cols; c++)
+                //        M3 [r, c] = (1 * r + 3) * (1 * c + 1);
+
+
+                //Console.WriteLine (M1.ToString ()); Console.WriteLine ();
+                ////     Console.WriteLine (M2.ToString ()); Console.WriteLine ();
+                ////Console.WriteLine (M3.ToString ()); Console.WriteLine ();
+
+                ////    PLMatrix M4 = M1 + M3;
+                ////    Console.WriteLine (M4.ToString ()); Console.WriteLine ();
+
+                //PLMatrix M5 = M1 ^ new PLDouble (2);
+                //Console.WriteLine (M5.ToString ()); Console.WriteLine ();
+
+
+                //Console.WriteLine ();
+
+                Console.WriteLine ("=======================================================");
+
+                PLCMatrix N1 = new PLCMatrix (2, 3);
+                N1 [0, 0] = new PLComplex (1, 2);
+                N1 [0, 1] = new PLComplex (3, 4);
+                N1 [0, 2] = new PLComplex (5, 6);
+                N1 [1, 0] = new PLComplex (7, 6);
+                N1 [1, 1] = new PLComplex (3, 1);
+                N1 [1, 2] = new PLComplex (8, 9);
+
+
+                PLCMatrix N2 = new PLCMatrix (2, 3);
+                N2 [0, 0] = new PLComplex (3, 2);
+                N2 [0, 1] = new PLComplex (2, 8);
+                N2 [0, 2] = new PLComplex (7, 7);
+                N2 [1, 0] = new PLComplex (2, 7);
+                N2 [1, 1] = new PLComplex (1, 9);
+                N2 [1, 2] = new PLComplex (8, 3);
+
+
+
+                //for (int r = 0; r<N1.Rows; r++)
+                //    for (int c = 0; c<N1.Cols; c++)
+                //        N1 [r, c] = new PLComplex ((r + 3) * (c + 1), r * c + 1);
+
+                //PLCMatrix N2 = new PLCMatrix (4, 2);
+
+                //for (int r = 0; r<N2.Rows; r++)
+                //    for (int c = 0; c<N2.Cols; c++)
+                //        N2 [r, c] = new PLComplex ((r + 5) * (c + 2), 2 * r * c + 2);
+
+                Console.WriteLine (N1.ToString ()); Console.WriteLine ();
+                Console.WriteLine (N2.ToString ()); Console.WriteLine ();
+
+                PLCMatrix N3 = new PLComplex (2, -3) * N1;// + N2;
+                Console.WriteLine (N3.ToString ()); Console.WriteLine ();
+
+                //Console.WriteLine (N [7].ToString ()); Console.WriteLine ();
+
+                //PLMatrix lst2 = N1.CollapseToColumn ();
+
+                //rows = lst2.Rows;
+
+                //for (int i = 0; i<rows; i++)
+                //    Console.WriteLine (lst2 [i].ToString ("%9.6f"));
+                //Console.WriteLine ();
+
             }
 
-            Console.WriteLine ();
-
-            ////****************************************************
-
-            //PLMatrix M = new PLMatrix (3, 4);
-
-            //for (int r = 0; r<M.Rows; r++)
-            //    for (int c = 0; c<M.Cols; c++)
-            //        M [r, c] = 100 * (rand.NextDouble () - 0.5);
-
-
-            //string str = M.ToString ("%9.3f");
-            //Console.WriteLine (str);
-            //Console.WriteLine ();
-
-            ////****************************************************
-
-            //List<PLInteger> G = new List<PLInteger> ();
-
-            //for (int i = 0; i<8; i++)
-            //    G.Add (new PLInteger ((int) (100 * (rand.NextDouble () - 0.5))));
-
-            //for (int i = 0; i<G.Count; i++)
-            //    Console.WriteLine (G [i].ToString ("%6d"));
-
-            ////****************************************************
-
-            //PLList H = new PLList ();
-            //for (int i = 0; i<8; i++)
-            //    H.Add (new PLInteger ((int) (100 * (rand.NextDouble () - 0.5))));
-
-            //Console.WriteLine ();
-            //Console.WriteLine (H.ToString ("%8d"));
+            catch (Exception ex)
+            {
+                Console.WriteLine ("Exception: " + ex.Message);
+            }
         }
     }
 }
