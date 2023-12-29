@@ -342,9 +342,25 @@ namespace Main
 
             string matrixName = Operator;
 
-            PLMatrix mat = workspace.Get (matrixName) as PLMatrix;
-            int rows = (workspace.Rows (mat) as PLInteger).Data;
-            int cols = (workspace.Cols (mat) as PLInteger).Data;
+            int rows;
+            int cols;
+
+            if (workspace.Get (matrixName) is PLMatrix)
+            {
+                PLMatrix mat = workspace.Get (matrixName) as PLMatrix;
+                rows = mat.Rows; // (workspace.Rows (mat) as PLInteger).Data;
+                cols = mat.Cols; // (workspace.Cols (mat) as PLInteger).Data;
+            }
+
+            else if (workspace.Get (matrixName) is PLCMatrix)
+            {
+                PLCMatrix mat = workspace.Get (matrixName) as PLCMatrix;
+                rows = mat.Rows;
+                cols = mat.Cols;
+            }
+
+            else
+                throw new Exception ("Unrecognized matrix type");
 
             bool IsRowVector = rows == 1 && cols > 1;
             bool IsColVector = rows > 1  && cols == 1;

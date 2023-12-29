@@ -231,6 +231,19 @@ namespace FunctionLibrary
                 return result;
             }
 
+            PLCMatrix arg2 = var as PLCMatrix;
+
+            if (arg2 != null)
+            {
+                PLCMatrix result = new PLCMatrix (arg2.Cols, arg2.Rows);
+
+                for (int i = 0; i<arg2.Rows; i++)
+                    for (int j = 0; j<arg2.Cols; j++)
+                        result [j, i] = new PLComplex (arg2 [i, j].Real, -1 * arg2 [i, j].Imag);
+
+                return result;
+            }
+
             throw new Exception ("Error: can't transpose type " + var.GetType ());
         }
 

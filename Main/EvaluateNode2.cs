@@ -27,18 +27,18 @@ namespace Main
             {
                 op.Evaluate (workspace);
 
-                if (op.Value is PLMatrix)
+                if (op.Value is PLMatrix || op.Value is PLCMatrix)
                 {
-                    rows = (op.Value as PLMatrix).Rows;
-                    cols = (op.Value as PLMatrix).Cols;
+                    rows = op.Value.Rows;
+                    cols = op.Value.Cols;
                     break;
                 }
             }
 
             foreach (ExpressionTreeNode op in Operands)
             {
-                if (op.Value is PLMatrix)
-                    if ((op.Value as PLMatrix).Rows != rows || (op.Value as PLMatrix).Cols != cols)
+                if (op.Value is PLMatrix || op.Value is PLCMatrix)
+                    if (op.Value.Rows != rows || op.Value.Cols != cols)
                         return false;
             }
 
@@ -55,12 +55,18 @@ namespace Main
             if (Operands.Count == 0)
                 return;    
 
-            PLMatrix matValue = Value as PLMatrix;
-            if (matValue == null) throw new Exception ("Cannot take submatrix of a scalar");
+            PLMatrix matValue   = Value as PLMatrix;
+            PLCMatrix cmatValue = Value as PLCMatrix;
 
-            bool srcIsMatrix    = matValue.IsMatrix; // more than one row and more than one column
-            bool srcIsRowVector = matValue.IsRowVector;
-            bool srcIsColVector = matValue.IsColVector;
+
+            if (matValue == null && cmatValue == null) throw new Exception ("Cannot take submatrix of a scalar");
+
+
+
+
+            bool srcIsMatrix    = Value.IsMatrix; // more than one row and more than one column
+            bool srcIsRowVector = Value.IsRowVector;
+            bool srcIsColVector = Value.IsColVector;
 
             //************************************************************************
 
@@ -89,8 +95,21 @@ namespace Main
                 if (selectDouble != null)
                 {
                     int i = (int)selectDouble.Data - 1;
-                    double d = srcIsRowVector ? matValue [0, i] : matValue [i, 0];
-                    Value = new PLDouble (d);
+
+                    if (matValue != null)
+                    {
+                        double d = srcIsRowVector ? matValue [0, i] : matValue [i, 0];
+                        Value = new PLDouble (d);
+                    }
+
+                    else if (cmatValue != null)
+                    {
+                        Value = srcIsRowVector ? cmatValue [0, i] : cmatValue [i, 0];
+                    }
+
+                    else
+                        throw new Exception ("Unsupported matrix type");
+
                     return;
                 }
 
@@ -410,13 +429,17 @@ namespace Main
         //*******************************************************************************************
         //*******************************************************************************************
 
+        // LIMITATION: assumes result is same type as first operand
+
         private void Operator_Plus ()
         {
             if (AllOperandsSameSize (out int rows, out int cols, workspace))
             {
                 if (Operands [0].Value is PLString) Value = new PLString ("");
                 else if (rows == 1 && cols == 1)    Value = new PLDouble (0);
-                else                                Value = new PLMatrix (rows, cols);
+
+                else if (Operands [0].Value is PLMatrix)  Value = new PLMatrix (rows, cols);
+                else if (Operands [0].Value is PLCMatrix) Value = new PLCMatrix (rows, cols);
 
                 foreach (ExpressionTreeNode op in Operands)
                     Value += op.Value;

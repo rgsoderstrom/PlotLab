@@ -206,6 +206,9 @@ namespace PLWorkspace
 
             if (mat == null) throw new Exception (name + " is not a matrix");
 
+            if (mat is PLCMatrix)
+                throw new Exception ("Overwrite sub matrix not supported for complex");
+
             if (submat != null)
             {
                 // ensure it will fit
