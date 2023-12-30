@@ -115,5 +115,14 @@
   <ItemGroup>
     <EmbeddedResource Include="HelpTextFiles\General.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HelpTextFiles\M-FileFunctions.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HelpTextFiles\ComplexNumbers.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HelpTextFiles\SignalProcessing.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

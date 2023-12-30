@@ -93,6 +93,20 @@
 
   <!-- ********************************************************************-->
 
+  <HelpTopic SearchKey="pwd">
+    <Header>pwd</Header>
+
+    <Content>
+      <Title>print working directory</Title>
+
+      <Text>
+        pwd
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
   <HelpTopic SearchKey="ls">
     <Header>ls</Header>
 

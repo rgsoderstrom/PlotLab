@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+
+<!-- 
+    M-FileFunctions.xml
+      
+      Note: the code that reads these files has very little error checking
+-->
+
+<HelpTree>
+
+  <HelpTopic SearchKey="">
+    <Header>M-File Functions</Header>
+
+    <Content>
+      <Title>m-file functions</Title>
+
+      <Text>
+        User defined functions implemented in m-files
+        File name must be same as function name, with a .m extension.
+        First non-comment line must start with the word "function"        
+      </Text>
+    </Content>
+
+    <SubTopics>
+      <SubTopic SearchKey="fileFormat"/>
+      <SubTopic SearchKey="callingMFF"/>
+    </SubTopics>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="fileFormat">
+    <Header>Function file format</Header>
+
+    <Content>
+      <Title>Format of m-files</Title>
+
+      <Text>
+        In file f3.m
+          function [] = F3 (b, c)
+          .
+        
+        In file f2.m
+          function A = F2 (b, c)
+          .
+          .
+          A = returnedValue;
+        
+        in file f1.m
+          function [a, s, d] = F1 (b, c)
+          .
+          .
+          d = returnedValue1;
+          s = returnedValue2;
+          A = returnedValue3;
+      </Text>
+    </Content>
+  </HelpTopic>
+  
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="callingMFF">
+    <Header>Calling an m-file Function</Header>
+
+    <Content>
+      <Title>Calling an m-file</Title>
+
+      <Text>
+        No returned values:
+        F3 (1, 2);
+        
+        One returned value
+        B = F2 (3, 4);
+        
+        Several returned values
+        [z, x, c] = F1 (4, 5);
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  
+</HelpTree>

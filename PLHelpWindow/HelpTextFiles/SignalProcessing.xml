@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+
+
+<!-- 
+    ComplexNumbers.xml
+      
+      Note: the code that reads these files has very little error checking
+-->
+
+<HelpTree>
+
+  <HelpTopic SearchKey="">
+    <Header>Signal Processing</Header>
+
+    <Content>
+      <Title>Signal Processing functions </Title>
+
+      <Text>
+           CreateLPF
+           RunFilter
+           ClearFilter
+           DeleteFilter
+      </Text>
+    </Content>
+
+    <SubTopics>
+      <SubTopic SearchKey="CreateLPF"/>
+      <SubTopic SearchKey="RunFilter"/>
+      <SubTopic SearchKey="ClearFilter"/>
+      <SubTopic SearchKey="DeleteFilter"/>
+    </SubTopics>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="CreateLPF">
+    <Header>Complex numbers</Header>
+
+    <Content>
+      <Title>Creating complex numbers</Title>
+
+      <Text>
+          i = sqrt (-1);   % pre-defined 
+          j = sqrt (-1);   % pre-defined
+            a = 3 + 4 * i;
+            
+          Both i and j can be changed. The will revert to sqrt (-1) 
+          after a "clear"
+
+          If both have been changed, complex numbers sqrt (-1)
+          can be used
+            a = 3 + 4 * sqrt (-1);          
+      </Text>
+    </Content>
+  </HelpTopic>
+  
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="RunFilter">
+    <Header>Complex vectors and matrices</Header>
+
+    <Content>
+      <Title>Creating complex vectors and matrices</Title>
+
+      <Text>
+        t = [0 : 0.01 : 1];
+        s = exp (j * 2 * pi * 3 * t);
+        plot (t, real (s));
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="ClearFilter">
+    <Header>Supported complex operations</Header>
+
+    <Content>
+      <Title>Supported complex operations</Title>
+
+      <Text>
+        s = exp (i * 3 * [0 : 0.01 : 3]);
+        r = real (s);
+        t = imag (s);
+        
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="DeleteFilter">
+    <Header>Supported complex operations</Header>
+
+    <Content>
+      <Title>Supported complex operations</Title>
+
+      <Text>
+        s = exp (i * 3 * [0 : 0.01 : 3]);
+        r = real (s);
+        t = imag (s);
+        
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  
+</HelpTree>

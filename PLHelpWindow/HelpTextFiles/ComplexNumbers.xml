@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+
+
+<!-- 
+    ComplexNumbers.xml
+      
+      Note: the code that reads these files has very little error checking
+-->
+
+<HelpTree>
+
+  <HelpTopic SearchKey="">
+    <Header>Complex Numbers</Header>
+
+    <Content>
+      <Title>Supported operations on complex numbers </Title>
+
+      <Text>
+          Limited support for complex numbers, vectors and matrices
+      </Text>
+    </Content>
+
+    <SubTopics>
+      <SubTopic SearchKey="CNumbers"/>
+      <SubTopic SearchKey="CMatrices"/>
+      <SubTopic SearchKey="COperations"/>
+    </SubTopics>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="CNumbers">
+    <Header>Complex numbers</Header>
+
+    <Content>
+      <Title>Creating complex numbers</Title>
+
+      <Text>
+          i = sqrt (-1);   % pre-defined 
+          j = sqrt (-1);   % pre-defined
+            a = 3 + 4 * i;
+            
+          Both i and j can be changed. The will revert to sqrt (-1) 
+          after a "clear"
+
+          If both have been changed, complex numbers sqrt (-1)
+          can be used
+            a = 3 + 4 * sqrt (-1);          
+      </Text>
+    </Content>
+  </HelpTopic>
+  
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="CMatrices">
+    <Header>Complex vectors and matrices</Header>
+
+    <Content>
+      <Title>Creating complex vectors and matrices</Title>
+
+      <Text>
+        t = [0 : 0.01 : 1];
+        s = exp (j * 2 * pi * 3 * t);
+        plot (t, real (s));
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="COperations">
+    <Header>Supported complex operations</Header>
+
+    <Content>
+      <Title>Supported complex operations</Title>
+
+      <Text>
+        s = exp (i * 3 * [0 : 0.01 : 3]);
+        r = real (s);
+        t = imag (s);
+        
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  
+</HelpTree>

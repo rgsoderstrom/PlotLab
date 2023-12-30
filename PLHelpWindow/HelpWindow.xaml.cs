@@ -29,6 +29,9 @@ namespace PLHelpWindow
             "PlotFigures.xml",
             "DisplayingText.xml",
             "MathFunctions.xml",
+            "SignalProcessing.xml",
+            "ComplexNumbers.xml",
+            "M-FileFunctions.xml",
         };
 
         internal HelpWindow ()
