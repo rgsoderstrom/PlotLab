@@ -550,7 +550,8 @@ namespace FunctionLibrary
                     {
                         double re = cmat [r, c].Real;
                         double im = cmat [r, c].Imag;
-                        results [r, c] = Math.Exp (re) * new PLComplex (Math.Cos (im), Math.Sin (im));
+                        double m = Math.Exp (re);
+                        results [r, c] = new PLComplex (m * Math.Cos (im), m * Math.Sin (im));
                     }
                 }
 

@@ -433,19 +433,24 @@ namespace Main
 
         private void Operator_Plus ()
         {
-            if (AllOperandsSameSize (out int rows, out int cols, workspace))
-            {
-                if (Operands [0].Value is PLString) Value = new PLString ("");
-                else if (rows == 1 && cols == 1)    Value = new PLDouble (0);
+            //if (AllOperandsSameSize (out int rows, out int cols, workspace))
+            //{
+            //    if (Operands [0].Value is PLString) Value = new PLString ("");
+            //    else if (rows == 1 && cols == 1) Value = new PLDouble (0);
 
-                else if (Operands [0].Value is PLMatrix)  Value = new PLMatrix (rows, cols);
-                else if (Operands [0].Value is PLCMatrix) Value = new PLCMatrix (rows, cols);
+            //    else if (Operands [0].Value is PLMatrix) Value = new PLMatrix (rows, cols);
+            //    else if (Operands [0].Value is PLCMatrix) Value = new PLCMatrix (rows, cols);
+
+            //    else
+            //        throw new Exception ("Operator_Plus error");
+
+            Value = new PLDouble (0);
 
                 foreach (ExpressionTreeNode op in Operands)
                     Value += op.Value;
-            }
-            else
-                throw new Exception ("Matrix size error in \"+\"");
+            //}
+            //else
+            //    throw new Exception ("Matrix size error in \"+\"");
         }
 
         //*******************************************************************************************
@@ -453,18 +458,18 @@ namespace Main
 
         private void Operator_Minus ()
         {
-            if (AllOperandsSameSize (out int rows, out int cols, workspace))
-            {
-                if (rows == 1 && cols == 1) Value = new PLDouble (0);
-                else                        Value = new PLMatrix (rows, cols);
+            //if (AllOperandsSameSize (out int rows, out int cols, workspace))
+            //{
+            //    if (rows == 1 && cols == 1) Value = new PLDouble (0);
+            //    else                        Value = new PLMatrix (rows, cols);
 
                 Value = Operands [0].Value;
                             
                 for (int i=1; i<Operands.Count; i++)
                         Value -= Operands [i].Value;
-            }
-            else
-                throw new Exception ("Matrix size error in \"-\"");
+            //}
+            //else
+            //    throw new Exception ("Matrix size error in \"-\"");
         }
 
         //*******************************************************************************************

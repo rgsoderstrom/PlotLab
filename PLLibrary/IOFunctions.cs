@@ -50,9 +50,9 @@ namespace FunctionLibrary
                     break;
 
                 if (ft [0] == '%')
-                    str += lst [valueIndex++].ToString (ft);
+                    str.Add (lst [valueIndex++].ToString (ft));
                 else
-                    str += ft;
+                    str.Add (ft);
             }
 
             return str;
