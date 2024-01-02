@@ -40,11 +40,12 @@ namespace FunctionLibrary
                 {"atan2", Atan2},
                 {"rand", Rand},
                 {"Transpose", Transpose},
-                {"log",  Log},
-                {"log2", Log2},
-                {"exp", Exp},
-                {"max", Max},
-                {"min", Min},
+                {"log",   Log},
+                {"log2",  Log2},
+                {"log10", Log10},
+                {"exp",   Exp},
+                {"max",   Max},
+                {"min",   Min},
                 {"cross", CrossProduct},
                 {"real",  Real},
                 {"imag",  Imag},
@@ -519,6 +520,7 @@ namespace FunctionLibrary
         static public PLVariable Cosh   (PLVariable arg) {return MathFunction (Math.Cosh, "cosh",   arg);}
         static public PLVariable Tanh   (PLVariable arg) {return MathFunction (Math.Tanh, "tanh",   arg);}
         static public PLVariable Square (PLVariable arg) {return MathFunction (_Square,   "square", arg);}
+        static public PLVariable Log10  (PLVariable arg) {return MathFunction (Math.Log10, "log10", arg);}
 
         //*********************************************************************************
 

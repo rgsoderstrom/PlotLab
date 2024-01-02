@@ -29,6 +29,7 @@ namespace FunctionLibrary
                 {"RunFilter",    RunFilter},
                 {"ClearFilter",  ClearFilter},
                 {"DeleteFilter", DeleteFilter},
+                {"fft",          FFT }
             };
         }
 

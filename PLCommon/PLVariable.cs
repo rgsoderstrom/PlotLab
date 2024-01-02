@@ -82,6 +82,7 @@ namespace PLCommon
             if (op1 is PLComplex && op2 is PLDouble)  return (op1 as PLComplex).Mul (op2 as PLDouble);
             if (op1 is PLDouble  && op2 is PLComplex) return (op1 as PLDouble).Mul  (op2 as PLComplex);
             if (op1 is PLDouble  && op2 is PLDouble)  return (op1 as PLDouble).Mul  (op2 as PLDouble);
+            if (op1 is PLDouble  && op2 is PLCMatrix) return (op1 as PLDouble).Mul  (op2 as PLCMatrix);
             if (op1 is PLInteger && op2 is PLInteger) return (op1 as PLInteger).Mul (op2 as PLInteger);
             if (op1 is PLMatrix  && op2 is PLMatrix)  return (op1 as PLMatrix).Mul  (op2 as PLMatrix);
             if (op1 is PLDouble  && op2 is PLMatrix)  return (op1 as PLDouble).Mul  (op2 as PLMatrix);
@@ -546,7 +547,6 @@ namespace PLCommon
         public PLDouble  Add (PLDouble op2)  {return new PLDouble  (Data + op2.Data);}
         public PLComplex Add (PLComplex op2) {return new PLComplex (Data + op2.Real, op2.Imag);}
         public PLMatrix  Add (PLMatrix op2)  {return new PLMatrix  ("", Data + op2.Data); }
-
         public PLCMatrix  Add (PLCMatrix op2)
         {
             PLCMatrix results = new PLCMatrix (op2.Rows, op2.Cols);
@@ -556,6 +556,21 @@ namespace PLCommon
                 for (int j = 0; j<op2.Cols; j++)
                 {
                     results [i, j] = new PLComplex (Data + op2 [i, j].Real, op2 [i, j].Imag);
+                }
+            }
+
+            return results;
+        }
+
+        public PLCMatrix  Mul (PLCMatrix op2)
+        {
+            PLCMatrix results = new PLCMatrix (op2.Rows, op2.Cols);
+
+            for (int i = 0; i<op2.Rows; i++)
+            {
+                for (int j = 0; j<op2.Cols; j++)
+                {
+                    results [i, j] = new PLComplex (Data * op2 [i, j].Real, Data * op2 [i, j].Imag);
                 }
             }
 
