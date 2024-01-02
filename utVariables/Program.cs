@@ -15,6 +15,15 @@ namespace utVariables
         {
             try
             {
+                PLDouble a = new PLDouble (1.2);
+                PLDouble b = new PLDouble (3.4);
+                PLVariable c = a + b;
+
+                PLDouble d = a.Add (b);
+
+                Console.WriteLine ("c = " + (c as PLDouble).Data);
+                Console.WriteLine ("d = " + d.Data);
+
                 //PLMatrix M1 = new PLMatrix (3, 4);
 
                 //for (int r = 0; r<M1.Rows; r++)
@@ -48,7 +57,7 @@ namespace utVariables
 
                 //Console.WriteLine ();
 
-                Console.WriteLine ("=======================================================");
+//                Console.WriteLine ("=======================================================");
 
                 PLCMatrix N1 = new PLCMatrix (2, 3);
                 N1 [0, 0] = new PLComplex (1, 2);
@@ -79,11 +88,11 @@ namespace utVariables
                 //    for (int c = 0; c<N2.Cols; c++)
                 //        N2 [r, c] = new PLComplex ((r + 5) * (c + 2), 2 * r * c + 2);
 
-                Console.WriteLine (N1.ToString ()); Console.WriteLine ();
-                Console.WriteLine (N2.ToString ()); Console.WriteLine ();
+                //Console.WriteLine (N1.ToString ()); Console.WriteLine ();
+                //Console.WriteLine (N2.ToString ()); Console.WriteLine ();
 
-                PLCMatrix N3 = new PLComplex (2, -3) * N1;// + N2;
-                Console.WriteLine (N3.ToString ()); Console.WriteLine ();
+                //PLCMatrix N3 = new PLComplex (2, -3) * N1;// + N2;
+                //Console.WriteLine (N3.ToString ()); Console.WriteLine ();
 
                 //Console.WriteLine (N [7].ToString ()); Console.WriteLine ();
 
