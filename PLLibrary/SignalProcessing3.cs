@@ -23,7 +23,7 @@ namespace FunctionLibrary
         //
         //     - retuned results is 3 rows of N columns where N is sample count
         //      - row 1 is frequency scale if sample rate is specified, else it is bin number
-        //      - row 2 is magnitude spectrum
+        //      - row 2 is magnitude squared spectrum
         //      - row 3 is phase angle of spectrum
         //
 
@@ -142,15 +142,15 @@ namespace FunctionLibrary
             for (int i = L2; i<length; i++, put++)
             {
                 results [0, put] = frequencyScale [i];
-                results [1, put] = MagnitudeSquared (workBuffer [i].Real, workBuffer [i].Imag);
-                results [2, put] = PhaseAngle       (workBuffer [i].Real, workBuffer [i].Imag);
+                results [1, put] = PowerSpectrum (workBuffer [i].Real, workBuffer [i].Imag, length);
+                results [2, put] = PhaseAngle    (workBuffer [i].Real, workBuffer [i].Imag);
             }
 
             for (int i = 0; i<L2; i++, put++)
             {
                 results [0, put] = frequencyScale [i];
-                results [1, put] = MagnitudeSquared (workBuffer [i].Real, workBuffer [i].Imag);
-                results [2, put] = PhaseAngle       (workBuffer [i].Real, workBuffer [i].Imag);
+                results [1, put] = PowerSpectrum (workBuffer [i].Real, workBuffer [i].Imag, length);
+                results [2, put] = PhaseAngle    (workBuffer [i].Real, workBuffer [i].Imag);
             }
 
             return results;
@@ -171,15 +171,15 @@ namespace FunctionLibrary
             for (int i = L2; i<length; i++, put++)
             {
                 results [0, put] = frequencyScale [i];
-                results [1, put] = MagnitudeSquared (real [i], imag [i]);
-                results [2, put] = PhaseAngle       (real [i], imag [i]);
+                results [1, put] = PowerSpectrum (real [i], imag [i], length);
+                results [2, put] = PhaseAngle    (real [i], imag [i]);
             }
 
             for (int i = 0; i<L2; i++, put++)
             {
                 results [0, put] = frequencyScale [i];
-                results [1, put] = MagnitudeSquared (real [i], imag [i]);
-                results [2, put] = PhaseAngle       (real [i], imag [i]);
+                results [1, put] = PowerSpectrum (real [i], imag [i], length);
+                results [2, put] = PhaseAngle    (real [i], imag [i]);
             }
 
             return results;
@@ -197,9 +197,9 @@ namespace FunctionLibrary
             return results;
         }
 
-        private static double MagnitudeSquared (double re, double im)
+        private static double PowerSpectrum (double re, double im, double len)
         {
-            return re * re + im * im;
+            return (re * re + im * im) / len;
         }
 
         private static double PhaseAngle (double re, double im)
