@@ -42,6 +42,7 @@ namespace PLCommon
 
         public static PLVariable operator + (PLVariable op1, PLVariable op2)
         {
+            if (op1 is PLMatrix  && op2 is PLCMatrix) return (op1 as PLMatrix).Add  (op2 as PLCMatrix);
             if (op1 is PLCMatrix && op2 is PLCMatrix) return (op1 as PLCMatrix).Add (op2 as PLCMatrix);
             if (op1 is PLDouble  && op2 is PLCMatrix) return (op1 as PLDouble).Add  (op2 as PLCMatrix);
             if (op1 is PLCMatrix && op2 is PLDouble)  return (op2 as PLDouble).Add  (op1 as PLCMatrix);
@@ -231,6 +232,17 @@ namespace PLCommon
         public PLMatrix Div (PLDouble op2) {return new PLMatrix ("", Data / op2.Data);}
         public PLMatrix Pwr (PLDouble op2) {return new PLMatrix ("", Data ^ op2.Data);}
         public PLMatrix Pwr (PLMatrix op2) {return new PLMatrix ("", Data ^ op2.Data);}
+
+        public PLCMatrix Add (PLCMatrix op2) 
+        {
+            PLCMatrix results = new PLCMatrix (Rows, Cols);
+
+            for (int i = 0; i<Rows; i++)
+                for (int j = 0; j<Cols; j++)
+                    results [i, j] = new PLComplex (this [i, j] + op2 [i, j].Real, this [i, j] + op2 [i, j].Imag);
+
+            return results;
+        }
 
         //*************************************************************************************
 
