@@ -891,8 +891,9 @@ namespace PLCommon
         public override int Cols {get {return Data.Length;}}
         public override int Size {get {return Data.Length;}}
 
-        public PLString Add (string   op2) {return new PLString (Data + op2);}
-        public PLString Add (PLString op2) {return new PLString (Data + op2.Data);}
+
+        public PLString Add (string op2)   {Data += op2; return this;}
+        public PLString Add (PLString op2) {Data += op2.Data; return this;}
 
         public override string ToString (string _)
         {
