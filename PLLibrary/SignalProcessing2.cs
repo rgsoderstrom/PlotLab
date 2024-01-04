@@ -20,7 +20,7 @@ namespace FunctionLibrary
 
         //**********************************************************************************************************
         //
-        // handle = CreateLPF (sampleRate, cutoffFreq)
+        // [handle, coefficients] = CreateLPF (sampleRate, cutoffFreq)
         //
         static public PLVariable CreateLPF (PLVariable arg)
         {
@@ -28,6 +28,7 @@ namespace FunctionLibrary
             if (args == null) throw new Exception ("CreateLPF: FIR filter argument error");
             if (args.Count != 2) throw new Exception ("CreateLPF: FIR filter argument error");
 
+            double [] filterCoefs;
             double sampleRate = (args [0] as PLDouble).Data;
             double cutoff = (args [1] as PLDouble).Data;
 
@@ -36,7 +37,7 @@ namespace FunctionLibrary
 
             try
             {
-                double [] filterCoefs = MathNet.Filtering.FIR.FirCoefficients.LowPass (sampleRate, cutoff);
+                filterCoefs = MathNet.Filtering.FIR.FirCoefficients.LowPass (sampleRate, cutoff);
                 OnlineFirFilter filter = new OnlineFirFilter (filterCoefs);
 
                 firFilterCollection.Add (thisFilterHandle, filter);
@@ -47,7 +48,15 @@ namespace FunctionLibrary
                 throw new Exception ("Error creating FIR filter: " + ex.Message);
             }
 
-            return new PLInteger (thisFilterHandle);
+            PLList lst = new PLList ();
+            lst.Add (new PLInteger (thisFilterHandle));
+
+            PLMatrix coefs = new PLMatrix (1, filterCoefs.Length);
+            for (int i = 0; i<filterCoefs.Length; i++)
+                coefs [0, i] = filterCoefs [i];
+            lst.Add (coefs);
+
+            return lst;
         }
 
         //**********************************************************************************************************

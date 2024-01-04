@@ -43,7 +43,7 @@ namespace Main
                     break;
 
                 case TokenType.FunctionName:
-                    Evaluate_Function (workspace);
+                    Evaluate_Function (workspace, expression);
                     break;
 
                 case TokenType.FunctionFile:
@@ -285,7 +285,7 @@ namespace Main
         //*****************************************************************************************************
         //*****************************************************************************************************
 
-        void Evaluate_Function (Workspace workspace)
+        void Evaluate_Function (Workspace workspace, string expression)
         {
             bool forcePrint = false;
 
@@ -347,6 +347,35 @@ namespace Main
 
                 else
                     throw new Exception ("Can't find function " + Operator);
+            }
+
+            if (Value is PLList)
+            {
+                PLList lst = Value as PLList;
+
+                // look for an equal sign in output args
+                int equalIndex = -1;
+
+                for (int i = 0; i<expression.Length; i++) {if (expression [i] == '=') { equalIndex = i; break;}}
+
+                if (equalIndex != -1) // then some outputs were specified
+                {
+                    string [] outputsAsTokens = expression.Substring (0, equalIndex - 1).Split (new char [] { '[', ']', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    //if (outputsAsTokens.Length != lst.Count)
+                    //    throw new Exception ("Function call must have 0 outputs or the same number as function formal param list: " + expression);
+
+                    int count = Math.Min (outputsAsTokens.Length, lst.Count);
+
+                    for (int i = 0; i<count; i++)
+                    {
+                        lst [i].Name = outputsAsTokens [i];
+                        workspace.Add (lst [i]);
+                    }
+                }
+
+                Value = lst [0]; // PlotLab code expects only a single value returned. Other output parameters will
+                                 // be in caller's workspace so code will function as expected
             }
         }
     }
