@@ -51,6 +51,7 @@ namespace FunctionLibrary
 
                 if (ft [0] == '%')
                     str.Add (lst [valueIndex++].ToString (ft));
+
                 else
                     str.Add (ft);
             }
@@ -157,7 +158,7 @@ namespace FunctionLibrary
             PLInteger igr = a as PLInteger;
             PLBool bl     = a as PLBool;
 
-            if (str != null)
+            if (str != null && str.Data != null && str.Data.Length > 1)
             {
                 if (str.Data [str.Data.Length - 1] == '\'') str.Data = str.Data.Substring (0, str.Data.Length - 1);
                 if (str.Data [0] == '\'') str.Data = str.Data.Substring (1, str.Data.Length - 1);
