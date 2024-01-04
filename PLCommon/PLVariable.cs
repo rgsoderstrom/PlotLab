@@ -943,19 +943,21 @@ namespace PLCommon
 
         public override string ToString (string cfmt)
         {
-            string str = "";
+            string str = "[";
 
             foreach (PLVariable var in Data)
             {
                 str += var.ToString (cfmt) +"\n";
             }
 
+            str += ']';
+
             return str;
         }
 
         public override string ToString ()
         {
-            string str = "";
+            string str = "[";
 
             foreach (PLVariable var in Data)
             {
@@ -963,6 +965,7 @@ namespace PLCommon
               //str += "(" + var.ToString () + ")" + "\n";
             }
 
+            str += ']';
             return str;
         }
 
