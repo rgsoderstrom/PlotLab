@@ -55,6 +55,8 @@ namespace PLCommon
             if (op1 is PLMatrix  && op2 is PLDouble)  return (op1 as PLMatrix).Add  (op2 as PLDouble);
             if (op1 is PLDouble  && op2 is PLMatrix)  return (op2 as PLMatrix).Add  (op1 as PLDouble);
             if (op1 is PLString  && op2 is PLString)  return (op1 as PLString).Add  (op2 as PLString);
+            if (op1 is PLInteger && op2 is PLDouble)  return (op1 as PLInteger).Add (op2 as PLDouble);
+            if (op1 is PLDouble  && op2 is PLInteger) return (op2 as PLInteger).Add (op1 as PLDouble);
 
             throw new Exception ("Addition of " + op1.GetType () + " and " + op2.GetType () + " not implemented");
         }
@@ -765,6 +767,7 @@ namespace PLCommon
         }
 
         public PLInteger Add (PLInteger op2) {return new PLInteger (Data + op2.Data);}
+        public PLDouble  Add (PLDouble  op2) {return new PLDouble  (Data + op2.Data);}
         public PLInteger Sub (PLInteger op2) {return new PLInteger (Data - op2.Data);}
         public PLDouble  Sub (PLDouble  op2) {return new PLDouble  (Data - op2.Data);}
         public PLInteger Mul (PLInteger op2) {return new PLInteger (Data * op2.Data);}
@@ -779,19 +782,22 @@ namespace PLCommon
 
         public override string ToString (string cfmt)
         {
-            int w = 8;
 
-            List<string> cfmtParts = base.SplitFormatString (cfmt);
+            int a = 8, b = 5; // defaults
 
-            if (cfmtParts.Count == 2)  // --------------------- use defaults if error in format
-                w = int.Parse (cfmtParts [0]);
+            List<string> cfmtParts = SplitFormatString (cfmt);
 
-            string str = Data.ToString ();
+            if (cfmtParts.Count == 3)  // --------------------- use defaults if error in format
+            {
+                a = int.Parse (cfmtParts [0]);
+                b = int.Parse (cfmtParts [1]);
+            }
 
-            while (str.Length < w)
-                str = " " + str;
+            string fmt = "{0," + a + ":0.";
+            for (int i = 0; i<b; i++) fmt += '#';
+            fmt += "}";
 
-            return str;
+            return string.Format (fmt, Data);
         }
 
         public override string ToString ()
