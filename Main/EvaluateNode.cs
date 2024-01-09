@@ -374,8 +374,8 @@ namespace Main
                     }
                 }
 
-                Value = lst [0]; // PlotLab code expects only a single value returned. Other output parameters will
-                                 // be in caller's workspace so code will function as expected
+                Value = lst [0]; // PlotLab code expects only a single value returned. Other output parameters have
+                                 // been placed in the caller's workspace so code will function as expected
             }
         }
     }

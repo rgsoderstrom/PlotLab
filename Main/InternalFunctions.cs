@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Microsoft.Win32;
+
 using PLCommon;
 
 //
@@ -34,26 +36,41 @@ namespace Main
 
         // element-by-element multiply
 
-        static internal PLMatrix DotTimes (PLVariable arg1, PLVariable arg2)
+        static internal PLVariable DotTimes (PLVariable arg1, PLVariable arg2)
         {
-            PLMatrix m1 = arg1 as PLMatrix;
-            PLMatrix m2 = arg2 as PLMatrix;
+            if (arg1.Rows != arg2.Rows || arg1.Cols != arg2.Cols)
+                throw new Exception ("Argument size mis-match");
 
-            if (m1 != null && m2 != null)
-            {
-                if (m1.Rows != m2.Rows || m1.Cols != m2.Cols)
-                    throw new Exception ("Argument size mis-match");
+            if (arg1.IsMatrix == false && arg1.IsVector == false)
+                throw new Exception ("Dot-times requres two vectors or matrices");
 
-                PLMatrix result = new PLMatrix (m1.Rows, m1.Cols);
+            if (arg1 is PLMatrix  && arg2 is PLMatrix)  return _DotTimes (arg1 as PLMatrix,  arg2 as PLMatrix);
+            if (arg1 is PLMatrix  && arg2 is PLCMatrix) return _DotTimes (arg1 as PLMatrix,  arg2 as PLCMatrix);
+            if (arg1 is PLCMatrix && arg2 is PLMatrix)  return _DotTimes (arg2 as PLMatrix,  arg1 as PLCMatrix);
+            if (arg1 is PLCMatrix && arg2 is PLCMatrix) return _DotTimes (arg1 as PLCMatrix, arg2 as PLCMatrix);
 
-                for (int i = 0; i<result.Rows; i++)
-                    for (int j = 0; j<result.Cols; j++)
-                        result [i, j] = m1 [i, j] * m2 [i, j];
+            throw new Exception ("Dot-times argument error");
+        }
 
-                return result;
-            }
+        static PLMatrix _DotTimes (PLMatrix m1, PLMatrix m2)
+        {
+            PLMatrix result = new PLMatrix (m1.Rows, m1.Cols);
+            for (int i = 0; i<result.Rows; i++) for (int j = 0; j<result.Cols; j++) result [i, j] = m1 [i, j] * m2 [i, j];
+            return result;
+        }
 
-            throw new Exception ("Dot-times requres two matrices");
+        static PLCMatrix _DotTimes (PLMatrix m1, PLCMatrix m2)
+        {
+            PLCMatrix result = new PLCMatrix (m1.Rows, m1.Cols);
+            for (int i = 0; i<result.Rows; i++) for (int j = 0; j<result.Cols; j++) result [i, j] = m2 [i, j].Mul (m1 [i, j]);
+            return result;
+        }
+
+        static PLCMatrix _DotTimes (PLCMatrix m1, PLCMatrix m2)
+        {
+            PLCMatrix result = new PLCMatrix (m1.Rows, m1.Cols);
+            for (int i = 0; i<result.Rows; i++) for (int j = 0; j<result.Cols; j++) result [i, j] = m1 [i, j].Mul (m2 [i, j]);
+            return result;
         }
 
         //*********************************************************************************************

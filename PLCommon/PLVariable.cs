@@ -239,7 +239,7 @@ namespace PLCommon
 
             for (int i = 0; i<Rows; i++)
                 for (int j = 0; j<Cols; j++)
-                    results [i, j] = new PLComplex (this [i, j] + op2 [i, j].Real, this [i, j] + op2 [i, j].Imag);
+                    results [i, j] = new PLComplex (this [i, j] + op2 [i, j].Real, op2 [i, j].Imag);
 
             return results;
         }
@@ -589,17 +589,18 @@ namespace PLCommon
             return results;
         }
 
-        public PLDouble  Sub (PLDouble op2)   {return new PLDouble  (Data - op2.Data);}
-        public PLDouble  Sub (PLInteger op2)  {return new PLDouble  (Data - op2.Data);}
-        public PLMatrix  Sub (PLMatrix op2)   {return new PLMatrix  ("", Data - op2.Data); }
-        public PLComplex Sub (PLComplex op2)  {return new PLComplex (Data - op2.Real, -op2.Imag);}
-        public PLDouble  Mul (PLDouble op2)   {return new PLDouble  (Data * op2.Data);}
-        public PLMatrix  Mul (PLMatrix op2)   {return new PLMatrix  ("", Data * op2.Data); }
-        public PLComplex Mul (PLComplex op2)  {return new PLComplex (Data * op2.Real, Data * op2.Imag);}
-        public PLDouble  Div (PLDouble op2)   {return new PLDouble  (Data / op2.Data);}
-        public PLMatrix  Div (PLMatrix op2)   {return new PLMatrix  ("", Data / op2.Data); }
-        public PLDouble  Pwr (PLDouble op2)   {return new PLDouble  (Math.Pow (Data, op2.Data));}
-        public PLMatrix  Pwr (PLMatrix op2)   {return new PLMatrix  ("", Data ^ op2.Data); }
+        public PLDouble  Sub (PLDouble  op2) {return new PLDouble  (Data - op2.Data);}
+        public PLDouble  Sub (PLInteger op2) {return new PLDouble  (Data - op2.Data);}
+        public PLMatrix  Sub (PLMatrix  op2) {return new PLMatrix  ("", Data - op2.Data); }
+        public PLComplex Sub (PLComplex op2) {return new PLComplex (Data - op2.Real, -op2.Imag);}
+        public PLDouble  Mul (double    op2) {return new PLDouble  (Data * op2);}
+        public PLDouble  Mul (PLDouble  op2) {return new PLDouble  (Data * op2.Data);}
+        public PLMatrix  Mul (PLMatrix  op2) {return new PLMatrix  ("", Data * op2.Data); }
+        public PLComplex Mul (PLComplex op2) {return new PLComplex (Data * op2.Real, Data * op2.Imag);}
+        public PLDouble  Div (PLDouble  op2) {return new PLDouble  (Data / op2.Data);}
+        public PLMatrix  Div (PLMatrix  op2) {return new PLMatrix  ("", Data / op2.Data); }
+        public PLDouble  Pwr (PLDouble  op2) {return new PLDouble  (Math.Pow (Data, op2.Data));}
+        public PLMatrix  Pwr (PLMatrix  op2) {return new PLMatrix  ("", Data ^ op2.Data); }
 
         //*************************************************************************************
 
@@ -711,6 +712,7 @@ namespace PLCommon
         public PLComplex Sub (PLDouble  op2) {return new PLComplex (Real - op2.Data, Imag);}
         public PLComplex Mul (PLComplex op2) {return new PLComplex (Real * op2.Real - Imag * op2.Imag, Real * op2.Imag + Imag * op2.Real);}
         public PLComplex Mul (PLDouble op2)  {return new PLComplex (Real * op2.Data, Imag * op2.Data);}
+        public PLComplex Mul (double op2)    {return new PLComplex (Real * op2, Imag * op2);}
         public PLComplex Div (PLDouble  op2) {return new PLComplex (Real / op2.Data, Imag / op2.Data);}
 
         public PLComplex Div (PLComplex op2) {double mag = Magnitude * op2.Magnitude; double ang = Angle - op2.Angle; 
@@ -957,7 +959,7 @@ namespace PLCommon
 
         public override string ToString ()
         {
-            string str = "[";
+            string str = ""; // "[";
 
             foreach (PLVariable var in Data)
             {
@@ -965,7 +967,7 @@ namespace PLCommon
               //str += "(" + var.ToString () + ")" + "\n";
             }
 
-            str += ']';
+            //str += ']';
             return str;
         }
 

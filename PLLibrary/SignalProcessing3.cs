@@ -44,24 +44,17 @@ namespace FunctionLibrary
                 if (arg is PLList) // then sample rate is specified
                 {
                     PLList lst = arg as PLList;
+                    if (lst [0].IsVector == false) 
+                        throw new Exception ("Input signal must be vector");
+
+                    length = lst [0].Size;
+
                     sampleRate = (lst [1] as PLDouble).Data;
                     returnFreqScale = true;
                     realInput    = lst [0] as PLMatrix;  // only one of these will be non-null
                     complexInput = lst [0] as PLCMatrix;
 
-                    if (realInput != null)
-                    {
-                        if (realInput.IsVector == false) throw new Exception ("Input signal must be vector");
-                        length = realInput.Size;
-                    }
-
-                    else if (complexInput != null)
-                    {
-                        if (complexInput.IsVector == false) throw new Exception ("Input signal must be vector");
-                        length = complexInput.Size;
-                    }
-
-                    else
+                    if (realInput == null && complexInput == null)
                         throw new Exception ("Unsupported in type " + lst [0].GetType ());
                 }
 
@@ -93,7 +86,7 @@ namespace FunctionLibrary
             // run appropriate transform
             //
 
-            PLMatrix results = new PLMatrix (2, length);
+            PLMatrix results;
 
             // buffers for input to and output from Math.Net functions
             if (complexInput != null) // then is complex in

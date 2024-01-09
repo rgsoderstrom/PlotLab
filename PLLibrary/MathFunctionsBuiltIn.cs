@@ -49,8 +49,10 @@ namespace FunctionLibrary
                 {"cross", CrossProduct},
                 {"real",  Real},
                 {"imag",  Imag},
+                {"conj",  Conj},
                 {"mag",   Mag},
                 {"angle", Angle},
+                {"round", Round},
             };
         }
 
@@ -138,7 +140,8 @@ namespace FunctionLibrary
                 return results;
             }
 
-            throw new Exception ("Argument error, arg must be complex");
+            // throw new Exception ("Argument error, arg must be complex");
+            return src;
         }
 
         static public PLVariable Imag (PLVariable src)
@@ -160,7 +163,31 @@ namespace FunctionLibrary
                 return results;
             }
 
-            throw new Exception ("Argument error, arg must be complex");
+            //throw new Exception ("Argument error, arg must be complex");
+            return new PLDouble (0);
+        }
+
+        static public PLVariable Conj (PLVariable src)
+        {
+            if (src is PLComplex)
+            {
+                return new PLComplex ((src as PLComplex).Real, -1 * (src as PLComplex).Imag);
+            }
+
+            else if (src is PLCMatrix)
+            {
+                PLCMatrix cmat = src as PLCMatrix;
+                PLCMatrix results = new PLCMatrix (cmat.Rows, cmat.Cols);
+
+                for (int i = 0; i<cmat.Rows; i++)
+                    for (int j = 0; j<cmat.Cols; j++)
+                        results [i, j] = new PLComplex (cmat [i, j].Real, -1 * cmat [i, j].Imag);
+
+                return results;
+            }
+
+            //throw new Exception ("Argument error, arg must be complex");
+            return src;
         }
 
         static public PLVariable Mag (PLVariable src)
@@ -256,10 +283,12 @@ namespace FunctionLibrary
 
         static public PLVariable Rand (PLVariable var)
         {
-            PLMatrix mat = new PLMatrix (1, 1);
+            PLMatrix mat = var as PLMatrix;
             PLNull   nul = var as PLNull;
             PLDouble dbl = var as PLDouble;
-            PLList lst = var as PLList;
+            PLList   lst = var as PLList;
+
+            PLMatrix rmat = new PLMatrix (1, 1);
 
             if (nul != null) // true if rand invoked with no argument
             {
@@ -269,7 +298,7 @@ namespace FunctionLibrary
             else if (dbl != null)
             {
                 int N = (int)(0.5 + dbl.Data);
-                mat = new PLMatrix (N, N);
+                rmat = new PLMatrix (N, N);
             }
 
             else if (lst != null)
@@ -278,18 +307,23 @@ namespace FunctionLibrary
                 {
                     int M = (int)(0.5 + (lst.Data [0] as PLDouble).Data);
                     int N = (int)(0.5 + (lst.Data [1] as PLDouble).Data);
-                    mat = new PLMatrix (M, N);
+                    rmat = new PLMatrix (M, N);
                 }
+            }
+
+            else if (mat != null) // rand (size (z)); % where z is a matrix
+            {
+                rmat = new PLMatrix ((int) mat [0, 0], (int) mat [0, 1]);
             }
 
             else
                 throw new Exception ("Unreconized arguments to function rand");
 
-            for (int r = 0; r<mat.Rows; r++)
-                for (int c = 0; c<mat.Cols; c++)
-                    mat [r, c] = random.NextDouble ();
+            for (int r = 0; r<rmat.Rows; r++)
+                for (int c = 0; c<rmat.Cols; c++)
+                    rmat [r, c] = random.NextDouble ();
 
-            return mat;
+            return rmat;
         }
 
         //*********************************************************************************************
@@ -507,11 +541,7 @@ namespace FunctionLibrary
 
         // the "name" string here is only for error reporting
 
-        static public PLVariable Sin    (PLVariable arg) 
-        {
-            return MathFunction (Math.Sin,  "sin",    arg);
-        }
-
+        static public PLVariable Sin    (PLVariable arg) {return MathFunction (Math.Sin,  "sin",    arg);}
         static public PLVariable Cos    (PLVariable arg) {return MathFunction (Math.Cos,  "cos",    arg);}
         static public PLVariable Tan    (PLVariable arg) {return MathFunction (Math.Tan,  "tan",    arg);}
         static public PLVariable Abs    (PLVariable arg) {return MathFunction (Math.Abs,  "abs",    arg);}
@@ -521,6 +551,8 @@ namespace FunctionLibrary
         static public PLVariable Tanh   (PLVariable arg) {return MathFunction (Math.Tanh, "tanh",   arg);}
         static public PLVariable Square (PLVariable arg) {return MathFunction (_Square,   "square", arg);}
         static public PLVariable Log10  (PLVariable arg) {return MathFunction (Math.Log10, "log10", arg);}
+
+        static public PLVariable Round  (PLVariable arg) {return MathFunction (Math.Round,  "round",    arg);}
 
         //*********************************************************************************
 

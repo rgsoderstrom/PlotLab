@@ -86,10 +86,14 @@ namespace FunctionLibrary
                 throw new Exception ("FIR Filter not found");
             
             OnlineFilter filter = firFilterCollection [handle];
-            
+
             //
             // get input samples in the format OnlineFilter wants            
             //
+
+            if (args [1] is PLCMatrix)
+                throw new Exception ("RunFilter - complex input not supported");
+
             PLMatrix samples = args [1] as PLMatrix;
 
             if (samples.IsRowVector == false)

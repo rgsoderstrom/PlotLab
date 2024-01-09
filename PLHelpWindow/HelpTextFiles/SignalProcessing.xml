@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?> 
 
-
 <!-- 
     ComplexNumbers.xml
       
@@ -16,10 +15,30 @@
       <Title>Signal Processing functions </Title>
 
       <Text>
-           CreateLPF
-           RunFilter
-           ClearFilter
-           DeleteFilter
+        Support for FIR filters and FFTs
+      </Text>
+    </Content>
+
+    <SubTopics>
+      <SubTopic SearchKey="FirFilter"/>
+      <SubTopic SearchKey="FFT"/>
+    </SubTopics>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="FirFilter">
+    <Header>FIR Filters</Header>
+
+    <Content>
+      <Title>Creating and running FIR filters</Title>
+
+      <Text>
+          t = 0 : (1/2000) : 0.3;
+          sig = sin (2 * pi * 30 * t) + sin (2 * pi * 130 * t);
+
+          h = CreateLPF (2000, 100); % (sampleRate, cuttoff)
+          sig2 = RunFilter (h, sig);
       </Text>
     </Content>
 
@@ -29,27 +48,41 @@
       <SubTopic SearchKey="ClearFilter"/>
       <SubTopic SearchKey="DeleteFilter"/>
     </SubTopics>
-  </HelpTopic>
 
+  </HelpTopic>
+  
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="FFT">
+    <Header>FFTs</Header>
+
+    <Content>
+      <Title>FFT with Real or Complex input</Title>
+
+      <Text>
+        % complex input example
+        sig = exp (i * 2 * pi * 32 * t) + 2 * exp (i * 2 * pi * 200 * t);
+        spect = fft (sig, 1000); % (timeDomainSignal, sampleRate)
+      </Text>
+    </Content>
+
+    <SubTopics>
+      <SubTopic SearchKey="RealFFT"/>
+      <SubTopic SearchKey="ComplexFFT"/>
+    </SubTopics>
+
+  </HelpTopic>
+  
   <!-- ********************************************************************-->
 
   <HelpTopic SearchKey="CreateLPF">
-    <Header>Complex numbers</Header>
+    <Header>Create Low Pass FIR filter</Header>
 
     <Content>
-      <Title>Creating complex numbers</Title>
+      <Title>Creating FIR filter</Title>
 
       <Text>
-          i = sqrt (-1);   % pre-defined 
-          j = sqrt (-1);   % pre-defined
-            a = 3 + 4 * i;
-            
-          Both i and j can be changed. The will revert to sqrt (-1) 
-          after a "clear"
-
-          If both have been changed, complex numbers sqrt (-1)
-          can be used
-            a = 3 + 4 * sqrt (-1);          
+        h = CreateLPF (sampleRate, cutoff);
       </Text>
     </Content>
   </HelpTopic>
@@ -57,15 +90,15 @@
   <!-- ********************************************************************-->
 
   <HelpTopic SearchKey="RunFilter">
-    <Header>Complex vectors and matrices</Header>
+    <Header>Run FIR filter</Header>
 
     <Content>
-      <Title>Creating complex vectors and matrices</Title>
+      <Title>Running a FIR filter</Title>
 
       <Text>
-        t = [0 : 0.01 : 1];
-        s = exp (j * 2 * pi * 3 * t);
-        plot (t, real (s));
+          % h is integer from CreateLPF
+          outputSignal = RunFilter (h, inputSignal);
+          outputSignal = RunFilter (h, inputSignal, decimation);
       </Text>
     </Content>
   </HelpTopic>
@@ -73,16 +106,13 @@
   <!-- ********************************************************************-->
 
   <HelpTopic SearchKey="ClearFilter">
-    <Header>Supported complex operations</Header>
+    <Header>Clear filter</Header>
 
     <Content>
-      <Title>Supported complex operations</Title>
+      <Title>Clear FIR filter</Title>
 
       <Text>
-        s = exp (i * 3 * [0 : 0.01 : 3]);
-        r = real (s);
-        t = imag (s);
-        
+          ClearFilter (h);        
       </Text>
     </Content>
   </HelpTopic>
@@ -90,7 +120,21 @@
   <!-- ********************************************************************-->
 
   <HelpTopic SearchKey="DeleteFilter">
-    <Header>Supported complex operations</Header>
+    <Header>Delete FIR filter</Header>
+
+    <Content>
+      <Title>Delete one FIR filter</Title>
+
+      <Text>
+          DeleteFilter (h);        
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="RealFFT">
+    <Header>sssssssssssssssssssssss</Header>
 
     <Content>
       <Title>Supported complex operations</Title>
@@ -106,5 +150,21 @@
 
   <!-- ********************************************************************-->
 
+  <HelpTopic SearchKey="ComplexFFT">
+    <Header>xxxxxxxxxxxxxxxxxxx</Header>
+
+    <Content>
+      <Title>Supported complex operations</Title>
+
+      <Text>
+        s = exp (i * 3 * [0 : 0.01 : 3]);
+        r = real (s);
+        t = imag (s);
+        
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
   
 </HelpTree>
