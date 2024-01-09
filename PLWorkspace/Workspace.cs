@@ -33,8 +33,8 @@ namespace PLWorkspace
 
         static Workspace ()
         {
-            PLDouble PI = new PLDouble (3.14159265358979); PI.Name = "PI"; Constants.Add ("PI", PI); Constants.Add ("pi", PI);
-            PLDouble e  = new PLDouble (2.71828182845905); e.Name = "e";   Constants.Add ("e", e);
+            PLDouble PI = new PLDouble (Math.PI); PI.Name = "PI"; Constants.Add ("PI", PI); Constants.Add ("pi", PI);
+            PLDouble e  = new PLDouble (Math.Exp (0)); e.Name = "e";   Constants.Add ("e", e);
 
             PLBool TRUE  = new PLBool (true);  TRUE.Name = "true";   Constants.Add ("true", TRUE);
             PLBool FALSE = new PLBool (false); FALSE.Name = "false"; Constants.Add ("false", FALSE);
@@ -428,7 +428,11 @@ namespace PLWorkspace
                 }
             }
 
-            return Rows (a) * Cols (a);
+            PLMatrix s = new PLMatrix (1, 2);
+            s [0, 0] = (Rows (a) as PLInteger).Data; 
+            s [0, 1] = (Cols (a) as PLInteger).Data; 
+
+            return s;
         }
 
         public PLVariable Length (PLVariable a)
