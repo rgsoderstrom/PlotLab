@@ -90,13 +90,20 @@ namespace Main
 
             foreach (string d in searchPath)
             {
-                dir = new DirectoryInfo (d);
-                files = dir.GetFiles(wildCardName, SearchOption.TopDirectoryOnly);
-
-                foreach (FileInfo fi in files)
+                try
                 {
-                    int index = fi.Name.IndexOf (".m");
-                    matches.Add (fi.Name.Remove (index) + " ");
+                    dir = new DirectoryInfo (d);
+                    files = dir.GetFiles (wildCardName, SearchOption.TopDirectoryOnly);
+
+                    foreach (FileInfo fi in files)
+                    {
+                        int index = fi.Name.IndexOf (".m");
+                        matches.Add (fi.Name.Remove (index) + " ");
+                    }
+                }
+
+                catch (Exception) // probably an invalid name or dir doesn't exist
+                {
                 }
             }
 
