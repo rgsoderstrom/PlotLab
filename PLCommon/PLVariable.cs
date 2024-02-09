@@ -2,9 +2,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using CommonMath;
 
@@ -100,6 +97,7 @@ namespace PLCommon
         {
             if (op1 is PLComplex && op2 is PLComplex) return (op1 as PLComplex).Div (op2 as PLComplex);
             if (op1 is PLComplex && op2 is PLDouble)  return (op1 as PLComplex).Div (op2 as PLDouble);
+            if (op1 is PLDouble && op2 is PLComplex)  return (op1 as PLDouble).Div  (op2 as PLComplex);
             if (op1 is PLDouble && op2 is PLDouble)   return (op1 as PLDouble).Div  (op2 as PLDouble);
             if (op1 is PLMatrix && op2 is PLDouble)   return (op1 as PLMatrix).Div  (op2 as PLDouble);
             if (op1 is PLDouble && op2 is PLMatrix)   return (op1 as PLDouble).Div  (op2 as PLMatrix);
@@ -600,9 +598,18 @@ namespace PLCommon
         public PLMatrix  Mul (PLMatrix  op2) {return new PLMatrix  ("", Data * op2.Data); }
         public PLComplex Mul (PLComplex op2) {return new PLComplex (Data * op2.Real, Data * op2.Imag);}
         public PLDouble  Div (PLDouble  op2) {return new PLDouble  (Data / op2.Data);}
-        public PLMatrix  Div (PLMatrix  op2) {return new PLMatrix  ("", Data / op2.Data); }
+        public PLMatrix  Div (PLMatrix  op2) {return new PLMatrix  ("", Data / op2.Data);}
         public PLDouble  Pwr (PLDouble  op2) {return new PLDouble  (Math.Pow (Data, op2.Data));}
         public PLMatrix  Pwr (PLMatrix  op2) {return new PLMatrix  ("", Data ^ op2.Data); }
+
+        public PLComplex  Div (PLComplex  op2) 
+        {
+            double dm = op2.Magnitude; // denominator magnitude
+            double da = op2.Angle;     // denominator angle, radians
+            double rm = Data / dm; // results magnitude
+            double ra = -da;       // results angle
+            return new PLComplex (rm * Math.Cos (ra), rm * Math.Sin (ra));
+        }
 
         //*************************************************************************************
 
