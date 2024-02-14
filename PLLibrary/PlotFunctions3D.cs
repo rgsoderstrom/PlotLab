@@ -82,7 +82,7 @@ namespace FunctionLibrary
 
                 if (dataArgCount == 1)
                 {
-                    PLMatrix mat = lst [0] as PLMatrix;
+                    PLRMatrix mat = lst [0] as PLRMatrix;
                     if (mat == null) throw new Exception ("PlotVector arg1 must be col vector");
                     if (mat.Rows != 3 || mat.Cols != 1) throw new Exception ("PlotVector arg1 must be 3D col vector");
                     vect = new Vector3D (mat [0, 0], mat [1, 0], mat [2, 0]);
@@ -90,8 +90,8 @@ namespace FunctionLibrary
 
                 else if (dataArgCount == 2)
                 {
-                    PLMatrix mat1 = lst [0] as PLMatrix;
-                    PLMatrix mat2 = lst [1] as PLMatrix;
+                    PLRMatrix mat1 = lst [0] as PLRMatrix;
+                    PLRMatrix mat2 = lst [1] as PLRMatrix;
                     if (mat1 == null || mat2 == null) throw new Exception ("PlotVector arg1 error");
 
                     if (mat2.Cols == 1 && mat2.Rows == 3) // 2nd arg is a vector
@@ -113,9 +113,9 @@ namespace FunctionLibrary
 
                 else if (dataArgCount == 3)
                 {
-                    PLMatrix mat1 = lst [0] as PLMatrix;
-                    PLMatrix mat2 = lst [1] as PLMatrix;
-                    PLMatrix mat3 = lst [2] as PLMatrix;
+                    PLRMatrix mat1 = lst [0] as PLRMatrix;
+                    PLRMatrix mat2 = lst [1] as PLRMatrix;
+                    PLRMatrix mat3 = lst [2] as PLRMatrix;
                     if (mat1 == null || mat2 == null || mat3 == null) throw new Exception ("PlotVector arg1 error");
 
                     if (mat1.IsColVector == false) throw new Exception ("PlotVector 1st arg must be column vector");
@@ -161,7 +161,7 @@ namespace FunctionLibrary
                 }
             }
 
-            else if (input is PLMatrix mat) // column vector only
+            else if (input is PLRMatrix mat) // column vector only
             {
                 if (mat == null) throw new Exception ("PlotVector arg1 must be col vector");
                 if (mat.Rows != 3 || mat.Cols != 1) throw new Exception ("PlotVector arg1 must be 3D col vector");
@@ -220,20 +220,20 @@ namespace FunctionLibrary
                 if (lst.Count != 3)
                     throw new Exception ("Arg must be 3 coordinate numbers");
 
-                if (lst [0] is PLMatrix) {PLMatrix mx = (PLMatrix)lst [0]; x = mx [0, 0]; }
+                if (lst [0] is PLRMatrix) {PLRMatrix mx = (PLRMatrix)lst [0]; x = mx [0, 0]; }
                 if (lst [0] is PLDouble) {PLDouble mx = (PLDouble)lst [0]; x = mx.Data; }
-                if (lst [1] is PLMatrix) {PLMatrix my = (PLMatrix)lst [1]; y = my [0, 0]; }
+                if (lst [1] is PLRMatrix) {PLRMatrix my = (PLRMatrix)lst [1]; y = my [0, 0]; }
                 if (lst [1] is PLDouble) {PLDouble my = (PLDouble)lst [1]; y = my.Data; }
-                if (lst [2] is PLMatrix) {PLMatrix mz = (PLMatrix)lst [2]; z = mz [0, 0]; }
+                if (lst [2] is PLRMatrix) {PLRMatrix mz = (PLRMatrix)lst [2]; z = mz [0, 0]; }
                 if (lst [2] is PLDouble) {PLDouble mz = (PLDouble)lst [2]; z = mz.Data; }
 
                 if (x == double.NaN || y == double.NaN || z == double.NaN)
                     throw new Exception ("Arg must be 3 coordinate numbers");
             }
 
-            else if (arg is PLMatrix)
+            else if (arg is PLRMatrix)
             {
-                PLMatrix mat = arg as PLMatrix;
+                PLRMatrix mat = arg as PLRMatrix;
 
                 if (mat.Rows == 1 && mat.Cols == 3)      { x = mat [0, 0]; y = mat [0, 1]; z = mat [0, 2]; }
                 else if (mat.Rows == 3 && mat.Cols == 1) { x = mat [0, 0]; y = mat [1, 0]; z = mat [2, 0]; }

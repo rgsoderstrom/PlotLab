@@ -79,7 +79,7 @@ namespace FunctionLibrary
                 if (pstr == null) throw new Exception ("SetFigure error - 2nd arg must be a string");
 
                 PLDouble pdbl = args [2] as PLDouble;
-                PLMatrix pmat = args [2] as PLMatrix;
+                PLRMatrix pmat = args [2] as PLRMatrix;
 
                 switch (pstr.Text)
                 {

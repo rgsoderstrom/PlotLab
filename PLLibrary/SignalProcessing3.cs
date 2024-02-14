@@ -36,7 +36,7 @@ namespace FunctionLibrary
             double sampleRate = 0; // in samples per second
             int length;
 
-            PLMatrix  realInput = null; 
+            PLRMatrix  realInput = null; 
             PLCMatrix complexInput = null;
 
             try
@@ -51,16 +51,16 @@ namespace FunctionLibrary
 
                     sampleRate = (lst [1] as PLDouble).Data;
                     returnFreqScale = true;
-                    realInput    = lst [0] as PLMatrix;  // only one of these will be non-null
+                    realInput    = lst [0] as PLRMatrix;  // only one of these will be non-null
                     complexInput = lst [0] as PLCMatrix;
 
                     if (realInput == null && complexInput == null)
                         throw new Exception ("Unsupported in type " + lst [0].GetType ());
                 }
 
-                else if (arg is PLMatrix) // real input
+                else if (arg is PLRMatrix) // real input
                 {
-                    realInput = arg as PLMatrix;
+                    realInput = arg as PLRMatrix;
                     if (realInput.IsVector == false) throw new Exception ("Input signal must be vector");
                     length = realInput.Size;
                 }
@@ -86,7 +86,7 @@ namespace FunctionLibrary
             // run appropriate transform
             //
 
-            PLMatrix results;
+            PLRMatrix results;
 
             // buffers for input to and output from Math.Net functions
             if (complexInput != null) // then is complex in
@@ -121,10 +121,10 @@ namespace FunctionLibrary
 
         //********************************************************************************
 
-        private static PLMatrix FormatResults (ComplexFourierTransformation cft, Complex [] workBuffer, bool doFreqScale, double sampleRate)
+        private static PLRMatrix FormatResults (ComplexFourierTransformation cft, Complex [] workBuffer, bool doFreqScale, double sampleRate)
         {
             int length = workBuffer.Length;
-            PLMatrix results = new PLMatrix (3, length);
+            PLRMatrix results = new PLRMatrix (3, length);
 
             double [] frequencyScale = doFreqScale ? cft.GenerateFrequencyScale (sampleRate, length) : GenerateBinCount (length);
 
@@ -151,10 +151,10 @@ namespace FunctionLibrary
 
         //********************************************************************************
 
-        private static PLMatrix FormatResults (RealFourierTransformation rft, double [] real, double [] imag, bool doFreqScale, double sampleRate)
+        private static PLRMatrix FormatResults (RealFourierTransformation rft, double [] real, double [] imag, bool doFreqScale, double sampleRate)
         {
             int length = real.Length;
-            PLMatrix results = new PLMatrix (3, length);
+            PLRMatrix results = new PLRMatrix (3, length);
 
             double [] frequencyScale = doFreqScale ? rft.GenerateFrequencyScale (sampleRate, length) : GenerateBinCount (length);
 

@@ -4,6 +4,7 @@ using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using System.Collections.Generic;
 
+//using Common;
 using PLCommon;
 using Plot2D_Embedded;
 using Plot3D_Embedded;
@@ -93,7 +94,7 @@ namespace FunctionLibrary
             PLList dataArgs = new PLList ();
             PLList formatArgs = new PLList ();
 
-            if (input is PLMatrix)
+            if (input is PLRMatrix)
             {
                 dataArgs.Add (input);
             }
@@ -156,9 +157,9 @@ namespace FunctionLibrary
         /// 
         static private PLDisplayObject Plot1 (PLList dataArgs, DrawingParameters dp)
         {
-            if (dataArgs [0] is PLMatrix)
+            if (dataArgs [0] is PLRMatrix)
             {
-                PLMatrix mat = dataArgs [0] as PLMatrix;
+                PLRMatrix mat = dataArgs [0] as PLRMatrix;
 
                 List<Point>   points   = new List<Point> ();
                 List<Point3D> points3D = new List<Point3D> ();
@@ -387,10 +388,10 @@ namespace FunctionLibrary
             List<PLVariable> args = dataArgs.Data;
             List<Point> pts = new List<Point> ();
 
-            if (args [0] is PLMatrix && args [1] is PLMatrix)
+            if (args [0] is PLRMatrix && args [1] is PLRMatrix)
             {
-                PLMatrix m1 = args [0] as PLMatrix;
-                PLMatrix m2 = args [1] as PLMatrix;
+                PLRMatrix m1 = args [0] as PLRMatrix;
+                PLRMatrix m2 = args [1] as PLRMatrix;
 
                 if (m1.Rows == m2.Rows && m1.Cols == m2.Cols)
                 {
@@ -433,11 +434,11 @@ namespace FunctionLibrary
             List<PLVariable> args = dataArgs.Data;
             List<Point3D> pts = new List<Point3D> ();
 
-            if (args [0] is PLMatrix && args [1] is PLMatrix && args [2] is PLMatrix)
+            if (args [0] is PLRMatrix && args [1] is PLRMatrix && args [2] is PLRMatrix)
             {
-                PLMatrix m1 = args [0] as PLMatrix;
-                PLMatrix m2 = args [1] as PLMatrix;
-                PLMatrix m3 = args [2] as PLMatrix;
+                PLRMatrix m1 = args [0] as PLRMatrix;
+                PLRMatrix m2 = args [1] as PLRMatrix;
+                PLRMatrix m3 = args [2] as PLRMatrix;
 
                 if (m1.IsVector == false || m2.IsVector == false)
                     throw new Exception ("Plot data args - first two must both be row or column vectors");

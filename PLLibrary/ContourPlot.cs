@@ -78,13 +78,13 @@ namespace FunctionLibrary
 
         private static void AddAxesToData (PLList dataArgs)
         {
-            if (dataArgs [0] is PLMatrix mat)
+            if (dataArgs [0] is PLRMatrix mat)
             {
                 int nr = mat.Rows;
                 int nc = mat.Cols;
 
-                PLMatrix X = new PLMatrix (1, nc);
-                PLMatrix Y = new PLMatrix (1, nr);
+                PLRMatrix X = new PLRMatrix (1, nc);
+                PLRMatrix Y = new PLRMatrix (1, nr);
 
                 for (int i=0; i<nc; i++)
                     X [0, i] = i + 1;
@@ -109,9 +109,9 @@ namespace FunctionLibrary
         private static void SplitArguments (PLVariable input, ref PLList dataArgs, ref PLList displayArgs)
         {
             // if input is just a matrix then there are no display args
-            if (input is PLMatrix)
+            if (input is PLRMatrix)
             {
-                dataArgs.Add (input as PLMatrix);
+                dataArgs.Add (input as PLRMatrix);
                 return; 
             }
 
@@ -124,7 +124,7 @@ namespace FunctionLibrary
                 //
                 for (nextArg=0; nextArg<lst.Count; nextArg++)
                 {
-                    if (lst [nextArg] is PLMatrix mat)
+                    if (lst [nextArg] is PLRMatrix mat)
                     {
                         if (mat.IsVector)
                             dataArgs.Add (mat);
@@ -154,10 +154,10 @@ namespace FunctionLibrary
                     nextArg++;
                 }
 
-                else if (lst [nextArg] is PLMatrix mat)
+                else if (lst [nextArg] is PLRMatrix mat)
                 {
                     displayArgs.Add (new PLString ("Levels"));
-                    displayArgs.Add (lst [nextArg] as PLMatrix);
+                    displayArgs.Add (lst [nextArg] as PLRMatrix);
                     nextArg++;
                 }
 
@@ -180,9 +180,9 @@ namespace FunctionLibrary
                 //
                 // copy data into classes the plot library wants
                 //
-                PLMatrix xx = dataArgs [0] as PLMatrix;
-                PLMatrix yy = dataArgs [1] as PLMatrix;
-                PLMatrix zz = dataArgs [2] as PLMatrix;
+                PLRMatrix xx = dataArgs [0] as PLRMatrix;
+                PLRMatrix yy = dataArgs [1] as PLRMatrix;
+                PLRMatrix zz = dataArgs [2] as PLRMatrix;
 
                 List<double> x = new List<double> (xx.Cols);
                 for (int i=0; i<xx.Cols; i++)
@@ -233,7 +233,7 @@ namespace FunctionLibrary
 
                         case "Levels":
                         { 
-                            if (displayArgs [++i] is PLMatrix mat)
+                            if (displayArgs [++i] is PLRMatrix mat)
                             {
                                 if (mat.IsRowVector == false)
                                     throw new Exception ("Levels must be specified by a number or a row vector");
@@ -373,7 +373,7 @@ namespace FunctionLibrary
         //    //
         //    // list of levels
         //    //
-        //    PLMatrix mat = _levels as PLMatrix;
+        //    PLRMatrix mat = _levels as PLRMatrix;
         //    PLDouble dbl = _levels as PLDouble;  // if a single level
 
         //    List<double> levels = new List<double> ();

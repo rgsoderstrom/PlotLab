@@ -94,7 +94,7 @@ namespace Main
             //bool A = (args is PLList);
             //bool B = (args is PLInteger);
             //bool C = (args is PLScalar);
-            //bool D = (args is PLMatrix);
+            //bool D = (args is PLRMatrix);
             //bool E = (args is PLString);
 
             PLList hist = new PLList ();

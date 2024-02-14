@@ -315,8 +315,8 @@ namespace Main
                 {
                     if (Operator == "Transpose")
                     {
-                        if (Operands [0].Value is PLMatrix)
-                            Value = InternalFunctions.Transpose (Operands [0].Value as PLMatrix);
+                        if (Operands [0].Value is PLRMatrix)
+                            Value = InternalFunctions.Transpose (Operands [0].Value as PLRMatrix);
                         else
                             throw new Exception ("Can only transpose matrices");
                     }

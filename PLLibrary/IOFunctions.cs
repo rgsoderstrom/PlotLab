@@ -153,7 +153,7 @@ namespace FunctionLibrary
         {
             PLString  str = a as PLString;
             PLList    lst = a as PLList;
-            PLMatrix  mat = a as PLMatrix;
+            PLRMatrix  mat = a as PLRMatrix;
             PLDouble  dbl = a as PLDouble;
             PLInteger igr = a as PLInteger;
             PLBool bl     = a as PLBool;

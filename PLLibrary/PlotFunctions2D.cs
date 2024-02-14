@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
 
+using Common;
 using PLCommon;
 using Plot2D_Embedded;
 using PlottingLib;
@@ -31,6 +32,9 @@ namespace FunctionLibrary
             Plot2D fig = CurrentFigure as Plot2D;
 
             fig.RectangularGridOn = true;
+
+            EventLog.WriteLine ("Draw2DObj");
+            
             fig.Plot (co);
         }
 
@@ -63,7 +67,7 @@ namespace FunctionLibrary
             if (CurrentFigure is Plot2D == false)
                 return new PLNull ();
 
-            PLMatrix mat = arg as PLMatrix; // axis ([1 3 5 7])
+            PLRMatrix mat = arg as PLRMatrix; // axis ([1 3 5 7])
             PLString str = arg as PLString; // axis auto
 
             if (str != null)
@@ -82,7 +86,7 @@ namespace FunctionLibrary
 
             else // no arg, so return current limits
             { 
-                PLMatrix lim = new PLMatrix (1, 4);
+                PLRMatrix lim = new PLRMatrix (1, 4);
 
                 double x1 = 0, x2 = 0, y1 = 0, y2 = 0;
                 fig.GetAxes (ref x1, ref x2, ref y1, ref y2);
@@ -182,7 +186,7 @@ namespace FunctionLibrary
                     size [0, 2] = figure.Width;
                     size [0, 3] = figure.Height;
 
-                    return new PLMatrix (size);
+                    return new PLRMatrix (size);
 
                 default:
                     throw new Exception ("Get option not supported");
@@ -304,7 +308,7 @@ namespace FunctionLibrary
 
                 if (dataArgCount == 1)
                 {
-                    PLMatrix mat = lst [0] as PLMatrix;
+                    PLRMatrix mat = lst [0] as PLRMatrix;
                     if (mat == null) throw new Exception ("PlotVector arg1 must be 2D col vector");
                     if (mat.Rows != 2 || mat.Cols != 1) throw new Exception ("PlotVector arg1 must be 2D col vector");
                     vect = new Vector (mat [0, 0], mat [1, 0]);
@@ -312,8 +316,8 @@ namespace FunctionLibrary
 
                 else if (dataArgCount == 2)
                 {
-                    PLMatrix mat1 = lst [0] as PLMatrix;
-                    PLMatrix mat2 = lst [1] as PLMatrix;
+                    PLRMatrix mat1 = lst [0] as PLRMatrix;
+                    PLRMatrix mat2 = lst [1] as PLRMatrix;
                     if (mat1 == null || mat2 == null) throw new Exception ("PlotVector arg1 error");
 
                     if (mat2.Cols == 1 && mat2.Rows == 2) // 2nd arg is a vector
@@ -334,9 +338,9 @@ namespace FunctionLibrary
 
                 else if (dataArgCount == 3)
                 {
-                    PLMatrix mat1 = lst [0] as PLMatrix;
-                    PLMatrix mat2 = lst [1] as PLMatrix;
-                    PLMatrix mat3 = lst [2] as PLMatrix;
+                    PLRMatrix mat1 = lst [0] as PLRMatrix;
+                    PLRMatrix mat2 = lst [1] as PLRMatrix;
+                    PLRMatrix mat3 = lst [2] as PLRMatrix;
                     if (mat1 == null || mat2 == null || mat3 == null) throw new Exception ("PlotVector arg1 error");
 
                     if (mat1.IsColVector == false) throw new Exception ("PlotVector 1st arg must be column vector");
@@ -376,7 +380,7 @@ namespace FunctionLibrary
                 }
             }
 
-            else if (input is PLMatrix mat) // column vector only
+            else if (input is PLRMatrix mat) // column vector only
             {
                 if (mat == null) throw new Exception ("PlotVector arg1 must be 2D col vector");
                 if (mat.Rows != 2 || mat.Cols != 1) throw new Exception ("PlotVector arg1 must be 2D col vector");
@@ -437,12 +441,12 @@ namespace FunctionLibrary
 
             if (args.Count >= 2)
             {
-                if (args [0] is PLMatrix mat)
+                if (args [0] is PLRMatrix mat)
                     if (mat != null)
                         for (int col = 0; col<mat.Cols; col++)
                             tails.Add (new Point (mat [0, col], mat [1, col]));
 
-                if (args [1] is PLMatrix mat2)
+                if (args [1] is PLRMatrix mat2)
                     if (mat2 != null)
                         for (int col = 0; col<mat2.Cols; col++)
                             vects.Add (new Vector (mat2 [0, col], mat2 [1, col]));
@@ -480,7 +484,7 @@ namespace FunctionLibrary
                 {
                     case 2: // must be (colVector, text)
                     {
-                        PLMatrix mat = lst [0] as PLMatrix;
+                        PLRMatrix mat = lst [0] as PLRMatrix;
                         x   = mat.Data [0, 0];
                         y   = mat.Data [1, 0];
                         txt = (lst [1] as PLString).Text;
@@ -489,9 +493,9 @@ namespace FunctionLibrary
 
                     case 3: // (colVector, text, size) or (x, y, text)
                     {
-                        if (lst [0] is PLMatrix)
+                        if (lst [0] is PLRMatrix)
                         {
-                            PLMatrix mat = lst [0] as PLMatrix;
+                            PLRMatrix mat = lst [0] as PLRMatrix;
                             x        = mat.Data [0, 0];
                             y        = mat.Data [1, 0];
                             txt      = (lst [1] as PLString).Text;

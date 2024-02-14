@@ -51,7 +51,7 @@ namespace FunctionLibrary
             PLList lst = new PLList ();
             lst.Add (new PLInteger (thisFilterHandle));
 
-            PLMatrix coefs = new PLMatrix (1, filterCoefs.Length);
+            PLRMatrix coefs = new PLRMatrix (1, filterCoefs.Length);
             for (int i = 0; i<filterCoefs.Length; i++)
                 coefs [0, i] = filterCoefs [i];
             lst.Add (coefs);
@@ -78,7 +78,7 @@ namespace FunctionLibrary
             
             if      (args [0] is PLDouble)  handle = (int) (args [0] as PLDouble).Data;
             else if (args [0] is PLInteger) handle = (int) (args [0] as PLInteger).Data;
-            else if (args [0] is PLMatrix)  handle = (int) (args [0] as PLMatrix).Data [0, 0];
+            else if (args [0] is PLRMatrix)  handle = (int) (args [0] as PLRMatrix).Data [0, 0];
             else
                 throw new Exception ("RunFilter: handle argument type not supported");
 
@@ -94,7 +94,7 @@ namespace FunctionLibrary
             if (args [1] is PLCMatrix)
                 throw new Exception ("RunFilter - complex input not supported");
 
-            PLMatrix samples = args [1] as PLMatrix;
+            PLRMatrix samples = args [1] as PLRMatrix;
 
             if (samples.IsRowVector == false)
                 throw new Exception ("FirFilter, \"samples\": Only row vectors supported");
@@ -120,7 +120,7 @@ namespace FunctionLibrary
             //
             // put output in PlotLab format
             //
-            PLMatrix results = new PLMatrix (1, filtered.Length / decimation);
+            PLRMatrix results = new PLRMatrix (1, filtered.Length / decimation);
 
             for (int i = 0; i<results.Cols; i++)
                 results.Data [0, i] = filtered [i * decimation];
@@ -140,7 +140,7 @@ namespace FunctionLibrary
             
             if      (arg is PLDouble)  handle = (int) (arg as PLDouble).Data;
             else if (arg is PLInteger) handle = (int) (arg as PLInteger).Data;
-            else if (arg is PLMatrix)  handle = (int) (arg as PLMatrix).Data [0, 0];
+            else if (arg is PLRMatrix)  handle = (int) (arg as PLRMatrix).Data [0, 0];
             else
                 throw new Exception ("ClearFilter: argument type not supported");
                 
@@ -165,7 +165,7 @@ namespace FunctionLibrary
             
             if      (arg is PLDouble)  handle = (int) (arg as PLDouble).Data;
             else if (arg is PLInteger) handle = (int) (arg as PLInteger).Data;
-            else if (arg is PLMatrix)  handle = (int) (arg as PLMatrix).Data [0, 0];
+            else if (arg is PLRMatrix)  handle = (int) (arg as PLRMatrix).Data [0, 0];
             else
                 throw new Exception ("DeleteFilter: argument type not supported");
                 

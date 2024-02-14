@@ -21,9 +21,9 @@ namespace Main
         // Transpose 
         //    - implements ' operator
 
-        static internal PLMatrix Transpose (PLMatrix arg)
+        static internal PLRMatrix Transpose (PLRMatrix arg)
         {
-            PLMatrix result = new PLMatrix (arg.Cols, arg.Rows);
+            PLRMatrix result = new PLRMatrix (arg.Cols, arg.Rows);
 
             for (int i = 0; i<arg.Rows; i++)
                 for (int j = 0; j<arg.Cols; j++)
@@ -38,28 +38,31 @@ namespace Main
 
         static internal PLVariable DotTimes (PLVariable arg1, PLVariable arg2)
         {
-            if (arg1.Rows != arg2.Rows || arg1.Cols != arg2.Cols)
-                throw new Exception ("Argument size mis-match");
+            PLMatrix m1 = arg1 as PLMatrix;
+            PLMatrix m2 = arg2 as PLMatrix;
+
+            if (m1.Rows != m2.Rows || m1.Cols != m2.Cols)
+                throw new Exception ("Argument size mis-match in dot-times");
 
             if (arg1.IsMatrix == false && arg1.IsVector == false)
                 throw new Exception ("Dot-times requres two vectors or matrices");
 
-            if (arg1 is PLMatrix  && arg2 is PLMatrix)  return _DotTimes (arg1 as PLMatrix,  arg2 as PLMatrix);
-            if (arg1 is PLMatrix  && arg2 is PLCMatrix) return _DotTimes (arg1 as PLMatrix,  arg2 as PLCMatrix);
-            if (arg1 is PLCMatrix && arg2 is PLMatrix)  return _DotTimes (arg2 as PLMatrix,  arg1 as PLCMatrix);
+            if (arg1 is PLRMatrix  && arg2 is PLRMatrix)  return _DotTimes (arg1 as PLRMatrix,  arg2 as PLRMatrix);
+            if (arg1 is PLRMatrix  && arg2 is PLCMatrix) return _DotTimes (arg1 as PLRMatrix,  arg2 as PLCMatrix);
+            if (arg1 is PLCMatrix && arg2 is PLRMatrix)  return _DotTimes (arg2 as PLRMatrix,  arg1 as PLCMatrix);
             if (arg1 is PLCMatrix && arg2 is PLCMatrix) return _DotTimes (arg1 as PLCMatrix, arg2 as PLCMatrix);
 
             throw new Exception ("Dot-times argument error");
         }
 
-        static PLMatrix _DotTimes (PLMatrix m1, PLMatrix m2)
+        static PLRMatrix _DotTimes (PLRMatrix m1, PLRMatrix m2)
         {
-            PLMatrix result = new PLMatrix (m1.Rows, m1.Cols);
+            PLRMatrix result = new PLRMatrix (m1.Rows, m1.Cols);
             for (int i = 0; i<result.Rows; i++) for (int j = 0; j<result.Cols; j++) result [i, j] = m1 [i, j] * m2 [i, j];
             return result;
         }
 
-        static PLCMatrix _DotTimes (PLMatrix m1, PLCMatrix m2)
+        static PLCMatrix _DotTimes (PLRMatrix m1, PLCMatrix m2)
         {
             PLCMatrix result = new PLCMatrix (m1.Rows, m1.Cols);
             for (int i = 0; i<result.Rows; i++) for (int j = 0; j<result.Cols; j++) result [i, j] = m2 [i, j].Mul (m1 [i, j]);
@@ -77,17 +80,17 @@ namespace Main
 
         // element-by-element divide
 
-        static internal PLMatrix DotDivide (PLVariable arg1, PLVariable arg2)
+        static internal PLRMatrix DotDivide (PLVariable arg1, PLVariable arg2)
         {
-            PLMatrix m1 = arg1 as PLMatrix;
-            PLMatrix m2 = arg2 as PLMatrix;
+            PLRMatrix m1 = arg1 as PLRMatrix;
+            PLRMatrix m2 = arg2 as PLRMatrix;
 
             if (m1 != null && m2 != null)
             {
                 if (m1.Rows != m2.Rows || m1.Cols != m2.Cols)
                     throw new Exception ("Argument size mis-match");
 
-                PLMatrix result = new PLMatrix (m1.Rows, m1.Cols);
+                PLRMatrix result = new PLRMatrix (m1.Rows, m1.Cols);
 
                 for (int i = 0; i<result.Rows; i++)
                     for (int j = 0; j<result.Cols; j++)
@@ -100,6 +103,8 @@ namespace Main
         }
 
         //*********************************************************************************************
+        
+        // See comments for RowVector (PLList elem)
 
         static internal PLMatrix ColVector (PLList elements)
         {
@@ -119,7 +124,13 @@ namespace Main
             for (int i = 0; i<elements.Count; i++)
                 rows += elements [i].Rows;
 
-            PLMatrix results = new PLMatrix (rows, cols);
+            PLMatrix results;
+
+            if (elements [0] is PLComplex || elements [0] is PLCMatrix)
+                results = new PLCMatrix (rows, cols);
+            else
+                results = new PLRMatrix (rows, cols);
+
 
             for (int col = 0; col<cols; col++)
             {
@@ -130,17 +141,21 @@ namespace Main
                     PLMatrix mat;
 
                     if (var is PLDouble)
-                        mat = new PLMatrix (var as PLDouble);
+                        mat = new PLRMatrix (var as PLDouble);
+
+                    else if (var is PLComplex)
+                        mat = new PLCMatrix (var as PLComplex);
 
                     else if (var is PLMatrix)
                         mat = var as PLMatrix;
 
                     else
-                        throw new Exception ("Invalid operand");
+                        throw new Exception ("Invalid operand: " + var.GetType () + " not supported");
 
                     for (int j = 0; j<mat.Rows; j++)
                     {
-                        results [put++, col] = mat [j, col];
+                        PLVariable v = mat.Get (j, col);
+                        results.Set (put++, col, v);
                     }
                 }
             }
@@ -149,6 +164,18 @@ namespace Main
         }
 
         //*********************************************************************************************
+        //
+        // RowVector - make a row vector from a list of elements
+        //           - an element can be
+        //              - a scalar
+        //              - a column vector
+        //              - a row vector
+        //              - a matrix
+        //              with the limitation that all have the same number of rows. The elements
+        //              are concatenated in consecutive columns.
+        //
+        //              Note that this means the "RowVector" returned may be a matrix.
+        //
 
         static internal PLMatrix RowVector (PLList elements)
         {
@@ -168,7 +195,12 @@ namespace Main
             for (int i = 0; i<elements.Count; i++)
                 cols += elements [i].Cols;
 
-            PLMatrix results = new PLMatrix (rows, cols);
+            PLMatrix results;
+            
+            if (elements [0] is PLComplex || elements [0] is PLCMatrix)
+                results = new PLCMatrix (rows, cols);
+            else
+                results = new PLRMatrix (rows, cols);
 
             for (int row=0; row<rows; row++)
             {
@@ -176,20 +208,24 @@ namespace Main
 
                 foreach (PLVariable var in elements)
                 {
-                    PLMatrix mat;
+                   PLMatrix mat;
 
                     if (var is PLDouble)
-                        mat = new PLMatrix (var as PLDouble);
+                        mat = new PLRMatrix (var as PLDouble);
+
+                    else if (var is PLComplex)
+                        mat = new PLCMatrix (var as PLComplex);
 
                     else if (var is PLMatrix)
                         mat = var as PLMatrix;
 
                     else
-                        throw new Exception ("Invalid operand");
+                        throw new Exception ("Invalid operand: " + var.GetType () + " not supported");
 
-                    for (int j=0; j<mat.Cols; j++)
+                    for (int j = 0; j<mat.Cols; j++)
                     {
-                        results [row, put++] = mat [row, j];
+                        PLVariable v = mat.Get (row, j);
+                        results.Set (row, put++, v);
                     }
                 }
             }
@@ -199,7 +235,7 @@ namespace Main
 
         //*********************************************************************************************
 
-        static internal PLMatrix RowVector (double start, double step, double stop)
+        static internal PLRMatrix RowVector (double start, double step, double stop)
         {
             if (step == 0)
                 throw new Exception ("Vector Expand: Step size cannot be 0");
@@ -231,7 +267,7 @@ namespace Main
                     break;
             }
 
-            PLMatrix results = new PLMatrix (1, numbs.Count);
+            PLRMatrix results = new PLRMatrix (1, numbs.Count);
             results.Data.FillByRow (numbs.ToArray ());
             return results;
         }

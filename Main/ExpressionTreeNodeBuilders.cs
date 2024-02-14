@@ -345,9 +345,9 @@ namespace Main
             int rows;
             int cols;
 
-            if (workspace.Get (matrixName) is PLMatrix)
+            if (workspace.Get (matrixName) is PLRMatrix)
             {
-                PLMatrix mat = workspace.Get (matrixName) as PLMatrix;
+                PLRMatrix mat = workspace.Get (matrixName) as PLRMatrix;
                 rows = mat.Rows; // (workspace.Rows (mat) as PLInteger).Data;
                 cols = mat.Cols; // (workspace.Cols (mat) as PLInteger).Data;
             }

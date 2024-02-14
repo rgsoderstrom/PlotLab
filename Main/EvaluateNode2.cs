@@ -27,7 +27,7 @@ namespace Main
             {
                 op.Evaluate (workspace);
 
-                if (op.Value is PLMatrix || op.Value is PLCMatrix)
+                if (op.Value is PLRMatrix || op.Value is PLCMatrix)
                 {
                     rows = op.Value.Rows;
                     cols = op.Value.Cols;
@@ -37,7 +37,7 @@ namespace Main
 
             foreach (ExpressionTreeNode op in Operands)
             {
-                if (op.Value is PLMatrix || op.Value is PLCMatrix)
+                if (op.Value is PLRMatrix || op.Value is PLCMatrix)
                     if (op.Value.Rows != rows || op.Value.Cols != cols)
                         return false;
             }
@@ -55,7 +55,7 @@ namespace Main
             if (Operands.Count == 0)
                 return;    
 
-            PLMatrix matValue   = Value as PLMatrix;
+            PLRMatrix matValue   = Value as PLRMatrix;
             PLCMatrix cmatValue = Value as PLCMatrix;
 
             if (matValue == null && cmatValue == null) 
@@ -77,7 +77,7 @@ namespace Main
             {
                 PLVariable select = Operands [0].Evaluate (workspace);
 
-                PLMatrix  selectVect   = select as PLMatrix;
+                PLRMatrix  selectVect   = select as PLRMatrix;
                 PLDouble  selectDouble = select as PLDouble;
                 PLString  selectString = select as PLString;
                 PLInteger selectInt    = select as PLInteger;
@@ -133,10 +133,10 @@ namespace Main
                 {
                     if (srcIsRowVector && matValue != null)
                     {
-                        Value = new PLMatrix (1, selectVect.Size);
+                        Value = new PLRMatrix (1, selectVect.Size);
 
                         for (int i = 0; i<selectVect.Size; i++)
-                            (Value as PLMatrix) [0, i] = matValue [0, (int) selectVect [0, i] - 1];
+                            (Value as PLRMatrix) [0, i] = matValue [0, (int) selectVect [0, i] - 1];
                     }
 
                     else if (srcIsRowVector && cmatValue != null)
@@ -149,10 +149,10 @@ namespace Main
 
                     else if (srcIsColVector && matValue != null)
                     {
-                        Value = new PLMatrix (selectVect.Size, 1);
+                        Value = new PLRMatrix (selectVect.Size, 1);
 
                         for (int i = 0; i<selectVect.Size; i++)
-                            (Value as PLMatrix) [i, 0] = matValue [(int) selectVect [0, i] - 1, 0];
+                            (Value as PLRMatrix) [i, 0] = matValue [(int) selectVect [0, i] - 1, 0];
                     }
 
                     else if (srcIsColVector && cmatValue != null)
@@ -183,7 +183,7 @@ namespace Main
                 PLVariable selectRows = Operands [0].Evaluate (workspace);
                 PLVariable selectCols = Operands [1].Evaluate (workspace);
 
-                PLMatrix selectRowsVect  = selectRows as PLMatrix; // actually a vector
+                PLRMatrix selectRowsVect  = selectRows as PLRMatrix; // actually a vector
                 PLDouble selectRowScalar = selectRows as PLDouble;
                 PLString selectRowString = selectRows as PLString;
 
@@ -194,7 +194,7 @@ namespace Main
                 if (selectRowString != null) {for (int i = 0; i<matValue.Rows; i++) rows.Add (i); }
 
 
-                PLMatrix selectColsVect  = selectCols as PLMatrix; // actually a vector
+                PLRMatrix selectColsVect  = selectCols as PLRMatrix; // actually a vector
                 PLDouble selectColScalar = selectCols as PLDouble;
                 PLString selectColString = selectCols as PLString;
 
@@ -204,13 +204,13 @@ namespace Main
                 if (selectColScalar != null) {cols.Add ((int) selectColScalar.Data - 1); }
                 if (selectColString != null) {for (int i = 0; i<matValue.Cols; i++) cols.Add (i); }
 
-                Value = new PLMatrix (rows.Count, cols.Count);
+                Value = new PLRMatrix (rows.Count, cols.Count);
 
                 for (int r=0; r<rows.Count; r++)
                 {
                     for (int c=0; c<cols.Count; c++)
                     {
-                        (Value as PLMatrix) [r, c] = matValue [rows [r], cols [c]];
+                        (Value as PLRMatrix) [r, c] = matValue [rows [r], cols [c]];
                     }
                 }
             }
@@ -311,7 +311,7 @@ namespace Main
 
             if (workspace.Contains (LeftSideName))
             {
-                PLMatrix LeftSide = workspace.Get (LeftSideName) as PLMatrix;
+                PLRMatrix LeftSide = workspace.Get (LeftSideName) as PLRMatrix;
 
                 if (LeftSide != null) // left side is a matrix
                 {
@@ -319,7 +319,7 @@ namespace Main
                     {
                         PLVariable overwriteData = Operands [1].Value;  // new data to replace some of the old
                         PLDouble overwrite1 = overwriteData as PLDouble;
-                        PLMatrix overwrite2 = overwriteData as PLMatrix;
+                        PLRMatrix overwrite2 = overwriteData as PLRMatrix;
 
 
                         PLVariable r; // rows to overwrite
@@ -348,8 +348,8 @@ namespace Main
 
                         PLDouble rr  = r as PLDouble;
                         PLDouble cc  = c as PLDouble;
-                        PLMatrix rrr = r as PLMatrix;
-                        PLMatrix ccc = c as PLMatrix;
+                        PLRMatrix rrr = r as PLRMatrix;
+                        PLRMatrix ccc = c as PLRMatrix;
 
                         List<int> rows = new List<int> (); // to be overwritten
                         List<int> cols = new List<int> ();
@@ -465,7 +465,7 @@ namespace Main
             //    if (Operands [0].Value is PLString) Value = new PLString ("");
             //    else if (rows == 1 && cols == 1) Value = new PLDouble (0);
 
-            //    else if (Operands [0].Value is PLMatrix) Value = new PLMatrix (rows, cols);
+            //    else if (Operands [0].Value is PLRMatrix) Value = new PLRMatrix (rows, cols);
             //    else if (Operands [0].Value is PLCMatrix) Value = new PLCMatrix (rows, cols);
 
             //    else
@@ -488,7 +488,7 @@ namespace Main
             //if (AllOperandsSameSize (out int rows, out int cols, workspace))
             //{
             //    if (rows == 1 && cols == 1) Value = new PLDouble (0);
-            //    else                        Value = new PLMatrix (rows, cols);
+            //    else                        Value = new PLRMatrix (rows, cols);
 
                 Value = Operands [0].Value;
                             

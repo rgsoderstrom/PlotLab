@@ -118,9 +118,9 @@ namespace PLWorkspace
 
                 printString += (str + "\t" + typeStr + "\t");
 
-                if (val is PLMatrix)
+                if (val is PLRMatrix)
                 {
-                    PLMatrix var = val as PLMatrix;
+                    PLRMatrix var = val as PLRMatrix;
                     printString += (string.Format ("    {0} x {1}", var.Rows, var.Cols));
                 }
 
@@ -198,9 +198,9 @@ namespace PLWorkspace
                                         int tlcRow, int tlcCol, // 1-based
                                         PLVariable var)         // new data to overwrite some of old
         {
-            PLMatrix mat = Get (name) as PLMatrix;
+            PLRMatrix mat = Get (name) as PLRMatrix;
 
-            PLMatrix  submat = var as PLMatrix; // see what type the input data is
+            PLRMatrix  submat = var as PLRMatrix; // see what type the input data is
             PLDouble  value  = var as PLDouble;
             PLInteger iValue = var as PLInteger;
 
@@ -295,7 +295,7 @@ namespace PLWorkspace
                         if (str.Data == "all")
                         {
                             Variables.Clear ();
-                            PLLibrary.MFileFunctionMgr.ClearCache ();
+                          //PLLibrary.MFileFunctionMgr.ClearCache ();
                             break;
                         }
 
@@ -367,9 +367,9 @@ namespace PLWorkspace
 
                 printString += (str + "\t" + typeStr + "\t");
 
-                if (val is PLMatrix)
+                if (val is PLRMatrix)
                 {
-                    PLMatrix var = val as PLMatrix;
+                    PLRMatrix var = val as PLRMatrix;
                     printString += (string.Format ("    {0} x {1}", var.Rows, var.Cols));
                 }
 
@@ -386,7 +386,7 @@ namespace PLWorkspace
 
         public PLVariable Rows (PLVariable a)
         {
-            PLMatrix  p1 = a as PLMatrix;  if (p1 != null) return new PLInteger (p1.Rows); 
+            PLRMatrix  p1 = a as PLRMatrix;  if (p1 != null) return new PLInteger (p1.Rows); 
             PLList    p2 = a as PLList;    if (p2 != null) return new PLInteger (1); 
             PLDouble  p3 = a as PLDouble;  if (p3 != null) return new PLInteger (1); 
             PLInteger p4 = a as PLInteger; if (p4 != null) return new PLInteger (1);  
@@ -396,7 +396,7 @@ namespace PLWorkspace
 
         public PLVariable Cols (PLVariable a)
         {
-            PLMatrix  p1 = a as PLMatrix;  if (p1 != null) return new PLInteger (p1.Cols); 
+            PLRMatrix  p1 = a as PLRMatrix;  if (p1 != null) return new PLInteger (p1.Cols); 
             PLList    p2 = a as PLList;    if (p2 != null) return new PLInteger (p2.Count); 
             PLDouble  p3 = a as PLDouble;  if (p3 != null) return new PLInteger (1); 
             PLInteger p4 = a as PLInteger; if (p4 != null) return new PLInteger (1);  
@@ -428,7 +428,7 @@ namespace PLWorkspace
                 }
             }
 
-            PLMatrix s = new PLMatrix (1, 2);
+            PLRMatrix s = new PLRMatrix (1, 2);
             s [0, 0] = (Rows (a) as PLInteger).Data; 
             s [0, 1] = (Cols (a) as PLInteger).Data; 
 

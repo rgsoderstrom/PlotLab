@@ -70,7 +70,7 @@ namespace FunctionLibrary
 
         static public PLVariable CrossProduct (PLVariable var)
         {
-            PLMatrix result = new PLMatrix (3, 1);
+            PLRMatrix result = new PLRMatrix (3, 1);
 
             try
             {
@@ -79,8 +79,8 @@ namespace FunctionLibrary
                 if (lst == null)
                     throw new Exception ("input args must be two column vectors");
 
-                PLMatrix v1 = lst [0] as PLMatrix;
-                PLMatrix v2 = lst [1] as PLMatrix;
+                PLRMatrix v1 = lst [0] as PLRMatrix;
+                PLRMatrix v2 = lst [1] as PLRMatrix;
 
                 if (v1 == null || v2 == null)
                     throw new Exception ("input args");
@@ -131,7 +131,7 @@ namespace FunctionLibrary
             else if (src is PLCMatrix)
             {
                 PLCMatrix cmat = src as PLCMatrix;
-                PLMatrix results = new PLMatrix (cmat.Rows, cmat.Cols);
+                PLRMatrix results = new PLRMatrix (cmat.Rows, cmat.Cols);
 
                 for (int i = 0; i<cmat.Rows; i++)
                     for (int j = 0; j<cmat.Cols; j++)
@@ -154,7 +154,7 @@ namespace FunctionLibrary
             else if (src is PLCMatrix)
             {
                 PLCMatrix cmat = src as PLCMatrix;
-                PLMatrix results = new PLMatrix (cmat.Rows, cmat.Cols);
+                PLRMatrix results = new PLRMatrix (cmat.Rows, cmat.Cols);
 
                 for (int i = 0; i<cmat.Rows; i++)
                     for (int j = 0; j<cmat.Cols; j++)
@@ -200,7 +200,7 @@ namespace FunctionLibrary
             else if (src is PLCMatrix)
             {
                 PLCMatrix cmat = src as PLCMatrix;
-                PLMatrix results = new PLMatrix (cmat.Rows, cmat.Cols);
+                PLRMatrix results = new PLRMatrix (cmat.Rows, cmat.Cols);
 
                 for (int i = 0; i<cmat.Rows; i++)
                     for (int j = 0; j<cmat.Cols; j++)
@@ -222,7 +222,7 @@ namespace FunctionLibrary
             else if (src is PLCMatrix)
             {
                 PLCMatrix cmat = src as PLCMatrix;
-                PLMatrix results = new PLMatrix (cmat.Rows, cmat.Cols);
+                PLRMatrix results = new PLRMatrix (cmat.Rows, cmat.Cols);
 
                 for (int i = 0; i<cmat.Rows; i++)
                     for (int j = 0; j<cmat.Cols; j++)
@@ -246,11 +246,11 @@ namespace FunctionLibrary
             if (var is PLDouble)
                 return var;
 
-            PLMatrix arg = var as PLMatrix;
+            PLRMatrix arg = var as PLRMatrix;
 
             if (arg != null)
             {
-                PLMatrix result = new PLMatrix (arg.Cols, arg.Rows);
+                PLRMatrix result = new PLRMatrix (arg.Cols, arg.Rows);
 
                 for (int i = 0; i<arg.Rows; i++)
                     for (int j = 0; j<arg.Cols; j++)
@@ -283,12 +283,12 @@ namespace FunctionLibrary
 
         static public PLVariable Rand (PLVariable var)
         {
-            PLMatrix mat = var as PLMatrix;
+            PLRMatrix mat = var as PLRMatrix;
             PLNull   nul = var as PLNull;
             PLDouble dbl = var as PLDouble;
             PLList   lst = var as PLList;
 
-            PLMatrix rmat = new PLMatrix (1, 1);
+            PLRMatrix rmat = new PLRMatrix (1, 1);
 
             if (nul != null) // true if rand invoked with no argument
             {
@@ -298,7 +298,7 @@ namespace FunctionLibrary
             else if (dbl != null)
             {
                 int N = (int)(0.5 + dbl.Data);
-                rmat = new PLMatrix (N, N);
+                rmat = new PLRMatrix (N, N);
             }
 
             else if (lst != null)
@@ -307,13 +307,13 @@ namespace FunctionLibrary
                 {
                     int M = (int)(0.5 + (lst.Data [0] as PLDouble).Data);
                     int N = (int)(0.5 + (lst.Data [1] as PLDouble).Data);
-                    rmat = new PLMatrix (M, N);
+                    rmat = new PLRMatrix (M, N);
                 }
             }
 
             else if (mat != null) // rand (size (z)); % where z is a matrix
             {
-                rmat = new PLMatrix ((int) mat [0, 0], (int) mat [0, 1]);
+                rmat = new PLRMatrix ((int) mat [0, 0], (int) mat [0, 1]);
             }
 
             else
@@ -334,13 +334,13 @@ namespace FunctionLibrary
         {
             CommonMath.Matrix mat = null;
 
-            if (var is PLMatrix)
-                mat = (var as PLMatrix).Data;
+            if (var is PLRMatrix)
+                mat = (var as PLRMatrix).Data;
 
             else if (var is PLList)
             {
-                if ((var as PLList) [0] is PLMatrix)
-                    mat = ((var as PLList) [0] as PLMatrix).Data;
+                if ((var as PLList) [0] is PLRMatrix)
+                    mat = ((var as PLList) [0] as PLRMatrix).Data;
             }
 
             else
@@ -348,7 +348,7 @@ namespace FunctionLibrary
 
             CommonMath.Matrix mat1 = CommonMath.Matrix.Inverse (mat);
 
-            return new PLMatrix ("inverse", mat1);
+            return new PLRMatrix ("inverse", mat1);
         }
 
         //*********************************************************************************************
@@ -373,7 +373,7 @@ namespace FunctionLibrary
             if (count < 2) throw new Exception ("linspace number of points (arg 3) must be 2 or greater");
 
             CommonMath.Matrix mat = Linspace (start, stop, count);
-            PLMatrix results = new PLMatrix (mat);
+            PLRMatrix results = new PLRMatrix (mat);
             return results;
         }
 
@@ -431,7 +431,7 @@ namespace FunctionLibrary
 
             if (rc != null) rows = cols = (int)rc.Data;
 
-            PLMatrix results = new PLMatrix (rows, cols);
+            PLRMatrix results = new PLRMatrix (rows, cols);
             return results;
         }
 
@@ -471,7 +471,7 @@ namespace FunctionLibrary
 
             if (rc != null) rows = cols = (int)rc.Data;
 
-            PLMatrix results = new PLMatrix (rows, cols);
+            PLRMatrix results = new PLRMatrix (rows, cols);
 
             for (int r=0; r<results.Rows; r++)
                 for (int c=0; c<results.Cols; c++)
@@ -491,17 +491,17 @@ namespace FunctionLibrary
         delegate double ddFunction (double arg);
 
         /// <summary>
-        /// MathFunction - accepts a function pointer, a PLDouble or PLMatrix input and returns results in same format
+        /// MathFunction - accepts a function pointer, a PLDouble or PLRMatrix input and returns results in same format
         /// </summary>
         /// <param name="func - delegate referencing a function that accepts and returns a single double precision float"></param>
         /// <param name="name - only used for error reporting"></param>
-        /// <param name="arg  - a PLDouble or a PLMatrix. Other PL vars not supported"></param>
-        /// <returns>A PLMatrix or a PLDouble</returns>
+        /// <param name="arg  - a PLDouble or a PLRMatrix. Other PL vars not supported"></param>
+        /// <returns>A PLRMatrix or a PLDouble</returns>
         ///        
         static PLVariable MathFunction (ddFunction func, string name, PLVariable arg)
         {
             if (arg is PLDouble) return MathFunction (func, arg as PLDouble);
-            if (arg is PLMatrix) return MathFunction (func, arg as PLMatrix);
+            if (arg is PLRMatrix) return MathFunction (func, arg as PLRMatrix);
             throw new Exception ("Argument error - " + name + " function");
         }
 
@@ -520,15 +520,15 @@ namespace FunctionLibrary
         }
 
         /// <summary>
-        /// MathFunction - accepts a PLMatrix and passes one element at a time to the function "func"
+        /// MathFunction - accepts a PLRMatrix and passes one element at a time to the function "func"
         /// </summary>
         /// <param name="func"></param>
         /// <param name="arg"></param>
-        /// <returns>PLMatrix same size as input arg</returns>
+        /// <returns>PLRMatrix same size as input arg</returns>
         /// 
-        static PLMatrix MathFunction (ddFunction func, PLMatrix arg)
+        static PLRMatrix MathFunction (ddFunction func, PLRMatrix arg)
         {
-            PLMatrix result = new PLMatrix (arg.Rows, arg.Cols);
+            PLRMatrix result = new PLRMatrix (arg.Rows, arg.Cols);
 
             for (int i = 0; i<result.Rows; i++)
                 for (int j = 0; j<result.Cols; j++)
@@ -652,7 +652,7 @@ namespace FunctionLibrary
                 return new PLDouble (func (arg1.Data, arg2.Data));
             }
 
-            PLMatrix mat = arg as PLMatrix;
+            PLRMatrix mat = arg as PLRMatrix;
 
             if (mat != null)
             {
@@ -673,7 +673,7 @@ namespace FunctionLibrary
                 //
                 // two dimensional
                 //
-                PLMatrix results = new PLMatrix (1, mat.Cols);
+                PLRMatrix results = new PLRMatrix (1, mat.Cols);
 
                 for (int col=0; col<mat.Cols; col++)
                 {
@@ -701,8 +701,8 @@ namespace FunctionLibrary
             if (arg is PLList)
             {
                 PLList list = arg as PLList;
-                PLMatrix a = list [0] as PLMatrix;
-                PLMatrix b = list [1] as PLMatrix;
+                PLRMatrix a = list [0] as PLRMatrix;
+                PLRMatrix b = list [1] as PLRMatrix;
                 PLDouble c = list [0] as PLDouble;
                 PLDouble d = list [1] as PLDouble;
 
@@ -721,12 +721,12 @@ namespace FunctionLibrary
             return new PLDouble (Math.Atan2 (arg1.Data, arg2.Data));
         }
 
-        static PLMatrix Atan2 (PLMatrix arg1, PLMatrix arg2)
+        static PLRMatrix Atan2 (PLRMatrix arg1, PLRMatrix arg2)
         {
             if (arg1.Rows != arg2.Rows || arg1.Cols != arg2.Cols)
                 throw new Exception ("Argument size error - atan2 function");
 
-            PLMatrix result = new PLMatrix (arg1.Rows, arg1.Cols);
+            PLRMatrix result = new PLRMatrix (arg1.Rows, arg1.Cols);
 
             for (int i = 0; i<result.Rows; i++)
                 for (int j = 0; j<result.Cols; j++)
