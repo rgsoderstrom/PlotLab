@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
+using Common;
 using CommonMath;
 
 namespace PLCommon
@@ -22,13 +23,13 @@ namespace PLCommon
             return 0;
         }
 
-        public virtual int Rows { get { return 1; } }
-        public virtual int Cols { get { return 1; } }
-        public virtual int Size { get { return 1; } }
-        public virtual bool IsMatrix { get { return false; } }
-        public virtual bool IsVector { get { return false; } }
-        public virtual bool IsRowVector { get { return false; } }
-        public virtual bool IsColVector { get { return false; } }
+        public virtual int Rows {get {return 1;}}
+        public virtual int Cols {get {return 1;}}
+        public virtual int Size {get {return 1;}}
+        public virtual bool IsMatrix {get {return false;}}
+        public virtual bool IsVector {get {return false;}}
+        public virtual bool IsRowVector {get {return false;}}
+        public virtual bool IsColVector {get {return false;}}
 
         public static PLVariable operator + (PLVariable op1, PLVariable op2)
         {
@@ -48,7 +49,7 @@ namespace PLCommon
             if (op1 is PLDouble  && op2 is PLInteger) return (op2 as PLInteger).Add (op1 as PLDouble);
 
             if (op1 is PLComplex && op2 is PLCMatrix) return (op2 as PLCMatrix).Add (op1 as PLComplex);
-            if (op1 is PLComplex && op2 is PLDouble)  return (op1 as PLComplex).Add (op2 as PLDouble);
+            if (op1 is PLComplex && op2 is PLDouble) return (op1 as PLComplex).Add (op2 as PLDouble);
             if (op1 is PLComplex && op2 is PLComplex) return (op1 as PLComplex).Add (op2 as PLComplex);
 
             if (op1 is PLInteger && op2 is PLDouble)  return (op1 as PLInteger).Add (op2 as PLDouble);
@@ -92,18 +93,18 @@ namespace PLCommon
 
             if (op1 is PLCMatrix && op2 is PLRMatrix) return (op1 as PLCMatrix).Mul (op2 as PLRMatrix);
             if (op1 is PLCMatrix && op2 is PLCMatrix) return (op1 as PLCMatrix).Mul (op2 as PLCMatrix);
-            if (op1 is PLCMatrix && op2 is PLDouble)  return (op2 as PLDouble). Mul (op1 as PLCMatrix);
+            if (op1 is PLCMatrix && op2 is PLDouble) return (op2 as PLDouble).Mul (op1 as PLCMatrix);
             if (op1 is PLCMatrix && op2 is PLComplex) return (op1 as PLCMatrix).Mul (op2 as PLComplex);
 
-            if (op1 is PLDouble  && op2 is PLRMatrix) return (op1 as PLDouble). Mul (op2 as PLRMatrix);
-            if (op1 is PLDouble  && op2 is PLCMatrix) return (op1 as PLDouble). Mul (op2 as PLCMatrix);
-            if (op1 is PLDouble  && op2 is PLDouble)  return (op1 as PLDouble). Mul (op2 as PLDouble);
-            if (op1 is PLDouble  && op2 is PLComplex) return (op1 as PLDouble). Mul (op2 as PLComplex);
-            if (op1 is PLDouble  && op2 is PLInteger) return (op1 as PLDouble). Mul (op2 as PLInteger);
+            if (op1 is PLDouble  && op2 is PLRMatrix) return (op1 as PLDouble).Mul (op2 as PLRMatrix);
+            if (op1 is PLDouble  && op2 is PLCMatrix) return (op1 as PLDouble).Mul (op2 as PLCMatrix);
+            if (op1 is PLDouble  && op2 is PLDouble)  return (op1 as PLDouble).Mul (op2 as PLDouble);
+            if (op1 is PLDouble  && op2 is PLComplex) return (op1 as PLDouble).Mul (op2 as PLComplex);
+            if (op1 is PLDouble  && op2 is PLInteger) return (op1 as PLDouble).Mul (op2 as PLInteger);
 
             if (op1 is PLComplex && op2 is PLRMatrix) return (op1 as PLComplex).Mul (op2 as PLRMatrix);
             if (op1 is PLComplex && op2 is PLCMatrix) return (op1 as PLComplex).Mul (op2 as PLCMatrix);
-            if (op1 is PLComplex && op2 is PLDouble)  return (op1 as PLComplex).Mul (op2 as PLDouble);
+            if (op1 is PLComplex && op2 is PLDouble) return (op1 as PLComplex).Mul (op2 as PLDouble);
             if (op1 is PLComplex && op2 is PLComplex) return (op1 as PLComplex).Mul (op2 as PLComplex);
 
             if (op1 is PLInteger && op2 is PLDouble)  return (op1 as PLInteger).Mul (op2 as PLDouble);
@@ -121,7 +122,7 @@ namespace PLCommon
             if (op1 is PLDouble  && op2 is PLDouble)  return (op1 as PLDouble). Div (op2 as PLDouble);
             if (op1 is PLDouble  && op2 is PLComplex) return (op1 as PLDouble). Div (op2 as PLComplex);
 
-            if (op1 is PLComplex && op2 is PLDouble)  return (op1 as PLComplex).Div (op2 as PLDouble);
+            if (op1 is PLComplex && op2 is PLDouble) return (op1 as PLComplex).Div (op2 as PLDouble);
             if (op1 is PLComplex && op2 is PLComplex) return (op1 as PLComplex).Div (op2 as PLComplex);
 
             //return new PLString ("Division of " + op1.GetType () + " and " + op2.GetType () + " not implemented");
@@ -190,6 +191,10 @@ namespace PLCommon
             int a = 8, b = 5; // defaults
             string str = "";
 
+            //PLVariable p1; 
+            //PLComplex  p2;
+            //PLDouble   p3;
+
             try
             {
                 List<string> cfmtParts = base.SplitFormatString (cfmt);
@@ -208,6 +213,10 @@ namespace PLCommon
                 {
                     for (int c = 0; c<Cols; c++)
                     {
+                        //p1 = Get (r, c);
+                        //p2 = p1 as PLComplex;
+                        //p3 = p1 as PLDouble;
+
                         str += string.Format (fmt, Get (r, c)) + ", ";
                     }
 
@@ -218,8 +227,8 @@ namespace PLCommon
 
             catch (Exception ex)
             {
-                Console.WriteLine ("Exception: " + ex.Message);
-              //Console.WriteLine (ex.StackTrace);
+                EventLog.WriteLine ("Exception: " + ex.Message);
+              //EventLog.WriteLine (ex.StackTrace);
             }
 
             return str;
@@ -346,13 +355,12 @@ namespace PLCommon
         public PLRMatrix Mul (PLDouble op2)  {return new PLRMatrix ("", Data * op2.Data);}
         public PLRMatrix Mul (PLRMatrix op2) {return new PLRMatrix ("", Data * op2.Data);}
 
-     // public PLCMatrix Mul (PLCMatrix op2) {return new PLCMatrix ("", Data * op2.Data);}
-
         public PLRMatrix Div (PLDouble op2)  {return new PLRMatrix ("", Data / op2.Data);}
+
         public PLRMatrix Pwr (PLDouble op2)  {return new PLRMatrix ("", Data ^ op2.Data);}
         public PLRMatrix Pwr (PLRMatrix op2) {return new PLRMatrix ("", Data ^ op2.Data);}
 
-        public PLCMatrix Add (PLCMatrix op2) 
+        public PLCMatrix Add (PLCMatrix op2)
         {
             PLCMatrix results = new PLCMatrix (Rows, Cols);
 
@@ -363,7 +371,7 @@ namespace PLCommon
             return results;
         }
 
-        public PLCMatrix Sub (PLCMatrix op2) 
+        public PLCMatrix Sub (PLCMatrix op2)
         {
             PLCMatrix results = new PLCMatrix (Rows, Cols);
 
@@ -412,39 +420,34 @@ namespace PLCommon
     //
     public class PLCMatrix : PLMatrix
     {
-        public CommonMath.Matrix Real;
-        public CommonMath.Matrix Imag;
+        public CommonMath.CMatrix Data;
 
         public PLCMatrix (int r, int c)
         {
-            Real = new Matrix (r, c);
-            Imag = new Matrix (r, c);
+            Data = new CMatrix (r, c);
         }
 
-        //public PLCMatrix (CommonMath.Matrix src)
-        //{
-        //    Data = src;
-        //}
+        public PLCMatrix (CommonMath.CMatrix src)
+        {
+            Data = src;
+        }
 
         public PLCMatrix (PLComplex src)
         {
-            Real = new Matrix (1, 1);
-            Imag = new Matrix (1, 1);
-            Real [0, 0] = src.Real;
-            Imag [0, 0] = src.Imag;
+            Data = new CMatrix (1, 1);
+            Data [0, 0] = src.Data;
         }
 
         public PLCMatrix (string name, PLCMatrix src)
         {
             Name = name;
-            Real = src.Real;
-            Imag = src.Imag;
+            Data = src.Data;
         }
 
         public PLComplex this [int row, int col]  // zero-based indices
         {
-            get { return new PLComplex (Real [row, col], Imag [row, col]); }
-            set { Real [row, col] = value.Real; Imag [row, col] = value.Imag; }
+            get {return new PLComplex (Data [row, col]);}
+            set {Data [row, col] = value.Data;}
         }
 
         public PLComplex this [int sel]  // zero-based indices
@@ -466,7 +469,7 @@ namespace PLCommon
 
         public override PLVariable Get (int row, int col)
         {
-            return new PLComplex (Real [row, col], Imag [row, col]);
+            return new PLComplex (Data [row, col]);
         }
 
         public override void Set (int row, int col, PLVariable cmp)
@@ -478,9 +481,9 @@ namespace PLCommon
                 throw new Exception ("Complex matrix can only store complex numbers");
         }
 
-        public override int Rows {get { return Real.Rows; } }
-        public override int Cols {get { return Real.Cols; } }
-        public override int Size {get { return Rows * Cols; } }
+        public override int Rows {get {return Data.Rows;}}
+        public override int Cols {get {return Data.Cols;}}
+        public override int Size {get {return Rows * Cols;}}
 
         public PLCMatrix CollapseToColumn ()
         {
@@ -492,6 +495,7 @@ namespace PLCommon
             }
             return result;
         }
+
         public List<PLComplex> ReadByColumn ()
         {
             List<PLComplex> results = new List<PLComplex> (Rows * Cols);
@@ -505,16 +509,7 @@ namespace PLCommon
 
         public PLCMatrix Add (PLCMatrix op2)
         {
-            if (Rows != op2.Rows || Cols != op2.Cols)
-                throw new Exception ("Complex matrix addition size error");
-
-            PLCMatrix results = new PLCMatrix (Rows, Cols);
-
-            for (int i = 0; i<Rows; i++)
-                for (int j = 0; j<Cols; j++)
-                    results [i, j] = this [i, j].Add (op2 [i, j]);
-
-            return results;
+            return new PLCMatrix (Data + op2.Data);
         }
 
         public PLCMatrix Add (PLComplex op2)
@@ -528,7 +523,7 @@ namespace PLCommon
             return results;
         }
 
-        public PLCMatrix Sub (PLRMatrix op2) 
+        public PLCMatrix Sub (PLRMatrix op2)
         {
             PLCMatrix results = new PLCMatrix (Rows, Cols);
 
@@ -539,7 +534,7 @@ namespace PLCommon
             return results;
         }
 
-        public PLCMatrix Sub (PLCMatrix op2) 
+        public PLCMatrix Sub (PLCMatrix op2)
         {
             PLCMatrix results = new PLCMatrix (Rows, Cols);
 
@@ -590,129 +585,9 @@ namespace PLCommon
 
         public PLCMatrix Mul (PLCMatrix op2)
         {
-            if (Cols != op2.Rows)
-                throw new Exception ("Complex matrix multiply size error");
-
-            PLCMatrix results = new PLCMatrix (Rows, op2.Cols);
-
-            for (int i = 0; i<Rows; i++)
-            {
-                for (int j = 0; j<op2.Cols; j++)
-                {
-                    PLComplex acc = new PLComplex (0, 0);
-
-                    for (int k = 0; k<Cols; k++)
-                        acc = acc + (this [i, k] * op2 [k, j]) as PLComplex;
-
-                    results [i, j] = acc;
-                }
-            }
-
-            return results;
-        }
-
-        public static PLCMatrix operator+ (PLDouble op1, PLCMatrix op2) 
-        {
-            PLCMatrix results = new PLCMatrix (op2.Rows, op2.Cols);
-            
-            for (int i=0; i<op2.Rows; i++)
-            {
-                for (int j=0; j<op2.Cols; j++)
-                {
-                    results [i, j] = new PLComplex (op1.Data + op2 [i, j].Real, op2 [i, j].Imag);
-                }
-            }
-
-            return results;
+            return new PLCMatrix (Data * op2.Data);
         }
     }
-
-
-    //****************************************************************************************************
-    //****************************************************************************************************
-    //****************************************************************************************************
-
-    // PLCMatrix - complex matrix.
-
-    //public class PLCMatrix : PLVariable, IMatrixIF
-    //{
-
-    //    public List<PLComplex> ReadByColumn ()
-    //    {
-    //        List<PLComplex> results = new List<PLComplex> (Rows * Cols);
-
-    //        for (int j=0; j<Cols; j++)
-    //        {
-    //            for (int i = 0; i<Rows; i++)
-    //                results.Add (this [i, j]);
-    //        }
-
-    //        return results;
-    //    }
-
-    //    public PLCMatrix CollapseToColumn ()
-    //    {
-    //        PLCMatrix result = new PLCMatrix (Size, 1);
-
-    //        List<PLComplex> data = ReadByColumn ();
-
-    //        for (int i=0; i<Size; i++)
-    //        {
-    //            result [i, 0] = data [i];
-    //        }
-
-    //        return result;
-    //    }
-
-
-
-
-
-    //    public PLCMatrix Mul (PLCMatrix op2)
-    //    {
-    //        if (Cols != op2.Rows)
-    //            throw new Exception ("Complex matrix multiply size error");
-
-    //        PLCMatrix results = new PLCMatrix (Rows, op2.Cols);
-
-    //        for (int i = 0; i<Rows; i++)
-    //        {
-    //            for (int j = 0; j<op2.Cols; j++)
-    //            {
-    //                PLComplex acc = new PLComplex (0, 0);
-
-    //                for (int k = 0; k<Cols; k++)
-    //                    acc.Add (this [i, k].Mul (op2 [k, j]));
-
-    //                results [i, j] = acc;
-    //            }
-    //        }
-
-    //        return results;
-    //    }
-
-    //    public static PLCMatrix operator+ (PLDouble op1, PLCMatrix op2) 
-    //    {
-    //        PLCMatrix results = new PLCMatrix (op2.Rows, op2.Cols);
-
-    //        for (int i=0; i<op2.Rows; i++)
-    //        {
-    //            for (int j=0; j<op2.Cols; j++)
-    //            {
-    //                results [i, j] = new PLComplex (op1.Data + op2 [i, j].Real, op2 [i, j].Imag);
-    //            }
-    //        }
-
-    //        return results;
-    //    }
-
-
-    //public static PLRMatrix operator/ (PLRMatrix op1, PLDouble op2) {return new PLRMatrix ("", op1.Data / op2.Data);}
-    //public static PLRMatrix operator/ (PLDouble op1, PLRMatrix op2) {return new PLRMatrix ("", op1.Data / op2.Data);}
-    //public static PLRMatrix operator^ (PLRMatrix op1, PLDouble op2) {return new PLRMatrix ("", op1.Data ^ op2.Data);}
-    //public static PLRMatrix operator^ (PLRMatrix op1, PLRMatrix op2) {return new PLRMatrix ("", op1.Data ^ op2.Data);}
-    //public static PLRMatrix operator^ (PLDouble op1, PLRMatrix op2) {return new PLRMatrix ("", op1.Data ^ op2.Data);}
-
 
     //****************************************************************************************************
     //****************************************************************************************************
@@ -720,9 +595,6 @@ namespace PLCommon
 
     public abstract class PLScalar : PLVariable
     {
-        //public override int Size {get {return 1;}}
-        //public override int Rows {get {return 1;}}
-        //public override int Cols {get {return 1;}}
     }
 
     //****************************************************************************************************
@@ -790,12 +662,12 @@ namespace PLCommon
                 throw new Exception ("Unsupported PLDouble ctor: " + src.GetType ().ToString ());
         }
 
+        public PLComplex Add (PLComplex op2)
+        {
+            return new PLComplex (Data + op2.Data.Real, op2.Data.Imag);
+        }
 
-
-        public PLComplex Add (PLComplex op2) {return new PLComplex (Data + op2.Real, op2.Imag);}
-        public PLRMatrix  Add (PLRMatrix op2)  {return new PLRMatrix  ("", Data + op2.Data); }
-
-        public PLCMatrix  Add (PLCMatrix op2)
+        public PLCMatrix Add (PLCMatrix op2)
         {
             PLCMatrix results = new PLCMatrix (op2.Rows, op2.Cols);
 
@@ -810,7 +682,7 @@ namespace PLCommon
             return results;
         }
 
-        public PLCMatrix  Mul (PLCMatrix op2)
+        public PLCMatrix Mul (PLCMatrix op2)
         {
             PLCMatrix results = new PLCMatrix (op2.Rows, op2.Cols);
 
@@ -838,11 +710,11 @@ namespace PLCommon
         public PLDouble  Mul (PLInteger op2) {return new PLDouble  (Data * op2.Data);}
         public PLDouble  Mul (PLDouble  op2) {return new PLDouble  (Data * op2.Data);}
 
-        public PLRMatrix  Mul (PLRMatrix  op2) {return new PLRMatrix  ("", Data * op2.Data); }
+        public PLRMatrix Mul (PLRMatrix  op2) {return new PLRMatrix  ("", Data * op2.Data); }
         public PLComplex Mul (PLComplex op2) {return new PLComplex (Data * op2.Real, Data * op2.Imag);}
 
         public PLDouble  Div (PLDouble  op2) {return new PLDouble  (Data / op2.Data);}
-        public PLRMatrix  Div (PLRMatrix  op2) {return new PLRMatrix  ("", Data / op2.Data);}
+        public PLRMatrix Div (PLRMatrix  op2) {return new PLRMatrix  ("", Data / op2.Data);}
 
         public PLDouble  Pwr (PLDouble  op2) {return new PLDouble  (Math.Pow (Data, op2.Data));}
         public PLRMatrix  Pwr (PLRMatrix  op2) {return new PLRMatrix  ("", Data ^ op2.Data); }
@@ -881,9 +753,9 @@ namespace PLCommon
 
         public override string ToString ()
         {
-            if (Math.Abs (Data) > 1e4 || Math.Abs (Data) < 1e-4)
-                return (string.Format ("{0:E5}", Data));
-            else
+            //if (Math.Abs (Data) > 1e4 || Math.Abs (Data) < 1e-4)
+            //    return (string.Format ("{0:E5}", Data));
+            //else
                 return (string.Format ("{0:0.#####}", Data));
         }
     }
@@ -894,12 +766,20 @@ namespace PLCommon
 
     public class PLComplex : PLScalar
     {
-        readonly public double Real, Imag;
+        readonly public Complex Data = new Complex (0, 0);
+
+        public double Real {get {return Data.Real;} set {Data.Real = value;}}
+        public double Imag {get {return Data.Imag;} set {Data.Imag = value;}}
 
         public PLComplex (double re, double im)
         {
             Real = re;
             Imag = im;
+        }
+
+        public PLComplex (CommonMath.Complex src)
+        {
+            Data = src;
         }
 
         public PLComplex (PLVariable src)
@@ -922,12 +802,12 @@ namespace PLCommon
 
         public double Magnitude
         {
-            get {return Math.Sqrt (Real * Real + Imag * Imag);}
+            get {return Data.Magnitude;}
         }
 
         public double Angle // in radians
         {
-            get {return Math.Atan2 (Imag, Real);}
+            get {return Data.Angle;}
         }
 
         public PLCMatrix Mul (PLRMatrix op2)
@@ -956,21 +836,15 @@ namespace PLCommon
             return results;
         }
 
-
-        // public static PLComplex operator * (double    op1, PLComplex op2) {return new PLComplex (op1 * op2.Real, op1 * op2.Imag);}
-
-
-        public PLComplex Add (PLComplex op2) {return new PLComplex (Real + op2.Real, Imag + op2.Imag);}
-        public PLComplex Add (PLDouble  op2) {return new PLComplex (Real + op2.Data, Imag);}
-        public PLComplex Sub (PLComplex op2) {return new PLComplex (Real - op2.Real, Imag - op2.Imag);}
+        public PLComplex Add (PLComplex op2) {return new PLComplex (Data + op2.Data);}
+        public PLComplex Add (PLDouble  op2) {return new PLComplex (Data + op2.Data);}
+        public PLComplex Sub (PLComplex op2) {return new PLComplex (Data - op2.Data);}
         public PLComplex Sub (PLDouble  op2) {return new PLComplex (Real - op2.Data, Imag);}
-        public PLComplex Mul (PLComplex op2) {return new PLComplex (Real * op2.Real - Imag * op2.Imag, Real * op2.Imag + Imag * op2.Real);}
-        public PLComplex Mul (PLDouble op2)  {return new PLComplex (Real * op2.Data, Imag * op2.Data);}
+        public PLComplex Mul (PLComplex op2) {return new PLComplex (Data * op2.Data);}
+        public PLComplex Mul (PLDouble op2)  {return new PLComplex (Data * op2.Data);}
         public PLComplex Mul (double op2)    {return new PLComplex (Real * op2, Imag * op2);}
         public PLComplex Div (PLDouble  op2) {return new PLComplex (Real / op2.Data, Imag / op2.Data);}
-
-        public PLComplex Div (PLComplex op2) {double mag = Magnitude / op2.Magnitude; double ang = Angle - op2.Angle; 
-            return new PLComplex (mag * Math.Cos (ang), mag * Math.Sin (ang));}
+        public PLComplex Div (PLComplex op2) {return new PLComplex (Data / op2.Data);}
 
         //*************************************************************************************
 
@@ -997,10 +871,11 @@ namespace PLCommon
 
         public override string ToString ()
         {
-            double mag2 = Real * Real + Imag * Imag;
-            if (Math.Abs (mag2) > 0 && (Math.Abs (mag2) > 1e8 || Math.Abs (mag2) < 1e-8))
-                return (string.Format ("{(0:E5}, {1:E5)}", Real, Imag));
-            else
+            //double mag = Magnitude;
+
+            //if (mag > 0 && (mag > 1e8 || mag < 1e-8))
+            //    return (string.Format ("{(0:E5}, {1:E5)}", Real, Imag));
+            //else
                 return (string.Format ("({0:0.####}, {1:0.####})", Real, Imag));
         }
     }
@@ -1025,8 +900,6 @@ namespace PLCommon
         public PLInteger Mul (PLInteger op2) {return new PLInteger (Data * op2.Data);}
         public PLDouble  Mul (PLDouble  op2) {return new PLDouble  (Data * op2.Data);}
         public PLInteger Div (PLInteger op2) {return new PLInteger (Data / op2.Data);}
-
-     // public static PLDouble  operator * (PLDouble  op1, PLInteger op2) {return new PLDouble  (op1.Data * op2.Data);}
 
         //*************************************************************************************
 
@@ -1195,8 +1068,8 @@ namespace PLCommon
             set {Data [select] = value;}
         }
 
-        public override int Rows { get { throw new Exception ("Trying to read number rows in a list"); } }
-        public override int Cols { get { throw new Exception ("Trying to read number cols in a list"); } }
+        //public override int Rows { get { throw new Exception ("Trying to read number rows in a list"); } }
+        //public override int Cols { get { throw new Exception ("Trying to read number cols in a list"); } }
         public override int Size { get { int size = 0; foreach (PLVariable pl in Data) size += pl.Size; return size; } }
 
         public int Count {get {return Data.Count;}}

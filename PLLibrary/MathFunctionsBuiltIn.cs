@@ -331,24 +331,29 @@ namespace FunctionLibrary
         //*********************************************************************************************
 
         static public PLVariable Inverse (PLVariable var)
-        {
-            CommonMath.Matrix mat = null;
-
+        {            
             if (var is PLRMatrix)
-                mat = (var as PLRMatrix).Data;
+            { 
+                CommonMath.Matrix inp = (var as PLRMatrix).Data;
+                CommonMath.Matrix inv =  CommonMath.Matrix.Inverse (inp);
+                return new PLRMatrix (inv);
+            }
+
+            else if (var is PLCMatrix)
+            { 
+                CommonMath.CMatrix inp = (var as PLCMatrix).Data;
+                CommonMath.CMatrix inv =  CommonMath.CMatrix.Inverse (inp);
+                return new PLCMatrix (inv);
+            }
 
             else if (var is PLList)
             {
-                if ((var as PLList) [0] is PLRMatrix)
-                    mat = ((var as PLList) [0] as PLRMatrix).Data;
+                CommonMath.Matrix inp = ((var as PLList) [0] as PLRMatrix).Data;
+                CommonMath.Matrix inv =  CommonMath.Matrix.Inverse (inp);
+                return new PLRMatrix (inv);
             }
 
-            else
-                throw new Exception ("Inverse arg error");
-
-            CommonMath.Matrix mat1 = CommonMath.Matrix.Inverse (mat);
-
-            return new PLRMatrix ("inverse", mat1);
+            throw new Exception ("Inverse arg error: " + var.GetType () + " not supported");
         }
 
         //*********************************************************************************************
