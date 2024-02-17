@@ -181,6 +181,7 @@ namespace PLCommon
         // C++ style setter & getter simplify code that handles both real and complex matrices
         public abstract PLVariable Get (int r, int c);
         public abstract void       Set (int r, int c, PLVariable plv);
+        public abstract PLMatrix   CollapseToColumn ();
 
         //*************************************************************************************
 
@@ -285,7 +286,7 @@ namespace PLCommon
             return results;
         }
 
-        public PLRMatrix CollapseToColumn ()
+        public override PLMatrix CollapseToColumn ()
         {
             PLRMatrix result = new PLRMatrix (Size, 1);
 
@@ -485,7 +486,7 @@ namespace PLCommon
         public override int Cols {get {return Data.Cols;}}
         public override int Size {get {return Rows * Cols;}}
 
-        public PLCMatrix CollapseToColumn ()
+        public override PLMatrix CollapseToColumn ()
         {
             PLCMatrix result = new PLCMatrix (Size, 1);
             List<PLComplex> data = ReadByColumn ();

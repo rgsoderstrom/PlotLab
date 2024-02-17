@@ -55,10 +55,9 @@ namespace Main
             if (Operands.Count == 0)
                 return;    
 
-            PLRMatrix matValue   = Value as PLRMatrix;
-            PLCMatrix cmatValue = Value as PLCMatrix;
+            PLMatrix matValue  = Value as PLMatrix;
 
-            if (matValue == null && cmatValue == null) 
+            if (matValue == null) 
                 throw new Exception ("Cannot take submatrix of a scalar");
 
             bool srcIsMatrix    = Value.IsMatrix;//    && matValue != null; // more than one row and more than one column
@@ -77,7 +76,7 @@ namespace Main
             {
                 PLVariable select = Operands [0].Evaluate (workspace);
 
-                PLRMatrix  selectVect   = select as PLRMatrix;
+                PLRMatrix selectVect   = select as PLRMatrix;
                 PLDouble  selectDouble = select as PLDouble;
                 PLString  selectString = select as PLString;
                 PLInteger selectInt    = select as PLInteger;
@@ -86,81 +85,47 @@ namespace Main
                 {
                     if (selectString != null && selectString.Data == "All")
                     {
-                        Value = matValue != null ? matValue.CollapseToColumn () : (PLVariable) cmatValue.CollapseToColumn ();
+                        Value = matValue.CollapseToColumn ();
                         return;
                     }
-
-                    else throw new Exception ("Matrix requires two args");
                 }
 
                 if (selectDouble != null)
                 {
                     int i = (int)selectDouble.Data - 1;
-
-                    if (matValue != null)
-                    {
-                        double d = srcIsRowVector ? matValue [0, i] : matValue [i, 0];
-                        Value = new PLDouble (d);
-                    }
-
-                    else if (cmatValue != null)
-                    {
-                        Value = srcIsRowVector ? cmatValue [0, i] : cmatValue [i, 0];
-                    }
-
-                    else
-                        throw new Exception ("Unsupported matrix type");
-
+                    Value = srcIsRowVector ? matValue.Get (0, i) : matValue.Get (i, 0);
                     return;
                 }
 
-                if (selectInt != null && matValue != null)
+                if (selectInt != null)
                 {
                     int i = selectInt.Data - 1;
-                    double d = srcIsRowVector ? matValue [0, i] : matValue [i, 0];
-                    Value = new PLDouble (d);
-                    return;
-                }
-
-                if (selectInt != null && cmatValue != null)
-                {
-                    int i = selectInt.Data - 1;
-                    Value = srcIsRowVector ? cmatValue [0, i] : cmatValue [i, 0];
+                    Value = srcIsRowVector ? matValue.Get (0, i) : matValue.Get (i, 0);
                     return;
                 }
 
                 if (selectVect != null)
                 {
-                    if (srcIsRowVector && matValue != null)
+                    if (srcIsRowVector)
                     {
                         Value = new PLRMatrix (1, selectVect.Size);
 
                         for (int i = 0; i<selectVect.Size; i++)
-                            (Value as PLRMatrix) [0, i] = matValue [0, (int) selectVect [0, i] - 1];
+                        {
+                            PLVariable v = matValue.Get (0, (int) selectVect [0, i] - 1);
+                            (Value as PLMatrix).Set (0, i, v);
+                        }
                     }
 
-                    else if (srcIsRowVector && cmatValue != null)
-                    {
-                        Value = new PLCMatrix (1, selectVect.Size);
-
-                        for (int i = 0; i<selectVect.Size; i++)
-                            (Value as PLCMatrix) [0, i] = cmatValue [0, (int) selectVect [0, i] - 1];
-                    }
-
-                    else if (srcIsColVector && matValue != null)
+                    else if (srcIsColVector)
                     {
                         Value = new PLRMatrix (selectVect.Size, 1);
 
                         for (int i = 0; i<selectVect.Size; i++)
-                            (Value as PLRMatrix) [i, 0] = matValue [(int) selectVect [0, i] - 1, 0];
-                    }
-
-                    else if (srcIsColVector && cmatValue != null)
-                    {
-                        Value = new PLCMatrix (selectVect.Size, 1);
-
-                        for (int i = 0; i<selectVect.Size; i++)
-                            (Value as PLCMatrix) [i, 0] = cmatValue [(int) selectVect [0, i] - 1, 0];
+                        { 
+                            PLVariable v = matValue.Get (0, (int) selectVect [0, i] - 1);
+                            (Value as PLRMatrix).Set (i, 0, v);
+                        }
                     }
 
                     else throw new Exception ("Error extracting sub-matrix");
@@ -210,13 +175,11 @@ namespace Main
                 {
                     for (int c=0; c<cols.Count; c++)
                     {
-                        (Value as PLRMatrix) [r, c] = matValue [rows [r], cols [c]];
+                        PLVariable v = matValue.Get (rows [r], cols [c]);
+                        (Value as PLRMatrix).Set (r, c, v);
                     }
                 }
             }
-
-            
-
         }
 
         //*******************************************************************************************
