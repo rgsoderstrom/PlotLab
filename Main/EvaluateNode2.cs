@@ -51,22 +51,21 @@ namespace Main
         private void GetVariable (string variable)
         {
             Value = workspace.Get (variable);            
-            
+
+            if (Value is PLScalar)
+                return;
+
             if (Operands.Count == 0)
                 return;    
 
+            // save a copy of the input
             PLMatrix matValue  = Value as PLMatrix;
 
             if (matValue == null) 
                 throw new Exception ("Cannot take submatrix of a scalar");
 
-            bool srcIsMatrix    = Value.IsMatrix;//    && matValue != null; // more than one row and more than one column
-            bool srcIsRowVector = Value.IsRowVector;// && matValue != null;
-            bool srcIsColVector = Value.IsColVector;// && matValue != null;
-
-            //bool srcIsCMatrix    = Value.IsMatrix    && cmatValue != null;
-            //bool srcIsCRowVector = Value.IsRowVector && cmatValue != null;
-            //bool srcIsCColVector = Value.IsColVector && cmatValue != null;
+            bool srcIsRowVector = Value.IsRowVector;
+            bool srcIsColVector = Value.IsColVector;
 
             //************************************************************************
 
@@ -81,13 +80,10 @@ namespace Main
                 PLString  selectString = select as PLString;
                 PLInteger selectInt    = select as PLInteger;
 
-                if (srcIsMatrix)
+                if (selectString != null && selectString.Data == "All")
                 {
-                    if (selectString != null && selectString.Data == "All")
-                    {
-                        Value = matValue.CollapseToColumn ();
-                        return;
-                    }
+                    Value = matValue.CollapseToColumn ();
+                    return;
                 }
 
                 if (selectDouble != null)
@@ -108,7 +104,8 @@ namespace Main
                 {
                     if (srcIsRowVector)
                     {
-                        Value = new PLRMatrix (1, selectVect.Size);
+                        if (Value is PLRMatrix) Value = new PLRMatrix (1, selectVect.Size);
+                        else                    Value = new PLCMatrix (1, selectVect.Size);
 
                         for (int i = 0; i<selectVect.Size; i++)
                         {
@@ -119,12 +116,13 @@ namespace Main
 
                     else if (srcIsColVector)
                     {
-                        Value = new PLRMatrix (selectVect.Size, 1);
+                        if (Value is PLRMatrix) Value = new PLRMatrix (selectVect.Size, 1);
+                        else                    Value = new PLCMatrix (selectVect.Size, 1);
 
                         for (int i = 0; i<selectVect.Size; i++)
                         { 
                             PLVariable v = matValue.Get (0, (int) selectVect [0, i] - 1);
-                            (Value as PLRMatrix).Set (i, 0, v);
+                            (Value as PLMatrix).Set (i, 0, v);
                         }
                     }
 
@@ -142,15 +140,12 @@ namespace Main
 
             else if (Operands.Count == 2)
             {
-                if (Value is PLCMatrix)
-                    throw new Exception ("Submatrix of complex matrix not implemented");
-
                 PLVariable selectRows = Operands [0].Evaluate (workspace);
                 PLVariable selectCols = Operands [1].Evaluate (workspace);
 
                 PLRMatrix selectRowsVect  = selectRows as PLRMatrix; // actually a vector
-                PLDouble selectRowScalar = selectRows as PLDouble;
-                PLString selectRowString = selectRows as PLString;
+                PLDouble  selectRowScalar = selectRows as PLDouble;
+                PLString  selectRowString = selectRows as PLString;
 
                 List<int> rows = new List<int> ();
 
@@ -158,8 +153,7 @@ namespace Main
                 if (selectRowScalar != null) {rows.Add ((int) selectRowScalar.Data - 1); }
                 if (selectRowString != null) {for (int i = 0; i<matValue.Rows; i++) rows.Add (i); }
 
-
-                PLRMatrix selectColsVect  = selectCols as PLRMatrix; // actually a vector
+                PLRMatrix selectColsVect = selectCols as PLRMatrix; // actually a vector
                 PLDouble selectColScalar = selectCols as PLDouble;
                 PLString selectColString = selectCols as PLString;
 
@@ -169,14 +163,15 @@ namespace Main
                 if (selectColScalar != null) {cols.Add ((int) selectColScalar.Data - 1); }
                 if (selectColString != null) {for (int i = 0; i<matValue.Cols; i++) cols.Add (i); }
 
-                Value = new PLRMatrix (rows.Count, cols.Count);
+                if (Value is PLRMatrix) Value = new PLRMatrix (rows.Count, cols.Count);
+                else                    Value = new PLCMatrix (rows.Count, cols.Count);
 
                 for (int r=0; r<rows.Count; r++)
                 {
                     for (int c=0; c<cols.Count; c++)
                     {
                         PLVariable v = matValue.Get (rows [r], cols [c]);
-                        (Value as PLRMatrix).Set (r, c, v);
+                        (Value as PLMatrix).Set (r, c, v);
                     }
                 }
             }
