@@ -117,12 +117,16 @@ namespace PLCommon
         public static PLVariable operator/ (PLVariable op1, PLVariable op2)
         {  
             if (op1 is PLRMatrix && op2 is PLDouble)  return (op1 as PLRMatrix).Div (op2 as PLDouble);
+            if (op1 is PLCMatrix && op2 is PLDouble)  return (op1 as PLCMatrix).Div (op2 as PLDouble);
+            if (op1 is PLCMatrix && op2 is PLComplex) return (op1 as PLCMatrix).Div (op2 as PLComplex);
+            if (op1 is PLComplex && op2 is PLCMatrix) return (op1 as PLComplex).Div (op2 as PLCMatrix);
 
             if (op1 is PLDouble  && op2 is PLRMatrix) return (op1 as PLDouble). Div (op2 as PLRMatrix);
+            if (op1 is PLDouble  && op2 is PLCMatrix) return (op1 as PLDouble). Div (op2 as PLCMatrix);
             if (op1 is PLDouble  && op2 is PLDouble)  return (op1 as PLDouble). Div (op2 as PLDouble);
             if (op1 is PLDouble  && op2 is PLComplex) return (op1 as PLDouble). Div (op2 as PLComplex);
 
-            if (op1 is PLComplex && op2 is PLDouble) return (op1 as PLComplex).Div (op2 as PLDouble);
+            if (op1 is PLComplex && op2 is PLDouble)  return (op1 as PLComplex).Div (op2 as PLDouble);
             if (op1 is PLComplex && op2 is PLComplex) return (op1 as PLComplex).Div (op2 as PLComplex);
 
             //return new PLString ("Division of " + op1.GetType () + " and " + op2.GetType () + " not implemented");
@@ -588,6 +592,16 @@ namespace PLCommon
         {
             return new PLCMatrix (Data * op2.Data);
         }
+
+        public PLCMatrix Div (PLDouble op2)
+        {
+            return new PLCMatrix (Data / op2.Data);
+        }
+
+        public PLCMatrix Div (PLComplex op2)
+        {
+            return new PLCMatrix (Data / op2.Data);
+        }
     }
 
     //****************************************************************************************************
@@ -712,10 +726,11 @@ namespace PLCommon
         public PLDouble  Mul (PLDouble  op2) {return new PLDouble  (Data * op2.Data);}
 
         public PLRMatrix Mul (PLRMatrix  op2) {return new PLRMatrix  ("", Data * op2.Data); }
-        public PLComplex Mul (PLComplex op2) {return new PLComplex (Data * op2.Real, Data * op2.Imag);}
+        public PLComplex Mul (PLComplex op2)  {return new PLComplex (Data * op2.Real, Data * op2.Imag);}
 
-        public PLDouble  Div (PLDouble  op2) {return new PLDouble  (Data / op2.Data);}
+        public PLDouble  Div (PLDouble  op2)  {return new PLDouble   (Data / op2.Data);}
         public PLRMatrix Div (PLRMatrix  op2) {return new PLRMatrix  ("", Data / op2.Data);}
+        public PLCMatrix Div (PLCMatrix  op2) {return new PLCMatrix  (Data / op2.Data);}
 
         public PLDouble  Pwr (PLDouble  op2) {return new PLDouble  (Math.Pow (Data, op2.Data));}
         public PLRMatrix  Pwr (PLRMatrix  op2) {return new PLRMatrix  ("", Data ^ op2.Data); }
@@ -846,6 +861,11 @@ namespace PLCommon
         public PLComplex Mul (double op2)    {return new PLComplex (Real * op2, Imag * op2);}
         public PLComplex Div (PLDouble  op2) {return new PLComplex (Real / op2.Data, Imag / op2.Data);}
         public PLComplex Div (PLComplex op2) {return new PLComplex (Data / op2.Data);}
+
+        public PLCMatrix Div (PLCMatrix op2)
+        {
+            return new PLCMatrix (Data / op2.Data);
+        }
 
         //*************************************************************************************
 
