@@ -139,6 +139,7 @@ namespace PLCommon
             if (op1 is PLRMatrix  && op2 is PLDouble)  return (op1 as PLRMatrix).Pwr (op2 as PLDouble);
             if (op1 is PLDouble   && op2 is PLRMatrix) return (op1 as PLDouble). Pwr (op2 as PLRMatrix);
             if (op1 is PLDouble   && op2 is PLDouble)  return (op1 as PLDouble). Pwr (op2 as PLDouble);
+            if (op1 is PLComplex  && op2 is PLDouble)  return (op1 as PLComplex).Pwr (op2 as PLDouble);
 
             //return new PLString ("Power of " + op1.GetType () + " and " + op2.GetType () + " not implemented");
             throw new Exception ("Power of " + op1.GetType () + " and " + op2.GetType () + " not implemented");
@@ -861,6 +862,13 @@ namespace PLCommon
         public PLComplex Mul (double op2)    {return new PLComplex (Real * op2, Imag * op2);}
         public PLComplex Div (PLDouble  op2) {return new PLComplex (Real / op2.Data, Imag / op2.Data);}
         public PLComplex Div (PLComplex op2) {return new PLComplex (Data / op2.Data);}
+
+        public PLComplex Pwr (PLDouble op2) 
+        {
+            double mag = Math.Pow (Magnitude, op2.Data);
+            double ang = Angle * op2.Data;
+            return new PLComplex (mag * Math.Cos (ang), mag * Math.Sin (ang));
+        }
 
         public PLCMatrix Div (PLCMatrix op2)
         {

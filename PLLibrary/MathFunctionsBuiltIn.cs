@@ -192,7 +192,12 @@ namespace FunctionLibrary
 
         static public PLVariable Mag (PLVariable src)
         {
-            if (src is PLComplex)
+            if (src is PLDouble)
+            {
+                return new PLDouble (Math.Abs ((src as PLDouble).Data));
+            }
+
+            else if (src is PLComplex)
             {
                 return new PLDouble ((src as PLComplex).Magnitude);
             }
@@ -214,7 +219,13 @@ namespace FunctionLibrary
 
         static public PLVariable Angle (PLVariable src)
         {
-            if (src is PLComplex)
+            if (src is PLDouble)
+            {
+                bool pos = (src as PLDouble).Data >= 0;
+                return new PLDouble (pos ? 0 : Math.PI);
+            }
+
+            else if (src is PLComplex)
             {
                 return new PLDouble ((src as PLComplex).Angle);
             }
