@@ -881,7 +881,7 @@ namespace PLCommon
 
         public override string ToString (string cfmt)
         {
-            int a = 8, b = 5; // defaults
+            int a = 4, b = 5; // defaults
 
             List<string> cfmtParts = SplitFormatString (cfmt);
 
@@ -891,9 +891,15 @@ namespace PLCommon
                 b = int.Parse (cfmtParts [1]);
             }
 
-            string fmt = "{0," + a + ":0.";
-            for (int i = 0; i<b; i++) fmt += '#';
-            fmt += "}";
+            string fmt1 = "{0," + a + ":0.";
+            for (int i = 0; i<b; i++) fmt1 += '#';
+            fmt1 += "}";
+
+            string fmt2 = "{1," + a + ":0.";
+            for (int i = 0; i<b; i++) fmt2 += '#';
+            fmt2 += "}";
+
+            string fmt = "(" + fmt1 + ", " + fmt2 + ")";
 
             return string.Format (fmt, Real, Imag);
         }
