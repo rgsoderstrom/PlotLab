@@ -31,8 +31,10 @@ namespace FunctionLibrary
 
         static public PLVariable PrintToString (PLVariable arg)
         {
-            if (arg is PLString)
-                return arg;
+            if (arg is PLString) // remove leading and trailing single quotes and return remainder
+            { 
+                return new PLString ((arg as PLString).Text);
+            }
 
             PLList lst = arg as PLList;
             if (lst == null) throw new Exception ("sprintf error");
