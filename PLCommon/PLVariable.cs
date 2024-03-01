@@ -483,8 +483,11 @@ namespace PLCommon
             if (cmp is PLComplex)
                 this [row, col] = cmp as PLComplex;
 
+            else if (cmp is PLDouble)
+                this [row, col] = new PLComplex ((cmp as PLDouble).Data, 0);
+
             else
-                throw new Exception ("Complex matrix can only store complex numbers");
+                throw new Exception ("Complex matrix can not store type " + cmp.GetType ());
         }
 
         public override int Rows {get {return Data.Rows;}}
