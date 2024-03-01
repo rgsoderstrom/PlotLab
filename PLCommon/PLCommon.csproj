@@ -33,7 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Common">
-      <HintPath>..\..\ArduinoSupport\MessagingFramework\SocketLibrary\bin\Debug\Common.dll</HintPath>
+      <HintPath>..\..\Common\bin\Debug\Common.dll</HintPath>
     </Reference>
     <Reference Include="CommonMath">
       <HintPath>..\..\CommonMath\bin\Debug\CommonMath.dll</HintPath>
