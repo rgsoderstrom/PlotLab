@@ -38,21 +38,26 @@ namespace Main
 
         static internal PLVariable DotTimes (PLVariable arg1, PLVariable arg2)
         {
-            PLMatrix m1 = arg1 as PLMatrix;
-            PLMatrix m2 = arg2 as PLMatrix;
+            if (arg1.IsMatrix == false || arg2.IsMatrix == false)
+            {
+                return arg1 * arg2;
+            }
 
-            if (m1.Rows != m2.Rows || m1.Cols != m2.Cols)
-                throw new Exception ("Argument size mis-match in dot-times");
+            else
+            { 
+                PLMatrix m1 = arg1 as PLMatrix;
+                PLMatrix m2 = arg2 as PLMatrix;
 
-            if (arg1.IsMatrix == false && arg1.IsVector == false)
-                throw new Exception ("Dot-times requres two vectors or matrices");
+                if (m1.Rows != m2.Rows || m1.Cols != m2.Cols)
+                    throw new Exception ("Argument size mis-match in dot-times");
 
-            if (arg1 is PLRMatrix  && arg2 is PLRMatrix)  return _DotTimes (arg1 as PLRMatrix,  arg2 as PLRMatrix);
-            if (arg1 is PLRMatrix  && arg2 is PLCMatrix) return _DotTimes (arg1 as PLRMatrix,  arg2 as PLCMatrix);
-            if (arg1 is PLCMatrix && arg2 is PLRMatrix)  return _DotTimes (arg2 as PLRMatrix,  arg1 as PLCMatrix);
-            if (arg1 is PLCMatrix && arg2 is PLCMatrix) return _DotTimes (arg1 as PLCMatrix, arg2 as PLCMatrix);
+                if (arg1 is PLRMatrix && arg2 is PLRMatrix) return _DotTimes (arg1 as PLRMatrix, arg2 as PLRMatrix);
+                if (arg1 is PLRMatrix && arg2 is PLCMatrix) return _DotTimes (arg1 as PLRMatrix, arg2 as PLCMatrix);
+                if (arg1 is PLCMatrix && arg2 is PLRMatrix) return _DotTimes (arg2 as PLRMatrix, arg1 as PLCMatrix);
+                if (arg1 is PLCMatrix && arg2 is PLCMatrix) return _DotTimes (arg1 as PLCMatrix, arg2 as PLCMatrix);
 
-            throw new Exception ("Dot-times argument error");
+                throw new Exception ("Dot-times argument error");
+            }
         }
 
         static PLRMatrix _DotTimes (PLRMatrix m1, PLRMatrix m2)
