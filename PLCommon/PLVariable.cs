@@ -773,10 +773,10 @@ namespace PLCommon
 
         public override string ToString ()
         {
-            //if (Math.Abs (Data) > 1e4 || Math.Abs (Data) < 1e-4)
-            //    return (string.Format ("{0:E5}", Data));
-            //else
-                return (string.Format ("{0:0.#####}", Data));
+            if (Math.Abs (Data) > 1e4 || Math.Abs (Data) < 1e-4)
+                return string.Format ("{0:E3}", Data);
+            else
+                return string.Format ("{0:0.#####}", Data);
         }
     }
 
@@ -909,12 +909,7 @@ namespace PLCommon
 
         public override string ToString ()
         {
-            //double mag = Magnitude;
-
-            //if (mag > 0 && (mag > 1e8 || mag < 1e-8))
-            //    return (string.Format ("{(0:E5}, {1:E5)}", Real, Imag));
-            //else
-                return (string.Format ("({0:0.####}, {1:0.####})", Real, Imag));
+            return "(" + Real.ToString () + ", " + Imag.ToString () + ")";
         }
     }
 
