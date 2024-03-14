@@ -2,7 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 
 using Common;
 using CommonMath;
@@ -119,7 +119,7 @@ namespace PLCommon
             if (op1 is PLRMatrix && op2 is PLDouble)  return (op1 as PLRMatrix).Div (op2 as PLDouble);
             if (op1 is PLCMatrix && op2 is PLDouble)  return (op1 as PLCMatrix).Div (op2 as PLDouble);
             if (op1 is PLCMatrix && op2 is PLComplex) return (op1 as PLCMatrix).Div (op2 as PLComplex);
-            if (op1 is PLComplex && op2 is PLCMatrix) return (op1 as PLComplex).Div (op2 as PLCMatrix);
+          //if (op1 is PLComplex && op2 is PLCMatrix) return (op1 as PLComplex).Div (op2 as PLCMatrix);
 
             if (op1 is PLDouble  && op2 is PLRMatrix) return (op1 as PLDouble). Div (op2 as PLRMatrix);
             if (op1 is PLDouble  && op2 is PLCMatrix) return (op1 as PLDouble). Div (op2 as PLCMatrix);
@@ -441,7 +441,7 @@ namespace PLCommon
         public PLCMatrix (PLComplex src)
         {
             Data = new CMatrix (1, 1);
-            Data [0, 0] = src.Data;
+            Data [0, 0] = new CommonMath.Complex (src.Real, src.Imag);
         }
 
         public PLCMatrix (string name, PLCMatrix src)
@@ -453,7 +453,7 @@ namespace PLCommon
         public PLComplex this [int row, int col]  // zero-based indices
         {
             get {return new PLComplex (Data [row, col]);}
-            set {Data [row, col] = value.Data;}
+            set {Data [row, col] = new CommonMath.Complex (value.Real, value.Imag);}
         }
 
         public PLComplex this [int sel]  // zero-based indices
@@ -604,7 +604,7 @@ namespace PLCommon
 
         public PLCMatrix Div (PLComplex op2)
         {
-            return new PLCMatrix (Data / op2.Data);
+            return new PLCMatrix (Data / new CommonMath.Complex (op2.Data.Real, op2.Data.Imaginary));
         }
     }
 
@@ -683,7 +683,7 @@ namespace PLCommon
 
         public PLComplex Add (PLComplex op2)
         {
-            return new PLComplex (Data + op2.Data.Real, op2.Data.Imag);
+            return new PLComplex (Data + op2.Data.Real, op2.Data.Imaginary);
         }
 
         public PLCMatrix Add (PLCMatrix op2)
@@ -773,10 +773,10 @@ namespace PLCommon
 
         public override string ToString ()
         {
-            //if (Math.Abs (Data) > 1e4 || Math.Abs (Data) < 1e-4)
-            //    return (string.Format ("{0:E5}", Data));
-            //else
-                return (string.Format ("{0:0.#####}", Data));
+            if (Math.Abs (Data) > 1e4 || Math.Abs (Data) < 1e-4)
+                return string.Format ("{0:E3}", Data);
+            else
+                return string.Format ("{0:0.#####}", Data);
         }
     }
 
@@ -786,10 +786,10 @@ namespace PLCommon
 
     public class PLComplex : PLScalar
     {
-        readonly public Complex Data = new Complex (0, 0);
+        public System.Numerics.Complex Data = new System.Numerics.Complex (0, 0);
 
-        public double Real {get {return Data.Real;} set {Data.Real = value;}}
-        public double Imag {get {return Data.Imag;} set {Data.Imag = value;}}
+        public double Real {get {return Data.Real;}      set {Data = new System.Numerics.Complex (value, Data.Imaginary);}}
+        public double Imag {get {return Data.Imaginary;} set {Data = new System.Numerics.Complex (Data.Real, value);}}
 
         public PLComplex (double re, double im)
         {
@@ -797,9 +797,14 @@ namespace PLCommon
             Imag = im;
         }
 
+        public PLComplex (System.Numerics.Complex src)
+        {
+            Data = new System.Numerics.Complex (src.Real, src.Imaginary);
+        }
+
         public PLComplex (CommonMath.Complex src)
         {
-            Data = src;
+            Data = new System.Numerics.Complex (src.Real, src.Imag);
         }
 
         public PLComplex (PLVariable src)
@@ -827,7 +832,7 @@ namespace PLCommon
 
         public double Angle // in radians
         {
-            get {return Data.Angle;}
+            get {return Data.Phase;}
         }
 
         public PLCMatrix Mul (PLRMatrix op2)
@@ -873,10 +878,10 @@ namespace PLCommon
             return new PLComplex (mag * Math.Cos (ang), mag * Math.Sin (ang));
         }
 
-        public PLCMatrix Div (PLCMatrix op2)
-        {
-            return new PLCMatrix (Data / op2.Data);
-        }
+        //public PLCMatrix Div (PLCMatrix op2)
+        //{
+        //    return new PLCMatrix (Data / op2.Data);
+        //}
 
         //*************************************************************************************
 
@@ -909,12 +914,7 @@ namespace PLCommon
 
         public override string ToString ()
         {
-            //double mag = Magnitude;
-
-            //if (mag > 0 && (mag > 1e8 || mag < 1e-8))
-            //    return (string.Format ("{(0:E5}, {1:E5)}", Real, Imag));
-            //else
-                return (string.Format ("({0:0.####}, {1:0.####})", Real, Imag));
+            return "(" + Real.ToString () + ", " + Imag.ToString () + ")";
         }
     }
 

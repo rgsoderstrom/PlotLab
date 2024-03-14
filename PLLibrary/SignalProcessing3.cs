@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 using System.Windows;
 
 using MathNet.Numerics;
-using MathNet.Numerics.Transformations;
+using MathNet.Numerics.IntegralTransforms;
 
+using CommonMath;
 using PLCommon;
 
 namespace FunctionLibrary
@@ -91,29 +92,48 @@ namespace FunctionLibrary
             // buffers for input to and output from Math.Net functions
             if (complexInput != null) // then is complex in
             {
-                ComplexFourierTransformation cft = new ComplexFourierTransformation ();
-                Complex [] workBuffer = new Complex [length];
+                //ComplexFourierTransformation cft = new ComplexFourierTransformation ();
+                System.Numerics.Complex [] workBuffer = new System.Numerics.Complex [length];
 
                 for (int i = 0; i<length; i++)
-                    workBuffer [i] = new Complex (complexInput [i].Real, complexInput [i].Imag);
+                    workBuffer [i] = new System.Numerics.Complex (complexInput [i].Real, (float) complexInput [i].Imag);
 
-                cft.TransformForward (workBuffer);
-                results = FormatResults (cft, workBuffer, returnFreqScale, sampleRate);
+                Fourier.Forward (workBuffer);
+                results = FormatResults (workBuffer, returnFreqScale, sampleRate);
             }
 
-            else
+            else // real input
             {
-                double [] input = new double [length];
-                double [] reOutput;
-                double [] imOutput;
+                int sampleCount = realInput.Cols;
+                int pad = sampleCount.IsEven () ? 2 : 1;
 
-                RealFourierTransformation rft = new RealFourierTransformation ();
+                double [] fftReal    = new double [sampleCount];
+                double [] fftImag    = new double [sampleCount];
+                double [] workBuffer = new double [sampleCount + pad]; // before FFT: input signal
+                                                                       // after FFT: half of complex spectrum
 
-                for (int i = 0; i<length; i++)
-                    input [i] = realInput [i];
+                for (int i=0; i<sampleCount; i++)
+                    workBuffer [i] = realInput [i];
 
-                rft.TransformForward (input, out reOutput, out imOutput);
-                results = FormatResults (rft, reOutput, imOutput, returnFreqScale, sampleRate);
+                Fourier.ForwardReal (workBuffer, sampleCount, FourierOptions.NoScaling);
+
+                int put = 0;
+                
+                for (int k=0; k<workBuffer.Length; k+=2, put++)
+                { 
+                    fftReal [put] = workBuffer [k];
+                    fftImag [put] = workBuffer [k+1];
+                }
+
+                put = fftReal.Length - 1;
+
+                for (int k = 2; k<workBuffer.Length; k+=2, put--)
+                {
+                    fftReal [put] = workBuffer [k];
+                    fftImag [put] = workBuffer [k+1] * -1;
+                }
+
+                results = FormatResults (fftReal, fftImag, returnFreqScale, sampleRate);
             }
 
             return results;
@@ -121,12 +141,12 @@ namespace FunctionLibrary
 
         //********************************************************************************
 
-        private static PLRMatrix FormatResults (ComplexFourierTransformation cft, Complex [] workBuffer, bool doFreqScale, double sampleRate)
+        private static PLRMatrix FormatResults (System.Numerics.Complex [] workBuffer, bool doFreqScale, double sampleRate)
         {
             int length = workBuffer.Length;
             PLRMatrix results = new PLRMatrix (3, length);
 
-            double [] frequencyScale = doFreqScale ? cft.GenerateFrequencyScale (sampleRate, length) : GenerateBinCount (length);
+            double [] frequencyScale = doFreqScale ? Fourier.FrequencyScale (length, sampleRate) : GenerateBinCount (length);
 
             // copy to output buffer, swapping halves
             int put = 0;
@@ -135,15 +155,15 @@ namespace FunctionLibrary
             for (int i = L2; i<length; i++, put++)
             {
                 results [0, put] = frequencyScale [i];
-                results [1, put] = PowerSpectrum (workBuffer [i].Real, workBuffer [i].Imag, length);
-                results [2, put] = PhaseAngle    (workBuffer [i].Real, workBuffer [i].Imag);
+                results [1, put] = PowerSpectrum (workBuffer [i].Real, workBuffer [i].Imaginary, length);
+                results [2, put] = PhaseAngle    (workBuffer [i].Real, workBuffer [i].Imaginary);
             }
 
             for (int i = 0; i<L2; i++, put++)
             {
                 results [0, put] = frequencyScale [i];
-                results [1, put] = PowerSpectrum (workBuffer [i].Real, workBuffer [i].Imag, length);
-                results [2, put] = PhaseAngle    (workBuffer [i].Real, workBuffer [i].Imag);
+                results [1, put] = PowerSpectrum (workBuffer [i].Real, workBuffer [i].Imaginary, length);
+                results [2, put] = PhaseAngle    (workBuffer [i].Real, workBuffer [i].Imaginary);
             }
 
             return results;
@@ -151,12 +171,12 @@ namespace FunctionLibrary
 
         //********************************************************************************
 
-        private static PLRMatrix FormatResults (RealFourierTransformation rft, double [] real, double [] imag, bool doFreqScale, double sampleRate)
+        private static PLRMatrix FormatResults (double [] real, double [] imag, bool doFreqScale, double sampleRate)
         {
             int length = real.Length;
             PLRMatrix results = new PLRMatrix (3, length);
 
-            double [] frequencyScale = doFreqScale ? rft.GenerateFrequencyScale (sampleRate, length) : GenerateBinCount (length);
+            double [] frequencyScale = doFreqScale ? Fourier.FrequencyScale (length, sampleRate) : GenerateBinCount (length);
 
             int L2 = 1 + length / 2;
             int put = 0;
@@ -165,14 +185,14 @@ namespace FunctionLibrary
             {
                 results [0, put] = frequencyScale [i];
                 results [1, put] = PowerSpectrum (real [i], imag [i], length);
-                results [2, put] = PhaseAngle    (real [i], imag [i]);
+                results [2, put] = PhaseAngle (real [i], imag [i]);
             }
 
             for (int i = 0; i<L2; i++, put++)
             {
                 results [0, put] = frequencyScale [i];
                 results [1, put] = PowerSpectrum (real [i], imag [i], length);
-                results [2, put] = PhaseAngle    (real [i], imag [i]);
+                results [2, put] = PhaseAngle (real [i], imag [i]);
             }
 
             return results;
