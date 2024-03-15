@@ -25,6 +25,9 @@ namespace PLCommon
     {
         readonly public Plot2D_Embedded.CanvasObject Data;
 
+        public override int    DataAsInteger {get {throw new Exception ("DataAsInteger not implemented for canvas object");}}
+        public override double DataAsDouble  {get {throw new Exception ("DataAsDouble not implemented for canvas object");}}
+
         public PLCanvasObject (CanvasObject co)
         {
             Data = co;
@@ -39,6 +42,9 @@ namespace PLCommon
     public class PLViewportObject : PLDisplayObject
     {
         readonly public Plot3D_Embedded.ViewportObject Data;
+
+        public override int    DataAsInteger {get {throw new Exception ("DataAsInteger not implemented for viewport object");}}
+        public override double DataAsDouble  {get {throw new Exception ("DataAsDouble not implemented for viewport object");}}
 
         public PLViewportObject (ViewportObject co)
         {

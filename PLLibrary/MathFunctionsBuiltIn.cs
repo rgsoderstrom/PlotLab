@@ -316,8 +316,8 @@ namespace FunctionLibrary
             {
                 if (lst.Count == 2)
                 {
-                    int M = (int)(0.5 + (lst.Data [0] as PLDouble).Data);
-                    int N = (int)(0.5 + (lst.Data [1] as PLDouble).Data);
+                    int M = (lst.Data [0] as PLScalar).DataAsInteger;
+                    int N = (lst.Data [1] as PLScalar).DataAsInteger;
                     rmat = new PLRMatrix (M, N);
                 }
             }

@@ -614,6 +614,8 @@ namespace PLCommon
 
     public abstract class PLScalar : PLVariable
     {
+        abstract public int    DataAsInteger {get;}
+        abstract public double DataAsDouble  {get;}
     }
 
     //****************************************************************************************************
@@ -625,6 +627,9 @@ namespace PLCommon
     public class PLNull : PLScalar
     {
         public object Data = null;
+
+        public override int    DataAsInteger {get {return 0;}}
+        public override double DataAsDouble  {get {return 0;}}
 
         public override string ToString (string fmt)
         {
@@ -647,6 +652,9 @@ namespace PLCommon
     public class PLDouble : PLScalar
     {
         readonly public double Data;
+
+        public override int    DataAsInteger {get {return (int) Math.Round (Data);}}
+        public override double DataAsDouble  {get {return Data;}}
 
         public PLDouble (double d)
         {
@@ -797,6 +805,9 @@ namespace PLCommon
             Imag = im;
         }
 
+        public override int    DataAsInteger {get {throw new Exception ("DataAsInteger not implemented for complex");}}
+        public override double DataAsDouble  {get {throw new Exception ("DataAsDouble not implemented for complex");}}
+
         public PLComplex (System.Numerics.Complex src)
         {
             Data = new System.Numerics.Complex (src.Real, src.Imaginary);
@@ -931,6 +942,9 @@ namespace PLCommon
             Data = d;
         }
 
+        public override int    DataAsInteger {get {return Data;}}
+        public override double DataAsDouble  {get {return Data;}}
+
         public PLInteger Add (PLInteger op2) {return new PLInteger (Data + op2.Data);}
         public PLDouble  Add (PLDouble  op2) {return new PLDouble  (Data + op2.Data);}
         public PLInteger Sub (PLInteger op2) {return new PLInteger (Data - op2.Data);}
@@ -982,6 +996,9 @@ namespace PLCommon
             Data = func;
         }
 
+        public override int    DataAsInteger {get {throw new Exception ("DataAsInteger not implemented for function wrapper");}}
+        public override double DataAsDouble  {get {throw new Exception ("DataAsDouble not implemented for function wrapper");}}
+
         public override string ToString (string _)
         {
             return "function";
@@ -1000,6 +1017,9 @@ namespace PLCommon
         {
             Data = d;
         }
+
+        public override int    DataAsInteger {get {return Data == true ? 1 : 0;}}
+        public override double DataAsDouble  {get {return Data == true ? 1 : 0;}}
 
         public PLBool (PLVariable d)
         {
