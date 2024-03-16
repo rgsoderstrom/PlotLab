@@ -414,6 +414,18 @@ namespace Main
             return lines;
         }
 
+        List<string> FindTabCompletionsInCWD (string token)
+        {
+            List<string> lines = new List<string> ();
+
+            if (token.Length < 2) // need at least 2 chars to search
+                return lines;
+
+            lines.AddRange (FileSearch.PartialDirectoryNameSearch (token));
+
+            return lines;
+        }
+
         //***************************************************************************************
         //
         // raw input cleaned up and possibly concatenated into inputLine
@@ -436,7 +448,12 @@ namespace Main
                         int last = tokens.Length - 1;
                         string searchToken = tokens [last];
                         
-                        List<string> Completions = FindTabCompletions (searchToken);
+                        List<string> Completions;
+                        
+                        if (tokens [0] == "cd")
+                            Completions = FindTabCompletionsInCWD (searchToken); // for cd we only want completions in current directory
+                        else
+                            Completions = FindTabCompletions (searchToken);
 
                         if (Completions.Count == 1)
                         {
@@ -474,15 +491,19 @@ namespace Main
                                     break;
                             }
 
-                            // get the leading characters common to all completions
-                            string commonCharacters = Completions [0].Substring (0, matchingCharCount);
-
-                            // and remove the ones the user has already typed
-                            string tabAddedChars = commonCharacters.Substring (searchToken.Length);
-
+                            // re-display what was entered plus any completion characters common to all
                             Print ("\n\n" + Utils.Prompt);
                             EditablePrint (typedIn);
-                            EditableAppend (tabAddedChars);
+
+                            if (matchingCharCount > 0)
+                            { 
+                                string commonCharacters = Completions [0].Substring (0, matchingCharCount);
+
+                                // and remove the ones the user has already typed
+                                string tabAddedChars = commonCharacters.Substring (searchToken.Length);
+
+                                EditableAppend (tabAddedChars);
+                            }
                         }
                     }
 

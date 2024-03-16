@@ -72,6 +72,31 @@ namespace Main
             return false;
         }
 
+        //*******************************************************************************
+        //
+        //  PartialDirectoryNameSearch - look for directories in the current directory that
+        //                               match what has been typed
+        //
+        public static List<string> PartialDirectoryNameSearch (string name)
+        {
+            List<string> matches = new List<string> ();
+
+            DirectoryInfo dir = new DirectoryInfo (currentDirectory);
+            DirectoryInfo [] files = dir.GetDirectories (name + "*", SearchOption.TopDirectoryOnly);
+
+            foreach (DirectoryInfo di in files)
+            {
+                matches.Add (di.Name);
+            }
+
+            return matches;
+        }
+
+        //*******************************************************************************
+        //
+        //  PartialNameSearch - look for .m files in the current directory and on the 
+        //                      search path that match what has been typed
+        //
         public static List<string> PartialNameSearch (string name)
         {
             List<string> matches = new List<string> ();
@@ -80,7 +105,7 @@ namespace Main
            // string wildCardName = name.ToLower () + "*.m";
 
             DirectoryInfo dir = new DirectoryInfo (currentDirectory);
-            FileInfo [] files = dir.GetFiles(wildCardName, SearchOption.TopDirectoryOnly);
+            FileInfo [] files = dir.GetFiles (wildCardName, SearchOption.TopDirectoryOnly);
 
             foreach (FileInfo fi in files)
             {
