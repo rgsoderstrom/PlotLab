@@ -444,7 +444,7 @@ namespace Main
                 {
                     if (typedIn.Length > 1) // require at least 2 characters
                     {
-                        string[] tokens = typedIn.Split (new char [] { ' ', '=' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] tokens = typedIn.Split (new char [] {'[', '(', '*', '-', '*', '/', ' ', '=' }, StringSplitOptions.RemoveEmptyEntries);
                         int last = tokens.Length - 1;
                         string searchToken = tokens [last];
                         
