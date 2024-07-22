@@ -7,9 +7,9 @@ clear
 
 ClockFrequency  = 50e6;
 DelayTime       = 0.003;
-BlankingVoltage = 0.1;
-InitialVoltage  = 0.25;
-FinalVoltage    = 2; % 0.35; % 1.25;
+BlankingVoltage = 0.025;
+InitialVoltage  = 0.125;
+FinalVoltage    = 1.325;
 RiseTime        = 0.030;
 
 CountsPerVolt    = 1023 / 2.048;
