@@ -383,9 +383,9 @@ namespace FunctionLibrary
             if (args == null) throw new Exception ("linspace argument error");
             if (args.Count != 3) throw new Exception ("linspace argument error");
 
-            double start = (args [0] as PLDouble).Data;
-            double stop = (args [1] as PLDouble).Data;
-            int count = (int)(args [2] as PLDouble).Data;
+            double start = (args [0] as PLScalar).DataAsDouble;
+            double stop  = (args [1] as PLScalar).DataAsDouble;
+            int count    = (args [2] as PLScalar).DataAsInteger;
             if (count < 2) throw new Exception ("linspace number of points (arg 3) must be 2 or greater");
 
             CommonMath.Matrix mat = Linspace (start, stop, count);

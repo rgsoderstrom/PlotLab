@@ -1,21 +1,32 @@
 
+%
+% scratch.m
+%
+
 clear
 
-t = linspace (0, 8 * pi, 200);
+ClockFrequency  = 50e6;
+DelayTime       = 0.003;
+BlankingVoltage = 0.1;
+InitialVoltage  = 0.25;
+FinalVoltage    = 2; % 0.35; % 1.25;
+RiseTime        = 0.030;
 
-% x = cos (t);
-% y = sin (t);
-% z = cos (2 * t);
+CountsPerVolt    = 1023 / 2.048;
+StartDelayClocks = DelayTime * ClockFrequency;
+InitialCounts    =  InitialVoltage * CountsPerVolt;
+BlankingCounts   = BlankingVoltage * CountsPerVolt;    
+FinalCounts      =    FinalVoltage * CountsPerVolt;    
+RampCounts       = FinalCounts - InitialCounts;
+RampCountRate    = RampCounts / RiseTime;                          
+ClockDivisor     = ClockFrequency / RampCountRate;
 
-% pts = [x ; y ; z];
+sprintf ('BlankingCounts %f', BlankingCounts)
+sprintf ('InitialCounts  %f', InitialCounts)
+sprintf ('FinalCounts    %f', FinalCounts)
+sprintf ('RampCounts     %f', RampCounts)
+sprintf ('RampCountRate  %f', RampCountRate)
+sprintf ('StartDelayClocks %f', StartDelayClocks)
+sprintf ('ClockDivisor     %f', ClockDivisor)
 
-% plot (pts);
 
-
-x = t + sqrt (3) * sin (t);
-y = t * sqrt (3) - sin (t);
-z = 2 * cos (t);
-
-pts = [x ; y ; z];
-
-plot (pts);
