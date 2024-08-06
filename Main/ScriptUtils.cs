@@ -175,7 +175,7 @@ namespace Main
             if (index < Count)
                 return this [index].Number;
 
-            return 9999;
+            return 999999999;
         }
 
         //*************************************************************************************

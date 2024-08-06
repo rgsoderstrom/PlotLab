@@ -77,10 +77,10 @@ namespace Main
         //
         void ConstructorCommon (List<Token> tokens)
         {
-            if (InstanceCounter++ > 100)
-            {
-                throw new Exception ("Too many nodes in expression tree");
-            }
+            //if (InstanceCounter++ > 100)
+            //{
+            //    throw new Exception ("Too many nodes in expression tree");
+            //}
 
             try
             {

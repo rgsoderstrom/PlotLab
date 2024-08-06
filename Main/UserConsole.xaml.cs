@@ -141,7 +141,7 @@ namespace Main
                             bool B = str.Contains ("\r");
                             int  C = lines.Length;
 
-                            int firstScriptLine = 9999;
+                            int firstScriptLine = 999999999;
 
                             //
                             // look for if/for/while statements
