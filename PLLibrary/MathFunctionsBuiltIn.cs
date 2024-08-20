@@ -548,7 +548,14 @@ namespace FunctionLibrary
 
             for (int i = 0; i<result.Rows; i++)
                 for (int j = 0; j<result.Cols; j++)
-                    result [i, j] = func (arg [i, j]);
+                {
+                    double a = func (arg [i, j]);
+
+                    if (Double.IsNaN (a) || Double.IsInfinity (a))
+                        throw new Exception ("Infinity or NaN in calculations");
+
+                    result [i, j] = a;
+                }
 
             return result;
         }
