@@ -33,7 +33,7 @@ namespace FunctionLibrary
 
             fig.RectangularGridOn = true;
 
-            EventLog.WriteLine ("Draw2DObj");
+            //EventLog.WriteLine ("Draw2DObj");
             
             fig.Plot (co);
         }
