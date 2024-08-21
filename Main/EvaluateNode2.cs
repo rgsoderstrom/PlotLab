@@ -109,7 +109,9 @@ namespace Main
 
                         for (int i = 0; i<selectVect.Size; i++)
                         {
-                            PLVariable v = matValue.Get (0, (int) selectVect [0, i] - 1);
+                            PLVariable v = matValue.IsRowVector ? matValue.Get (0, (int) selectVect [0, i] - 1)
+                                                                : matValue.Get ((int) selectVect [0, i] - 1, 0);
+
                             (Value as PLMatrix).Set (0, i, v);
                         }
                     }
@@ -121,7 +123,9 @@ namespace Main
 
                         for (int i = 0; i<selectVect.Size; i++)
                         { 
-                            PLVariable v = matValue.Get (0, (int) selectVect [0, i] - 1);
+                            PLVariable v = matValue.IsRowVector ? matValue.Get (0, (int) selectVect [0, i] - 1)
+                                                                : matValue.Get ((int) selectVect [0, i] - 1, 0);
+
                             (Value as PLMatrix).Set (i, 0, v);
                         }
                     }
