@@ -3,25 +3,33 @@ addpath C:\Users\rgsod\Documents\Visual Studio 2022\Projects\ArduinoSupport\SONA
         
 clear
 		
-samples3
+samples2 ; figure (1) ; clf ; title (''); hold off
 
-Fs = 19150;
-dt = 1 / Fs;
-t = (0 : 1023) * dt;
+samples = z';
+fftResults = fft (samples, Fs);
 
-p = 100:300;
-plot (z (p, 1), z (p,2))
-plot (z (p, 1), z (p,2), 'r*', 'Size', 0.4);
+freqScale  = fftResults (1, :);
+magSquared = fftResults (2, :);
 
-f = 2 * Fs + 18;
-s = 500 + 400 * sin (2 * pi * 19168 * t);
-%plot (s, '*r');
+peakMag2 = 0;
 
-% zz = z (:, 2);
-% zz = zz / 4;
-% zz = round (zz);
+for i=513:1023,
+	if (peakMag2 < magSquared (i))
+		peakMag2 = magSquared (i);
+	end
+end
 
-% plot (zz);
-% plot (zz, '*');
+magSquared = magSquared / peakMag2;
+dB = 10 * log10 (magSquared);
 
+plot (freqScale, dB);
 
+for i=513:1023,
+	A = (dB (i) > dB (i-1));
+	B = (dB (i) > dB (i+1));
+	C = (dB (i) > -55);
+	
+	if A && B && C
+		disp (freqScale (i));
+	end
+end
