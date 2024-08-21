@@ -781,10 +781,12 @@ namespace PLCommon
 
         public override string ToString ()
         {
-            if (Math.Abs (Data) > 1e4 || Math.Abs (Data) < 1e-4)
-                return string.Format ("{0:E3}", Data);
-            else
-                return string.Format ("{0:0.#####}", Data);
+            return string.Format ("{0:0.#######}", Data);
+
+            //if (Math.Abs (Data) > 1e4 || Math.Abs (Data) < 1e-4)
+            //    return string.Format ("{0:E5}", Data);
+            //else
+            //    return string.Format ("{0:0.#####}", Data);
         }
     }
 
