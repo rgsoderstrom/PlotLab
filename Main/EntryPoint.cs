@@ -14,7 +14,7 @@ namespace Main
     {
         static public bool ShowParsingTokens = false;
         static public bool ShowExprTree      = false;
-        static int Counter = 1;
+        static int Counter = 0;
 
         public void ProcessArithmeticExpression (ref PLVariable answer, string expression, Workspace workspace, PrintFunction pf)
         {
