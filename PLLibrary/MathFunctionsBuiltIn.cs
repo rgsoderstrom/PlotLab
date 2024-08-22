@@ -53,6 +53,7 @@ namespace FunctionLibrary
                 {"mag",   Mag},
                 {"angle", Angle},
                 {"round", Round},
+                {"sum",   Sum},
             };
         }
 
@@ -716,6 +717,63 @@ namespace FunctionLibrary
 
         static public PLVariable Max (PLVariable arg) {return MaxMinCommon (Math.Max, arg);}
         static public PLVariable Min (PLVariable arg) {return MaxMinCommon (Math.Min, arg);}
+
+        //*********************************************************************************************
+
+        static public PLVariable Sum (PLVariable arg) 
+        {
+            PLList lst = arg as PLList;
+
+            if (lst != null)
+            {
+                if (lst.Count != 2)
+                    throw new Exception ("MaxMin arg error");
+
+                PLDouble arg1 = lst [0] as PLDouble;
+                PLDouble arg2 = lst [1] as PLDouble;
+                return new PLDouble (arg1.Data + arg2.Data);
+            }
+
+            PLRMatrix mat = arg as PLRMatrix;
+
+            if (mat != null)
+            {
+                //
+                // one dimensional
+                //
+                if (mat.Rows == 1 || mat.Cols == 1)
+                {
+                    int count = mat.Size; 
+                    double val = mat.Data [0, 0];
+
+                    for (int i = 1; i<count; i++)
+                        val +=  mat [i];
+
+                    return new PLDouble (val);
+                }
+
+                //
+                // two dimensional
+                //
+                PLRMatrix results = new PLRMatrix (1, mat.Cols);
+
+                for (int col=0; col<mat.Cols; col++)
+                {
+                    double val = mat [0, col];
+
+                    for (int row = 1; row<mat.Rows; row++)
+                        val += mat [row, col];
+
+                    results [0, col] = val;
+                }
+
+                return results;
+            }
+
+            else
+                throw new Exception ("Unsupported type in Sum function");
+        }
+
 
         //*********************************************************************************************
 
