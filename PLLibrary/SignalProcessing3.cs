@@ -212,7 +212,11 @@ namespace FunctionLibrary
 
         private static double PowerSpectrum (double re, double im, double len)
         {
-            return (re * re + im * im) / len;
+            re /= len;
+            im /= len;
+
+          //return Math.Sqrt (re * re + im * im);
+            return (re * re + im * im);
         }
 
         private static double PhaseAngle (double re, double im)
