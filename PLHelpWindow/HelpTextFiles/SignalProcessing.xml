@@ -60,9 +60,15 @@
       <Title>FFT with Real or Complex input</Title>
 
       <Text>
+        Input signal must be a row vector
+        
         % complex input example
         sig = exp (i * 2 * pi * 32 * t) + 2 * exp (i * 2 * pi * 200 * t);
         spect = fft (sig, 1000); % (timeDomainSignal, sampleRate)
+        
+        spect (1,:) is Freq scale
+        spect (2,:) is Amplitude
+        spect (3,:) is Phase
       </Text>
     </Content>
 
