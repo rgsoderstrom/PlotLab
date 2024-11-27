@@ -129,6 +129,8 @@ namespace PLCommon
             if (op1 is PLComplex && op2 is PLDouble)  return (op1 as PLComplex).Div (op2 as PLDouble);
             if (op1 is PLComplex && op2 is PLComplex) return (op1 as PLComplex).Div (op2 as PLComplex);
 
+            if (op1 is PLInteger && op2 is PLDouble)  return (op1 as PLInteger).Div (op2 as PLDouble);
+
             //return new PLString ("Division of " + op1.GetType () + " and " + op2.GetType () + " not implemented");
             throw new Exception ("Division of " + op1.GetType () + " and " + op2.GetType () + " not implemented");
         }
@@ -954,6 +956,7 @@ namespace PLCommon
         public PLInteger Mul (PLInteger op2) {return new PLInteger (Data * op2.Data);}
         public PLDouble  Mul (PLDouble  op2) {return new PLDouble  (Data * op2.Data);}
         public PLInteger Div (PLInteger op2) {return new PLInteger (Data / op2.Data);}
+        public PLDouble  Div (PLDouble  op2) {return new PLDouble  (Data / op2.Data);}
 
         //*************************************************************************************
 
