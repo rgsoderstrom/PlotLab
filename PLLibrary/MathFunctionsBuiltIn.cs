@@ -24,9 +24,10 @@ namespace FunctionLibrary
             return new Dictionary<string, PLFunction>
             {
                 {"linspace", Linspace},
-                {"zeros", Zeros},
-                {"ones", Ones},
-                {"ceil", Ceil},
+                {"zeros",  Zeros},
+                {"ones",   Ones},
+                {"ceil",   Ceil},
+                {"floor",  Floor},
                 {"square", Square},
                 {"sin",  Sin},
                 {"cos",  Cos},
@@ -648,6 +649,13 @@ namespace FunctionLibrary
         {
             double d = (arg as PLDouble).Data;
             PLDouble dd = new PLDouble (Math.Ceiling (d));
+            return dd;
+        }
+
+        static public PLVariable Floor (PLVariable arg) 
+        {
+            double d = (arg as PLDouble).Data;
+            PLInteger dd = new PLInteger ((int) Math.Floor (d));
             return dd;
         }
 
