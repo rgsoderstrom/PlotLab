@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using MathNet.Numerics.Statistics;
+
 using PLCommon;
 
 //
@@ -56,6 +58,7 @@ namespace FunctionLibrary
                 {"round", Round},
                 {"sum",   Sum},
                 {"mean",  Mean},
+                {"median", Median},
             };
         }
 
@@ -762,6 +765,32 @@ namespace FunctionLibrary
             }
 
             return results;
+        }
+
+        //********************************************************************************
+
+        static public PLVariable Median (PLVariable arg)
+        {
+            PLRMatrix mat = arg as PLRMatrix;
+
+            if (mat == null)
+                throw new Exception ("Median requires a real vector input");
+
+            // Vector
+            if (mat.Rows == 1 || mat.Cols == 1)
+            {
+                List<double> data = new List<double> ();
+
+                int count = mat.Size; 
+
+                for (int i = 0; i<count; i++)
+                    data.Add (mat [i]);
+
+                return new PLDouble (data.Median());
+            }
+
+            else
+                throw new Exception ("Median requires a real vector input");
         }
 
         //********************************************************************************
