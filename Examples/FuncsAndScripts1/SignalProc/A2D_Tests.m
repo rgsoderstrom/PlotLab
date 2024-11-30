@@ -3,7 +3,7 @@ addpath C:\Users\rgsod\Documents\Visual Studio 2022\Projects\ArduinoSupport\SONA
         
 clear
 		
-samples2 ; figure (2) ; clf ; title (''); hold off
+samples3 ; figure ; clf ; title (''); hold off
 
 samples = z';
 
@@ -16,8 +16,8 @@ dc = mean (samples);
 samples = samples - dc;
 
 
-%fftResults = fft (samples, Fs);
-fftResults = fft (win .* samples, Fs);
+fftResults = fft (samples, Fs);
+%fftResults = fft (win .* samples, Fs);
 
 freqScale  = fftResults (1, :);
 magSquared = fftResults (2, :);
