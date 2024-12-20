@@ -34,17 +34,17 @@ namespace FunctionLibrary
         {
             PLString pstr = arg as PLString;
 
-            if (pstr != null)
+            if (pstr == null)
+                throw new Exception ("Invalid print format");
+
+            string str = pstr.Text;
+
+            switch (str)
             {
-                string str = pstr.Text;
+                case "short": PLVariable.PrintFormat = PLVariable.PrintFormatType.Short; break;
+                case "long":  PLVariable.PrintFormat = PLVariable.PrintFormatType.Long;  break;
 
-                switch (str)
-                {
-                    case "short": PLVariable.PrintFormat = PLVariable.PrintFormatType.Short; break;
-                    case "long":  PLVariable.PrintFormat = PLVariable.PrintFormatType.Long;  break;
-
-                    default: throw new Exception ("Unrecognized \"format\" option");
-                }
+                default: throw new Exception ("Unrecognized \"format\" option");
             }
 
             return new PLNull ();
