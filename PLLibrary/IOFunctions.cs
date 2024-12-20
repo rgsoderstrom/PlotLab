@@ -18,6 +18,7 @@ namespace FunctionLibrary
             {
                 {"sprintf", PrintToString},
                 {"disp",    Display},  
+                {"format",  Format},  
             };
         }
 
@@ -27,6 +28,28 @@ namespace FunctionLibrary
 
         //*********************************************************************************************
         //*********************************************************************************************
+        //*********************************************************************************************
+
+        static public PLVariable Format (PLVariable arg)
+        {
+            PLString pstr = arg as PLString;
+
+            if (pstr != null)
+            {
+                string str = pstr.Text;
+
+                switch (str)
+                {
+                    case "short": PLVariable.PrintFormat = PLVariable.PrintFormatType.Short; break;
+                    case "long":  PLVariable.PrintFormat = PLVariable.PrintFormatType.Long;  break;
+
+                    default: throw new Exception ("Unrecognized \"format\" option");
+                }
+            }
+
+            return new PLNull ();
+        }
+
         //*********************************************************************************************
 
         static public PLVariable PrintToString (PLVariable arg)

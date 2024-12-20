@@ -14,6 +14,10 @@ namespace PLCommon
         public string Name = "";
         public abstract string ToString (string fmt);
 
+        public enum PrintFormatType {Short, Long};
+
+        public static PrintFormatType PrintFormat = PrintFormatType.Short;
+
         public static double ToNumber (PLVariable plv, ref bool failFlag)
         {
             if (plv is PLDouble) return (plv as PLDouble).Data;
@@ -783,7 +787,9 @@ namespace PLCommon
 
         public override string ToString ()
         {
-            return string.Format ("{0:0.#######}", Data);
+            if      (PrintFormat == PrintFormatType.Short) return string.Format ("{0:0.##}", Data);         
+            else if (PrintFormat == PrintFormatType.Long)  return string.Format ("{0:0.#######}", Data);
+            else  throw new Exception ("Unsupported print format");
 
             //if (Math.Abs (Data) > 1e4 || Math.Abs (Data) < 1e-4)
             //    return string.Format ("{0:E5}", Data);

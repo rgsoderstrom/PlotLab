@@ -22,6 +22,7 @@
     <SubTopics>
       <SubTopic SearchKey="disp"/>
       <SubTopic SearchKey="sprintf"/>
+      <SubTopic SearchKey="format"/>
     </SubTopics>
   </HelpTopic>
 
@@ -54,6 +55,21 @@
 
       <Text>
         s = sprintf ('L = %3.2f meters', 123.4567);
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="format">
+    <Header>format</Header>
+
+    <Content>
+      <Title>Number of digits to print</Title>
+
+      <Text>
+        format short
+        format long
       </Text>
     </Content>
   </HelpTopic>
