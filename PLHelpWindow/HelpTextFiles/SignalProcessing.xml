@@ -88,7 +88,9 @@
       <Title>Creating FIR filter</Title>
 
       <Text>
-        h = CreateLPF (sampleRate, cutoff);
+        % invokes MathNet.Filtering.FIR.FirCoefficients.LowPass (sampleRate, cutoff);
+        handle = CreateLPF (sampleRate, cutoff);
+        [handle, coefficients] = CreateLPF (sampleRate, cutoffFreq);
       </Text>
     </Content>
   </HelpTopic>
