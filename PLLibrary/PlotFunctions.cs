@@ -10,6 +10,8 @@ using Plot2D_Embedded;
 using Plot3D_Embedded;
 using PlottingLib;
 
+using PLLibrary;
+
 //***************************************************************************************************
 
 //
@@ -395,16 +397,31 @@ namespace FunctionLibrary
 
                 if (m1.Rows == m2.Rows && m1.Cols == m2.Cols)
                 {
-                    if (m1.IsRowVector)
+                    if (m1.IsRowVector) // both row vectors
                     {
                         for (int i=0; i<m1.Cols; i++)
                             pts.Add (new Point (m1 [0, i], m2 [0, i]));
                     }
 
-                    else
+                    else // both col vectors
                     {
                         for (int i=0; i<m1.Rows; i++)
                             pts.Add (new Point (m1 [i, 0], m2 [i, 0]));
+                    }
+                }
+
+                else if (m1.Rows == m2.Cols && m1.Cols == m2.Rows)
+                {
+                    if (m1.IsRowVector) // m2 is col
+                    {
+                        for (int i=0; i<m1.Cols; i++)
+                            pts.Add (new Point (m1 [0, i], m2 [i, 0]));
+                    }
+
+                    else // m1 is col, m2 is row
+                    {
+                        for (int i=0; i<m1.Rows; i++)
+                            pts.Add (new Point (m1 [i, 0], m2 [0, i]));
                     }
                 }
 
@@ -441,7 +458,11 @@ namespace FunctionLibrary
                 PLRMatrix m3 = args [2] as PLRMatrix;
 
                 if (m1.IsVector == false || m2.IsVector == false)
-                    throw new Exception ("Plot data args - first two must both be row or column vectors");
+                    throw new Exception ("Plot data args - first two must be vectors");
+
+                if (m1.IsRowVector) m1 = (PLRMatrix) m1.CollapseToColumn ();
+                if (m2.IsRowVector) m2 = (PLRMatrix) m2.CollapseToColumn ();
+                if (m3.IsRowVector) m3 = (PLRMatrix) m3.CollapseToColumn ();
 
                 if (m3.IsVector) // then plot a line
                 {
@@ -450,20 +471,8 @@ namespace FunctionLibrary
                     if (m2.Size != count || m3.Size != count)
                         throw new Exception ("Plot data args - vectors must be same size");
 
-                    if (m1.IsRowVector && m2.IsRowVector && m3.IsRowVector)
-                    {
-                        for (int i=0; i<count; i++)
-                            pts.Add (new Point3D (m1 [0, i], m2 [0, i], m3 [0, i]));
-                    }
-
-                    else if (m1.IsColVector && m2.IsColVector && m3.IsColVector)
-                    {
-                        for (int i=0; i<count; i++)
-                            pts.Add (new Point3D (m1 [i, 0], m2 [i, 0], m3 [i, 0]));
-                    }
-
-                    else
-                        throw new Exception ("Plot data args - vectors must be same orientation, i.e. all row or all column");
+                    for (int i=0; i<count; i++)
+                        pts.Add (new Point3D (m1 [i, 0], m2 [i, 0], m3 [i, 0]));
                 }
 
                 else // draw a surface

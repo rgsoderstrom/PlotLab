@@ -43,7 +43,7 @@
 
       <Text>
         plot (xCoordinates, yCoordinates);
-           Where xCoordinates and yCoordinates can both be row or both be column vectors.
+           Where xCoordinates and yCoordinates are vectors of the same length. Row and column vectors can be mixed.
            Solid line is drawn in default color
           
         plot (xCoords, yCoords, 'r', style, thickness);
@@ -215,7 +215,7 @@
 
       <Text>
         plot (xCoordinates, yCoordinates, zCoordinates);
-           Where xCoordinates, yCoordinates and zCoordinates can all be row or all be column vectors.
+           Where xCoordinates, yCoordinates and zCoordinates must be vectors.
            Solid line is drawn in default color
           
         plot (xCoords, yCoords, zCoords, 'r', style, thickness);
