@@ -163,6 +163,16 @@ namespace Main
                 string nextCurrentDir;
                 string path = pstr.Data;
 
+                // look for leading and trailing single quote. silently eliminate if found
+                int i0 = path.IndexOf ('\'');
+                int i1 = path.LastIndexOf ('\'');
+
+                if (i0 == 0 && i1 == path.Length - 1)
+                {
+                    path = path.Remove (path.Length - 1, 1);
+                    path = path.Remove (0, 1);
+                }
+
                 if (path [0] == '\\') // absolute path on same disk
                 {
                     int i = FileSearch.CurrentDirectory.IndexOf ("\\");
