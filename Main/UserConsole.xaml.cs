@@ -323,7 +323,7 @@ namespace Main
             {
                 inputLines.Clear ();
                 nestingLevel = new Utils.NestingLevel ();
-                throw new Exception (ex.Message);
+                throw new Exception ("Error in UserConsole ReturnKeyHandler: " + ex.Message);
             }
         }
 
