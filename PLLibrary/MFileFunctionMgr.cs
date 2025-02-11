@@ -123,11 +123,14 @@ namespace PLLibrary
                 {
                     string [] tokens = raw.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                    if (tokens [0][0] == '%')
-                        continue;
+                    if (tokens.Length > 0)
+                    {
+                        if (tokens [0] [0] == '%')
+                            continue;
 
-                    if (tokens [0] == "function")
-                        isFunction = true;
+                        if (tokens [0] == "function")
+                            isFunction = true;
+                    }
 
                     break;
                 }
@@ -136,7 +139,6 @@ namespace PLLibrary
             file.Close ();
             return isFunction;
         }
-
     }
 }
 
