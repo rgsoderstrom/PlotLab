@@ -43,6 +43,7 @@
     </Content>
 
     <SubTopics>
+      <SubTopic SearchKey="CreateFIR"/>
       <SubTopic SearchKey="CreateLPF"/>
       <SubTopic SearchKey="RunFilter"/>
       <SubTopic SearchKey="ClearFilter"/>
@@ -81,11 +82,25 @@
   
   <!-- ********************************************************************-->
 
-  <HelpTopic SearchKey="CreateLPF">
-    <Header>Create Low Pass FIR filter</Header>
+  <HelpTopic SearchKey="CreateFIR">
+    <Header>FIR filter from coefs</Header>
 
     <Content>
-      <Title>Creating FIR filter</Title>
+      <Title>Creating general FIR filter</Title>
+
+      <Text>
+        handle = CreateFIR (vector of coefs);
+      </Text>
+    </Content>
+  </HelpTopic>
+  
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="CreateLPF">
+    <Header>Low Pass FIR filter</Header>
+
+    <Content>
+      <Title>Creating low pass FIR filter</Title>
 
       <Text>
         % invokes MathNet.Filtering.FIR.FirCoefficients.LowPass (sampleRate, cutoff);

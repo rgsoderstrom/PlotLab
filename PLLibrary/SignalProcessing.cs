@@ -26,6 +26,7 @@ namespace FunctionLibrary
             return new Dictionary<string, PLFunction> 
             {
                 {"CreateLPF",    CreateLPF},
+                {"CreateFIR",    CreateFIR},
                 {"RunFilter",    RunFilter},
                 {"ClearFilter",  ClearFilter},
                 {"DeleteFilter", DeleteFilter},

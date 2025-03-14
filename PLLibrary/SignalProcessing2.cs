@@ -59,6 +59,41 @@ namespace FunctionLibrary
             return lst;
         }
 
+
+        //**********************************************************************************************************
+        //
+        // handle = CreateFIR (coefficients); % create a MathNet FIR filter from an array of coefficients
+        //
+        static public PLVariable CreateFIR (PLVariable arg)
+        {
+            PLRMatrix coefs = arg as PLRMatrix;
+
+            if (coefs.IsVector == false)
+                throw new Exception ("CreateFIR: FIR filter argument error. Must be a single vector");
+
+            // put passed-in coefs in the format MathNet expects            
+            double [] filterCoefs = new double [coefs.Size];
+
+            for (int i=0; i<coefs.Size; i++)
+                filterCoefs [i] = coefs [i];
+
+            // generate filter coefficients
+            int thisFilterHandle = nextFirFlterHandle++;
+
+            try
+            {
+                OnlineFirFilter filter = new OnlineFirFilter (filterCoefs);
+                firFilterCollection.Add (thisFilterHandle, filter);
+            }
+
+            catch (Exception ex)
+            {
+                throw new Exception ("Error creating FIR filter: " + ex.Message);
+            }
+
+            return new PLInteger (thisFilterHandle);
+        }
+
         //**********************************************************************************************************
         //
         // results = RunFilter (handle, samples, decimation); % decimation optional, default = 1
