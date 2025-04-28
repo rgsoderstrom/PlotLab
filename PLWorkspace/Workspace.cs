@@ -326,9 +326,10 @@ namespace PLWorkspace
         {
             if (arg != null)
             {
-                PLList lst = arg as PLList;
-                PLString str = lst [0] as PLString;
-                if (Variables.ContainsKey (str.Data))
+                PLString str = arg as PLString;
+                //PLList lst = arg as PLList;
+                //PLString str = lst [0] as PLString;
+                if (Variables.ContainsKey (str.Text))
                     return new PLBool (true);
             }
 
