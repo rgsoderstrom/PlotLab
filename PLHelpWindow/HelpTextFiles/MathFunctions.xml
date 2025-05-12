@@ -27,6 +27,8 @@
       <SubTopic SearchKey="cos"/>
       <SubTopic SearchKey="tan"/>
       <SubTopic SearchKey="cross"/>
+      <SubTopic SearchKey="max"/>
+      <SubTopic SearchKey="min"/>
     </SubTopics>
   </HelpTopic>
 
@@ -137,10 +139,54 @@
 
       <Text>
         v3 = cross (v1, v2);
-           v1 and v2 must both be column vectors of length 2 or 3
+        v1 and v2 must both be column vectors of length 2 or 3
       </Text>
     </Content>
   </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="max">
+    <Header>find maximum</Header>
+
+    <Content>
+      <Title>return maximum of a vector or matrix</Title>
+
+      <Text>
+        for a vector input, maximum and its index returned
+            w  = [1 8 2 4 2 9 1];
+            a  = max (w);
+            [z, x] = max (w);
+
+            [z, x] = max (a, b); % where a, b are scalars is also supported
+            
+        for a matrix, a row vector is returned withe the max of each column
+      </Text>
+    </Content>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="min">
+    <Header>find minimum</Header>
+
+    <Content>
+      <Title>return minimun of a vector or matrix</Title>
+
+      <Text>
+        for a vector input, minimum and its index returned
+            w  = [1 8 2 4 2 9 1];
+            a  = min (w);
+            [z, x] = min (w);
+
+            [z, x] = min (a, b); % where a, b are scalars is also supported
+
+        for a matrix, a row vector is returned withe the min of each column
+      </Text>
+    </Content>
+  </HelpTopic>
+
+
 </HelpTree>
 
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 using MathNet.Numerics.Statistics;
 
@@ -685,7 +686,9 @@ namespace FunctionLibrary
 
                 PLDouble arg1 = lst [0] as PLDouble;
                 PLDouble arg2 = lst [1] as PLDouble;
-                return new PLDouble (func (arg1.Data, arg2.Data));
+                PLDouble val = new PLDouble (func (arg1.Data, arg2.Data));
+
+                return new PLList () {new PLDouble (val), new PLInteger (val == arg1 ? 1 : 2)};
             }
 
             PLRMatrix mat = arg as PLRMatrix;
@@ -699,11 +702,17 @@ namespace FunctionLibrary
                 {
                     int count = mat.Size; 
                     double val = mat.Data [0, 0];
+                    int index = 1;
 
                     for (int i = 1; i<count; i++)
+                    { 
                         val = func (val, mat [i]);
 
-                    return new PLDouble (val);
+                        if (val == mat [i])
+                            index = i + 1;
+                    }
+
+                    return new PLList () {new PLDouble (val), new PLInteger (index)};
                 }
 
                 //
