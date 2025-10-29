@@ -146,7 +146,11 @@ namespace Main
 
                 else if (tokens.Count == 2)
                 {
-                    throw new Exception ("Token count == 2");
+                    string str = "\nToken count == 2:\n";
+                    str += tokens [0].ToString () + "\n";
+                    str += tokens [1].ToString () + "\n";
+
+                    throw new Exception (str);
                 }
 
                 //********************************************************************************
@@ -190,7 +194,9 @@ namespace Main
 
         //*******************************************************************************************
 
-        readonly List<string> CanCompact = new List<string> () { "+", ":", "/", "Comma"};
+    // fails for expressions of the form: 1000 / (10 / 2)
+    //  readonly List<string> CanCompact = new List<string> () { "+", ":", "/", "Comma"};
+        readonly List<string> CanCompact = new List<string> () { "+", ":", "Comma"};
 
         internal void Compact ()
         {
@@ -209,6 +215,8 @@ namespace Main
                     }
                 }
             }
+
+            string exp = expression; // temp for debug
 
             List<ExpressionTreeNode> newOperands = new List<ExpressionTreeNode> ();
 
