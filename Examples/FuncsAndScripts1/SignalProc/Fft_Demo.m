@@ -14,7 +14,7 @@ spect = fft (sig, sr);
 
 clf ; hold on
 
-plot (spect (1, :), spect (2, :));
-%plot (spect (1, :), 10 * log10 (spect (2, :)));
+%plot (spect (1, :), spect (2, :));
+plot (spect (1, :), 10 * log10 (spect (2, :)));
 
 2 * max (spect (2,:))
