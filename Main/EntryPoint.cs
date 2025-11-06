@@ -65,7 +65,7 @@ namespace Main
 
             catch (Exception ex)
             {
-                throw new Exception ("expression " + expression + " failed, " + ex.Message);
+                throw new Exception ("    expression " + expression + " failed, " + ex.Message + "\n");
             }
         }
     }

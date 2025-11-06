@@ -389,22 +389,22 @@ namespace PLWorkspace
 
         public PLVariable Rows (PLVariable a)
         {
-            PLRMatrix  p1 = a as PLRMatrix;  if (p1 != null) return new PLInteger (p1.Rows); 
+            PLRMatrix p1 = a as PLRMatrix; if (p1 != null) return new PLInteger (p1.Rows); 
             PLList    p2 = a as PLList;    if (p2 != null) return new PLInteger (1); 
             PLDouble  p3 = a as PLDouble;  if (p3 != null) return new PLInteger (1); 
             PLInteger p4 = a as PLInteger; if (p4 != null) return new PLInteger (1);  
             PLString  p5 = a as PLString;  if (p5 != null) return new PLInteger (1);  
-            throw new Exception ("Unsupported type " + a.ToString () + " to rows function");
+            throw new Exception ("Can\'t count the rows of a " + a.ToString ());
         }
 
         public PLVariable Cols (PLVariable a)
         {
-            PLRMatrix  p1 = a as PLRMatrix;  if (p1 != null) return new PLInteger (p1.Cols); 
+            PLRMatrix p1 = a as PLRMatrix; if (p1 != null) return new PLInteger (p1.Cols); 
             PLList    p2 = a as PLList;    if (p2 != null) return new PLInteger (p2.Count); 
             PLDouble  p3 = a as PLDouble;  if (p3 != null) return new PLInteger (1); 
             PLInteger p4 = a as PLInteger; if (p4 != null) return new PLInteger (1);  
             PLString  p5 = a as PLString;  if (p5 != null) return new PLInteger (p5.Text.Length);  
-            throw new Exception ("Unsupported type " + a.ToString () + " to cols function");
+            throw new Exception ("Can\'t count the columns of a " + a.ToString ());
         }
 
         public PLVariable Size (PLVariable a)

@@ -146,9 +146,9 @@ namespace Main
 
                 else if (tokens.Count == 2)
                 {
-                    string str = "\nToken count == 2:\n";
-                    str += tokens [0].ToString () + "\n";
-                    str += tokens [1].ToString () + "\n";
+                    string str = "\nToken count == 2. Tokens:\n";
+                    str += "  " + tokens [0].ToString () + "\n";
+                    str += "  " + tokens [1].ToString () + "\n";
 
                     throw new Exception (str);
                 }
