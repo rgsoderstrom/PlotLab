@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Media.Animation;
 
 using PLCommon;
 
@@ -20,6 +21,7 @@ namespace FunctionLibrary
                 {"scalarField", ScalarField},
                 {"Covector1",   Covector1},
                 {"Covector2",   Covector2},
+                {"TransducerSamples", TransducerSamples}
             };
         }
 
@@ -28,6 +30,42 @@ namespace FunctionLibrary
         //*********************************************************************************************
 
         // User defined function
+
+        // find largest jump in col 2
+
+        static public PLVariable TransducerSamples (PLVariable args)
+        {
+            PLRMatrix input = args as PLRMatrix;
+
+            if (input == null)
+                throw new Exception ("TransducerSamples only accepts N-by-3 real matrix");
+
+            // differences
+            PLRMatrix diffs = new PLRMatrix (input.Rows-1, 1);
+
+            for (int i=0; i<input.Rows-1; i++)
+                diffs [i, 0] = input [i+1, 1] - input [i, 1];
+
+            // largest absolute value difference and its index
+            double ld = diffs [1, 0];
+            double lda = 0;
+
+            for (int i=1; i<diffs.Rows; i++)
+            { 
+                if (ld < Math.Abs (diffs [i, 0]))
+                { 
+                    ld = Math.Abs (diffs [i, 0]);
+                    lda = input [i, 2];
+                }
+            }
+
+            PLRMatrix results = new PLRMatrix (1, 2);
+            results [0,0] = ld;
+            results [0,1] = lda;
+            return results;
+        }
+
+        //*********************************************************************************************
 
         static public PLVariable ContourTestFunction (PLVariable args)
         {
