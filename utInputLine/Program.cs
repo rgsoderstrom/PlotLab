@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using FrontEnd;
+//using Main;
 
 namespace utInputLine
 {
@@ -20,9 +20,9 @@ namespace utInputLine
 
         static void Main (string [] args)
         {
-            string [] words = testCases [2].Split (new string [] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
+            string [] words = testCases [1].Split (new string [] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
 
-
+            Console.WriteLine (words [0]);
 
         }
     }

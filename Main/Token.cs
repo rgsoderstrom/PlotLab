@@ -16,7 +16,7 @@ namespace Main
         String,
         ArithmeticOperator,   // +, -, etc.
         TransposeOperator,
-        Decimal,
+        Decimal,        // number that begins with a leading decimal, .34
 
 
         // revised on second pass

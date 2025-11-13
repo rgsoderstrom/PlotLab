@@ -1,81 +1,143 @@
-﻿
-
-//
-// COPIED FROM FrontEnd
-//
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FrontEnd
+namespace Main
 {
-    public static class Utils
+    public static partial class Utils
     {
-        public static readonly string Prompt = "--> ";
-        public static readonly string LineContinued = "...";
-        public static readonly char   Semicolon = ';';
+        //*************************************************************************************************
+
+        public class InputLine
+        {
+            public InputLine (string txt, bool comp, bool pf) //, NestingLevel nl)
+            {
+                text      = txt;
+                complete  = comp;
+                printFlag = pf;
+                //finalNesting = nl;
+            }
+
+            public readonly string text;
+            public readonly bool complete;    // true => no continuation
+            public readonly bool printFlag;   // true => no trailing semicolon
+            //public NestingLevel finalNesting; // nesting level at end of line
+        }
 
         //*************************************************************************************************
 
-        public struct NestingLevel
+        public static void CleanupRawInput (string raw,       // as typed in, pasted in or read from script file
+                                            List<InputLine> final,     // cleanup-up, separated or concatenated here            
+                                            ref NestingLevel callersNesting) 
         {
-            public NestingLevel (char c, int q, int b, int p)
-            {
-                character = c;
-                quoteLevel = q;
-                bracketLevel = b;
-                parenLevel = p;
-            }
+            if (raw.Length == 0)
+                return;
 
-            public NestingLevel (NestingLevel prev, char ch)
-            {
-                character = ch;
+            string rawCopy = (string)raw.Clone ();
 
-                if (character == Quote)
+            //
+            // remove leading and trailing whitespaces
+            //
+            rawCopy = rawCopy.Trim ();
+
+            if (rawCopy.Length == 0)
+                return;
+
+            //
+            // get nesting level for each character
+            //
+            List<NestingLevel> nesting = new List<NestingLevel> ();
+
+            nesting.Add (new NestingLevel (callersNesting, rawCopy [0]));
+
+            for (int i = 1; i<rawCopy.Length; i++)
+                nesting.Add (new NestingLevel (nesting [i-1], rawCopy [i]));
+
+            //
+            // remove any comment. Look for '%' outside of quoted string
+            //
+
+            int index = -1;
+
+            for (int i = 0; i<rawCopy.Length; i++)
+            {
+                if (rawCopy [i] == '%' && nesting [i].QuoteLevel == 0)
                 {
-                    if (prev.character == Esc) quoteLevel = prev.quoteLevel;
-                    if (prev.quoteLevel == 1) quoteLevel = 0;
-                    else quoteLevel = 1;
+                    index = i;
+                    break;
                 }
-                else
-                    quoteLevel = prev.quoteLevel;
-
-                if      (character == OpenBracket)  bracketLevel = prev.bracketLevel + 1;
-                else if (character == CloseBracket) bracketLevel = prev.bracketLevel - 1;
-                else                                bracketLevel = prev.bracketLevel;
-
-                if      (character == OpenParen)  parenLevel = prev.parenLevel + 1;
-                else if (character == CloseParen) parenLevel = prev.parenLevel - 1;
-                else                              parenLevel = prev.parenLevel;
             }
 
-            static char Esc = '\\';
-            static char Quote = '\'';
-            static char OpenBracket = '[';
-            static char CloseBracket = ']';
-            static char OpenParen = '(';
-            static char CloseParen = ')';
+            if (index != -1)
+            {
+                rawCopy = rawCopy.Remove (index);
+                nesting.RemoveAt (index);
 
-            public readonly char character;
-            public readonly int quoteLevel;  // can only be 0 or 1, no nested quotes allowed
-            public readonly int bracketLevel;
-            public readonly int parenLevel;
+                if (rawCopy.Length == 0)
+                    return;
+            }
+
+            //
+            // look for expression separators at nesting level == 0
+            //
+
+            char [] separators = new char [] { ',', ';' };
+            List<int> indices = new List<int> ();
+
+            for (int i = 0; i<rawCopy.Length; i++)
+            {
+                if (nesting [i].Level == 0)
+                    if (separators.Contains (rawCopy [i]))
+                        indices.Add (i);
+            }
+
+            // split into list of strings with separators
+            List<string> rawSubstrings = new List<string> ();
+
+            if (indices.Count == 0) // || (indices [indices.Count - 1] != rawCopy.Length - 1))
+                indices.Add (rawCopy.Length - 1);
+
+            int startIndex = 0;
+
+            foreach (int endIndex in indices)
+            {
+                string str = rawCopy.Substring (startIndex, endIndex - startIndex + 1); // terminator included
+                rawSubstrings.Add (str.Trim ());
+                startIndex = endIndex + 1;
+            }
+
+            if (startIndex < rawCopy.Length)
+                rawSubstrings.Add (rawCopy.Substring (startIndex));
+
+            // look at substrings for terminators and continuation dots
+
+            foreach (string str in rawSubstrings)
+            {
+                string str1 = str; // need a mutable copy
+
+                bool printFlag = str1 [str1.Length - 1] != Semicolon;
+
+                if (separators.Contains (str1 [str1.Length - 1]))
+                    str1 = str1.Remove (str1.Length - 1);
+
+                str1 = str1.Trim ();
+
+                bool completeFlag = str1.EndsWith (LineContinued) == false;
+
+                if (completeFlag == false)
+                {
+                    int i = str1.LastIndexOf (LineContinued);
+
+                    if (i != -1) str1 = str1.Remove (i);
+                    else throw new Exception ("Error removing line continuation");
+                }
+
+                final.Add (new InputLine (str1, completeFlag, printFlag)); 
+            }
+
+            callersNesting = nesting [nesting.Count - 1];
         }
-
-        //*************************************************************************************************
-
-        public static void CleanupRawInput (string       raw,       // as typed in, pasted in or read from text file
-                                            List<string> final,     // cleanup-up, separated or concatenated here
-                                            ref bool     complete,  // true => no continuation line ready for lineProcessor
-                                            ref bool     printFlag) // true => no trailing semicolon, so print answer
-        {
-        }
-
-        //*************************************************************************************************
-
     }
 }
