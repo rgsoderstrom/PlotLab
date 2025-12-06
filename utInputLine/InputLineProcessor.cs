@@ -57,9 +57,13 @@ namespace Main
 
                 // look for compound statements. split any into single statements
 
+                List<string> simple = new List<string> ();
 
 
 
+
+
+                // pass each simple string to token processor
 
                 TokenParsing parser = new TokenParsing ();
 
