@@ -14,8 +14,8 @@ namespace utInputLine
     {
         static List<string> testCases = new List<string> () 
         { 
-            //"((1 2 3)  +     (4 5 6));"
-            "y = sin (7 + (8 * (9 + 10 + 'z')));", 
+            " a = (1, 2, 3); b = [4 5 6]; c = a + a;"
+            //"y = sin (7 + (8 * (9 + 10 + 'z')));", 
             //"x = 3; y = sin (7 + (8 * 9));", 
             //"a = [1, sqrt (2), 3];", 
             //"a = [10:2:30];",
