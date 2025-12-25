@@ -34,7 +34,7 @@ namespace Main
 
         //*****************************************************************************************************
 
-        public List<Token> StringToTokens (string expression, IWorkspace workspace, ILibrary lib, IFileSystem files)
+        public List<Token> StringToTokens (AnnotatedString expression, IWorkspace workspace, ILibrary lib, IFileSystem files)
         {
             List<Token> tokens = ParsingPassOne (expression);
             tokens = ParsingPassTwo (tokens, workspace, lib, files);
@@ -47,11 +47,8 @@ namespace Main
         // ParsingPassOne
         //
 
-        internal List<Token> ParsingPassOne (string expression)
+        internal List<Token> ParsingPassOne (AnnotatedString expression)
         {
-            char[] chars = expression.ToCharArray ();
-
-
             List<Token> tokens = new List<Token> ();
             Token CurrentToken = null;
 
@@ -79,7 +76,7 @@ namespace Main
                 {
                     if (get < expression.Length)
                     {
-                        status.currentChar = expression [get++];
+                        status.currentChar = expression [get++].Character;
                     }
 
                     else if (get == expression.Length)
