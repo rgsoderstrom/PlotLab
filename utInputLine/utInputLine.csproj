@@ -51,7 +51,8 @@
     <Compile Include="Interfaces\ILibrary.cs" />
     <Compile Include="Interfaces\IWorkspace.cs" />
     <Compile Include="Driver.cs" />
-    <Compile Include="NestingLevel.cs" />
+    <Compile Include="AnnotatedChar.cs" />
+    <Compile Include="AnnotatedString.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stubs\CommandHistory.cs" />
     <Compile Include="Stubs\FileSystem.cs" />

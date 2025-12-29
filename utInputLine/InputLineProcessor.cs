@@ -39,42 +39,42 @@ namespace Main
                 string text = RemovePromptAndComments (inputLine);
                 text = SqueezeConsecutiveSpaces (text);
 
-                Console.WriteLine ("===========================================\n");
-                Console.WriteLine (text);
+                //Console.WriteLine ("===========================================\n");
 
+                //Console.WriteLine (text + "\n");
 
+                AnnotatedString annotated = new AnnotatedString (text);
+                //Console.WriteLine (annotated.ToString () + "\n");
 
-                // assign "nesting level" to each character
-                NestingLevel [] CharNestingLevel = new NestingLevel [text.Length];
+                // Split lines like:
+                // a = 1; b = 2; c = 3;
+                // into individual statements, while leaving lines like:
+                // a = [1 ; 2 ; 4];
+                // as a single statement
+                List<AnnotatedString> annotated2 = annotated.SplitAtLevel0Semicolon ();
 
-                CharNestingLevel [0] = new NestingLevel (text [0]);
+                //foreach (AnnotatedString AS in annotated2)
+                //    Console.WriteLine (AS);
 
-                for (int i=1; i<text.Length; i++)
-                    CharNestingLevel [i] = new NestingLevel (CharNestingLevel [i-1], text [i]);
-
-                for (int i=0; i<text.Length; i++)
-                    Console.WriteLine (CharNestingLevel [i]);
-
-                // look for compound statements. split any into single statements
-
-                List<string> simple = new List<string> ();
-
-
-
-
-
-                // pass each simple string to token processor
-
+                //
+                // pass each annotated string to token processor
+                //
                 TokenParsing parser = new TokenParsing ();
 
-                List<Token> tokens = parser.StringToTokens (text, workspace, library, files);
+                foreach (AnnotatedString annotatedText in annotated2)
+                {
+                    List<Token> tokens = parser.StringToTokens (annotatedText, workspace, library, files);
 
-                Print ("----------------------------------------");
+                    Print ("----------------------------------------");
 
-                Print (text);
+                    Print (text);
 
-                foreach (Token tok in tokens)
-                    Print (tok.ToString ());
+                    foreach (Token tok in tokens)
+                        Print (tok.ToString ());
+                }
+
+
+
             }
 
             catch (Exception ex)

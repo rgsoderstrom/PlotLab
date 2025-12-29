@@ -11,7 +11,7 @@ namespace Main
     public class Token
     {
 	    public TokenType type;
-	    public string    text;
+	    public AnnotatedString    text;
 
         public Token (TokenType ty, string txt) {type = ty; text = txt;}
 

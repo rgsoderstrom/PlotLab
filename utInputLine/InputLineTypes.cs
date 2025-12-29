@@ -33,7 +33,7 @@ namespace Main
     {
         string text;
         StatementTypes stamementType;
-        List<NestingLevel> Nesting; // for each character
+        List<AnnotatedChar> Nesting; // for each character
     }
 
     //*************************************************************************************
