@@ -34,6 +34,8 @@ namespace FunctionLibrary
                 {"square", Square},
                 {"sin",  Sin},
                 {"cos",  Cos},
+                {"asin", ASin},
+                {"acos", ACos},
                 {"tan",  Tan},
                 {"sinh", Sinh},
                 {"cosh", Cosh},
@@ -573,7 +575,10 @@ namespace FunctionLibrary
 
         static public PLVariable Sin    (PLVariable arg) {return MathFunction (Math.Sin,  "sin",    arg);}
         static public PLVariable Cos    (PLVariable arg) {return MathFunction (Math.Cos,  "cos",    arg);}
+        static public PLVariable ASin   (PLVariable arg) {return MathFunction (Math.Asin, "asin",    arg);}
+        static public PLVariable ACos   (PLVariable arg) {return MathFunction (Math.Acos, "acos",    arg);}
         static public PLVariable Tan    (PLVariable arg) {return MathFunction (Math.Tan,  "tan",    arg);}
+
         static public PLVariable Abs    (PLVariable arg) {return MathFunction (Math.Abs,  "abs",    arg);}
         static public PLVariable Log    (PLVariable arg) {return MathFunction (Math.Log,  "log",    arg);}
         static public PLVariable Sinh   (PLVariable arg) {return MathFunction (Math.Sinh, "sinh",   arg);}
