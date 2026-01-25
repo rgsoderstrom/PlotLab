@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Generic;   
 
-//using PLCommon;
-//using PLWorkspace;
-//using PLLibrary;
+////using PLCommon;
+////using PLWorkspace;
+////using PLLibrary;
 
 namespace Main
 {
@@ -12,44 +12,42 @@ namespace Main
         internal List<Token> ParsingPassTwo (List<Token> initial, IWorkspace workspace, ILibrary library, IFileSystem files)
         {
             List<Token> edited = LookupAlphanumerics (initial, workspace, library, files);
-            
+
             edited = IdentifyParens (edited, workspace); // grouping, function args, sub matrix
 
             edited = IdentifyBrackets (edited); // by separator: :, ;, etc.
 
             edited = ReplaceTransposeOps (edited); // A' => Transpose (A)
 
-            edited = LookForDecimals (edited); // combine decimal point with subsequent numeric. DO BEFORE UNARY
-
             edited = BindUnaryOperators (edited); // -, A => (-1 * A), -, 7 => -7
 
-            edited = LookForTwoCharOperators (edited); // &, & => &&
+            //            edited = LookForTwoCharOperators (edited); // &, & => &&
 
             return edited;
         }
 
         //*************************************************************************************************
 
-        List<Token> LookupAlphanumerics (List<Token> initial, 
-                                         IWorkspace  workspace,
-                                         ILibrary    library,
-                                         IFileSystem files) 
+        List<Token> LookupAlphanumerics (List<Token> initial,
+                                         IWorkspace workspace,
+                                         ILibrary library,
+                                         IFileSystem files)
         {
-            for (int i=0; i<initial.Count; i++)
+            for (int i = 0; i<initial.Count; i++)
             {
                 if (initial [i].type == TokenType.Alphanumeric)
                 {
-                    if (workspace.IsDefined (initial [i].text))
+                    if (workspace.IsDefined (initial [i].annotatedText.Raw))
                         initial [i].type = TokenType.VariableName;
 
-                    else if (library.IsDefined (initial [i].text))
+                    else if (library.IsDefined (initial [i].annotatedText.Raw))
                         initial [i].type = TokenType.FunctionName;
 
-                    else if (files.IsScriptFile (initial [i].text))
-                        initial [i].type = TokenType.ScriptFile;
+                    else if (files.IsFunctionFile (initial [i].annotatedText.Raw))
+                        initial [i].type = TokenType.FunctionName;
 
-                    else if (files.IsFunctionFile (initial [i].text))
-                        initial [i].type = TokenType.FunctionFile;
+                    else if (files.IsScriptFile (initial [i].annotatedText.Raw))
+                        initial [i].type = TokenType.ScriptFile;
 
                     else initial [i].type = TokenType.Undefined;
                 }
@@ -60,60 +58,47 @@ namespace Main
 
         //*************************************************************************************************
 
+        // Identify parenthesis as:
+        //    GroupingParens,  // A * (B + C)
+        //    FunctionParens,  // Func1 (P, Q, R, S)
+        //    SubmatrixParens, // ZMat (Rs, Cs); % (row select, col select)
+
         List<Token> IdentifyParens (List<Token> tokens, IWorkspace final)
         {
             List<Token> edited = new List<Token> ();
 
-            for (int i=0; i<tokens.Count; i++)
+            for (int i = 0; i<tokens.Count; i++)
             {
                 if (tokens [i].type == TokenType.Parens)
                 {
-                    Token tok = new Token (TokenType.GroupingParens, tokens [i].text);
-                    edited.Add (tok);
-                }
-
-                else if (tokens [i].type == TokenType.FunctionName || tokens [i].type == TokenType.FunctionFile)
-                {
-                    if (i + 1 == tokens.Count)
+                    if (edited.Count == 0) 
                     {
-                        Token tok = new Token (TokenType.FunctionName, tokens [i].text);
+                        Token tok = new Token (TokenType.GroupingParens, tokens [i].annotatedText);
                         edited.Add (tok);
-                        i++;
-                        
-                        //throw new Exception ("Function " + tokens [i].text + " missing args");
                     }
-
-                    else
+                    else // look at previous type to see what type these parens are
                     {
-                        TokenPair tp = new TokenPair ();
-                        tp.pairType = TokenPairType.Function;
-                        tp.t0 = tokens [i];
-                        tp.t1 = tokens [i+1];
-                        tp.t1.type = TokenType.FunctionParens;
-                        tp.text = tp.t0.text + tp.t1.text;
-                        edited.Add (tp);
-                        i++;
+                        switch (edited [edited.Count-1].type)
+                        {
+                            case TokenType.VariableName:
+                                Token tok1 = new Token (TokenType.SubmatrixParens, tokens [i].annotatedText);
+                                edited.Add (tok1);
+                                break;
+
+                            case TokenType.FunctionName:
+                                Token tok2 = new Token (TokenType.FunctionParens, tokens [i].annotatedText);
+                                edited.Add (tok2);
+                                break;
+
+                            default:
+                                Token tok3 = new Token (TokenType.GroupingParens, tokens [i].annotatedText);
+                                edited.Add (tok3);
+                                break;
+                        }
                     }
                 }
 
-                else if (tokens [i].type == TokenType.VariableName || tokens [i].type == TokenType.Undefined)
-                {
-                    if (i + 1 < tokens.Count && tokens [i + 1].type == TokenType.Parens)
-                    {
-                        TokenPair tp = new TokenPair ();
-                        tp.pairType = TokenPairType.Submatrix;
-                        tp.t0 = tokens [i];
-                        tp.t1 = tokens [i+1];
-                        tp.t1.type = TokenType.SubmatrixParens;
-                        tp.text = tp.t0.text + tp.t1.text;
-                        edited.Add (tp);
-                        i++;
-                    }
-                    else                
-                        edited.Add (tokens [i]);
-                }
-
-                else                
+                else
                     edited.Add (tokens [i]);
             }
 
@@ -122,290 +107,406 @@ namespace Main
 
         //*************************************************************************************************
 
-        // for any Bracket tokens, identify top-level (i.e. no paren or bracket nesting) separator
+        // Identify brackets as:
+        //      BracketsColon,  // [A : B : C] or [A : B]
+        //      BracketsSemi,   // [a ; b ; c ; d] or [1 2 3 ; 4 5 6]
+        //      BracketsComma,  // [1, 2, 3]
+        //      BracketsSpace,  // [1 2 3]
+
+        // for any Bracket tokens, identify top-level (i.e. same nesting level as opening bracket) separator
 
         List<Token> IdentifyBrackets (List<Token> initial)
         {
-            for (int i=0; i<initial.Count; i++)
+            const char NoneFound = '?'; // no separators found
+
+            for (int i = 0; i<initial.Count; i++)
             {
                 if (initial [i].type == TokenType.Brackets)
                 {
-                    int parenNesting = 0, bracketNesting = 0;
-                    int i1 = initial [i].text.IndexOf ('[');
-                    int i2 = initial [i].text.LastIndexOf (']');
+                    AnnotatedString tokenText = initial [i].annotatedText;
+                    char separatorFound = NoneFound;
 
-                    string textCopy = initial [i].text.Substring (i1 + 1, i2 - i1 - 1); // w/o outer brackets
-                    List<char> separatorsFound = new List<char> ();
+                    int initalNesting = tokenText [0].NestingLevel;
 
-                    for (int j = 0; j<textCopy.Length; j++)
+                    for (int j = 0; j<tokenText.Count; j++)
                     {
-                        if (textCopy [j] == '(') parenNesting++;
-                        if (textCopy [j] == '[') bracketNesting++;
+                        AnnotatedChar tokenChar = tokenText [j];
 
-                        if (textCopy [j] == ')') {parenNesting--;   if (parenNesting < 0)   throw new Exception ("Parenthesis error: " + initial [i].text); }
-                        if (textCopy [j] == ']') {bracketNesting--; if (bracketNesting < 0) throw new Exception ("Bracket error: " + initial [i].text); }
+                        if (tokenChar.NestingLevel == initalNesting)
+                        { 
+                            if (TokenUtils.bracketSeparators.Contains (tokenChar.Character))
+                            { 
+                                if (separatorFound == NoneFound)
+                                    separatorFound = tokenChar.Character;
 
-                        if (parenNesting == 0 && bracketNesting == 0)
-                        {
-                            if (TokenUtils.bracketSeparators.Contains (textCopy [j]))
-                            {
-                                if (separatorsFound.Contains (textCopy [j]) == false)
-                                    separatorsFound.Add (textCopy [j]);
+                                else if (separatorFound != tokenChar.Character)
+                                    throw new Exception ("Bracket separator error");
                             }
                         }
                     }
 
-                    // determine lowest priority separator
-                    TokenUtils.BracketSeparatorPriority lowestBSP = new TokenUtils.BracketSeparatorPriority (' ', 99999, TokenType.Brackets);
-
-                    foreach (char c in separatorsFound)
+                    switch (separatorFound)
                     {
-                        TokenUtils.BracketSeparatorPriority bsp = TokenUtils.GetBspForOperator (c);
-                        if (lowestBSP.priority > bsp.priority) lowestBSP = bsp;
-                    }
+                        case ':':
+                            initial [i].type = TokenType.BracketsColon;
+                            break;
 
-                    initial [i].type = lowestBSP.tokenType;
+                        case ';':
+                            initial [i].type = TokenType.BracketsSemi;
+                            break;
+
+                        case ',':
+                            initial [i].type = TokenType.BracketsComma;
+                            break;
+
+             //           case ' ':
+               //             break;
+
+                        case NoneFound:
+                            initial [i].type = TokenType.BracketsSpace;
+                            break;
+
+                        default:
+                            throw new Exception ("Error looking for bracket separators");
+
+                    }
                 }
             }
 
             return initial;
         }
+
 
         //*************************************************************************************************
 
         // replace transpose operator by function call
 
-        List<Token> ReplaceTransposeOps (List<Token> initial)
+        private bool IsTransposeToken (Token tok) {return tok.type == TokenType.Transpose;}
+
+        private List<Token> ReplaceTransposeOps (List<Token> initial)
         {
-            for (int i = 0; i<initial.Count;)
+            List<int> transposeIndices = new List<int> ();
+
+            int start = 0;
+
+            while (start < initial.Count)
             {
-                if (initial [i].type == TokenType.TransposeOperator)
-                {
-                    TokenPair tp = new TokenPair ();
-                    tp.pairType = TokenPairType.Function;
+                int index = initial.FindIndex (start, IsTransposeToken);
 
-                    tp.t0 = new Token (TokenType.FunctionName, "Transpose");
-                    tp.t1 = new Token (TokenType.FunctionParens, "(" + initial [i - 1].text + ")");
-                    tp.text = tp.t0.text + tp.t1.text;
+                if (index == -1)
+                    break;
 
-                    initial [i - 1] = tp;
-                    initial.RemoveAt (i);
-                }
-
-                else
-                    i++;
+                transposeIndices.Add (index);
+                start = index + 1;
             }
 
-            return initial;
+            // if none found, just return original list
+            if (transposeIndices.Count == 0)
+                return initial;  
+
+            List<Token> edited = new List<Token> ();
+            int get = 0;
+
+            foreach (int index in transposeIndices)
+            {
+                while (get < index - 1)
+                    edited.Add (initial [get++]);
+
+                edited.Add (new Token (TokenType.FunctionName, new AnnotatedString ("transpose"))); // NESTING LEVELS NEEDED?
+
+                // add parens unless outer level is already parens                
+                if (initial [get].type != TokenType.GroupingParens) edited.Add (new Token (TokenType.FunctionParens, initial [get].annotatedText.AddOuterParens ()));
+                else                                                edited.Add (new Token (TokenType.FunctionParens, initial [get].annotatedText));
+
+                get += 2;
+            }
+
+            // move tokens after last transpose
+            while (get < initial.Count)
+                edited.Add (initial [get++]);
+
+        //  return initial;
+            return edited;
         }
 
-        //List<Token> ReplaceTransposeOps (List<Token> initial)
-        //{
-        //    for (int i = 0; i<initial.Count;)
-        //    {
-        //        if (initial [i].type == TokenType.TransposeOperator)
-        //        {
-        //            TokenPair tp = new TokenPair ();
-        //            tp.pairType = TokenPairType.Function;
-
-        //            tp.t0 = new Token (TokenType.FunctionName, "Transpose");
-        //            tp.t1 = initial [i - 1];
-        //            initial [i - 1] = tp;
-        //            initial.RemoveAt (i);
-        //        }
-
-        //        else
-        //            i++;
-        //    }
-
-        //    return initial;
-        //}
-
+        //*************************************************************************************************
+        //*************************************************************************************************
         //*************************************************************************************************
 
-        // operators
+        // unary operators
+
+        private void UnaryTokenMover (List<Token> initial, List<Token> edited, ref int getIndex)
+        {
+            if (initial [getIndex].type == TokenType.Operator)
+            {
+                switch (initial [getIndex+1].type)
+                {
+                    case TokenType.Numeric:
+                    { 
+                        if (initial [getIndex].annotatedText [0].IsPlusMinus)
+                        { 
+                            Token t1 = new Token (TokenType.Numeric, initial [getIndex].annotatedText + initial [getIndex + 1].annotatedText);
+                            edited.Add (t1);
+                            getIndex += 2;
+                        }
+                        break;
+                    }
+
+                    case TokenType.VariableName:
+                    case TokenType.GroupingParens:
+                    case TokenType.BracketsColon:
+                    case TokenType.BracketsSemi: 
+                    case TokenType.BracketsComma:
+                    case TokenType.BracketsSpace:
+                    case TokenType.FunctionName:
+                    {
+                        if (initial [getIndex].annotatedText [0].IsPlusMinus)
+                        { 
+                            Token t1 = new Token (TokenType.Numeric, initial [getIndex].annotatedText + new AnnotatedString ("1"));
+                            edited.Add (t1);
+                            Token t2 = new Token (TokenType.Operator, new AnnotatedString ("*"));
+                            edited.Add (t2);
+                            edited.Add (initial [getIndex+1]);
+                            getIndex += 2;
+                        }
+                        else if (initial [getIndex].annotatedText [0].IsTilde) // "not" function
+                        {
+                            edited.Add (new Token (TokenType.FunctionName, new AnnotatedString ("not"))); // NESTING LEVELS NEEDED?
+
+                            // add parens unless outer level is already parens                
+                            if (initial [getIndex].type != TokenType.GroupingParens) 
+                                edited.Add (new Token (TokenType.FunctionParens, initial [getIndex + 1].annotatedText.AddOuterParens ()));
+                            else                                                     
+                                edited.Add (new Token (TokenType.FunctionParens, initial [getIndex + 1].annotatedText));
+
+                            getIndex += 2;
+                        }
+                        break;
+                    }
+
+                    default: throw new Exception ("Token parsing error");
+                }
+            }
+        }
+
+     //   private bool IsUnaryOpToken (Token tok) {return tok.type == TokenType.Operator && tok.annotatedText [0].IsUnaryOp;}
+        private bool IsOpToken (Token tok) {return tok.type == TokenType.Operator;}
 
         List<Token> BindUnaryOperators (List<Token> initial)
         {
-            // Look for consecutive operands ending in a unary op
+            List<Token> edited = new List<Token> ();
 
-            for (int i = initial.Count-1; i>0; i--)
+            List<int> operatorIndices = new List<int> ();
+
+            int start = 0;
+
+            while (start < initial.Count)
             {
-                try
-                {
-                    TokenType im2 = i >= 2 ? initial [i-2].type : TokenType.ArithmeticOperator;
-                    TokenType im1 = initial [i-1].type;
+                int index = initial.FindIndex (start, IsOpToken);// IsUnaryOpToken);
 
-                    if (im2 == TokenType.ArithmeticOperator && im1 == TokenType.ArithmeticOperator)
-                    {
-                        if (TokenUtils.IsUnaryOp (initial [i-1].text))
-                        {
-                            switch (initial [i-1].text [0])
-                            {
-                                case '+':
-                                    initial.RemoveAt (i-1);
-                                    break;
+                if (index == -1)
+                    break;
 
-                                case '-':
-                                {
-                                    string op = "";
-                                    TokenType ty = initial [i].type;
-
-                                    switch (ty)
-                                    {
-                                        case TokenType.VariableName:
-                                        case TokenType.Alphanumeric:
-                                        case TokenType.GroupingParens:
-                                        {
-                                            Token tok = new Token (TokenType.GroupingParens, "(-1 * " + initial [i].text + ")");
-                                            initial [i-1] = tok;
-                                            initial.RemoveAt (i);
-                                        }
-                                        break;
-
-                                        case TokenType.Numeric:
-                                        {
-                                            if (initial [i].text [0] == '-') op = initial [i].text.Remove (0, 1);
-                                            else if (initial [i].text [0] == '+') {op = initial [i].text.Remove (0, 1); op = "-" + op;}
-                                            else op = "-" + initial [i].text;
-
-                                            Token tok = new Token (TokenType.Numeric, op);
-                                            initial [i-1] = tok;
-                                            initial.RemoveAt (i);
-                                        }
-                                        break;
-
-                                        case TokenType.FunctionFile:
-                                        case TokenType.FunctionName:
-                                        case TokenType.Pair:
-                                        {
-                                            initial.RemoveAt (i-1);
-                                            initial.Insert (i-1, new Token (TokenType.Numeric, "-1"));
-                                            initial.Insert (i, new Token (TokenType.ArithmeticOperator, "*"));
-                                        }
-                                        break;
-
-                                        default:
-                                            throw new Exception ("Unary minus error, type = " + ty.ToString ());
-                                    }
-                                }
-                                break;
-
-                                case '~':
-                                {
-                                    TokenPair tok = new TokenPair (); // TokenType.GroupingParens, op);
-                                    tok.pairType = TokenPairType.Function;
-
-                                    tok.t0 = new Token (TokenType.FunctionName, "Not");
-                                    tok.t1 = initial [i];
-                                    //tok.t1 = new Token (TokenType.FunctionParens, "(" + initial [i].text + ")");
-
-                                    initial [i-1] = tok;
-                                    initial.RemoveAt (i);
-                                }
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                catch (Exception ex)
-                {
-                    throw new Exception ("Error binding unary ops: " + ex.Message); // initial [i+1].text);
-                }
+                operatorIndices.Add (index);
+                start = index + 1;
             }
 
-            return initial;
-        }
+            // if none found, just return original list
+            if (operatorIndices.Count == 0)
+                return initial;  
 
-        //*************************************************************************************************
 
-        // combine consecutive operator characters into single 2-char operator
+            int operatorIndex;// = operatorIndices [0];
+            int get = 0; // where we are reading from initial list
 
-        List<Token> LookForTwoCharOperators (List<Token> initial)
-        {
-            List<Token> final = new List<Token> ();
 
-            for (int i=0; i<initial.Count-1; i++)
+            if (operatorIndices [0] == 0) // means first token is a unary op so bind it to the second token
+            { 
+                operatorIndex = operatorIndices [0];
+                UnaryTokenMover (initial, edited, ref get);
+                operatorIndices.RemoveRange (0, 1);
+            }
+
+            // Look for consecutive operators ending in a unary op
+            List<int> unaryOpIndices = new List<int> ();
+
+            while (operatorIndices.Count > 1)
             {
-                TokenType t0 = initial [i].type;
-                TokenType t1 = initial [i+1].type;
+                int i1 = operatorIndices [0];
+                int i2 = operatorIndices [1];
 
-                if ((t0 == TokenType.ArithmeticOperator || t0 == TokenType.Decimal) && t1 == TokenType.ArithmeticOperator)
+                if (i2 == i1 + 1)
                 {
-                    string op = initial [i].text + initial [i+1].text;
-                    
-                    if (TokenUtils.IsTwoCharOperator (op) == true)
-                    {
-                        final.Add (new Token (TokenType.ArithmeticOperator, op));
-                        i++;
-                    }
-                    else
-                        throw new Exception ("Illegal operator: " + op);
+                    unaryOpIndices.Add (i2);
+                    operatorIndices.RemoveRange (0, 2);
                 }
                 else
-                    final.Add (initial [i]);
+                    operatorIndices.RemoveRange (0, 1);
             }
 
-            final.Add (initial [initial.Count - 1]);
-            return final;
-        }
 
-        //*************************************************************************************************
-
-        // combine isolated decimal points with following numeric
-
-        List<Token> LookForDecimals (List<Token> initial)
-        {
-            List<Token> final = new List<Token> ();
-
-            int lastAdded = -1;
-
-            for (int i=0; i<initial.Count-1; i++)
+            while (unaryOpIndices.Count > 0)
             {
-                TokenType t0 = initial [i].type;
-                TokenType t1 = initial [i+1].type;
+                while (get < unaryOpIndices [0])
+                    edited.Add (initial [get++]);
 
-                if (t0 == TokenType.Decimal && t1 == TokenType.Numeric)
-                {
-                    string op = initial [i].text + initial [i+1].text;
-                    lastAdded = i + 1;
-                    
-                    final.Add (new Token (TokenType.Numeric, op));
-                    i++;
-                }
-                else
-                    final.Add (initial [i]);
+                UnaryTokenMover (initial, edited, ref get);
+                unaryOpIndices.RemoveRange (0, 1);
             }
 
-            // see if the final token has already been moved
-            if (lastAdded != initial.Count - 1)
-                final.Add (initial [initial.Count - 1]); 
 
-            return final;
+
+
+            while (get < initial.Count)
+                edited.Add (initial [get++]);
+
+
+
+
+            //// Look for consecutive operators ending in a unary op
+
+            //for (int i = 0; i<initial.Count-1; i++)
+            //{
+            //    if (initial [i].type != TokenType.Operator)
+            //        edited.Add (initial [i]);
+            //    else
+            //    {
+            //        if (initial [i+1].type != TokenType.Operator)
+            //            edited.Add (initial [i]);
+
+            //        else // found 2 consecutive operator tokens
+            //        {
+
+            //        }
+            //    }
+
+
+            //}
+
+
+                //            for (int i = initial.Count-1; i>0; i--)
+                //            {
+                //                try
+                //                {
+                //                    TokenType im2 = i >= 2 ? initial [i-2].type : TokenType.ArithmeticOperator;
+                //                    TokenType im1 = initial [i-1].type;
+
+                //                    if (im2 == TokenType.ArithmeticOperator && im1 == TokenType.ArithmeticOperator)
+                //                    {
+                //                        if (TokenUtils.IsUnaryOp (initial [i-1].text))
+                //                        {
+                //                            switch (initial [i-1].text [0])
+                //                            {
+                //                                case '+':
+                //                                    initial.RemoveAt (i-1);
+                //                                    break;
+
+                //                                case '-':
+                //                                {
+                //                                    string op = "";
+                //                                    TokenType ty = initial [i].type;
+
+                //                                    switch (ty)
+                //                                    {
+                //                                        case TokenType.VariableName:
+                //                                        case TokenType.Alphanumeric:
+                //                                        case TokenType.GroupingParens:
+                //                                        {
+                //                                            Token tok = new Token (TokenType.GroupingParens, "(-1 * " + initial [i].text + ")");
+                //                                            initial [i-1] = tok;
+                //                                            initial.RemoveAt (i);
+                //                                        }
+                //                                        break;
+
+                //                                        case TokenType.Numeric:
+                //                                        {
+                //                                            if (initial [i].text [0] == '-') op = initial [i].text.Remove (0, 1);
+                //                                            else if (initial [i].text [0] == '+') {op = initial [i].text.Remove (0, 1); op = "-" + op;}
+                //                                            else op = "-" + initial [i].text;
+
+                //                                            Token tok = new Token (TokenType.Numeric, op);
+                //                                            initial [i-1] = tok;
+                //                                            initial.RemoveAt (i);
+                //                                        }
+                //                                        break;
+
+                //                                        case TokenType.FunctionFile:
+                //                                        case TokenType.FunctionName:
+                //                                        case TokenType.Pair:
+                //                                        {
+                //                                            initial.RemoveAt (i-1);
+                //                                            initial.Insert (i-1, new Token (TokenType.Numeric, "-1"));
+                //                                            initial.Insert (i, new Token (TokenType.ArithmeticOperator, "*"));
+                //                                        }
+                //                                        break;
+
+                //                                        default:
+                //                                            throw new Exception ("Unary minus error, type = " + ty.ToString ());
+                //                                    }
+                //                                }
+                //                                break;
+
+                //                                case '~':
+                //                                {
+                //                                    TokenPair tok = new TokenPair (); // TokenType.GroupingParens, op);
+                //                                    tok.pairType = TokenPairType.Function;
+
+                //                                    tok.t0 = new Token (TokenType.FunctionName, "Not");
+                //                                    tok.t1 = initial [i];
+                //                                    //tok.t1 = new Token (TokenType.FunctionParens, "(" + initial [i].text + ")");
+
+                //                                    initial [i-1] = tok;
+                //                                    initial.RemoveAt (i);
+                //                                }
+                //                                break;
+                //                            }
+                //                        }
+                //                    }
+                //                }
+
+                //                catch (Exception ex)
+                //                {
+                //                    throw new Exception ("Error binding unary ops: " + ex.Message); // initial [i+1].text);
+                //                }
+                //            }
+
+                return edited;
         }
+
+        //        //*************************************************************************************************
+
+        //        // combine consecutive operator characters into single 2-char operator
+
+        //        List<Token> LookForTwoCharOperators (List<Token> initial)
+        //        {
+        //            List<Token> final = new List<Token> ();
+
+        //            for (int i=0; i<initial.Count-1; i++)
+        //            {
+        //                TokenType t0 = initial [i].type;
+        //                TokenType t1 = initial [i+1].type;
+
+        //                if ((t0 == TokenType.ArithmeticOperator || t0 == TokenType.Decimal) && t1 == TokenType.ArithmeticOperator)
+        //                {
+        //                    string op = initial [i].text + initial [i+1].text;
+
+        //                    if (TokenUtils.IsTwoCharOperator (op) == true)
+        //                    {
+        //                        final.Add (new Token (TokenType.ArithmeticOperator, op));
+        //                        i++;
+        //                    }
+        //                    else
+        //                        throw new Exception ("Illegal operator: " + op);
+        //                }
+        //                else
+        //                    final.Add (initial [i]);
+        //            }
+
+        //            final.Add (initial [initial.Count - 1]);
+        //            return final;
+        //        }
     }
 }
-
-
-
-
-
-/******************************
-
-
-namespace PLKernel
-{
-    public partial class TokenParsing
-    {
-
-
-*************************/
-
-
-
-
-
 
 
 

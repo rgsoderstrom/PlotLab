@@ -30,53 +30,54 @@ namespace Main
         
         int NestingLevel (char c)
         {
-            //
-            // parenthesis nesting level
-            //
-            if (TokenUtils.IsOpenParen (c))
-                ParenNestingLevel++;
+            ////
+            //// parenthesis nesting level
+            ////
+            //if (TokenUtils.IsOpenParen (c))
+            //    ParenNestingLevel++;
 
-            else if (TokenUtils.IsCloseParen (c))
-            {
-                ParenNestingLevel--;
+            //else if (TokenUtils.IsCloseParen (c))
+            //{
+            //    ParenNestingLevel--;
 
-                if (ParenNestingLevel < 0)
-                    throw new Exception ("Parenthesis argument syntax error, extra closing paren");
-            }
+            //    if (ParenNestingLevel < 0)
+            //        throw new Exception ("Parenthesis argument syntax error, extra closing paren");
+            //}
 
-            //
-            // bracket nesting level
-            //
-            else if (TokenUtils.IsOpenBracket (c))
-                BracketNestingLevel++;
+            ////
+            //// bracket nesting level
+            ////
+            //else if (TokenUtils.IsOpenBracket (c))
+            //    BracketNestingLevel++;
 
-            else if (TokenUtils.IsCloseBracket (c))
-            {
-                BracketNestingLevel--;
+            //else if (TokenUtils.IsCloseBracket (c))
+            //{
+            //    BracketNestingLevel--;
 
-                if (BracketNestingLevel < 0)
-                    throw new Exception ("Bracket argument syntax error, extra closing bracket");
-            }
+            //    if (BracketNestingLevel < 0)
+            //        throw new Exception ("Bracket argument syntax error, extra closing bracket");
+            //}
 
-            //
-            // Quote nesting level
-            //
-            if (TokenUtils.IsSingleQuote (c))
-            {
-                if (QuoteNestingLevel == 0)
-                {
-                    //if (char.IsLetter (PrevCharacter) == false && char.IsDigit (PrevCharacter) == false && CannotPreceedString.Contains (PrevCharacter) == false) // don't count quotes meant as transpose operator
-                    if (CanPreceedString.Contains (PrevCharacter) == true)
-                        QuoteNestingLevel = 1;
-                }
+            ////
+            //// Quote nesting level
+            ////
+            //if (TokenUtils.IsSingleQuote (c))
+            //{
+            //    if (QuoteNestingLevel == 0)
+            //    {
+            //        //if (char.IsLetter (PrevCharacter) == false && char.IsDigit (PrevCharacter) == false && CannotPreceedString.Contains (PrevCharacter) == false) // don't count quotes meant as transpose operator
+            //        if (CanPreceedString.Contains (PrevCharacter) == true)
+            //            QuoteNestingLevel = 1;
+            //    }
 
-                else 
-                    QuoteNestingLevel = 0;
-            }
+            //    else 
+            //        QuoteNestingLevel = 0;
+            //}
 
-            PrevCharacter = c;
+            //PrevCharacter = c;
 
-            return ParenNestingLevel + BracketNestingLevel + QuoteNestingLevel;
+            //return ParenNestingLevel + BracketNestingLevel + QuoteNestingLevel;
+            return 0;
         }
 
         //**************************************************************************************************
@@ -86,43 +87,43 @@ namespace Main
         //
         public List<string> SplitFunctionArgs (string str)
         {
-            string arguments;
+            //string arguments;
 
-            // if outer parens, remove them
-            if (TokenUtils.IsOpenParen (str [0]) && TokenUtils.IsCloseParen (str [str.Length - 1]))
-            {
-                int index = str.LastIndexOf (')');
-                if (index == -1) throw new Exception ("Function arguments missing closing paren: " + str);
-                arguments = str.Remove (index);
+            //// if outer parens, remove them
+            //if (TokenUtils.IsOpenParen (str [0]) && TokenUtils.IsCloseParen (str [str.Length - 1]))
+            //{
+            //    int index = str.LastIndexOf (')');
+            //    if (index == -1) throw new Exception ("Function arguments missing closing paren: " + str);
+            //    arguments = str.Remove (index);
 
-                index = arguments.IndexOf ('(');
-                if (index == -1) throw new Exception ("Function arguments missing opening paren: " + str);
-                arguments = arguments.Remove (0, index + 1);
-            }
-            else
-            {
-                arguments = str;
-            }
+            //    index = arguments.IndexOf ('(');
+            //    if (index == -1) throw new Exception ("Function arguments missing opening paren: " + str);
+            //    arguments = arguments.Remove (0, index + 1);
+            //}
+            //else
+            //{
+            //    arguments = str;
+            //}
 
 
             List<string> args = new List<string> ();
 
-            ResetNestingLevel ();
-            int start = 0;
+            //ResetNestingLevel ();
+            //int start = 0;
 
-            for (int i = 0; i<arguments.Length; i++)
-            {
-                if (NestingLevel (arguments [i]) == 0)
-                {
-                    if (TokenUtils.IsComma (arguments [i]))
-                    {
-                        args.Add (arguments.Substring (start, i - start));
-                        start = i + 1;
-                    }
-                }                
-            }
+            //for (int i = 0; i<arguments.Length; i++)
+            //{
+            //    if (NestingLevel (arguments [i]) == 0)
+            //    {
+            //        if (TokenUtils.IsComma (arguments [i]))
+            //        {
+            //            args.Add (arguments.Substring (start, i - start));
+            //            start = i + 1;
+            //        }
+            //    }                
+            //}
 
-            args.Add (arguments.Substring (start, arguments.Length - start));
+            //args.Add (arguments.Substring (start, arguments.Length - start));
 
             return args;
         }
@@ -139,41 +140,41 @@ namespace Main
 
         void BreakIntoSubstrings (string source, List<string> substrings, CharacterTest test)
         {
-            ResetNestingLevel ();
-            substrings.Clear ();
-            int start = 0;
+            //ResetNestingLevel ();
+            //substrings.Clear ();
+            //int start = 0;
 
-            for (int i = 0; i<source.Length; i++)
-            {
-                NestingLevel (source [i]);
+            //for (int i = 0; i<source.Length; i++)
+            //{
+            //    NestingLevel (source [i]);
 
-                if (ParenNestingLevel == 0 && BracketNestingLevel == 0)
-                {
-                    if (test (source [i]) == true) // then we found separator
-                    {
-                        string s = source.Substring (start, i - start);
+            //    if (ParenNestingLevel == 0 && BracketNestingLevel == 0)
+            //    {
+            //        if (test (source [i]) == true) // then we found separator
+            //        {
+            //            string s = source.Substring (start, i - start);
 
-                        bool empty = true;
+            //            bool empty = true;
 
-                        foreach (char c in s)
-                        {
-                            if (TokenUtils.IsWhitespace (c) == false)
-                            {
-                                empty = false;
-                                break;
-                            }
-                        }
+            //            foreach (char c in s)
+            //            {
+            //                if (TokenUtils.IsWhitespace (c) == false)
+            //                {
+            //                    empty = false;
+            //                    break;
+            //                }
+            //            }
 
-                        if (empty == false)
-                            substrings.Add (s);
+            //            if (empty == false)
+            //                substrings.Add (s);
 
-                        start = i + 1;
-                    }
-                }                
-            }
+            //            start = i + 1;
+            //        }
+            //    }                
+            //}
 
-            if (substrings.Count > 0)
-                substrings.Add (source.Substring (start, source.Length - start));
+            //if (substrings.Count > 0)
+            //    substrings.Add (source.Substring (start, source.Length - start));
         }
 
         //******************************************************************************************************
@@ -198,31 +199,31 @@ namespace Main
         public List<string> SplitBracketArgs_Comma (string str)
         {
             List<string> args = new List<string> ();
-            BreakIntoSubstrings (RemoveBrackets (str), args, TokenUtils.IsComma);
+            //BreakIntoSubstrings (RemoveBrackets (str), args, TokenUtils.IsComma);
             return args;
         }
 
         public List<string> SplitBracketArgs_Colon (string str)
         {
             List<string> args = new List<string> ();
-            BreakIntoSubstrings (RemoveBrackets (str), args, TokenUtils.IsColon);
+            //BreakIntoSubstrings (RemoveBrackets (str), args, TokenUtils.IsColon);
             return args;
         }
 
         public List<string> SplitBracketArgs_Semi (string str)
         {
             List<string> args = new List<string> ();
-            BreakIntoSubstrings (RemoveBrackets (str), args, TokenUtils.IsSemicolon);
+            //BreakIntoSubstrings (RemoveBrackets (str), args, TokenUtils.IsSemicolon);
             return args;
         }
 
         public List<string> SplitBracketArgs_Space (string str)
         {
-            string str1 = RemoveBrackets (str);
+            //string str1 = RemoveBrackets (str);
 
             List<string> args = new List<string> ();
-            BreakIntoSubstrings (str1, args, TokenUtils.IsWhitespace);
-            if (args.Count == 0) args.Add (str1); // sigle token, e.g. [0.5]
+            //BreakIntoSubstrings (str1, args, TokenUtils.IsWhitespace);
+            //if (args.Count == 0) args.Add (str1); // sigle token, e.g. [0.5]
             return args;
         }
 

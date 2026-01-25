@@ -30,13 +30,16 @@ namespace Main
         //**************************************************************************************
         //**************************************************************************************
 
-        public void ParseOneInputLine (string                   inputLine,
-                                       ref List<string>         statements, 
-                                       ref List<StatementTypes> stmtTypes)  
+        public void ParseOneInputLine (string                   inputLine)
+                                       //ref List<string>         statements)  
         {
             try
             { 
                 string text = RemovePromptAndComments (inputLine);
+
+                if (text.Length == 0)
+                    return;
+
                 text = SqueezeConsecutiveSpaces (text);
 
                 //Console.WriteLine ("===========================================\n");
@@ -46,15 +49,12 @@ namespace Main
                 AnnotatedString annotated = new AnnotatedString (text);
                 //Console.WriteLine (annotated.ToString () + "\n");
 
-                // Split lines like:
+                // Split compound lines like:
                 // a = 1; b = 2; c = 3;
                 // into individual statements, while leaving lines like:
                 // a = [1 ; 2 ; 4];
                 // as a single statement
                 List<AnnotatedString> annotated2 = annotated.SplitAtLevel0Semicolon ();
-
-                //foreach (AnnotatedString AS in annotated2)
-                //    Console.WriteLine (AS);
 
                 //
                 // pass each annotated string to token processor
@@ -63,9 +63,12 @@ namespace Main
 
                 foreach (AnnotatedString annotatedText in annotated2)
                 {
-                    List<Token> tokens = parser.StringToTokens (annotatedText, workspace, library, files);
-
                     Print ("----------------------------------------");
+
+                    Console.WriteLine (annotatedText);
+                    Console.WriteLine ();
+
+                    List<Token> tokens = parser.StringToTokens (annotatedText, workspace, library, files);
 
                     Print (text);
 
@@ -79,7 +82,10 @@ namespace Main
 
             catch (Exception ex)
             {
+                string st = ex.StackTrace;
+
                 Console.WriteLine ("Exception in ParseOneInputLine: " + ex.Message);
+             //   Console.WriteLine ("Exception in ParseOneInputLine: " + ex.StackTrace);
             }
         }
     }

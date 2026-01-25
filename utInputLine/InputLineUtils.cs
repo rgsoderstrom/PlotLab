@@ -21,8 +21,6 @@ namespace Main
 
         private string RemovePromptAndComments (string lineIn)
         {
-            bool inString = false;
-
             string lineOut = lineIn.Trim (); // remove leading and trailing spaces
 
             //
@@ -38,11 +36,13 @@ namespace Main
             //
             // remove any comment
             //
+            bool inString = false;
+
             if (lineOut.Contains ("%"))
             {
-                for (int i=lineOut.Length-1; i>=0; i--)
+                for (int i=0; i<lineOut.Length; i++)
                 {
-                    if (lineOut [i] == '\'') // then entering or leaving quoted string, where % doesn't mean comment
+                    if (lineOut [i] == '\'') // then entering or leaving quoted string, where % doesn't indicate comment
                         inString ^= true;
 
                     if (lineOut [i] == '%' && inString == false)
@@ -60,14 +60,19 @@ namespace Main
 
         private string SqueezeConsecutiveSpaces (string text)
         {
+            string results = "";
+
             text = text.Replace ("\t", " ");
 
             string [] splitText = text.Split (new string [] {"  "}, StringSplitOptions.RemoveEmptyEntries);
 
-            string results = splitText [0];
+            if (splitText.Length > 0)
+            { 
+                results = splitText [0];
 
-            for (int i=1; i<splitText.Length; i++)
-                results += " " + splitText [i].Trim ();
+                for (int i=1; i<splitText.Length; i++)
+                    results += " " + splitText [i].Trim ();
+            }
 
             return results;
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,18 +13,8 @@ namespace utInputLine
 {
     class Driver
     {
-        static List<string> testCases = new List<string> () 
-        { 
-            //"a = 3; b = 7;",
-            "a = (1, 2, 3);  b = [1 2 3 ; 4 5 6];    c = a +    a;     d = sqrt (c)  ",
-            //"y = sin (7 + (8 * (9 + 10 + 'z')));", 
-            //"x = 3; y = sin (7 + (8 * 9));", 
-            //"a = [1, sqrt (2), 3];", 
-            //"a = [10:2:30];",
-            //"s = 'a b c \\' d e f';",
-            //"s = sprintf ('%f', a);",
-            //"z [5:7] = \t [1:3];"
-        };
+        static string filePathAndName = @"D:\From_C_Visual Studio 2022\Visual Studio 2022\Projects\PlotLab\Examples\InputLineTests.m";
+
 
         static Workspace workspace   = new Workspace ();
         static Library   library     = new Library ();
@@ -36,18 +27,91 @@ namespace utInputLine
 
         static void Main (string [] args)
         {
-            InputLineProcessor inputProcessor = new InputLineProcessor (workspace, library, fileSystem, Print);
+            //AnnotatedString s1 = new AnnotatedString ("-");
+            //AnnotatedString s2 = new AnnotatedString ("123");
+            ////AnnotatedChar c2 = new AnnotatedChar ('a');
 
-            foreach (string str in testCases)
+
+            //Console.WriteLine ("s1 before");
+            //Console.WriteLine ("Text only:");
+            //Console.WriteLine (s1.Raw);
+
+            //Console.WriteLine ("Annotations:");
+            //Console.WriteLine (s1);
+            //Console.WriteLine ("");
+
+            //AnnotatedString s3 = s1 + s2;
+
+            //Console.WriteLine ("s1 after");
+            //Console.WriteLine ("Text only:");
+            //Console.WriteLine (s1.Raw);
+
+            //Console.WriteLine ("Annotations:");
+            //Console.WriteLine (s1);
+            //Console.WriteLine ("");
+
+            //Console.WriteLine ("s3");
+            //Console.WriteLine ("Text only:");
+            //Console.WriteLine (s3.Raw);
+
+            //Console.WriteLine ("Annotations:");
+            //Console.WriteLine (s3);
+            //Console.WriteLine ("");
+
+
+            //AnnotatedString s2 = s1.AddOuterParens ();
+
+            //Console.WriteLine ("");
+            //Console.WriteLine ("modified:");
+
+            //Console.WriteLine ("Text only:");
+            //Console.WriteLine (s2.Raw);
+
+            //Console.WriteLine ("Annotations:");
+            //Console.WriteLine (s2);
+            //Console.WriteLine ("");
+
+            ////Console.WriteLine ("c2 Text only:");
+            ////Console.WriteLine (c2.Character);
+
+            ////Console.WriteLine ("Annotations:");
+            ////Console.WriteLine (c2.ToString ());
+            ////Console.WriteLine ("");
+
+            //s1.Append (s2);
+
+            //Console.WriteLine (s1.Text);
+            //Console.WriteLine (s1);
+
+            //List<AnnotatedString> strList = s1.SplitAtLevel0Semicolon ();
+            //Console.WriteLine (strList [0]);
+            //Console.WriteLine (strList [1]);
+
+
+
+
+            try
             {
-                List<string> statements = new List<string> ();
-                List<StatementTypes> stmtTypes = new List<StatementTypes> ();
+                InputLineProcessor inputProcessor = new InputLineProcessor (workspace, library, fileSystem, Print);
 
-                inputProcessor.ParseOneInputLine (str, ref statements, ref stmtTypes);
+                StreamReader file = new StreamReader (filePathAndName);
+                string raw;
 
+                while ((raw = file.ReadLine ()) != null)
+                {
+                    if (raw.Length > 0)
+                    {
+                        inputProcessor.ParseOneInputLine (raw);
+                    }
+                }
+
+                file.Close ();
             }
 
-
+            catch (Exception ex)
+            {
+                Print ("Exception: " + ex.Message);
+            }
+        }
         }
     }
-}
