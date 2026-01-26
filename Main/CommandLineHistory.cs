@@ -59,7 +59,7 @@ namespace Main
         private static readonly CommandHistoryWriteOptions writeOption = CommandHistoryWriteOptions.WriteUnique;
         private static readonly int maxLineCount = 100; // don't write more than this many lines
 
-        static public void Close ()
+        static public void Close (bool editOnClose)
         {
             try
             {
@@ -92,6 +92,12 @@ namespace Main
                         file.WriteLine (str);
 
                 file.Close ();
+
+                // if requested edit history file after Plotlab exits
+                if (editOnClose)
+                {
+                    System.Diagnostics.Process.Start (UserConsole.HistoryFileDirectory + "\\" + historyFileName);
+                }
             }
 
             catch (Exception)

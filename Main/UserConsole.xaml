@@ -24,8 +24,9 @@
 
                 <GroupBox Header="History" BorderBrush="Green" BorderThickness="2" Margin="2,10,2,0">
                     <StackPanel Orientation="Vertical">
-                        <Button Name="ShowHistory"  Content="Show History"    Margin="2,2,2,0" IsEnabled="True" Click="ShowHistory_Click"/>
-                        <Button Name="ClearHistory" Content="Clear History"   Margin="2,2,2,0" IsEnabled="True" Click="ClearHistory_Click"/>
+                        <Button   Name="ShowHistory"  Content="Show History"         Margin="2,2,2,0" IsEnabled="True" Click="ShowHistory_Click"/>
+                        <Button   Name="ClearHistory" Content="Clear History"        Margin="2,2,2,0" IsEnabled="True" Click="ClearHistory_Click"/>
+                        <CheckBox Name="EditHistory"  Content="Edit History on Exit" Margin="2,2,2,0" IsEnabled="True"/>
                     </StackPanel>
                 </GroupBox>
             </StackPanel>

@@ -111,7 +111,7 @@ namespace Main
 
         private void Window_Closed (object sender, EventArgs e)
         {
-            CommandLineHistory.Close ();
+            CommandLineHistory.Close ((bool) EditHistory.IsChecked);
             EventLog.Close ();
             Application.Current.Shutdown();            
         }
