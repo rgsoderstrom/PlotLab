@@ -160,6 +160,10 @@ namespace Main
                     for (int j = 0; j<mat.Rows; j++)
                     {
                         PLVariable v = mat.Get (j, col);
+
+                        if (results is PLRMatrix && v is PLComplex)
+                            results = new PLCMatrix (results as PLRMatrix);
+
                         results.Set (put++, col, v);
                     }
                 }
@@ -201,7 +205,7 @@ namespace Main
                 cols += elements [i].Cols;
 
             PLMatrix results;
-            
+
             if (elements [0] is PLComplex || elements [0] is PLCMatrix)
                 results = new PLCMatrix (rows, cols);
             else
@@ -230,6 +234,10 @@ namespace Main
                     for (int j = 0; j<mat.Cols; j++)
                     {
                         PLVariable v = mat.Get (row, j);
+
+                        if (results is PLRMatrix && v is PLComplex)
+                            results = new PLCMatrix (results as PLRMatrix);
+
                         results.Set (row, put++, v);
                     }
                 }

@@ -434,6 +434,24 @@ namespace PLCommon
     {
         public CommonMath.CMatrix Data;
 
+
+        public PLCMatrix (PLRMatrix src)
+        {
+            Data = new CMatrix (src.Rows, src.Cols);
+
+            for (int i=0; i<src.Rows; i++)
+            { 
+                for (int j=0; j<src.Cols; j++)
+                { 
+                    Data [i, j].Real = src [i, j];
+                    Data [i, j].Imag = 0;
+                }
+            }
+        }
+
+
+
+
         public PLCMatrix (int r, int c)
         {
             Data = new CMatrix (r, c);
