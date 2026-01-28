@@ -96,7 +96,15 @@ namespace Main
                 // if requested edit history file after Plotlab exits
                 if (editOnClose)
                 {
-                    System.Diagnostics.Process.Start (UserConsole.HistoryFileDirectory + "\\" + historyFileName);
+                    try
+                    {
+                        System.Diagnostics.Process.Start (UserConsole.HistoryFileDirectory + "\\" + historyFileName);
+                    }
+
+                    catch (Exception ex)
+                    {
+                        EventLog.WriteLine ("Exception editing history file: " + ex.Message);
+                    }
                 }
             }
 
