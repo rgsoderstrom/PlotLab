@@ -227,6 +227,9 @@ namespace PLWorkspace
 
             else if (iValue != null)
                 mat [tlcRow - 1, tlcCol - 1] = iValue.Data;
+
+            else
+                throw new Exception ("OverwriteSubmatrix error");
         }
 
         //*****************************************************************************************
