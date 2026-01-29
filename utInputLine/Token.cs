@@ -8,6 +8,7 @@ namespace Main
 {
     //***************************************************************************************************
 
+    [Serializable]
     public class Token
     {
 	    public TokenType       type;

@@ -13,6 +13,7 @@ using System.Xml.Linq;
 
 namespace Main
 {
+    [Serializable]
     public class AnnotatedChar
     {
         // private members
@@ -121,7 +122,7 @@ namespace Main
         //**********************************************************************************
 
         // all charcters in any operator: oneChar, twoChar, unary, transpose
-        static List<char> Operators = new List<char> () {';', '\'', '.', '^', '*', '/', '+', '-', '=', '&', '|', '>', '<', '~' };
+        static List<char> Operators = new List<char> () {';', ':', '\'', '.', '^', '*', '/', '+', '-', '=', '&', '|', '>', '<', '~' };
 
         static public bool IsTwoCharOpStr (string s) {return twoCharBinaryOperators.Contains (s);}
         static List<string> twoCharBinaryOperators = new List<string> () {".*", "./", ".^", "&&", "||", "~=", "==", ">=", "<="};

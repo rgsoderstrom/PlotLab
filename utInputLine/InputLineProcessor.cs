@@ -30,24 +30,21 @@ namespace Main
         //**************************************************************************************
         //**************************************************************************************
 
-        public void ParseOneInputLine (string                   inputLine)
-                                       //ref List<string>         statements)  
+        public List<List<Token>> ParseOneInputLine (string inputLine)
         {
+            // One List<Token> for each input statement. Since a line can contain
+            // more than one statement, we may need to return more than one list
+            List<List<Token>> TokenLists = new List<List<Token>> ();
+
             try
             { 
                 string text = RemovePromptAndComments (inputLine);
 
                 if (text.Length == 0)
-                    return;
+                    return TokenLists;
 
                 text = SqueezeConsecutiveSpaces (text);
-
-                //Console.WriteLine ("===========================================\n");
-
-                //Console.WriteLine (text + "\n");
-
                 AnnotatedString annotated = new AnnotatedString (text);
-                //Console.WriteLine (annotated.ToString () + "\n");
 
                 // Split compound lines like:
                 // a = 1; b = 2; c = 3;
@@ -63,30 +60,27 @@ namespace Main
 
                 foreach (AnnotatedString annotatedText in annotated2)
                 {
-                    Print ("----------------------------------------");
+                    //Print ("----------------------------------------");
 
-                    Console.WriteLine (annotatedText);
-                    Console.WriteLine ();
+                    //Console.WriteLine (annotatedText);
+                    //Console.WriteLine ();
 
-                    List<Token> tokens = parser.StringToTokens (annotatedText, workspace, library, files);
+                    List<Token> statementTokens = parser.StringToTokens (annotatedText, workspace, library, files);
+                    TokenLists.Add (statementTokens);
 
-                    Print (text);
+                    //Print (text);
 
-                    foreach (Token tok in tokens)
-                        Print (tok.ToString ());
+                    //foreach (Token tok in statementTokens)
+                    //    Print (tok.ToString ());
                 }
-
-
-
             }
 
             catch (Exception ex)
             {
-                string st = ex.StackTrace;
-
                 Console.WriteLine ("Exception in ParseOneInputLine: " + ex.Message);
-             //   Console.WriteLine ("Exception in ParseOneInputLine: " + ex.StackTrace);
             }
+
+            return TokenLists;
         }
     }
 }

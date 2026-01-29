@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace Main
 {
+    [Serializable]
     public class AnnotatedString
     {
         // private members

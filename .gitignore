@@ -13,7 +13,7 @@ PLKernel/
 **/[Pp]ackages/*
 !**[Pp]ackages/build
 samples*.m
-
+*.bin
 
 
 

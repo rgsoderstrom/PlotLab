@@ -284,7 +284,9 @@ namespace Main
                         break;
                     }
 
-                    default: throw new Exception ("Token parsing error");
+                    default: throw new Exception ("Token parsing error: " + 
+                                                  " " + initial [getIndex+1].type +
+                                                  " " + initial [getIndex+1].annotatedText.Raw);
                 }
             }
         }
