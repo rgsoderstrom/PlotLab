@@ -13,9 +13,9 @@ namespace Main
     [Serializable]
     internal class SerializedTokens
     {
-        public readonly List<Token> tokens; 
+        public readonly List<IToken> tokens; 
 
-        public SerializedTokens (List<Token> src)
+        public SerializedTokens (List<IToken> src)
         {
             tokens = src;
         }

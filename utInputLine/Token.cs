@@ -8,8 +8,14 @@ namespace Main
 {
     //***************************************************************************************************
 
+    public interface IToken
+    {
+        TokenType Type {get ; set ;}
+        AnnotatedString AnnotatedText {get ;}
+    }
+
     [Serializable]
-    public class Token
+    public class Token : IToken
     {
 	    private          TokenType       type;
 	    private readonly AnnotatedString annotatedText;

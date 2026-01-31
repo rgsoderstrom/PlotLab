@@ -35,23 +35,22 @@ namespace Main
 
         //*****************************************************************************************************
 
-        public List<Token> StringToTokens (AnnotatedString expression, IWorkspace workspace, ILibrary lib, IFileSystem files)
+        public List<IToken> StringToTokens (AnnotatedString expression, IWorkspace workspace, ILibrary lib, IFileSystem files)
         {
-            List<Token> tokens = ParsingPassOne (expression);
+            List<IToken> tokens = ParsingPassOne (expression);
             tokens = ParsingPassTwo (tokens, workspace, lib, files);
             return tokens;
         }
 
         //*****************************************************************************************************
-
         //
         // ParsingPassOne
         //
 
-        internal List<Token> ParsingPassOne (AnnotatedString expression)
+        internal List<IToken> ParsingPassOne (AnnotatedString expression)
         {
-            List<Token> tokens = new List<Token> ();
-            Token CurrentToken = null;
+            List<IToken> tokens = new List<IToken> ();
+            IToken CurrentToken = null;
 
             //
             // catch some obvious errors
@@ -185,7 +184,7 @@ namespace Main
 
         //*************************************************************************************************
 
-        static void ExitProcessing (List<Token> tokens, ref Token current, ParsingStatus status)
+        static void ExitProcessing (List<IToken> tokens, ref IToken current, ParsingStatus status)
         {
             if (current != null)
             {
@@ -196,7 +195,7 @@ namespace Main
 
         //*************************************************************************************************
 
-        static bool AlphanumericProcessing (List<Token> tokens, ref Token token, ParsingStatus status)
+        static bool AlphanumericProcessing (List<IToken> tokens, ref IToken token, ParsingStatus status)
         {
             bool accepted = false;
 
@@ -229,7 +228,7 @@ namespace Main
 
         //*************************************************************************************************
 
-        static bool OperatorProcessing (List<Token> tokens, ref Token token, ParsingStatus status)
+        static bool OperatorProcessing (List<IToken> tokens, ref IToken token, ParsingStatus status)
         {
           //  Console.WriteLine ("Operator, " + status.currentChar);
 
@@ -260,7 +259,7 @@ namespace Main
             return accepted;
         }
 
-        static bool TwoCharOperatorProcessing (List<Token> tokens, ref Token token, ParsingStatus status)
+        static bool TwoCharOperatorProcessing (List<IToken> tokens, ref IToken token, ParsingStatus status)
         {
           //  Console.WriteLine ("Operator, " + status.currentChar);
 
@@ -293,7 +292,7 @@ namespace Main
 
         //*************************************************************************************************
 
-        static bool TransposeProcessing (List<Token> tokens, ref Token token, ParsingStatus status)
+        static bool TransposeProcessing (List<IToken> tokens, ref IToken token, ParsingStatus status)
         {
           //  Console.WriteLine ("Transpose, " + status.currentChar);
 
@@ -305,7 +304,7 @@ namespace Main
             return true;
         }
 
-        static bool SupressOutputProcessing (List<Token> tokens, ref Token token, ParsingStatus status)
+        static bool SupressOutputProcessing (List<IToken> tokens, ref IToken token, ParsingStatus status)
         {
           //  Console.WriteLine ("SupressOutputProcessing, " + status.currentChar);
 
@@ -319,7 +318,7 @@ namespace Main
 
         //*************************************************************************************************
 
-        static bool NumberProcessing (List<Token> tokens, ref Token current, ParsingStatus status)
+        static bool NumberProcessing (List<IToken> tokens, ref IToken current, ParsingStatus status)
         {
            // Console.WriteLine ("Number, " + status.currentChar);
 
@@ -349,12 +348,11 @@ namespace Main
             return accepted;
         }
 
-
-
+        //*************************************************************************************************
 
         static private int quoteNestingLevel = -1;
 
-        static bool StringProcessing (List<Token> tokens, ref Token token, ParsingStatus status)
+        static bool StringProcessing (List<IToken> tokens, ref IToken token, ParsingStatus status)
         {
             //Console.WriteLine ("String, " + status.currentChar);
 
@@ -405,7 +403,7 @@ namespace Main
 
         static int parenthesisNesting; // nesting when token created
 
-        static bool ParenthesisProcessing (List<Token> tokens, ref Token token, ParsingStatus status)
+        static bool ParenthesisProcessing (List<IToken> tokens, ref IToken token, ParsingStatus status)
         {
             //Console.WriteLine ("Parenthesis, " + status.currentChar);
 
@@ -440,7 +438,7 @@ namespace Main
 
         static int bracketNesting; // nesting when token created
 
-        static bool BracketProcessing (List<Token> tokens, ref Token token, ParsingStatus status)
+        static bool BracketProcessing (List<IToken> tokens, ref IToken token, ParsingStatus status)
         {
          //   Console.WriteLine ("Bracket, " + status.currentChar);
 
@@ -472,9 +470,3 @@ namespace Main
         }
     }
 }
-
-
-
-
-
-

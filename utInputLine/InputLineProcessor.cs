@@ -30,11 +30,11 @@ namespace Main
         //**************************************************************************************
         //**************************************************************************************
 
-        public List<List<Token>> ParseOneInputLine (string inputLine)
+        public List<List<IToken>> ParseOneInputLine (string inputLine)
         {
             // One List<Token> for each input statement. Since a line can contain
             // more than one statement, we may need to return more than one list
-            List<List<Token>> TokenLists = new List<List<Token>> ();
+            List<List<IToken>> TokenLists = new List<List<IToken>> ();
 
             try
             { 
@@ -65,7 +65,7 @@ namespace Main
                     //Console.WriteLine (annotatedText);
                     //Console.WriteLine ();
 
-                    List<Token> statementTokens = parser.StringToTokens (annotatedText, workspace, library, files);
+                    List<IToken> statementTokens = parser.StringToTokens (annotatedText, workspace, library, files);
                     TokenLists.Add (statementTokens);
 
                     //Print (text);

@@ -30,7 +30,7 @@ namespace utInputLine
         {
             try
             {
-                List<List<Token>> TokensForFileLines = new List<List<Token>> ();
+                List<List<IToken>> TokensForFileLines = new List<List<IToken>> ();
 
                 InputLineProcessor inputProcessor = new InputLineProcessor (workspace, library, fileSystem, Print);
 
@@ -41,9 +41,9 @@ namespace utInputLine
                 {
                     if (raw.Length > 0)
                     {
-                        List<List<Token>> tok = inputProcessor.ParseOneInputLine (raw);
+                        List<List<IToken>> tok = inputProcessor.ParseOneInputLine (raw);
                         
-                        foreach (List<Token> lt in tok)
+                        foreach (List<IToken> lt in tok)
                             TokensForFileLines.Add (lt);
                     }
                 }
@@ -55,9 +55,9 @@ namespace utInputLine
                 //
                 int fileCounter = 1;
 
-                foreach (List<Token> lt in TokensForFileLines)
+                foreach (List<IToken> lt in TokensForFileLines)
                 {
-                    foreach (Token tok in lt)
+                    foreach (IToken tok in lt)
                         Print (tok.ToString ());
 
                     Print ("=======================================");
