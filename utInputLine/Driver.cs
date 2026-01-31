@@ -14,8 +14,8 @@ namespace utInputLine
 {
     class Driver
     {
-        static readonly string InputMFile = @"D:\From_C_Visual Studio 2022\Visual Studio 2022\Projects\PlotLab\Examples\InputLineTests.m";
-
+        static readonly string InputMFileName = @"D:\From_C_Visual Studio 2022\Visual Studio 2022\Projects\PlotLab\Examples\InputLineTests.m";
+        static readonly string OutputFileName = "../../listOfTokens{0}.bin"; // passed to string.Format to insert number
 
         private static readonly Workspace  workspace  = new Workspace ();
         private static readonly Library    library    = new Library ();
@@ -34,7 +34,7 @@ namespace utInputLine
 
                 InputLineProcessor inputProcessor = new InputLineProcessor (workspace, library, fileSystem, Print);
 
-                StreamReader inputFile = new StreamReader (InputMFile);
+                StreamReader inputFile = new StreamReader (InputMFileName);
                 string raw;
 
                 while ((raw = inputFile.ReadLine ()) != null)
@@ -53,6 +53,8 @@ namespace utInputLine
                 //
                 // print results to console and serialize to a file
                 //
+                int fileCounter = 1;
+
                 foreach (List<Token> lt in TokensForFileLines)
                 {
                     foreach (Token tok in lt)
@@ -62,10 +64,12 @@ namespace utInputLine
 
                     SerializedTokens listOfTokens = new SerializedTokens (lt);
 
-                    StreamWriter tokenWriter = new StreamWriter ("../../listOfTokens.bin");
-                    BinaryFormatter b = new BinaryFormatter();
+                  //  Console.WriteLine (string.Format (OutputFileName, fileCounter++));
+
+                    StreamWriter tokenWriter = new StreamWriter (string.Format (OutputFileName, fileCounter++));
+                    BinaryFormatter b = new BinaryFormatter ();
                     b.Serialize (tokenWriter.BaseStream, listOfTokens);
-                    tokenWriter.Close();
+                    tokenWriter.Close ();
                 }
             }
 
