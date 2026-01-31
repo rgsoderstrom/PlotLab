@@ -138,7 +138,7 @@ namespace Main
 
                     case ParsingState.Error:
                         if      (CurrentToken == null)       throw new Exception (string.Format ("Parsing error, CurrentToken == null"));
-                        else if (CurrentToken.annotatedText != null) throw new Exception (string.Format ("Parsing error, Text = {0}, char = {1}", CurrentToken.annotatedText, status.currentChar));
+                        else if (CurrentToken.AnnotatedText != null) throw new Exception (string.Format ("Parsing error, Text = {0}, char = {1}", CurrentToken.AnnotatedText, status.currentChar));
                         else                                 throw new Exception (string.Format ("Parsing error, atext == null, char = {0}", status.currentChar));
 
                     default:
@@ -212,7 +212,7 @@ namespace Main
             { 
                 if (status.currentChar.IsAlpha || status.currentChar.IsNumber)
                 {
-                    token.annotatedText.Append (status.currentChar);
+                    token.AnnotatedText.Append (status.currentChar);
                     accepted = true;
                 }
                 else
@@ -245,7 +245,7 @@ namespace Main
             {
                 if (status.currentChar.IsOperator)
                 {
-                    token.annotatedText.Append (status.currentChar);
+                    token.AnnotatedText.Append (status.currentChar);
                     accepted = true; 
                 }
 
@@ -276,7 +276,7 @@ namespace Main
             {
                 if (status.currentChar.IsTwoCharOp)
                 {
-                    token.annotatedText.Append (status.currentChar);
+                    token.AnnotatedText.Append (status.currentChar);
                     accepted = true; 
                 }
 
@@ -335,7 +335,7 @@ namespace Main
             {
                 if (status.currentChar.IsNumber)// ||  status.currentChar.IsDecimal || status.currentChar.IsExponential)
                 {
-                    current.annotatedText.Append (status.currentChar);//.Character;
+                    current.AnnotatedText.Append (status.currentChar);//.Character;
                     accepted = true;
                 }
                 else
@@ -371,7 +371,7 @@ namespace Main
             { 
                 if (status.currentChar.QuoteLevel >= quoteNestingLevel)
                 {
-                    token.annotatedText.Append (status.currentChar);
+                    token.AnnotatedText.Append (status.currentChar);
                     accepted = true;
                 }
                 else
@@ -422,7 +422,7 @@ namespace Main
             { 
                 if (status.currentChar.ParenLevel >= parenthesisNesting)
                 {
-                    token.annotatedText.Append (status.currentChar);
+                    token.AnnotatedText.Append (status.currentChar);
                     accepted = true;
                 }
                 else
@@ -457,7 +457,7 @@ namespace Main
             { 
                 if (status.currentChar.BracketLevel >= bracketNesting)
                 {
-                    token.annotatedText.Append (status.currentChar);
+                    token.AnnotatedText.Append (status.currentChar);
                     accepted = true;
                 }
                 else

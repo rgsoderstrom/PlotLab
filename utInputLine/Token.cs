@@ -11,8 +11,11 @@ namespace Main
     [Serializable]
     public class Token
     {
-	    public TokenType       type;
-	    public AnnotatedString annotatedText;
+	    private          TokenType       type;
+	    private readonly AnnotatedString annotatedText;
+
+        public TokenType Type {get {return type;} set {type = value;}}
+        public AnnotatedString AnnotatedText {get {return annotatedText;}}
 
         public Token (TokenType ty, AnnotatedChar   txt) {type = ty; annotatedText = new AnnotatedString (txt);}
         public Token (TokenType ty, AnnotatedString txt) {type = ty; annotatedText = txt;}

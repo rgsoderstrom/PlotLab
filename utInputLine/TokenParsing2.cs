@@ -21,8 +21,6 @@ namespace Main
 
             edited = BindUnaryOperators (edited); // -, A => (-1 * A), -, 7 => -7
 
-            //            edited = LookForTwoCharOperators (edited); // &, & => &&
-
             return edited;
         }
 
@@ -35,21 +33,21 @@ namespace Main
         {
             for (int i = 0; i<initial.Count; i++)
             {
-                if (initial [i].type == TokenType.Alphanumeric)
+                if (initial [i].Type == TokenType.Alphanumeric)
                 {
-                    if (workspace.IsDefined (initial [i].annotatedText.Raw))
-                        initial [i].type = TokenType.VariableName;
+                    if (workspace.IsDefined (initial [i].AnnotatedText.Raw))
+                        initial [i].Type = TokenType.VariableName;
 
-                    else if (library.IsDefined (initial [i].annotatedText.Raw))
-                        initial [i].type = TokenType.FunctionName;
+                    else if (library.IsDefined (initial [i].AnnotatedText.Raw))
+                        initial [i].Type = TokenType.FunctionName;
 
-                    else if (files.IsFunctionFile (initial [i].annotatedText.Raw))
-                        initial [i].type = TokenType.FunctionName;
+                    else if (files.IsFunctionFile (initial [i].AnnotatedText.Raw))
+                        initial [i].Type = TokenType.FunctionName;
 
-                    else if (files.IsScriptFile (initial [i].annotatedText.Raw))
-                        initial [i].type = TokenType.ScriptFile;
+                    else if (files.IsScriptFile (initial [i].AnnotatedText.Raw))
+                        initial [i].Type = TokenType.ScriptFile;
 
-                    else initial [i].type = TokenType.Undefined;
+                    else initial [i].Type = TokenType.Undefined;
                 }
             }
 
@@ -69,29 +67,29 @@ namespace Main
 
             for (int i = 0; i<tokens.Count; i++)
             {
-                if (tokens [i].type == TokenType.Parens)
+                if (tokens [i].Type == TokenType.Parens)
                 {
                     if (edited.Count == 0) 
                     {
-                        Token tok = new Token (TokenType.GroupingParens, tokens [i].annotatedText);
+                        Token tok = new Token (TokenType.GroupingParens, tokens [i].AnnotatedText);
                         edited.Add (tok);
                     }
                     else // look at previous type to see what type these parens are
                     {
-                        switch (edited [edited.Count-1].type)
+                        switch (edited [edited.Count-1].Type)
                         {
                             case TokenType.VariableName:
-                                Token tok1 = new Token (TokenType.SubmatrixParens, tokens [i].annotatedText);
+                                Token tok1 = new Token (TokenType.SubmatrixParens, tokens [i].AnnotatedText);
                                 edited.Add (tok1);
                                 break;
 
                             case TokenType.FunctionName:
-                                Token tok2 = new Token (TokenType.FunctionParens, tokens [i].annotatedText);
+                                Token tok2 = new Token (TokenType.FunctionParens, tokens [i].AnnotatedText);
                                 edited.Add (tok2);
                                 break;
 
                             default:
-                                Token tok3 = new Token (TokenType.GroupingParens, tokens [i].annotatedText);
+                                Token tok3 = new Token (TokenType.GroupingParens, tokens [i].AnnotatedText);
                                 edited.Add (tok3);
                                 break;
                         }
@@ -121,9 +119,9 @@ namespace Main
 
             for (int i = 0; i<initial.Count; i++)
             {
-                if (initial [i].type == TokenType.Brackets)
+                if (initial [i].Type == TokenType.Brackets)
                 {
-                    AnnotatedString tokenText = initial [i].annotatedText;
+                    AnnotatedString tokenText = initial [i].AnnotatedText;
                     char separatorFound = NoneFound;
 
                     int initalNesting = tokenText [0].NestingLevel;
@@ -148,22 +146,22 @@ namespace Main
                     switch (separatorFound)
                     {
                         case ':':
-                            initial [i].type = TokenType.BracketsColon;
+                            initial [i].Type = TokenType.BracketsColon;
                             break;
 
                         case ';':
-                            initial [i].type = TokenType.BracketsSemi;
+                            initial [i].Type = TokenType.BracketsSemi;
                             break;
 
                         case ',':
-                            initial [i].type = TokenType.BracketsComma;
+                            initial [i].Type = TokenType.BracketsComma;
                             break;
 
              //           case ' ':
                //             break;
 
                         case NoneFound:
-                            initial [i].type = TokenType.BracketsSpace;
+                            initial [i].Type = TokenType.BracketsSpace;
                             break;
 
                         default:
@@ -181,7 +179,7 @@ namespace Main
 
         // replace transpose operator by function call
 
-        private bool IsTransposeToken (Token tok) {return tok.type == TokenType.Transpose;}
+        private bool IsTransposeToken (Token tok) {return tok.Type == TokenType.Transpose;}
 
         private List<Token> ReplaceTransposeOps (List<Token> initial)
         {
@@ -215,8 +213,8 @@ namespace Main
                 edited.Add (new Token (TokenType.FunctionName, new AnnotatedString ("transpose"))); // NESTING LEVELS NEEDED?
 
                 // add parens unless outer level is already parens                
-                if (initial [get].type != TokenType.GroupingParens) edited.Add (new Token (TokenType.FunctionParens, initial [get].annotatedText.AddOuterParens ()));
-                else                                                edited.Add (new Token (TokenType.FunctionParens, initial [get].annotatedText));
+                if (initial [get].Type != TokenType.GroupingParens) edited.Add (new Token (TokenType.FunctionParens, initial [get].AnnotatedText.AddOuterParens ()));
+                else                                                edited.Add (new Token (TokenType.FunctionParens, initial [get].AnnotatedText));
 
                 get += 2;
             }
@@ -237,15 +235,15 @@ namespace Main
 
         private void UnaryTokenMover (List<Token> initial, List<Token> edited, ref int getIndex)
         {
-            if (initial [getIndex].type == TokenType.Operator)
+            if (initial [getIndex].Type == TokenType.Operator)
             {
-                switch (initial [getIndex+1].type)
+                switch (initial [getIndex+1].Type)
                 {
                     case TokenType.Numeric:
                     { 
-                        if (initial [getIndex].annotatedText [0].IsPlusMinus)
+                        if (initial [getIndex].AnnotatedText [0].IsPlusMinus)
                         { 
-                            Token t1 = new Token (TokenType.Numeric, initial [getIndex].annotatedText + initial [getIndex + 1].annotatedText);
+                            Token t1 = new Token (TokenType.Numeric, initial [getIndex].AnnotatedText + initial [getIndex + 1].AnnotatedText);
                             edited.Add (t1);
                             getIndex += 2;
                         }
@@ -260,24 +258,24 @@ namespace Main
                     case TokenType.BracketsSpace:
                     case TokenType.FunctionName:
                     {
-                        if (initial [getIndex].annotatedText [0].IsPlusMinus)
+                        if (initial [getIndex].AnnotatedText [0].IsPlusMinus)
                         { 
-                            Token t1 = new Token (TokenType.Numeric, initial [getIndex].annotatedText + new AnnotatedString ("1"));
+                            Token t1 = new Token (TokenType.Numeric, initial [getIndex].AnnotatedText + new AnnotatedString ("1"));
                             edited.Add (t1);
                             Token t2 = new Token (TokenType.Operator, new AnnotatedString ("*"));
                             edited.Add (t2);
                             edited.Add (initial [getIndex+1]);
                             getIndex += 2;
                         }
-                        else if (initial [getIndex].annotatedText [0].IsTilde) // "not" function
+                        else if (initial [getIndex].AnnotatedText [0].IsTilde) // "not" function
                         {
                             edited.Add (new Token (TokenType.FunctionName, new AnnotatedString ("not"))); // NESTING LEVELS NEEDED?
 
                             // add parens unless outer level is already parens                
-                            if (initial [getIndex].type != TokenType.GroupingParens) 
-                                edited.Add (new Token (TokenType.FunctionParens, initial [getIndex + 1].annotatedText.AddOuterParens ()));
+                            if (initial [getIndex].Type != TokenType.GroupingParens) 
+                                edited.Add (new Token (TokenType.FunctionParens, initial [getIndex + 1].AnnotatedText.AddOuterParens ()));
                             else                                                     
-                                edited.Add (new Token (TokenType.FunctionParens, initial [getIndex + 1].annotatedText));
+                                edited.Add (new Token (TokenType.FunctionParens, initial [getIndex + 1].AnnotatedText));
 
                             getIndex += 2;
                         }
@@ -285,14 +283,14 @@ namespace Main
                     }
 
                     default: throw new Exception ("Token parsing error: " + 
-                                                  " " + initial [getIndex+1].type +
-                                                  " " + initial [getIndex+1].annotatedText.Raw);
+                                                  " " + initial [getIndex+1].Type +
+                                                  " " + initial [getIndex+1].AnnotatedText.Raw);
                 }
             }
         }
 
-     //   private bool IsUnaryOpToken (Token tok) {return tok.type == TokenType.Operator && tok.annotatedText [0].IsUnaryOp;}
-        private bool IsOpToken (Token tok) {return tok.type == TokenType.Operator;}
+     //   private bool IsUnaryOpToken (Token tok) {return tok.Type == TokenType.Operator && tok.AnnotatedText [0].IsUnaryOp;}
+        private bool IsOpToken (Token tok) {return tok.Type == TokenType.Operator;}
 
         List<Token> BindUnaryOperators (List<Token> initial)
         {
@@ -369,11 +367,11 @@ namespace Main
 
             //for (int i = 0; i<initial.Count-1; i++)
             //{
-            //    if (initial [i].type != TokenType.Operator)
+            //    if (initial [i].Type != TokenType.Operator)
             //        edited.Add (initial [i]);
             //    else
             //    {
-            //        if (initial [i+1].type != TokenType.Operator)
+            //        if (initial [i+1].Type != TokenType.Operator)
             //            edited.Add (initial [i]);
 
             //        else // found 2 consecutive operator tokens
@@ -390,8 +388,8 @@ namespace Main
                 //            {
                 //                try
                 //                {
-                //                    TokenType im2 = i >= 2 ? initial [i-2].type : TokenType.ArithmeticOperator;
-                //                    TokenType im1 = initial [i-1].type;
+                //                    TokenType im2 = i >= 2 ? initial [i-2].Type : TokenType.ArithmeticOperator;
+                //                    TokenType im1 = initial [i-1].Type;
 
                 //                    if (im2 == TokenType.ArithmeticOperator && im1 == TokenType.ArithmeticOperator)
                 //                    {
@@ -406,7 +404,7 @@ namespace Main
                 //                                case '-':
                 //                                {
                 //                                    string op = "";
-                //                                    TokenType ty = initial [i].type;
+                //                                    TokenType ty = initial [i].Type;
 
                 //                                    switch (ty)
                 //                                    {
@@ -485,8 +483,8 @@ namespace Main
 
         //            for (int i=0; i<initial.Count-1; i++)
         //            {
-        //                TokenType t0 = initial [i].type;
-        //                TokenType t1 = initial [i+1].type;
+        //                TokenType t0 = initial [i].Type;
+        //                TokenType t1 = initial [i+1].Type;
 
         //                if ((t0 == TokenType.ArithmeticOperator || t0 == TokenType.Decimal) && t1 == TokenType.ArithmeticOperator)
         //                {
