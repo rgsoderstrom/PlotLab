@@ -44,7 +44,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InputLineProcessor.cs" />
-    <Compile Include="SerializedTokens.cs" />
     <Compile Include="TokenTypes.cs" />
     <Compile Include="InputLineUtils.cs" />
     <Compile Include="Interfaces\ICmndHistory.cs" />

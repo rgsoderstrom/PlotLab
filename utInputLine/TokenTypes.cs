@@ -40,5 +40,13 @@ namespace Main
         BracketsSemi,   // [a ; b ; c ; d] or [1 2 3 ; 4 5 6]
         BracketsComma,  // [1, 2, 3]
         BracketsSpace,  // [1 2 3]
+
+        Pair, // for class TokenPair
+    };
+
+    public enum TokenPairType
+    {
+        Function,
+        Submatrix,
     };
 }

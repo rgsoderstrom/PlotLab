@@ -21,10 +21,14 @@ namespace Main
 
             edited = BindUnaryOperators (edited); // -, A => (-1 * A), -, 7 => -7
 
+            edited = CombineTokensIntoPairs (edited); // combine FuncName (FuncArgs) or Matrix [range] into TokenPairs
+
             return edited;
         }
 
         //*************************************************************************************************
+
+        // Assign a more specific type to an Alphanumeric
 
         List<IToken> LookupAlphanumerics (List<IToken> initial,
                                           IWorkspace workspace,
@@ -174,7 +178,6 @@ namespace Main
             return initial;
         }
 
-
         //*************************************************************************************************
 
         // replace transpose operator by function call
@@ -289,9 +292,11 @@ namespace Main
             }
         }
 
-     //   private bool IsUnaryOpToken (Token tok) {return tok.Type == TokenType.Operator && tok.AnnotatedText [0].IsUnaryOp;}
-        private bool IsOpToken (IToken tok) {return tok.Type == TokenType.Operator;}
+       // private bool IsOpToken (IToken tok) {return tok.Type == TokenType.Operator;}
 
+        //
+        //
+        //
         List<IToken> BindUnaryOperators (List<IToken> initial)
         {
             List<IToken> edited = new List<IToken> ();
@@ -302,7 +307,8 @@ namespace Main
 
             while (start < initial.Count)
             {
-                int index = initial.FindIndex (start, IsOpToken);// IsUnaryOpToken);
+                int index = initial.FindIndex (start, delegate (IToken tok) {return tok.Type == TokenType.Operator;});
+             // int index = initial.FindIndex (start, IsOpToken);
 
                 if (index == -1)
                     break;
@@ -356,6 +362,46 @@ namespace Main
 
                 return edited;
         }
+
+        //*************************************************************************************************
+
+        private List<IToken> CombineTokensIntoPairs (List<IToken> initial)
+        {
+            List<IToken> edited = new List<IToken> ();
+
+            for (int i=0; i<initial.Count-1; i++)
+            {
+                switch (initial [i].Type)
+                {
+                    case TokenType.VariableName:
+                        if (initial [i+1].Type == TokenType.SubmatrixParens)
+                        {
+                            TokenPair submatPair = new TokenPair (TokenPairType.Submatrix, initial [i], initial [i+1]);
+                            edited.Add (submatPair);
+                            i++; // don't look at the parens token a second time
+                        }
+                        else
+                            edited.Add (initial [i]);
+                        break;
+
+                    case TokenType.FunctionName:
+                        if (initial [i+1].Type != TokenType.FunctionParens)
+                            throw new Exception ("Function name " + initial [i].AnnotatedText.Raw + " without arguments");
+
+                        TokenPair funcPair = new TokenPair (TokenPairType.Function, initial [i], initial [i+1]);
+                        edited.Add (funcPair);
+                        i++; // don't look at the function parens token a second time
+                        break;
+
+                    default:
+                        edited.Add (initial [i]);
+                        break;
+                }
+            }
+
+            return edited;
+        }
+
     }
 }
 
