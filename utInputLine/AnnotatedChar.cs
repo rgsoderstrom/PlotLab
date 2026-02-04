@@ -13,7 +13,6 @@ using System.Xml.Linq;
 
 namespace Main
 {
-    [Serializable]
     public class AnnotatedChar
     {
         // private members

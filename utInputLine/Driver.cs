@@ -15,7 +15,6 @@ namespace utInputLine
     class Driver
     {
         static readonly string InputMFileName = @"D:\From_C_Visual Studio 2022\Visual Studio 2022\Projects\PlotLab\Examples\InputLineTests.m";
-  //    static readonly string OutputFileName = "../../listOfTokens{0}.bin"; // passed to string.Format to insert number
 
         private static readonly Workspace  workspace  = new Workspace ();
         private static readonly Library    library    = new Library ();
@@ -51,9 +50,8 @@ namespace utInputLine
                 inputFile.Close ();
 
                 //
-                // print results to console and serialize to a file
+                // print results to console
                 //
-         //     int fileCounter = 1;
 
                 foreach (List<IToken> lt in TokensForFileLines)
                 {
