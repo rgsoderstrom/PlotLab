@@ -399,9 +399,12 @@ namespace Main
                 }
             }
 
+            // add last initial token if it isn't part of a token pair 
+            if ((initial [initial.Count - 1].Type != TokenType.SubmatrixParens) && (initial [initial.Count - 1].Type != TokenType.FunctionParens))
+                edited.Add (initial [initial.Count - 1]); 
+
             return edited;
         }
-
     }
 }
 
