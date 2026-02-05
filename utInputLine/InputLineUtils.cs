@@ -4,10 +4,6 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Reflection;
-
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Main
 {
@@ -19,7 +15,7 @@ namespace Main
 
         //**************************************************************************************
 
-        private string RemovePromptAndComments (string lineIn)
+        public static string RemovePromptAndComments (string lineIn)
         {
             string lineOut = lineIn.Trim (); // remove leading and trailing spaces
 
@@ -58,7 +54,7 @@ namespace Main
 
         //**************************************************************************************
 
-        private string SqueezeConsecutiveSpaces (string text)
+        public static string SqueezeConsecutiveSpaces (string text)
         {
             string results = "";
 
