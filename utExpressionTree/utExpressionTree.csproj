@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7108A760-15CA-4AE7-B09A-22A49B7D682C}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>utExpressionTree</RootNamespace>
+    <AssemblyName>utExpressionTree</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="..\utInputLine\AnnotatedChar.cs">
+      <Link>AnnotatedChar.cs</Link>
+    </Compile>
+    <Compile Include="..\utInputLine\AnnotatedString.cs">
+      <Link>AnnotatedString.cs</Link>
+    </Compile>
+    <Compile Include="..\utInputLine\InputLineProcessor.cs">
+      <Link>InputLineProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\utInputLine\InputLineUtils.cs">
+      <Link>InputLineUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\utInputLine\Interfaces\ICmndHistory.cs">
+      <Link>Interfaces\ICmndHistory.cs</Link>
+    </Compile>
+    <Compile Include="..\utInputLine\Interfaces\IFileSystem.cs">
+      <Link>Interfaces\IFileSystem.cs</Link>
+    </Compile>
+    <Compile Include="..\utInputLine\Interfaces\ILibrary.cs">
+      <Link>Interfaces\ILibrary.cs</Link>
+    </Compile>
+    <Compile Include="..\utInputLine\Interfaces\IWorkspace.cs">
+      <Link>Interfaces\IWorkspace.cs</Link>
+    </Compile>
+    <Compile Include="..\utInputLine\Stubs\CommandHistory.cs">
+      <Link>Stubs\CommandHistory.cs</Link>
+    </Compile>
+    <Compile Include="..\utInputLine\Stubs\FileSystem.cs">
+      <Link>Stubs\FileSystem.cs</Link>
+    </Compile>
+    <Compile Include="..\utInputLine\Stubs\Library.cs">
+      <Link>Stubs\Library.cs</Link>
+    </Compile>
+    <Compile Include="..\utInputLine\Stubs\Workspace.cs">
+      <Link>Stubs\Workspace.cs</Link>
+    </Compile>
+    <Compile Include="..\utInputLine\Token.cs">
+      <Link>Token.cs</Link>
+    </Compile>
+    <Compile Include="..\utInputLine\TokenParsing.cs">
+      <Link>TokenParsing.cs</Link>
+    </Compile>
+    <Compile Include="..\utInputLine\TokenParsing2.cs">
+      <Link>TokenParsing2.cs</Link>
+    </Compile>
+    <Compile Include="..\utInputLine\TokenTypes.cs">
+      <Link>TokenTypes.cs</Link>
+    </Compile>
+    <Compile Include="..\utInputLine\TokenUtils.cs">
+      <Link>TokenUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\utInputLine\TokenUtils2.cs">
+      <Link>TokenUtils2.cs</Link>
+    </Compile>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
