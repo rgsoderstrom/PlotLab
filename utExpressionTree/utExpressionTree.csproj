@@ -38,8 +38,18 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Common">
+      <HintPath>..\..\Common\bin\Debug\Common.dll</HintPath>
+    </Reference>
+    <Reference Include="CommonMath">
+      <HintPath>..\..\CommonMath\bin\Debug\CommonMath.dll</HintPath>
+    </Reference>
+    <Reference Include="PLCommon">
+      <HintPath>..\PLCommon\bin\Debug\PLCommon.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -120,6 +130,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ExpressionTree.cs" />
+    <Compile Include="ExpressionTreeNode.cs" />
+    <Compile Include="ExpressionTreeNodeBuilders.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

@@ -3,7 +3,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 
 using Main;
 
@@ -11,11 +14,11 @@ namespace utExpressionTree
 {
     public partial class MainWindow : Window
     {
-        static readonly string InputMFileName = @"D:\From_C_Visual Studio 2022\Visual Studio 2022\Projects\PlotLab\Examples\InputLineTests.m";
+        static readonly string InputMFileName = @"D:\From_C_Visual Studio 2022\Visual Studio 2022\Projects\PlotLab\Examples\ExpressionTreeTests.m";
 
-        private static readonly Workspace  workspace  = new Workspace ();
-        private static readonly Library    library    = new Library ();
-        private static readonly FileSystem fileSystem = new FileSystem ();
+        public static readonly Workspace  workspace  = new Workspace ();
+        public static readonly Library    library    = new Library ();
+        public static readonly FileSystem fileSystem = new FileSystem ();
 
         static void Print (string str)
         {
@@ -40,12 +43,33 @@ namespace utExpressionTree
                 {
                     if (raw.Length > 0)
                     {
-                       // List<List<IToken>> tok = inputProcessor.ParseOneInputLine (raw);
-                    
-                       //foreach (List<IToken> lt in tok)
-                        //    TokensForFileLines.Add (lt);
+                        string text = InputLineProcessor.RemovePromptAndComments (raw);
 
-                        Console.WriteLine (raw);
+                        if (text.Length == 0)
+                            continue;
+
+                        text = InputLineProcessor.SqueezeConsecutiveSpaces (text);
+                        AnnotatedString annotated = new AnnotatedString (text);
+
+                     // Print (annotated.ToString ());
+
+                        ExpressionTreeNode.Workspace  = workspace;
+                        ExpressionTreeNode.Library    = library;
+                        ExpressionTreeNode.FileSystem = fileSystem;
+                        ExpressionTreeNode.Print      = Print;
+
+                        ExpressionTree tree = new ExpressionTree (annotated);//, workspace, library, fileSystem, Print);
+
+                        //TreeView tv = new TreeView ();
+                        //tv.Items.Add (tree.TreeView ());
+                        //win.Content = tv;
+                        //win.Title = "Tree " + Counter;
+                        //win.Width = 400;
+                        //win.Height = 300;
+                        //win.Show ();
+
+
+
                     }
                 }
 
@@ -58,15 +82,5 @@ namespace utExpressionTree
             }
         }
 
-        //********************************************************************************
-        //
-        // Copied from utInputLine
-        //
-        private void InputLinesToTokens ()
-        { 
-            InputLineProcessor inputProcessor = new InputLineProcessor (workspace, library, fileSystem, Print);
-
-
-        }
     }
 }
