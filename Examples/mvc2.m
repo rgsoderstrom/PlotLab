@@ -5,7 +5,7 @@
 %figure (1); hold on ; set (1, 'Position', [100 10 750 550]);
 
 % D space
-figure (2); clf ; hold on ; set (2, 'Position', [1000 10 750 550]);
+figure (2); clf ; hold on ; % set (2, 'Position', [1000 10 750 550]);
 
 rs = linspace (0.25, 2, 4);
 ts = linspace (0, 2*pi, 20);

@@ -1,19 +1,15 @@
 
 
-% InputLine tests
-
-	z = [1 2 3 ; ...
-	     4 5 6 ; ...
-		 7 8 0];
-		 
-
-
-
+% ExpressionTreeTests - only use single-statement lines
 
 
  	z = 3 + 4 * sin (45);
 	% z = 3 + 4 * c123 (6);
 	% t1 = [1 2 3]' + (4 5 6)' + [7:9]' + dd' + c123;
+
+
+
+
 	
 	% strings
 	% y = 'asdf';
@@ -26,7 +22,7 @@
 	% b6 = (1, 2, 3, 4)';
 	% a4 = [1, sqrt (2), -3]'  ;  
 	% z2 = c123';
-	% z3 = dd3';	a4 = [1, sqrt (2), -3]'   
+	% z3 = dd3';  
 
 	% decimal
 	% z2 = .4;
