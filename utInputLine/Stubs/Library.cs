@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Main
 {
-    internal class Library : ILibrary
+    public class Library : ILibrary
     {
         List<string> builtInFunction = new List<string> () {"sin" , "log2", "sqrt", "sprintf"};
 

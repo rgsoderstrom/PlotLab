@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Main
 {
-    internal class Workspace : IWorkspace
+    public class Workspace : IWorkspace
     {
         List<string> definedVariables = new List<string> () {"a1" , "b12", "c123"};
 

@@ -23,6 +23,17 @@ namespace Main
 
         private ContextType overrideType;
 
+        //**************************************************************************
+
+        // Test for 2 AnnotatedChars having all same nesting levels
+        public static bool SameNesting (AnnotatedChar c1, AnnotatedChar c2)
+        {
+            return c1.quotelevel   == c2.quotelevel
+                && c1.bracketlevel == c2.bracketlevel
+                && c1.parenlevel   == c2.parenlevel
+                && c1.overrideType == c2.overrideType;
+        }
+
         //***************************************************************************
 
         internal enum ContextType {None, IsNumber, IsTwoCharOperator, IsTranspose, IsLetter, IsSupressOutput};
@@ -113,10 +124,10 @@ namespace Main
 
 
 
-        //      public bool IsExponent      {get {return character == '^';}}
-        //      public bool IsColon         {get {return character == ':';}}
+        public bool IsExponent      {get {return character == '^';}}
+        public bool IsColon         {get {return character == ':';}}
         public bool IsSemicolon     {get {return character == ';';}}
-        //      public bool IsComma         {get {return character == ',';}}
+        public bool IsComma         {get {return character == ',';}}
 
         //**********************************************************************************
 

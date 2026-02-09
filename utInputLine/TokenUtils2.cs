@@ -13,22 +13,22 @@ namespace Main
         // NestingLevel - called with each character in a string to find places outside of parens, strings or brackets
         //
 
-        static public readonly List<char> CanPreceedString = new List<char> () {'\0', ' ', ',' , '(', '='};
+        //static public readonly List<char> CanPreceedString = new List<char> () {'\0', ' ', ',' , '(', '='};
 
-        int  ParenNestingLevel   = 0;
-        int  BracketNestingLevel = 0;
-        int  QuoteNestingLevel   = 0; // never more than 1
-        char PrevCharacter       = '\0';
+        //int  ParenNestingLevel   = 0;
+        //int  BracketNestingLevel = 0;
+        //int  QuoteNestingLevel   = 0; // never more than 1
+        //char PrevCharacter       = '\0';
 
-        void ResetNestingLevel ()
-        {
-            ParenNestingLevel   = 0;
-            BracketNestingLevel = 0;
-            QuoteNestingLevel   = 0; // never more than 1
-            PrevCharacter       = '\0';
-        }
+        //void ResetNestingLevel ()
+        //{
+        //    ParenNestingLevel   = 0;
+        //    BracketNestingLevel = 0;
+        //    QuoteNestingLevel   = 0; // never more than 1
+        //    PrevCharacter       = '\0';
+        //}
         
-        int NestingLevel (char c)
+        int xxNestingLevel (char c)
         {
             ////
             //// parenthesis nesting level
@@ -85,47 +85,44 @@ namespace Main
         // SplitFunctionArgs
         //      - of the form (A, B, C)
         //
-        public List<string> SplitFunctionArgs (string str)
+        static public List<AnnotatedString> SplitFunctionArgs (AnnotatedString str)
         {
-            //string arguments;
+            // verify first character is an open paren and last is close paren
+            int lastIndex = str.Count - 1;
+            if (str [0].IsOpenParen          == false) throw new Exception ("Function arg syntax error at open paren: " + str.Raw);
+            if (str [lastIndex].IsCloseParen == false) throw new Exception ("Function arg syntax error at close paren: " + str.Raw);
+            
+            // copy first char to compare its nesting levels to subsequent characters
+            AnnotatedChar initial = str [0];
 
-            //// if outer parens, remove them
-            //if (TokenUtils.IsOpenParen (str [0]) && TokenUtils.IsCloseParen (str [str.Length - 1]))
-            //{
-            //    int index = str.LastIndexOf (')');
-            //    if (index == -1) throw new Exception ("Function arguments missing closing paren: " + str);
-            //    arguments = str.Remove (index);
+            // verify all nesting levels same at both ends
+            if (AnnotatedChar.SameNesting (str [0], str [lastIndex]) == false)
+                throw new Exception ("Function argument error: " + str.Raw);
 
-            //    index = arguments.IndexOf ('(');
-            //    if (index == -1) throw new Exception ("Function arguments missing opening paren: " + str);
-            //    arguments = arguments.Remove (0, index + 1);
-            //}
-            //else
-            //{
-            //    arguments = str;
-            //}
+            // find all commas at same nesting level as open paren. these are where we will start and end copying
+            List <int> copyEndpoints = new List<int> ();
+            copyEndpoints.Add (0); // start first copy here
 
+            // look for commas at same nesting level
+            for (int i=1; i<lastIndex; i++)
+                if (str [i].IsComma && AnnotatedChar.SameNesting (str [0], str [i]))
+                    copyEndpoints.Add (i);
 
-            List<string> args = new List<string> ();
+            copyEndpoints.Add (lastIndex); // end last copy here
 
-            //ResetNestingLevel ();
-            //int start = 0;
+            // do the copying
+            List<AnnotatedString> extractedArgs = new List<AnnotatedString> ();
 
-            //for (int i = 0; i<arguments.Length; i++)
-            //{
-            //    if (NestingLevel (arguments [i]) == 0)
-            //    {
-            //        if (TokenUtils.IsComma (arguments [i]))
-            //        {
-            //            args.Add (arguments.Substring (start, i - start));
-            //            start = i + 1;
-            //        }
-            //    }                
-            //}
+            for (int i=0; i<copyEndpoints.Count-1; i++)
+            {
+                int start = copyEndpoints [i] + 1;
+                int end   = copyEndpoints [i+1] - 1;
+                int count = end - start + 1;
+                AnnotatedString arg = str.TrimmedSubstring (start, count);
+                extractedArgs.Add (arg);
+            }
 
-            //args.Add (arguments.Substring (start, arguments.Length - start));
-
-            return args;
+            return extractedArgs;
         }
 
         //***********************************************************************************************************

@@ -13,7 +13,8 @@ namespace utTokens
 {
     internal class Driver
     {
-        static readonly string InputMFileName = @"D:\From_C_Visual Studio 2022\Visual Studio 2022\Projects\PlotLab\Examples\TokenTests.m";
+        static readonly string InputMFileName = @"D:\From_C_Visual Studio 2022\Visual Studio 2022\Projects\PlotLab\Examples\TokenUtilsTests.m";
+     // static readonly string InputMFileName = @"D:\From_C_Visual Studio 2022\Visual Studio 2022\Projects\PlotLab\Examples\TokenTests.m";
 
         private static readonly Workspace  workspace  = new Workspace ();
         private static readonly Library    library    = new Library ();
@@ -41,24 +42,28 @@ namespace utTokens
                     text = InputLineProcessor.SqueezeConsecutiveSpaces (text);
                     AnnotatedString annotated = new AnnotatedString (text);
 
-                    Print (annotated.ToString ());
+                    Print (annotated.ToString () + "\n");
+                    List<AnnotatedString> fargs = TokenParsing.SplitFunctionArgs (annotated);
 
-
-                    //
-                    // pass each annotated string to token processor
-                    //
-                    TokenParsing parser = new TokenParsing ();
-
-
-                    // NO SUPRESS OUTPUT
-
-
-                    List<IToken> statementTokens = parser.StringToTokens (annotated, workspace, library, fileSystem);
-
-                    foreach (IToken tok in statementTokens)
-                        Print (tok.ToString ());
+                    foreach (AnnotatedString AS in fargs)
+                        Print (AS.ToString () + "\n");
 
                     Print ("======================================");
+
+                    //******************************************************************************************************
+
+                    //Print (annotated.ToString ());
+
+                    ////
+                    //// pass each annotated string to token processor
+                    ////
+                    //TokenParsing parser = new TokenParsing ();
+                    //List<IToken> statementTokens = parser.StringToTokens (annotated, workspace, library, fileSystem);
+
+                    //foreach (IToken tok in statementTokens)
+                    //    Print (tok.ToString ());
+
+                    //Print ("======================================");
 
                 }
             }

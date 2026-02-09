@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace Main
 {
-    internal delegate void PrintFunction (string str);
+    public delegate void PrintFunction (string str);
 
     internal partial class InputLineProcessor
     {

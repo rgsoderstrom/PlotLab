@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Main
 {
-    internal class FileSystem : IFileSystem
+    public class FileSystem : IFileSystem
     {
         List<string> ScriptFiles   = new List<string> () {"Ex1" , "ShowSamples", "PlotTests"};
         List<string> FunctionFiles = new List<string> () {"F1Func" , "F2", "PlotVector"};

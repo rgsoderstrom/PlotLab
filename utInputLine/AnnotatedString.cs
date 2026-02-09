@@ -268,6 +268,32 @@ namespace Main
 
         //*******************************************************************
         //
+        // Return substring with leading and trailing spaces removed
+        //
+        public AnnotatedString TrimmedSubstring (int start, int count)
+        {
+            while (annotatedChars [start].IsWhitespace && count > 1)
+            {
+                start++;
+                count--;
+            }
+
+            while (annotatedChars [start + count - 1].IsWhitespace && count > 1)
+            {
+                count--;
+            }
+
+            return new AnnotatedString (annotatedChars, start, count);
+        }
+
+        // no trimming
+        public AnnotatedString Substring (int start, int count)
+        {
+            return new AnnotatedString (annotatedChars, start, count);
+        }
+
+        //*******************************************************************
+        //
         // Add outer parenthesis
         //
 
