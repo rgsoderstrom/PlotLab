@@ -15,70 +15,7 @@ namespace Main
 
         //static public readonly List<char> CanPreceedString = new List<char> () {'\0', ' ', ',' , '(', '='};
 
-        //int  ParenNestingLevel   = 0;
-        //int  BracketNestingLevel = 0;
-        //int  QuoteNestingLevel   = 0; // never more than 1
-        //char PrevCharacter       = '\0';
 
-        //void ResetNestingLevel ()
-        //{
-        //    ParenNestingLevel   = 0;
-        //    BracketNestingLevel = 0;
-        //    QuoteNestingLevel   = 0; // never more than 1
-        //    PrevCharacter       = '\0';
-        //}
-        
-        int xxNestingLevel (char c)
-        {
-            ////
-            //// parenthesis nesting level
-            ////
-            //if (TokenUtils.IsOpenParen (c))
-            //    ParenNestingLevel++;
-
-            //else if (TokenUtils.IsCloseParen (c))
-            //{
-            //    ParenNestingLevel--;
-
-            //    if (ParenNestingLevel < 0)
-            //        throw new Exception ("Parenthesis argument syntax error, extra closing paren");
-            //}
-
-            ////
-            //// bracket nesting level
-            ////
-            //else if (TokenUtils.IsOpenBracket (c))
-            //    BracketNestingLevel++;
-
-            //else if (TokenUtils.IsCloseBracket (c))
-            //{
-            //    BracketNestingLevel--;
-
-            //    if (BracketNestingLevel < 0)
-            //        throw new Exception ("Bracket argument syntax error, extra closing bracket");
-            //}
-
-            ////
-            //// Quote nesting level
-            ////
-            //if (TokenUtils.IsSingleQuote (c))
-            //{
-            //    if (QuoteNestingLevel == 0)
-            //    {
-            //        //if (char.IsLetter (PrevCharacter) == false && char.IsDigit (PrevCharacter) == false && CannotPreceedString.Contains (PrevCharacter) == false) // don't count quotes meant as transpose operator
-            //        if (CanPreceedString.Contains (PrevCharacter) == true)
-            //            QuoteNestingLevel = 1;
-            //    }
-
-            //    else 
-            //        QuoteNestingLevel = 0;
-            //}
-
-            //PrevCharacter = c;
-
-            //return ParenNestingLevel + BracketNestingLevel + QuoteNestingLevel;
-            return 0;
-        }
 
         //**************************************************************************************************
         //
