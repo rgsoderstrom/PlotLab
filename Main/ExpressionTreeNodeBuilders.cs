@@ -66,8 +66,8 @@ namespace Main
                 if (i > index) right.Add (tokens [i]);
             }
 
-            Operands.Add (new ExpressionTreeNode (left,  workspace, expression));
-            Operands.Add (new ExpressionTreeNode (right, workspace, expression));
+            Operands.Add (new ExpressionTreeNode (left,  workspace));
+            Operands.Add (new ExpressionTreeNode (right, workspace));
         }
 
         //*************************************************************************************************
@@ -265,10 +265,10 @@ namespace Main
                 case TokenType.Pair:
                 {
                     List<Token> tok = new List<Token> () { tokens.t1 };
-                    Operands.Add (new ExpressionTreeNode (tok, workspace, expression));
+                    Operands.Add (new ExpressionTreeNode (tok, workspace));
                 }
                 break;
-
+                
                 case TokenType.BracketsComma:
                 {
                     List<string> tok = parser.SplitBracketArgs_Comma (tokens.t1.text);
