@@ -14,8 +14,9 @@ namespace Main
         public List<ExpressionTreeNode> Operands = new List<ExpressionTreeNode> ();
 
         // available all nodes
-        public static IWorkspace    BaseWorkspace;   // most user created variables
-        public static IWorkspace    GlobalWorkspace; // constants (e.g. pi) and variables explcitly marked "global"
+        //public static IWorkspace    BaseWorkspace;   // most user created variables
+        //public static IWorkspace    GlobalWorkspace; // constants (e.g. pi) and variables explcitly marked "global"
+        public static IWorkspace    Workspace; // just 1 for initial testing
         public static ILibrary      Library;
         public static IFileSystem   FileSystem;
         public static PrintFunction Print;
@@ -32,7 +33,7 @@ namespace Main
             get
             {
                 if (ValueValid) return nodeValue;
-                else return Evaluate (workspace);
+                else return Evaluate (Workspace);
             }
 
             set

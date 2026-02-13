@@ -68,6 +68,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Stubs\Workspace2.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -105,9 +106,6 @@
     <Compile Include="..\utInputLine\Stubs\Library.cs">
       <Link>Stubs\Library.cs</Link>
     </Compile>
-    <Compile Include="..\utInputLine\Stubs\Workspace.cs">
-      <Link>Stubs\Workspace.cs</Link>
-    </Compile>
     <Compile Include="..\utInputLine\Token.cs">
       <Link>Token.cs</Link>
     </Compile>
@@ -130,6 +128,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="EvaluateNode.cs" />
+    <Compile Include="EvaluateNode2.cs" />
     <Compile Include="ExpressionTree.cs" />
     <Compile Include="ExpressionTreeNode.cs" />
     <Compile Include="ExpressionTreeNodeBuilders.cs" />
