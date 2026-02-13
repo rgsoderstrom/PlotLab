@@ -73,6 +73,7 @@ namespace PLCommon
 
             if (op1 is PLCMatrix && op2 is PLRMatrix) return (op1 as PLCMatrix).Sub (op2 as PLRMatrix);
             if (op1 is PLCMatrix && op2 is PLCMatrix) return (op1 as PLCMatrix).Sub (op2 as PLCMatrix);
+            if (op1 is PLCMatrix && op2 is PLComplex) return (op1 as PLCMatrix).Sub (op2 as PLComplex);
 
             if (op1 is PLDouble  && op2 is PLRMatrix) return (op1 as PLDouble). Sub (op2 as PLRMatrix);
             if (op1 is PLDouble  && op2 is PLDouble)  return (op1 as PLDouble). Sub (op2 as PLDouble);
@@ -574,6 +575,17 @@ namespace PLCommon
             for (int i = 0; i<Rows; i++)
                 for (int j = 0; j<Cols; j++)
                     results [i, j] = new PLComplex (this [i, j].Real - op2 [i, j].Real, this [i, j].Imag - op2 [i, j].Imag);
+
+            return results;
+        }
+
+        public PLCMatrix Sub (PLComplex op2)
+        {
+            PLCMatrix results = new PLCMatrix (Rows, Cols);
+
+            for (int i = 0; i<Rows; i++)
+                for (int j = 0; j<Cols; j++)
+                    results [i, j] = new PLComplex (this [i, j].Real - op2.Real, this [i, j].Imag - op2.Imag);
 
             return results;
         }
