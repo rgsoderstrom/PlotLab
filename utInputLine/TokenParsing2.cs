@@ -39,16 +39,16 @@ namespace Main
             {
                 if (initial [i].Type == TokenType.Alphanumeric)
                 {
-                    if (workspace.IsDefined (initial [i].AnnotatedText.Raw))
+                    if (workspace.IsDefined (initial [i].AnnotatedText.Plain))
                         initial [i].Type = TokenType.VariableName;
 
-                    else if (library.IsDefined (initial [i].AnnotatedText.Raw))
+                    else if (library.IsDefined (initial [i].AnnotatedText.Plain))
                         initial [i].Type = TokenType.FunctionName;
 
-                    else if (files.IsFunctionFile (initial [i].AnnotatedText.Raw))
+                    else if (files.IsFunctionFile (initial [i].AnnotatedText.Plain))
                         initial [i].Type = TokenType.FunctionName;
 
-                    else if (files.IsScriptFile (initial [i].AnnotatedText.Raw))
+                    else if (files.IsScriptFile (initial [i].AnnotatedText.Plain))
                         initial [i].Type = TokenType.ScriptFile;
 
                     else initial [i].Type = TokenType.Undefined;
@@ -287,7 +287,7 @@ namespace Main
 
                     default: throw new Exception ("Token parsing error: " + 
                                                   " " + initial [getIndex+1].Type +
-                                                  " " + initial [getIndex+1].AnnotatedText.Raw);
+                                                  " " + initial [getIndex+1].AnnotatedText.Plain);
                 }
             }
         }
@@ -386,7 +386,7 @@ namespace Main
 
                     case TokenType.FunctionName:
                         if (initial [i+1].Type != TokenType.FunctionParens)
-                            throw new Exception ("Function name " + initial [i].AnnotatedText.Raw + " without arguments");
+                            throw new Exception ("Function name " + initial [i].AnnotatedText.Plain + " without arguments");
 
                         TokenPair funcPair = new TokenPair (TokenPairType.Function, initial [i], initial [i+1]);
                         edited.Add (funcPair);

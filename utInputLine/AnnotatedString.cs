@@ -19,7 +19,7 @@ namespace Main
         private List<AnnotatedChar> annotatedChars;
 
         // public access properties
-        internal string Raw
+        public string Plain // plain test without annotation
         {
             get
             {
@@ -325,27 +325,6 @@ namespace Main
             return new AnnotatedString (newChars);
         }
 
-        //internal void AddOuterParens ()
-        //{
-        //    // increment paren nesting for all characters
-        //    for (int i=0; i<annotatedChars.Count; i++)
-        //        annotatedChars [i].ParenLevel++;
-
-        //    // new initial character
-        //    AnnotatedChar c1 = new AnnotatedChar ('(');
-
-        //    // if the previous first char raised a nesting level, we need to undo that for new first char
-        //    c1.ParenLevel   = (sbyte) (annotatedChars [0].IsOpenParen   ? annotatedChars [0].ParenLevel - 1   : annotatedChars [0].ParenLevel);
-        //    c1.BracketLevel = (sbyte) (annotatedChars [0].IsOpenBracket ? annotatedChars [0].BracketLevel - 1 : annotatedChars [0].BracketLevel);
-        //    c1.QuoteLevel   = (sbyte) (annotatedChars [0].IsQuote       ? annotatedChars [0].QuoteLevel - 1   : annotatedChars [0].QuoteLevel);
-
-        //    annotatedChars.Insert (0, c1);
-
-        //    // new final close paren
-        //    AnnotatedChar c2 = new AnnotatedChar (annotatedChars [annotatedChars.Count - 1], ')');
-        //    annotatedChars.Add (c2);
-
-        //}
         //*******************************************************************
         //
         // Indexer
@@ -388,12 +367,23 @@ namespace Main
 
         //*******************************************************************
         //
-        // Remove
+        // RemoveWrapper
+        //  - typically parens or square brackets
+        //  - also removes spaces on either end
         //
-        //public AnnotatedString Remove (int startIndex, int count)
-        //{
-        //    return new AnnotatedString (annotatedChars, startIndex, count);
-        //}
+        public AnnotatedString RemoveWrapper ()
+        {
+            int startIndex = 1;
+            int endIndex = annotatedChars.Count - 2;
+
+            while (annotatedChars [startIndex].IsWhitespace && startIndex < endIndex)
+                startIndex++;
+
+            while (annotatedChars [endIndex].IsWhitespace && endIndex > startIndex)
+                endIndex--;
+
+            return new AnnotatedString (annotatedChars, startIndex, endIndex - startIndex + 1);
+        }
 
         //*******************************************************************
         //
