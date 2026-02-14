@@ -9,6 +9,8 @@ using System.Windows;
 using System.Windows.Controls;
 
 using Main;
+using PLWorkspace;
+using Common;
 
 namespace utExpressionTree
 {
@@ -28,6 +30,7 @@ namespace utExpressionTree
         public MainWindow ()
         {
             InitializeComponent ();
+            EventLog.Open ("D:\\From_C_Visual Studio 2022\\Visual Studio 2022\\Projects\\PlotLab\\utExpressionTree\\log.txt");
         }
 
         private List<List<IToken>> TokensForFileLines = new List<List<IToken>> ();
@@ -38,6 +41,7 @@ namespace utExpressionTree
             { 
                 StreamReader inputFile = new StreamReader (InputMFileName);
                 string raw;
+                int Counter = 0;
 
                 while ((raw = inputFile.ReadLine ()) != null)
                 {
@@ -53,21 +57,52 @@ namespace utExpressionTree
 
                      // Print (annotated.ToString ());
 
+                        //**********************************************************************
+
+                        Counter++;
+
+                        // first pass
+                        TokenParsing parsing = new TokenParsing ();
+                        Window win = new Window ();
+                        TextBox tb = new TextBox ();
+
+                        // first pass
+                        List<IToken> tokens = parsing.ParsingPassOne (annotated);
+                        tb.Text += "First pass:\n";
+                        foreach (Token tok in tokens) tb.Text += tok.ToString () + "\n";
+
+                        // second pass
+                        tokens = parsing.ParsingPassTwo (tokens, workspace, library, fileSystem);
+                        tb.Text += "\nSecond pass:\n";
+                        foreach (Token tok in tokens) tb.Text += tok.ToString () + "\n";
+
+                        win.Content = tb;
+                        win.SizeToContent = SizeToContent.Height;
+                        win.Title = "Parsing " + Counter;
+                        win.Width = 400;
+                        win.Show ();
+
+                        //**********************************************************************
+
                         ExpressionTreeNode.Workspace  = workspace;
                         ExpressionTreeNode.Library    = library;
                         ExpressionTreeNode.FileSystem = fileSystem;
                         ExpressionTreeNode.Print      = Print;
 
-                        ExpressionTree tree = new ExpressionTree (annotated);//, workspace, library, fileSystem, Print);
+                        ExpressionTree tree = new ExpressionTree (annotated);
 
-                        //TreeView tv = new TreeView ();
-                        //tv.Items.Add (tree.TreeView ());
-                        //win.Content = tv;
-                        //win.Title = "Tree " + Counter;
-                        //win.Width = 400;
-                        //win.Height = 300;
-                        //win.Show ();
+                        Window win2 = new Window ();
+                        TreeView tv = new TreeView ();
+                        tv.Items.Add (tree.TreeView ());
+                        win2.Content = tv;
+                        win2.Title = "Tree " + Counter;
+                        win2.Width = 400;
+                        win2.Height = 300;
+                        win2.Show ();
 
+                        //**********************************************************************
+
+                        
 
 
                     }
@@ -78,7 +113,8 @@ namespace utExpressionTree
             
             catch (Exception ex)
             {
-                Console.WriteLine ("Window_Loaded: " + ex.Message);
+                Console.WriteLine ("Exception in Window_Loaded: " + ex.Message);
+                EventLog.WriteLine ("Exception in Window_Loaded: " + ex.StackTrace);
             }
         }
 

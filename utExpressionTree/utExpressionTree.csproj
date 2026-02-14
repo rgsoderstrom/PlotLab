@@ -68,6 +68,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Interfaces\IWorkspace.cs" />
     <Compile Include="Stubs\Workspace2.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -93,9 +94,6 @@
     </Compile>
     <Compile Include="..\utInputLine\Interfaces\ILibrary.cs">
       <Link>Interfaces\ILibrary.cs</Link>
-    </Compile>
-    <Compile Include="..\utInputLine\Interfaces\IWorkspace.cs">
-      <Link>Interfaces\IWorkspace.cs</Link>
     </Compile>
     <Compile Include="..\utInputLine\Stubs\CommandHistory.cs">
       <Link>Stubs\CommandHistory.cs</Link>

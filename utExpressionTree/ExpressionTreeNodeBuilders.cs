@@ -16,6 +16,12 @@ namespace Main
 
         internal void BuildNodeFrom_List (List<IToken> tokens)
         {
+
+            Console.WriteLine ("BuildNodeFrom_List of tokens:");
+            foreach (IToken it in tokens)
+                Console.WriteLine (it.ToString ());
+            Console.WriteLine ();
+
             int lowestPriority = 999;
             int index = -1;
 
@@ -56,6 +62,8 @@ namespace Main
             Operator = tokens [index].AnnotatedText.Plain;
             NodeType = tokens [index].Type;
 
+            Console.WriteLine ("Operator: " + Operator + " Type: " + NodeType);
+
             List<IToken> left  = new List<IToken> ();
             List<IToken> right = new List<IToken> ();
 
@@ -64,6 +72,20 @@ namespace Main
                 if (i < index) left.Add (tokens [i]);
                 if (i > index) right.Add (tokens [i]);
             }
+
+
+            Console.WriteLine ("left operand:");
+            foreach (IToken it in left)
+                Console.WriteLine (it.ToString ());
+            Console.WriteLine ();
+
+            Console.WriteLine ("right operand:");
+            foreach (IToken it in right)
+                Console.WriteLine (it.ToString ());
+            Console.WriteLine ();
+
+            Console.WriteLine ("-------------------------------");
+
 
             Operands.Add (new ExpressionTreeNode (left));
             Operands.Add (new ExpressionTreeNode (right));
@@ -186,7 +208,7 @@ namespace Main
         //*************************************************************************************************
         //*************************************************************************************************
 
-        void BuildNodeFrom_Numeric (List<IToken> tokens, IWorkspace workspace)
+        void BuildNodeFrom_Numeric (List<IToken> tokens)
         {
             bool valid = double.TryParse (tokens [0].AnnotatedText.Plain, out double scalar);
 

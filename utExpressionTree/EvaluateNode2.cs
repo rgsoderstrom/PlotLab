@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using PLCommon;
-//using PLWorkspace;
+using PLWorkspace;
 //using PLLibrary;
 
 namespace Main
@@ -73,7 +73,7 @@ namespace Main
 
             if (Operands.Count == 1)
             {
-                PLVariable select = Operands [0].Evaluate (workspace);
+                PLVariable select = Operands [0].Evaluate (Workspace);
 
                 PLRMatrix selectVect   = select as PLRMatrix;
                 PLDouble  selectDouble = select as PLDouble;
@@ -271,9 +271,9 @@ namespace Main
             /***/
             string LeftSideName = Operands [0].Operator;
 
-            if (workspace.Contains (LeftSideName))
+            if (Workspace.Contains (LeftSideName))
             {
-                PLRMatrix LeftSide = workspace.Get (LeftSideName) as PLRMatrix;
+                PLRMatrix LeftSide = Workspace.Get (LeftSideName) as PLRMatrix;
 
                 if (LeftSide != null) // left side is a matrix
                 {
@@ -323,11 +323,11 @@ namespace Main
                         else for (int i = 0; i<ccc.Size; i++) cols.Add ((int)ccc [0, i]);
 
 
-                        workspace.OverwriteSubmatrix (LeftSideName,       // name of matrix already in workspace
+                        Workspace.OverwriteSubmatrix (LeftSideName,       // name of matrix already in workspace
                                                       rows [0], cols [0], // 1-based   <-------------------------------- ONLY FIRST NUMBER PASSED
                                                       overwriteData);     // new data to overwrite some of old
 
-                        Value = workspace.Get (LeftSideName);
+                        Value = Workspace.Get (LeftSideName);
                         return;
                     }
                 }
@@ -336,7 +336,7 @@ namespace Main
 
             Value = Operands [1].Value;
             Value.Name = Operands [0].Operator;
-            workspace.Add (Value);
+            Workspace.Add (Value);
         }
 
         //*******************************************************************************************
@@ -466,11 +466,11 @@ namespace Main
 
         private void Operator_Divide ()
         {
-            Value = Operands [0].Evaluate (workspace);
+            Value = Operands [0].Evaluate (Workspace);
 
             for (int i = 1; i<Operands.Count; i++)
             {
-                Operands [i].Evaluate (workspace);
+                Operands [i].Evaluate (Workspace);
                 Value /= Operands [i].Value;
             }
         }
@@ -480,10 +480,11 @@ namespace Main
 
         private void Operator_DotDivide ()
         {
-            Value = InternalFunctions.DotDivide (Operands [0].Value, Operands [1].Value);
+            throw new Exception ("Operator_DotDivide not implemented");
+            //Value = InternalFunctions.DotDivide (Operands [0].Value, Operands [1].Value);
 
-            for (int i = 2; i<Operands.Count; i++)
-                Value = InternalFunctions.DotDivide (Value, Operands [i].Evaluate (workspace));
+            //for (int i = 2; i<Operands.Count; i++)
+            //    Value = InternalFunctions.DotDivide (Value, Operands [i].Evaluate (workspace));
         }
 
         //*******************************************************************************************
@@ -502,10 +503,11 @@ namespace Main
 
         private void Operator_DotMultiply ()
         {
-            Value = InternalFunctions.DotTimes (Operands [0].Value, Operands [1].Value);
+            throw new Exception ("Operator_DotMultiply not implemented");
+            //Value = InternalFunctions.DotTimes (Operands [0].Value, Operands [1].Value);
 
-            for (int i = 2; i<Operands.Count; i++)
-                Value = InternalFunctions.DotTimes (Value, Operands [i].Value);
+            //for (int i = 2; i<Operands.Count; i++)
+            //    Value = InternalFunctions.DotTimes (Value, Operands [i].Value);
         }
 
         //*******************************************************************************************
@@ -529,12 +531,13 @@ namespace Main
 
         private void Operator_RowVectorElements ()
         {
-            PLList values = new PLList ();
+            throw new Exception ("Operator_RowVectorElements not implemented");
+            //PLList values = new PLList ();
 
-            foreach (ExpressionTreeNode node in Operands)
-                values.Add (node.Evaluate (workspace));
+            //foreach (ExpressionTreeNode node in Operands)
+            //    values.Add (node.Evaluate (Workspace));
 
-            Value = InternalFunctions.RowVector (values);
+            //Value = InternalFunctions.RowVector (values);
         }
 
         //*******************************************************************************************
@@ -542,35 +545,36 @@ namespace Main
 
         private void Operator_RowVectorIterator ()
         {
-            if (Operands.Count == 0)
-            {
-                Value = new PLString ("All");
-            }
+            throw new Exception ("Operator_RowVectorIterator not implemented");
+            //if (Operands.Count == 0)
+            //{
+            //    Value = new PLString ("All");
+            //}
 
-            else
-            {
-                double start, step, stop;
+            //else
+            //{
+            //    double start, step, stop;
 
-                PLDouble op1 = new PLDouble (Operands [0].Value);
-                PLDouble op2 = new PLDouble (Operands [1].Value);
-                start = op1.Data;
+            //    PLDouble op1 = new PLDouble (Operands [0].Value);
+            //    PLDouble op2 = new PLDouble (Operands [1].Value);
+            //    start = op1.Data;
 
-                if (Operands.Count == 2)
-                {
-                    step  = 1;
-                    stop  = op2.Data;
-                }
-                else if (Operands.Count == 3)
-                {
-                    PLDouble op3 = new PLDouble (Operands [2].Value);
-                    step = op2.Data;
-                    stop = op3.Data;
-                }
-                else
-                    throw new Exception ("Syntax error at \":\", operands");
+            //    if (Operands.Count == 2)
+            //    {
+            //        step  = 1;
+            //        stop  = op2.Data;
+            //    }
+            //    else if (Operands.Count == 3)
+            //    {
+            //        PLDouble op3 = new PLDouble (Operands [2].Value);
+            //        step = op2.Data;
+            //        stop = op3.Data;
+            //    }
+            //    else
+            //        throw new Exception ("Syntax error at \":\", operands");
 
-                Value = InternalFunctions.RowVector (start, step, stop);
-            }
+            //    Value = InternalFunctions.RowVector (start, step, stop);
+            //}
         }
 
         //*******************************************************************************************
@@ -578,12 +582,13 @@ namespace Main
 
         private void Operator_ColVectorElements ()
         {
-            PLList ops = new PLList ();
+            throw new Exception ("Operator_ColVectorElements not implemented");
+            //PLList ops = new PLList ();
 
-            foreach (ExpressionTreeNode node in Operands)
-                ops.Add (node.Value);
+            //foreach (ExpressionTreeNode node in Operands)
+            //    ops.Add (node.Value);
 
-            Value = InternalFunctions.ColVector (ops); 
+            //Value = InternalFunctions.ColVector (ops); 
         }
 
         //*******************************************************************************************

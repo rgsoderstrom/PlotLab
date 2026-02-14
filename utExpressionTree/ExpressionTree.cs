@@ -10,11 +10,12 @@ namespace Main
     public class ExpressionTree
     {
         readonly ExpressionTreeNode root;
+        readonly bool SupressPrinting = false;
 
         public ExpressionTree (AnnotatedString expression) 
         {
             ExpressionTreeNode.InstanceCounter = 0;
-            root = new ExpressionTreeNode (expression);
+            root = new ExpressionTreeNode (expression, ref SupressPrinting);
          //   Compact ();
         }
 

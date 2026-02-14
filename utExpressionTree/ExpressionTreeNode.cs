@@ -50,9 +50,27 @@ namespace Main
         public static int InstanceCounter = 0; // zeroed when new tree started
 
         //
-        // public ctor
+        // public ctor used to construct root node
         //
-        public ExpressionTreeNode (AnnotatedString expr)
+        public ExpressionTreeNode (AnnotatedString expr, ref bool SuppressPrinting)
+        {
+            TokenParsing parsing = new TokenParsing ();
+            List<IToken> tokens = parsing.StringToTokens (expr, Workspace, Library, FileSystem);
+
+            if (tokens [tokens.Count - 1].Type == TokenType.SupressPrinting)
+            {
+                SuppressPrinting = true;
+                tokens.Remove (tokens [tokens.Count - 1]);
+            }
+
+            InstanceCounter = 0;
+            ConstructorCommon (tokens);
+        }
+
+        //
+        // private ctor
+        //
+        private ExpressionTreeNode (AnnotatedString expr)
         {
             TokenParsing parsing = new TokenParsing ();
             List<IToken> tokens = parsing.StringToTokens (expr, Workspace, Library, FileSystem);
@@ -60,9 +78,6 @@ namespace Main
             ConstructorCommon (tokens);
         }
 
-        //
-        // private ctor
-        //
         ExpressionTreeNode (List<IToken> tokens)
         {
             ConstructorCommon (tokens);
@@ -77,10 +92,10 @@ namespace Main
         //
         void ConstructorCommon (List<IToken> tokens)
         {
-            //if (InstanceCounter++ > 100)
-            //{
-            //    throw new Exception ("Too many nodes in expression tree");
-            //}
+            if (InstanceCounter++ > 1000)
+            {
+                throw new Exception ("Too many nodes in expression tree");
+            }
 
             try
             {
@@ -105,7 +120,7 @@ namespace Main
                             break;
                        
                         case TokenType.Numeric:  // scalar 
-                            BuildNodeFrom_Numeric (tokens, Workspace);
+                            BuildNodeFrom_Numeric (tokens);
                             break;
 
                         case TokenType.FunctionName:
