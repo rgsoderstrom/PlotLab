@@ -16,7 +16,8 @@ namespace utExpressionTree
 {
     public partial class MainWindow : Window
     {
-        static readonly string InputMFileName = @"D:\From_C_Visual Studio 2022\Visual Studio 2022\Projects\PlotLab\Examples\ExpressionTreeTests.m";
+    //  static readonly string InputMFileName = @"D:\From_C_Visual Studio 2022\Visual Studio 2022\Projects\PlotLab\Examples\ExpressionTreeTests.m";
+        static readonly string InputMFileName = @"..\..\..\Examples\ExpressionTreeTests.m";
 
         public static readonly Workspace  workspace  = new Workspace ();
         public static readonly Library    library    = new Library ();
