@@ -16,15 +16,15 @@ namespace Main
     public enum TokenType
     {
         // assigned during first pass
-        Numeric,        // 123		        
-        Alphanumeric,   // used until complete token read and identified
-        Parens,         // (a, b)
-        Brackets,       // declare a matrix or vector
+        Numeric,         // 123		        
+        Alphanumeric,    // used until complete token read and identified
+        Parens,          // (a, b)
+        Brackets,        // declare a matrix or vector
         String,
-        Operator,       // +, -, etc.
+        Operator,        // +, -, etc.
         Transpose,
         TwoCharOperator,
-        SupressOutput,  // trailing semicolon
+        SupressPrinting, // trailing semicolon
 
         // possibly revised to one of these on second pass
         VariableName,

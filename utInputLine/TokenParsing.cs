@@ -308,7 +308,7 @@ namespace Main
         {
           //  Console.WriteLine ("SupressOutputProcessing, " + status.currentChar);
 
-            token = new Token (TokenType.SupressOutput, status.currentChar);
+            token = new Token (TokenType.SupressPrinting, status.currentChar);
             tokens.Add (token);
             token = null;
             status.state = ParsingState.Between;//.Leaving;
