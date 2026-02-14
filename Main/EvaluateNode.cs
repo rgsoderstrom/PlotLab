@@ -43,11 +43,11 @@ namespace Main
                     break;
 
                 case TokenType.FunctionName:
-                    Evaluate_Function (workspace, expression);
+                    Evaluate_Function (workspace);//, expression);
                     break;
 
                 case TokenType.FunctionFile:
-                    Evaluate_MFileFunction (workspace, expression);
+                    Evaluate_MFileFunction (workspace);//, expression);
                     break;
 
 
@@ -61,120 +61,121 @@ namespace Main
         //*********************************************************************************
         //*********************************************************************************
 
-        PLVariable Evaluate_MFileFunction (Workspace callersWorkspace, string expression)
+        PLVariable Evaluate_MFileFunction (Workspace callersWorkspace)//, string expression)
         {
+            throw new Exception ("M-file not implemented");
 
-            // Create new (empty) local workspace
-            // Copy passed-in operands into that workspace, with names of input parameters (from m-file)
-            // Pass function lines to ScriptProcessor
-            // Copy output parameters to Value, as ordered list
-            //  - PLList
+            //// Create new (empty) local workspace
+            //// Copy passed-in operands into that workspace, with names of input parameters (from m-file)
+            //// Pass function lines to ScriptProcessor
+            //// Copy output parameters to Value, as ordered list
+            ////  - PLList
 
 
-            Workspace functionsWorkspace = new Workspace ();
-            ScriptProcessor sp = new ScriptProcessor (functionsWorkspace, PF);
+            //Workspace functionsWorkspace = new Workspace ();
+            //ScriptProcessor sp = new ScriptProcessor (functionsWorkspace, PF);
 
-            string funcName = Operator; // a = f1 (b); 
-            string fullName = ""; // full path to f1.m, filled-in below
-            MFileFunctionProcessor mfileProc = null;
+            //string funcName = Operator; // a = f1 (b); 
+            //string fullName = ""; // full path to f1.m, filled-in below
+            //MFileFunctionProcessor mfileProc = null;
 
-            try
-            {
-                if (MFileFunctionMgr.IsMFileFunction (funcName, ref fullName, ref mfileProc))
-                {
-                    if (mfileProc == null)
-                    {
-                        try
-                        {
-                            mfileProc = MFileFunctionMgr.ParseMFile (funcName, fullName); // Split the m-file into inputs, executable and outputs
-                        }
+            //try
+            //{
+            //    if (MFileFunctionMgr.IsMFileFunction (funcName, ref fullName, ref mfileProc))
+            //    {
+            //        if (mfileProc == null)
+            //        {
+            //            try
+            //            {
+            //                mfileProc = MFileFunctionMgr.ParseMFile (funcName, fullName); // Split the m-file into inputs, executable and outputs
+            //            }
 
-                        catch (Exception ex)
-                        {
-                            PF ("Error parsing m-file: " + ex.Message);
-                        }
-                    }
+            //            catch (Exception ex)
+            //            {
+            //                PF ("Error parsing m-file: " + ex.Message);
+            //            }
+            //        }
 
-                    //*****************************************************************************************
-                    //
-                    // evaluate the arguments passed to the function using the caller's workspace and get them in one list
-                    //
-                    List<PLVariable> inputArguments = new List<PLVariable> ();
+            //        //*****************************************************************************************
+            //        //
+            //        // evaluate the arguments passed to the function using the caller's workspace and get them in one list
+            //        //
+            //        List<PLVariable> inputArguments = new List<PLVariable> ();
 
-                    foreach (ExpressionTreeNode etn in Operands)
-                        inputArguments.Add (etn.Evaluate (callersWorkspace));
+            //        foreach (ExpressionTreeNode etn in Operands)
+            //            inputArguments.Add (etn.Evaluate (callersWorkspace));
 
-                    //
-                    // attach the names to the values and put into the function's local workspace
-                    //
-                    for (int i=0; i<inputArguments.Count; i++)
-                    {
-                        inputArguments [i].Name = mfileProc.InputFormalParams [i];
-                        functionsWorkspace.Add (inputArguments [i]);
-                    }
+            //        //
+            //        // attach the names to the values and put into the function's local workspace
+            //        //
+            //        for (int i=0; i<inputArguments.Count; i++)
+            //        {
+            //            inputArguments [i].Name = mfileProc.InputFormalParams [i];
+            //            functionsWorkspace.Add (inputArguments [i]);
+            //        }
 
-                    //
-                    // run the executable lines just like a script
-                    //
-                    ScriptProcessor scriptProcessor = new ScriptProcessor (functionsWorkspace, PF);
-                    scriptProcessor.RunScriptLines (mfileProc.ExecutableScript);
+            //        //
+            //        // run the executable lines just like a script
+            //        //
+            //        ScriptProcessor scriptProcessor = new ScriptProcessor (functionsWorkspace, PF);
+            //        scriptProcessor.RunScriptLines (mfileProc.ExecutableScript);
 
-                    //
-                    // If there is more than one output we place the outputs in the caller's workspace, using the names
-                    // the caller specifies.
-                    //
-                    // Caller must specify either 0 outputs or the same number as the number of formal output arguments
-                    //
+            //        //
+            //        // If there is more than one output we place the outputs in the caller's workspace, using the names
+            //        // the caller specifies.
+            //        //
+            //        // Caller must specify either 0 outputs or the same number as the number of formal output arguments
+            //        //
 
-                    // look for an equal sign
-                    int equalIndex = -1;
+            //        // look for an equal sign
+            //        int equalIndex = -1;
 
-                    for (int i = 0; i<expression.Length; i++) {if (expression [i] == '=') {equalIndex = i; break;}}
+            //        for (int i = 0; i<expression.Length; i++) {if (expression [i] == '=') {equalIndex = i; break;}}
 
-                    if (equalIndex != -1) // then some outputs were specified
-                    {
-                        string [] outputsAsTokens = expression.Substring (0, equalIndex - 1).Split (new char [] { '[', ']', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            //        if (equalIndex != -1) // then some outputs were specified
+            //        {
+            //            string [] outputsAsTokens = expression.Substring (0, equalIndex - 1).Split (new char [] { '[', ']', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                        if (outputsAsTokens.Length != mfileProc.OutputFormalParams.Count)
-                            throw new Exception ("Function call must have 0 outputs or the same number as function formal param list: " + funcName);
+            //            if (outputsAsTokens.Length != mfileProc.OutputFormalParams.Count)
+            //                throw new Exception ("Function call must have 0 outputs or the same number as function formal param list: " + funcName);
 
-                        if (mfileProc.OutputFormalParams.Count > 1)
-                        {
-                            for (int i = 0; i<mfileProc.OutputFormalParams.Count; i++)
-                            {
-                                PLDouble dbl = new PLDouble (functionsWorkspace.Get (mfileProc.OutputFormalParams [i]));
-                                dbl.Name = outputsAsTokens [i];
-                                callersWorkspace.Add (dbl);
-                            }
-                        }
-                    }
+            //            if (mfileProc.OutputFormalParams.Count > 1)
+            //            {
+            //                for (int i = 0; i<mfileProc.OutputFormalParams.Count; i++)
+            //                {
+            //                    PLDouble dbl = new PLDouble (functionsWorkspace.Get (mfileProc.OutputFormalParams [i]));
+            //                    dbl.Name = outputsAsTokens [i];
+            //                    callersWorkspace.Add (dbl);
+            //                }
+            //            }
+            //        }
 
-                    //
-                    // ... and in this node's Value field
-                    //
+            //        //
+            //        // ... and in this node's Value field
+            //        //
 
-                    if (mfileProc.OutputFormalParams.Count == 1)
-                    {
-                        Value = functionsWorkspace.Get (mfileProc.OutputFormalParams [0]);
-                    }
-                    else
-                    {
-                        Value = new PLList ();
+            //        if (mfileProc.OutputFormalParams.Count == 1)
+            //        {
+            //            Value = functionsWorkspace.Get (mfileProc.OutputFormalParams [0]);
+            //        }
+            //        else
+            //        {
+            //            Value = new PLList ();
 
-                        foreach (string str in mfileProc.OutputFormalParams)
-                        {
-                            (Value as PLList).Add (functionsWorkspace.Get (str));
-                        }
-                    }
-                }
-            }
+            //            foreach (string str in mfileProc.OutputFormalParams)
+            //            {
+            //                (Value as PLList).Add (functionsWorkspace.Get (str));
+            //            }
+            //        }
+            //    }
+            //}
 
-            catch (Exception ex)
-            {
-                throw new Exception ("Error evaluating m-file function " + funcName + ": " + ex.Message);
-            }
+            //catch (Exception ex)
+            //{
+            //    throw new Exception ("Error evaluating m-file function " + funcName + ": " + ex.Message);
+            //}
 
-            return new PLNull ();
+            //return new PLNull ();
         }
 
         //*********************************************************************************
@@ -285,7 +286,7 @@ namespace Main
         //*****************************************************************************************************
         //*****************************************************************************************************
 
-        void Evaluate_Function (Workspace workspace, string expression)
+        void Evaluate_Function (Workspace workspace)
         {
             bool forcePrint = false;
 
@@ -351,31 +352,33 @@ namespace Main
 
             if (Value is PLList)
             {
-                PLList lst = Value as PLList;
+                throw new Exception ("Not implemented");
 
-                // look for an equal sign in output args
-                int equalIndex = -1;
+                //PLList lst = Value as PLList;
 
-                for (int i = 0; i<expression.Length; i++) {if (expression [i] == '=') { equalIndex = i; break;}}
+                //// look for an equal sign in output args
+                //int equalIndex = -1;
 
-                if (equalIndex != -1) // then some outputs were specified
-                {
-                    string [] outputsAsTokens = expression.Substring (0, equalIndex - 1).Split (new char [] { '[', ']', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                //for (int i = 0; i<expression.Length; i++) {if (expression [i] == '=') { equalIndex = i; break;}}
 
-                    //if (outputsAsTokens.Length != lst.Count)
-                    //    throw new Exception ("Function call must have 0 outputs or the same number as function formal param list: " + expression);
+                //if (equalIndex != -1) // then some outputs were specified
+                //{
+                //    string [] outputsAsTokens = expression.Substring (0, equalIndex - 1).Split (new char [] { '[', ']', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                    int count = Math.Min (outputsAsTokens.Length, lst.Count);
+                //    //if (outputsAsTokens.Length != lst.Count)
+                //    //    throw new Exception ("Function call must have 0 outputs or the same number as function formal param list: " + expression);
 
-                    for (int i = 0; i<count; i++)
-                    {
-                        lst [i].Name = outputsAsTokens [i];
-                        workspace.Add (lst [i]);
-                    }
-                }
+                //    int count = Math.Min (outputsAsTokens.Length, lst.Count);
 
-                Value = lst [0]; // PlotLab code expects only a single value returned. Other output parameters have
-                                 // been placed in the caller's workspace so code will function as expected
+                //    for (int i = 0; i<count; i++)
+                //    {
+                //        lst [i].Name = outputsAsTokens [i];
+                //        workspace.Add (lst [i]);
+                //    }
+                //}
+
+                //Value = lst [0]; // PlotLab code expects only a single value returned. Other output parameters have
+                //                 // been placed in the caller's workspace so code will function as expected
             }
         }
     }
