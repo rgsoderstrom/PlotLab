@@ -89,6 +89,8 @@ namespace Main
 
             Operands.Add (new ExpressionTreeNode (left));
             Operands.Add (new ExpressionTreeNode (right));
+        
+            Console.WriteLine ("leaving BuildNodeFrom_List, " + tokens.Count + " tokens, " + Operands.Count + " operands");    
         }
 
         //*************************************************************************************************
@@ -119,7 +121,6 @@ namespace Main
         void BuildNodeFrom_Brackets (List<IToken> tokens, IWorkspace workspace)
         {
             TokenParsing parser = new TokenParsing ();
-         //   List<string> args = new List<string> ();
 
             NodeType = tokens [0].Type;
 
@@ -128,7 +129,7 @@ namespace Main
                 case TokenType.BracketsColon:
                 {
                     Operator = "RowVectorIterator";
-                    List<AnnotatedString> args = TokenParsing.SplitBracketArgs_Colon (tokens [0].AnnotatedText);
+                    List<AnnotatedString> args = parser.SplitBracketArgs_Colon (tokens [0].AnnotatedText);
                     foreach (AnnotatedString str in args)
                         Operands.Add (new ExpressionTreeNode (str));
                 }
@@ -137,7 +138,7 @@ namespace Main
                 case TokenType.BracketsComma:
                 {
                     Operator = "RowVectorElements";
-                    List<AnnotatedString> args = TokenParsing.SplitBracketArgs_Comma (tokens [0].AnnotatedText);
+                    List<AnnotatedString> args = parser.SplitBracketArgs_Comma (tokens [0].AnnotatedText);
                     foreach (AnnotatedString str in args)
                         Operands.Add (new ExpressionTreeNode (str));
                 }
@@ -146,7 +147,7 @@ namespace Main
                 case TokenType.BracketsSemi:
                 {
                     Operator = "ColVectorElements";
-                    List<AnnotatedString> args = TokenParsing.SplitBracketArgs_Semi (tokens [0].AnnotatedText);
+                    List<AnnotatedString> args = parser.SplitBracketArgs_Semi (tokens [0].AnnotatedText);
 
                     foreach (AnnotatedString str in args)
                     {
@@ -160,7 +161,7 @@ namespace Main
                 case TokenType.BracketsSpace:
                 {
                     Operator = "RowVectorElements";
-                    List<AnnotatedString> args = TokenParsing.SplitBracketArgs_Space (tokens [0].AnnotatedText);
+                    List<AnnotatedString> args = parser.SplitBracketArgs_Space (tokens [0].AnnotatedText);
 
                     foreach (AnnotatedString str in args)
                         if (str.Count > 0)                                 //   <==========================================================
@@ -262,6 +263,7 @@ namespace Main
             if (tokens is TokenPair == false)
                 throw new Exception ("BuildNodeFrom_FunctionPair must be passed a token pair. Got " + tokens.AnnotatedText.Plain);
 
+            TokenParsing parser = new TokenParsing ();
             TokenPair Pair = tokens as TokenPair;
 
             Operator = Pair.Get1.AnnotatedText.Plain;
@@ -272,7 +274,7 @@ namespace Main
                 case TokenType.GroupingParens:
                 case TokenType.FunctionParens:
                 {
-                    List<AnnotatedString> args = TokenParsing.SplitFunctionArgs (Pair.Get2.AnnotatedText);
+                    List<AnnotatedString> args = parser.SplitFunctionArgs (Pair.Get2.AnnotatedText);
 
                     foreach (AnnotatedString str in args)
                         Operands.Add (new ExpressionTreeNode (str));
@@ -295,7 +297,7 @@ namespace Main
                 
                 case TokenType.BracketsComma:
                 {
-                    List<AnnotatedString> tok = TokenParsing.SplitBracketArgs_Comma (Pair.Get2.AnnotatedText);
+                    List<AnnotatedString> tok = parser.SplitBracketArgs_Comma (Pair.Get2.AnnotatedText);
 
                     foreach (AnnotatedString str in tok)
                         Operands.Add (new ExpressionTreeNode (str));
@@ -304,7 +306,7 @@ namespace Main
 
                 case TokenType.BracketsColon:
                 {
-                    List<AnnotatedString> tok = TokenParsing.SplitBracketArgs_Colon (Pair.Get2.AnnotatedText);
+                    List<AnnotatedString> tok = parser.SplitBracketArgs_Colon (Pair.Get2.AnnotatedText);
 
                     foreach (AnnotatedString str in tok)
                         Operands.Add (new ExpressionTreeNode (str));
@@ -313,7 +315,7 @@ namespace Main
 
                 case TokenType.BracketsSemi:
                 {
-                    List<AnnotatedString> tok = TokenParsing.SplitBracketArgs_Semi (Pair.Get2.AnnotatedText);
+                    List<AnnotatedString> tok = parser.SplitBracketArgs_Semi (Pair.Get2.AnnotatedText);
 
                     foreach (AnnotatedString str in tok)
                         Operands.Add (new ExpressionTreeNode (str));
@@ -322,7 +324,7 @@ namespace Main
 
                 case TokenType.BracketsSpace:
                 {
-                    List<AnnotatedString> tok = TokenParsing.SplitBracketArgs_Space (Pair.Get2.AnnotatedText);
+                    List<AnnotatedString> tok = parser.SplitBracketArgs_Space (Pair.Get2.AnnotatedText);
 
                     foreach (AnnotatedString str in tok)
                         Operands.Add (new ExpressionTreeNode (str));

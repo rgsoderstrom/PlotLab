@@ -21,9 +21,9 @@ namespace Main
 
         delegate bool CharacterTest (AnnotatedChar c);
 
-        static private void BreakIntoSubstrings (AnnotatedString       src, 
-                                                 List<AnnotatedString> substrings, 
-                                                 CharacterTest         test)
+        private void BreakIntoSubstrings (AnnotatedString       src, 
+                                          List<AnnotatedString> substrings, 
+                                          CharacterTest         test)
         {
             List <int> copyEndpoints = new List<int> ();
             copyEndpoints.Add (0); // start first copy here
@@ -54,7 +54,7 @@ namespace Main
         //      - of the form (A, B, C)
         //
 
-        static public List<AnnotatedString> SplitFunctionArgs (AnnotatedString str)
+        public List<AnnotatedString> SplitFunctionArgs (AnnotatedString str)
         {
             // Error checking - verify first character is an open paren and last is close paren
             int lastIndex = str.Count - 1;
@@ -69,10 +69,6 @@ namespace Main
         }
 
         //***********************************************************************************************************
-        //***********************************************************************************************************
-
-        //******************************************************************************************************
-
         //
         // SplitBracketArgs
         //  - break one string [(A + B) : (C + D)] into two
@@ -83,13 +79,13 @@ namespace Main
         // c = [1 : 3 : 20]
         // v = [2 ; 4 ; 6]
 
-        static private void VerifyBrackets (AnnotatedString str)
+        private void VerifyBrackets (AnnotatedString str)
         {
             if (str [0].IsOpenBracket == false)              throw new Exception ("Missing opening bracket: " + str.Plain);
             if (str [str.Count - 1].IsCloseBracket == false) throw new Exception ("Missing closing bracket: " + str.Plain);
         }
 
-        static public List<AnnotatedString> SplitBracketArgs_Comma (AnnotatedString str)
+        public List<AnnotatedString> SplitBracketArgs_Comma (AnnotatedString str)
         {
             VerifyBrackets (str);
             List<AnnotatedString> args = new List<AnnotatedString> ();
@@ -97,7 +93,7 @@ namespace Main
             return args;
         }
 
-        static public List<AnnotatedString> SplitBracketArgs_Colon (AnnotatedString str)
+        public List<AnnotatedString> SplitBracketArgs_Colon (AnnotatedString str)
         {
             VerifyBrackets (str);
             List<AnnotatedString> args = new List<AnnotatedString> ();
@@ -105,7 +101,7 @@ namespace Main
             return args;
         }
 
-        static public List<AnnotatedString> SplitBracketArgs_Semi (AnnotatedString str)
+        public List<AnnotatedString> SplitBracketArgs_Semi (AnnotatedString str)
         {
             VerifyBrackets (str);
             List<AnnotatedString> args = new List<AnnotatedString> ();
@@ -113,7 +109,7 @@ namespace Main
             return args;
         }
 
-        static public List<AnnotatedString> SplitBracketArgs_Space (AnnotatedString str)
+        public List<AnnotatedString> SplitBracketArgs_Space (AnnotatedString str)
         {
             VerifyBrackets (str);
             List<AnnotatedString> args = new List<AnnotatedString> ();
@@ -127,7 +123,7 @@ namespace Main
         //  - eg: (2:4, 6:7) => "2:4", "6:7"
         //  
 
-        static public List<AnnotatedString> SplitSubmatrixArgs (AnnotatedString str)
+        public List<AnnotatedString> SplitSubmatrixArgs (AnnotatedString str)
         {
             VerifyBrackets (str);
 
