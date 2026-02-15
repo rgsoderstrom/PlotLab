@@ -47,7 +47,7 @@ namespace Main
     {
         // private storage
 	    private          TokenPairType   pairType;  // this will be Submatrix or Function
-	    private readonly AnnotatedString annotatedText;
+	    //private readonly AnnotatedString annotatedText;
 
         private readonly IToken t1;
         private readonly IToken t2;
@@ -59,7 +59,8 @@ namespace Main
         public IToken Get1 {get {return t1;}}
         public IToken Get2 {get {return t2;}}
 
-        public AnnotatedString AnnotatedText {get {return annotatedText;}}
+        public AnnotatedString AnnotatedText {get {return new AnnotatedString ("None");}}
+      //public AnnotatedString AnnotatedText {get {return annotatedText;}}
 
         // constructors
         public TokenPair (TokenPairType ty, IToken tok1, IToken tok2) 

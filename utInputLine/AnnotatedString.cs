@@ -38,10 +38,10 @@ namespace Main
         //
         // ctors
         //
-        internal AnnotatedString (List<AnnotatedChar> src)
-        {
-            annotatedChars = src;
-        }
+        //internal AnnotatedString (List<AnnotatedChar> src)
+        //{
+        //    annotatedChars = src;
+        //}
 
 
 
@@ -322,7 +322,10 @@ namespace Main
             AnnotatedChar c2 = new AnnotatedChar (annotatedChars [annotatedChars.Count - 1], ')');
             newChars.Add (c2);
 
-            return new AnnotatedString (newChars);
+          //  return new AnnotatedString (newChars);
+
+            annotatedChars = newChars;
+            return this;
         }
 
         //*******************************************************************
