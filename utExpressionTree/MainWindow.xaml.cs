@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using Main;
 using PLWorkspace;
 using Common;
+using PLCommon;
 
 namespace utExpressionTree
 {
@@ -70,12 +71,12 @@ namespace utExpressionTree
                         // first pass
                         List<IToken> tokens = parsing.ParsingPassOne (annotated);
                         tb.Text += "First pass:\n";
-                        foreach (Token tok in tokens) tb.Text += tok.ToString () + "\n";
+                        foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
 
                         // second pass
                         tokens = parsing.ParsingPassTwo (tokens, workspace, library, fileSystem);
                         tb.Text += "\nSecond pass:\n";
-                        foreach (Token tok in tokens) tb.Text += tok.ToString () + "\n";
+                        foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
 
                         win.Content = tb;
                         win.SizeToContent = SizeToContent.Height;
@@ -103,9 +104,8 @@ namespace utExpressionTree
 
                         //**********************************************************************
 
-                        
-
-
+                        PLVariable answer = tree.Evaluate (workspace);
+                        Console.WriteLine ("answer: " + answer.ToString ());
                     }
                 }
 
