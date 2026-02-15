@@ -68,6 +68,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="..\Main\InternalFunctions.cs">
+      <Link>InternalFunctions.cs</Link>
+    </Compile>
     <Compile Include="Interfaces\IWorkspace.cs" />
     <Compile Include="Stubs\Workspace2.cs" />
     <Page Include="MainWindow.xaml">

@@ -5,6 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using PLCommon;
+using PLWorkspace;
+
 namespace Main
 {
     public class ExpressionTree
@@ -54,10 +57,10 @@ namespace Main
 
         //******************************************************************************
 
-        //public PLVariable Evaluate (Workspace workspace)
-        //{
-        //    return root.Evaluate (workspace);
-        //}
+        public PLVariable Evaluate (Workspace workspace)
+        {
+            return root.Evaluate (workspace);
+        }
 
 
     }

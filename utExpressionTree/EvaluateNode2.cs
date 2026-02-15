@@ -480,11 +480,10 @@ namespace Main
 
         private void Operator_DotDivide ()
         {
-            throw new Exception ("Operator_DotDivide not implemented");
-            //Value = InternalFunctions.DotDivide (Operands [0].Value, Operands [1].Value);
+            Value = InternalFunctions.DotDivide (Operands [0].Value, Operands [1].Value);
 
-            //for (int i = 2; i<Operands.Count; i++)
-            //    Value = InternalFunctions.DotDivide (Value, Operands [i].Evaluate (workspace));
+            for (int i = 2; i<Operands.Count; i++)
+                Value = InternalFunctions.DotDivide (Value, Operands [i].Evaluate (Workspace));
         }
 
         //*******************************************************************************************
@@ -503,11 +502,10 @@ namespace Main
 
         private void Operator_DotMultiply ()
         {
-            throw new Exception ("Operator_DotMultiply not implemented");
-            //Value = InternalFunctions.DotTimes (Operands [0].Value, Operands [1].Value);
+            Value = InternalFunctions.DotTimes (Operands [0].Value, Operands [1].Value);
 
-            //for (int i = 2; i<Operands.Count; i++)
-            //    Value = InternalFunctions.DotTimes (Value, Operands [i].Value);
+            for (int i = 2; i<Operands.Count; i++)
+                Value = InternalFunctions.DotTimes (Value, Operands [i].Value);
         }
 
         //*******************************************************************************************
@@ -531,13 +529,12 @@ namespace Main
 
         private void Operator_RowVectorElements ()
         {
-            throw new Exception ("Operator_RowVectorElements not implemented");
-            //PLList values = new PLList ();
+            PLList values = new PLList ();
 
-            //foreach (ExpressionTreeNode node in Operands)
-            //    values.Add (node.Evaluate (Workspace));
+            foreach (ExpressionTreeNode node in Operands)
+                values.Add (node.Evaluate (Workspace));
 
-            //Value = InternalFunctions.RowVector (values);
+            Value = InternalFunctions.RowVector (values);
         }
 
         //*******************************************************************************************
@@ -545,58 +542,50 @@ namespace Main
 
         private void Operator_RowVectorIterator ()
         {
-            throw new Exception ("Operator_RowVectorIterator not implemented");
-            //if (Operands.Count == 0)
-            //{
-            //    Value = new PLString ("All");
-            //}
+            if (Operands.Count == 0)
+            {
+                Value = new PLString ("All");
+            }
 
-            //else
-            //{
-            //    double start, step, stop;
+            else
+            {
+                double start, step, stop;
 
-            //    PLDouble op1 = new PLDouble (Operands [0].Value);
-            //    PLDouble op2 = new PLDouble (Operands [1].Value);
-            //    start = op1.Data;
+                PLDouble op1 = new PLDouble (Operands [0].Value);
+                PLDouble op2 = new PLDouble (Operands [1].Value);
+                start = op1.Data;
 
-            //    if (Operands.Count == 2)
-            //    {
-            //        step  = 1;
-            //        stop  = op2.Data;
-            //    }
-            //    else if (Operands.Count == 3)
-            //    {
-            //        PLDouble op3 = new PLDouble (Operands [2].Value);
-            //        step = op2.Data;
-            //        stop = op3.Data;
-            //    }
-            //    else
-            //        throw new Exception ("Syntax error at \":\", operands");
+                if (Operands.Count == 2)
+                {
+                    step  = 1;
+                    stop  = op2.Data;
+                }
+                else if (Operands.Count == 3)
+                {
+                    PLDouble op3 = new PLDouble (Operands [2].Value);
+                    step = op2.Data;
+                    stop = op3.Data;
+                }
+                else
+                    throw new Exception ("Syntax error at \":\", operands");
 
-            //    Value = InternalFunctions.RowVector (start, step, stop);
-            //}
+                Value = InternalFunctions.RowVector (start, step, stop);
+            }
         }
 
-        //*******************************************************************************************
         //*******************************************************************************************
 
         private void Operator_ColVectorElements ()
         {
-            throw new Exception ("Operator_ColVectorElements not implemented");
-            //PLList ops = new PLList ();
+            PLList ops = new PLList ();
 
-            //foreach (ExpressionTreeNode node in Operands)
-            //    ops.Add (node.Value);
+            foreach (ExpressionTreeNode node in Operands)
+                ops.Add (node.Value);
 
-            //Value = InternalFunctions.ColVector (ops); 
+            Value = InternalFunctions.ColVector (ops);
         }
 
         //*******************************************************************************************
-        //*******************************************************************************************
-
-        //*******************************************************************************************
-        //*******************************************************************************************
-
 
 
     }
