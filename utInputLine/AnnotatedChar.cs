@@ -12,10 +12,10 @@ namespace Main
     public class AnnotatedChar
     {
         // private members
-        private char  character;
-        private sbyte quotelevel;  // can only be 0 or 1, no nested quotes allowed
-        private sbyte bracketlevel;
-        private sbyte parenlevel;
+        private readonly char  character;
+        private          sbyte quotelevel;  // can only be 0 or 1, no nested quotes allowed
+        private          sbyte bracketlevel;
+        private          sbyte parenlevel;
 
         private ContextType overrideType;
 
@@ -94,31 +94,17 @@ namespace Main
         public bool IsTranspose { get { return OverrideType == ContextType.IsTranspose; } }
         public bool IsSupress   { get { return OverrideType == ContextType.IsSupressOutput; } }
 
-
-
         // these are never overriden
         public bool IsOpenParen { get { return character == '('; } }
         public bool IsCloseParen { get { return character == ')'; } }
         public bool IsOpenBracket { get { return character == '['; } }
         public bool IsCloseBracket { get { return character == ']'; } }
 
-
-
-
-
-
-
-
         public bool IsOpenQuote { get { return character == openquote; } }
         public bool IsCloseQuote { get { return character == closequote; } }
         public bool IsWhitespace   {get {return (character == ' ' || character == '\t'); }}
 
-
         public bool IsUnaryOp  {get {return unaryLeftOperators.Contains (character);}}
-        //      public bool IsUnaryRightOp {get {return unaryRightOperators.Contains (character);}}
-
-
-
 
         public bool IsExponent      {get {return character == '^';}}
         public bool IsColon         {get {return character == ':';}}
@@ -233,13 +219,6 @@ namespace Main
         private const char openquote     = (char) 145; // extended ASCII left single quote
         private const char closequote    = (char) 146; //   "        "   right   "     "
 
-     //   static public char openbracket  = '[';
-      //  static public char closebracket = ']';
-        
-     //   static public char openparen  = '(';
-     //   static public char closeparen = ')';
-
-       // public int Quotelevel {get {return quotelevel;}}
         public int NestingLevel {get {return quotelevel + bracketlevel + parenlevel;}}
 
         //*******************************************************************
