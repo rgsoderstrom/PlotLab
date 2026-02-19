@@ -292,8 +292,7 @@ namespace Main
             }
         }
 
-       // private bool IsOpToken (IToken tok) {return tok.Type == TokenType.Operator;}
-
+        //******************************************************************************
         //
         //
         //
@@ -308,7 +307,6 @@ namespace Main
             while (start < initial.Count)
             {
                 int index = initial.FindIndex (start, delegate (IToken tok) {return tok.Type == TokenType.Operator;});
-             // int index = initial.FindIndex (start, IsOpToken);
 
                 if (index == -1)
                     break;
