@@ -47,6 +47,9 @@
     <Reference Include="PLCommon">
       <HintPath>..\PLCommon\bin\Debug\PLCommon.dll</HintPath>
     </Reference>
+    <Reference Include="PLLibrary">
+      <HintPath>..\PLLibrary\bin\Debug\PLLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Numerics" />
@@ -71,8 +74,16 @@
     <Compile Include="..\Main\InternalFunctions.cs">
       <Link>InternalFunctions.cs</Link>
     </Compile>
+    <Compile Include="InputLineProcessor.cs" />
+    <Compile Include="InputLineUtils.cs" />
     <Compile Include="Interfaces\IWorkspace.cs" />
     <Compile Include="Stubs\Workspace2.cs" />
+    <Compile Include="Token.cs" />
+    <Compile Include="TokenParsing.cs" />
+    <Compile Include="TokenParsing2.cs" />
+    <Compile Include="TokenTypes.cs" />
+    <Compile Include="TokenUtils.cs" />
+    <Compile Include="TokenUtils2.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -83,47 +94,17 @@
     <Compile Include="..\utInputLine\AnnotatedString.cs">
       <Link>AnnotatedString.cs</Link>
     </Compile>
-    <Compile Include="..\utInputLine\InputLineProcessor.cs">
-      <Link>InputLineProcessor.cs</Link>
-    </Compile>
-    <Compile Include="..\utInputLine\InputLineUtils.cs">
-      <Link>InputLineUtils.cs</Link>
-    </Compile>
     <Compile Include="..\utInputLine\Interfaces\ICmndHistory.cs">
       <Link>Interfaces\ICmndHistory.cs</Link>
     </Compile>
     <Compile Include="..\utInputLine\Interfaces\IFileSystem.cs">
       <Link>Interfaces\IFileSystem.cs</Link>
     </Compile>
-    <Compile Include="..\utInputLine\Interfaces\ILibrary.cs">
-      <Link>Interfaces\ILibrary.cs</Link>
-    </Compile>
     <Compile Include="..\utInputLine\Stubs\CommandHistory.cs">
       <Link>Stubs\CommandHistory.cs</Link>
     </Compile>
     <Compile Include="..\utInputLine\Stubs\FileSystem.cs">
       <Link>Stubs\FileSystem.cs</Link>
-    </Compile>
-    <Compile Include="..\utInputLine\Stubs\Library.cs">
-      <Link>Stubs\Library.cs</Link>
-    </Compile>
-    <Compile Include="..\utInputLine\Token.cs">
-      <Link>Token.cs</Link>
-    </Compile>
-    <Compile Include="..\utInputLine\TokenParsing.cs">
-      <Link>TokenParsing.cs</Link>
-    </Compile>
-    <Compile Include="..\utInputLine\TokenParsing2.cs">
-      <Link>TokenParsing2.cs</Link>
-    </Compile>
-    <Compile Include="..\utInputLine\TokenTypes.cs">
-      <Link>TokenTypes.cs</Link>
-    </Compile>
-    <Compile Include="..\utInputLine\TokenUtils.cs">
-      <Link>TokenUtils.cs</Link>
-    </Compile>
-    <Compile Include="..\utInputLine\TokenUtils2.cs">
-      <Link>TokenUtils2.cs</Link>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
