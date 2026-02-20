@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 using Main;
 
+using PLLibrary;
+
 namespace utTokens
 {
     internal class Driver
@@ -15,7 +17,6 @@ namespace utTokens
         static readonly string InputMFileName = @"D:\From_C_Visual Studio 2022\Visual Studio 2022\Projects\PlotLab\Examples\TokenTests.m";
 
         private static readonly Workspace  workspace  = new Workspace ();
-        private static readonly Library    library    = new Library ();
         private static readonly FileSystem fileSystem = new FileSystem ();
 
         static void Print (string str)
@@ -27,6 +28,7 @@ namespace utTokens
         {
             try
             {
+        
                 //  AnnotatedStringTest ();
 
 
@@ -81,7 +83,7 @@ namespace utTokens
             // pass each annotated string to token processor
             //
             TokenParsing parser = new TokenParsing ();
-            List<IToken> statementtokens = parser.StringToTokens (annotated, workspace, library, fileSystem);
+            List<IToken> statementtokens = parser.StringToTokens (annotated, workspace, fileSystem);
 
             foreach (IToken tok in statementtokens)
                 Print (tok.ToString ());
@@ -91,6 +93,8 @@ namespace utTokens
 
         static private void TokenUtilsTest (string raw)
         {
+            TokenParsing parsing = new TokenParsing ();
+
             string text = InputLineProcessor.RemovePromptAndComments (raw);
 
             if (text.Length == 0)
@@ -100,7 +104,7 @@ namespace utTokens
             AnnotatedString annotated = new AnnotatedString (text);
 
             Print (annotated.ToString () + "\n");
-            List<AnnotatedString> fargs = TokenParsing.SplitBracketArgs_Space (annotated);
+            List<AnnotatedString> fargs = parsing.SplitBracketArgs_Space (annotated);
 
             foreach (AnnotatedString AS in fargs)
                 Print (AS.ToString () + "\n");
