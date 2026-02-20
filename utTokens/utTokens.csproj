@@ -8,10 +8,11 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>utTokens</RootNamespace>
     <AssemblyName>utTokens</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PLLibrary">
+      <HintPath>..\PLLibrary\bin\Debug\PLLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -49,37 +53,22 @@
     <Compile Include="..\utInputLine\AnnotatedString.cs">
       <Link>AnnotatedString.cs</Link>
     </Compile>
-    <Compile Include="..\utInputLine\InputLineUtils.cs">
-      <Link>InputLineUtils.cs</Link>
-    </Compile>
-    <Compile Include="..\utInputLine\Token.cs">
-      <Link>Token.cs</Link>
-    </Compile>
-    <Compile Include="..\utInputLine\TokenParsing.cs">
-      <Link>TokenParsing.cs</Link>
-    </Compile>
-    <Compile Include="..\utInputLine\TokenParsing2.cs">
-      <Link>TokenParsing2.cs</Link>
-    </Compile>
-    <Compile Include="..\utInputLine\TokenTypes.cs">
-      <Link>TokenTypes.cs</Link>
-    </Compile>
-    <Compile Include="..\utInputLine\TokenUtils.cs">
-      <Link>TokenUtils.cs</Link>
-    </Compile>
-    <Compile Include="..\utInputLine\TokenUtils2.cs">
-      <Link>TokenUtils2.cs</Link>
-    </Compile>
     <Compile Include="Driver.cs" />
+    <Compile Include="InputLineProcessor.cs" />
+    <Compile Include="InputLineUtils.cs" />
     <Compile Include="Interfaces\ICmndHistory.cs" />
     <Compile Include="Interfaces\IFileSystem.cs" />
-    <Compile Include="Interfaces\ILibrary.cs" />
     <Compile Include="Interfaces\IWorkspace.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stubs\CommandHistory.cs" />
     <Compile Include="Stubs\FileSystem.cs" />
-    <Compile Include="Stubs\Library.cs" />
     <Compile Include="Stubs\Workspace.cs" />
+    <Compile Include="Token.cs" />
+    <Compile Include="TokenParsing.cs" />
+    <Compile Include="TokenParsing2.cs" />
+    <Compile Include="TokenTypes.cs" />
+    <Compile Include="TokenUtils.cs" />
+    <Compile Include="TokenUtils2.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
