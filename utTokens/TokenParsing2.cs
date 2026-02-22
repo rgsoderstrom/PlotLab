@@ -19,12 +19,69 @@ namespace Main
 
             edited = ReplaceTransposeOps (edited); // A' => Transpose (A)
 
+            edited = CombineTokensIntoPairs (edited); // combine FuncName (FuncArgs) or Matrix [range] into TokenPairs
+
+            edited = IdentifyOperatorType (edited);
+
             edited = BindUnaryOperators (edited); // -, A => (-1 * A),
                                                   // -, 7 => -7
 
-            edited = CombineTokensIntoPairs (edited); // combine FuncName (FuncArgs) or Matrix [range] into TokenPairs
-
             return edited;
+        }
+
+        //*************************************************************************************************
+
+        // label operators as binary or unary. in-place
+
+        List<IToken> IdentifyOperatorType (List<IToken> initial)
+        {
+            //
+            // find all operator tokens
+            //
+            List<int> operatorIndices = new List<int> ();
+
+            int start = 0;
+
+            while (start < initial.Count)
+            {
+                int index = initial.FindIndex (start, delegate (IToken tok) {return tok.Type == TokenType.Operator;});
+
+                if (index == -1)
+                    break;
+
+                operatorIndices.Add (index);
+                start = index + 1;
+            }
+
+            // if none found, just return
+            if (operatorIndices.Count == 0)
+                return initial;  
+
+            //
+            // determine whether each operator is unary or binary
+            //
+            for (int i=0; i<operatorIndices.Count; i++)
+            {
+                int index = operatorIndices [i];                
+                TokenType prevType = index > 0 ? initial [index-1].Type : TokenType.None;
+
+                switch (prevType)
+                {
+                    case TokenType.None:
+                    case TokenType.Operator:
+                    case TokenType.BinaryOperator:
+                    case TokenType.TwoCharOperator:
+                    case TokenType.EqualSign:
+                        initial [index].Type = TokenType.UnaryOperator; // a * -b
+                        break;
+
+                    default:
+                        initial [index].Type = TokenType.BinaryOperator; // a * b
+                        break;
+                }
+            }
+
+            return initial;
         }
 
         //*************************************************************************************************
@@ -231,68 +288,6 @@ namespace Main
         }
 
         //*************************************************************************************************
-        //*************************************************************************************************
-        //*************************************************************************************************
-
-        // unary operators
-
-        private void UnaryTokenMover (List<IToken> initial, List<IToken> edited, ref int getIndex)
-        {
-            if (initial [getIndex].Type == TokenType.Operator)
-            {
-                switch (initial [getIndex+1].Type)
-                {
-                    case TokenType.Numeric:
-                    { 
-                        if (initial [getIndex].AnnotatedText [0].IsPlusMinus)
-                        { 
-                            Token t1 = new Token (TokenType.Numeric, initial [getIndex].AnnotatedText + initial [getIndex + 1].AnnotatedText);
-                            edited.Add (t1);
-                            getIndex += 2;
-                        }
-                        break;
-                    }
-
-                    case TokenType.VariableName:
-                    case TokenType.GroupingParens:
-                    case TokenType.BracketsColon:
-                    case TokenType.BracketsSemi: 
-                    case TokenType.BracketsComma:
-                    case TokenType.BracketsSpace:
-                    case TokenType.FunctionName:
-                    {
-                        if (initial [getIndex].AnnotatedText [0].IsPlusMinus)
-                        { 
-                            Token t1 = new Token (TokenType.Numeric, initial [getIndex].AnnotatedText + new AnnotatedString ("1"));
-                            edited.Add (t1);
-                            Token t2 = new Token (TokenType.Operator, new AnnotatedString ("*"));
-                            edited.Add (t2);
-                            edited.Add (initial [getIndex+1]);
-                            getIndex += 2;
-                        }
-                        else if (initial [getIndex].AnnotatedText [0].IsTilde) // "not" function
-                        {
-                            edited.Add (new Token (TokenType.FunctionName, new AnnotatedString ("not"))); // NESTING LEVELS NEEDED?
-
-                            // add parens unless outer level is already parens                
-                            if (initial [getIndex].Type != TokenType.GroupingParens) 
-                                edited.Add (new Token (TokenType.FunctionParens, initial [getIndex + 1].AnnotatedText.AddOuterParens ()));
-                            else                                                     
-                                edited.Add (new Token (TokenType.FunctionParens, initial [getIndex + 1].AnnotatedText));
-
-                            getIndex += 2;
-                        }
-                        break;
-                    }
-
-                    default: throw new Exception ("Token parsing error: " + 
-                                                  " " + initial [getIndex+1].Type +
-                                                  " " + initial [getIndex+1].AnnotatedText.Plain);
-                }
-            }
-        }
-
-        //******************************************************************************
         //
         //
         //
@@ -306,7 +301,7 @@ namespace Main
 
             while (start < initial.Count)
             {
-                int index = initial.FindIndex (start, delegate (IToken tok) {return tok.Type == TokenType.Operator;});
+                int index = initial.FindIndex (start, delegate (IToken tok) {return tok.Type == TokenType.UnaryOperator;});
 
                 if (index == -1)
                     break;
@@ -319,40 +314,46 @@ namespace Main
             if (operatorIndices.Count == 0)
                 return initial;  
 
-            int operatorIndex;// = operatorIndices [0];
-            int get = 0; // where we are reading from initial list
+            int get = 0; // index used to copy out of initial
 
-            if (operatorIndices [0] == 0) // means first token is a unary op so bind it to the second token
-            { 
-                operatorIndex = operatorIndices [0];
-                UnaryTokenMover (initial, edited, ref get);
-                operatorIndices.RemoveRange (0, 1);
-            }
-
-            // Look for consecutive operators ending in a unary op
-            List<int> unaryOpIndices = new List<int> ();
-
-            while (operatorIndices.Count > 1)
+            for (int i=0; i<operatorIndices.Count; i++)
             {
-                int i1 = operatorIndices [0];
-                int i2 = operatorIndices [1];
+                int index = operatorIndices [i];
 
-                if (i2 == i1 + 1)
-                {
-                    unaryOpIndices.Add (i2);
-                    operatorIndices.RemoveRange (0, 2);
-                }
-                else
-                    operatorIndices.RemoveRange (0, 1);
-            }
-
-            while (unaryOpIndices.Count > 0)
-            {
-                while (get < unaryOpIndices [0])
+                while (get < index)
                     edited.Add (initial [get++]);
 
-                UnaryTokenMover (initial, edited, ref get);
-                unaryOpIndices.RemoveRange (0, 1);
+                if (initial [index].AnnotatedText.Count > 1)
+                    throw new Exception ("Error in unary operator string: " + initial [index].AnnotatedText.Plain [0]);
+
+                switch (initial [index].AnnotatedText.Plain [0])
+                {
+                    case '+':
+                    case '-':
+                        Token t1 = new Token (TokenType.Numeric, initial [get].AnnotatedText + new AnnotatedString ("1"));
+                        edited.Add (t1);
+                        Token t2 = new Token (TokenType.Operator, new AnnotatedString ("*"));
+                        edited.Add (t2);
+                        edited.Add (initial [get+1]);
+                        get += 2;
+                        break;
+
+                    case '~': // "not" function
+                        Token t3 = new Token (TokenType.FunctionName, new AnnotatedString ("not")); // NESTING LEVELS NEEDED?
+
+                        // add parens unless outer level is already parens                
+                        Token t4 = initial [get].Type != TokenType.GroupingParens ? 
+                                   new Token (TokenType.FunctionParens, initial [get + 1].AnnotatedText.AddOuterParens ()) :
+                                   new Token (TokenType.FunctionParens, initial [get + 1].AnnotatedText);
+
+                        TokenPair funcPair = new TokenPair (TokenPairType.Function, t3, t4);
+                        edited.Add (funcPair);
+                        get += 2;
+                        break;
+
+                    default:
+                        throw new Exception ("Unsupported unary operator: " + initial [index].AnnotatedText.Plain [0]);
+                }
             }
 
             while (get < initial.Count)

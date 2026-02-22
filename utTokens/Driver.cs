@@ -29,8 +29,8 @@ namespace utTokens
             try
             {
         
-                //  AnnotatedStringTest ();
-
+            //    AnnotatedStringTest ();
+             //   return;
 
 
                 StreamReader inputFile = new StreamReader (InputMFileName);
@@ -55,17 +55,39 @@ namespace utTokens
         }
 
         //***********************************************************************
+        //***********************************************************************
+        //***********************************************************************
+
+        static private List<string> AnnotatedTestStrings = new List<string> () {
+            //"'c = a * b = %d'",
+            //"c = 3 * b;",
+            //"( 123, 456  )",
+            "n = -4;",
+            "z2 = a ~= -b;",
+            "z2 = a .* b;",
+        };
 
         static private void AnnotatedStringTest ()
         {
-            AnnotatedString annotated = new AnnotatedString ("( 123, 456  )");
-            Print (annotated.ToString ());
-        
-            Print ("");
+            Console.WriteLine ("AnnotatedStringTest\n");
 
-            AnnotatedString a2 = annotated.RemoveWrapper ();
-            Print (a2.ToString ());
+
+            foreach (string str in AnnotatedTestStrings)
+            {
+                AnnotatedString annotated = new AnnotatedString (str);
+                Print (annotated.ToString ());
+                Print ("===========================================");
+            }
+
+        
+
+         //   AnnotatedString a2 = annotated.RemoveWrapper ();
+         //   Print (a2.ToString ());
         }
+
+        //***********************************************************************
+        //***********************************************************************
+        //***********************************************************************
 
         static private void TokenParsingTest (string raw)
         {
@@ -77,7 +99,7 @@ namespace utTokens
             text = InputLineProcessor.SqueezeConsecutiveSpaces (text);
             AnnotatedString annotated = new AnnotatedString (text);
 
-            Print (annotated.ToString ());
+            Print (annotated.Plain.ToString ());
 
             //
             // pass each annotated string to token processor
@@ -90,6 +112,10 @@ namespace utTokens
 
              Print ("======================================");
         }
+
+        //***********************************************************************
+        //***********************************************************************
+        //***********************************************************************
 
         static private void TokenUtilsTest (string raw)
         {
