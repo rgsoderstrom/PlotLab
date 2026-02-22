@@ -114,49 +114,50 @@ namespace PLLibrary
         // Evaluate - looks for a named function in a dictionary and if found, calls it
         //
         
-        public static bool Contains (PLString name) 
+        public static bool Contains (string name) 
         {
-            if (SigProcFunctions.ContainsKey (name.Text))
+            if (SigProcFunctions.ContainsKey (name))
                 return true;
 
-            if (MathFunctions.ContainsKey (name.Text))
+            if (MathFunctions.ContainsKey (name))
                 return true;
 
-            if (IOFunctions.ContainsKey (name.Text))
+            if (IOFunctions.ContainsKey (name))
                 return true;
 
-            if (PlotFunctions.ContainsKey (name.Text))
+            if (PlotFunctions.ContainsKey (name))
                 return true;
 
             return false;
         }
 
-        public static PLVariable Evaluate (PLString name, PLVariable args, ref bool forcePrint)
+        public static PLVariable Evaluate (string name, PLVariable args)
         {
-            if (SigProcFunctions.ContainsKey (name.Text))
+            if (SigProcFunctions.ContainsKey (name))
             {
-                PLFunction func = SigProcFunctions [name.Text];
+                PLFunction func = SigProcFunctions [name];
                 return func (args);
             }
 
-            if (MathFunctions.ContainsKey (name.Text))
+            if (MathFunctions.ContainsKey (name))
             {
-                PLFunction func = MathFunctions [name.Text];
+                PLFunction func = MathFunctions [name];
                 return func (args);
             }
 
-            if (IOFunctions.ContainsKey (name.Text))
+            if (IOFunctions.ContainsKey (name))
             {
-                if (name.Text == "disp")
-                    forcePrint = true;
+                throw new Exception ("function disp not implemented");
+                //if (name == "disp")
+                //    forcePrint = true;
 
-                PLFunction func = IOFunctions [name.Text];
-                return func (args);
+                //PLFunction func = IOFunctions [name];
+                //return func (args);
             }
 
-            if (PlotFunctions.ContainsKey (name.Text))
+            if (PlotFunctions.ContainsKey (name))
             {
-                PLFunction func = PlotFunctions [name.Text];
+                PLFunction func = PlotFunctions [name];
                 return func (args);
             }
 
