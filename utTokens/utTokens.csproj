@@ -47,12 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\utInputLine\AnnotatedChar.cs">
-      <Link>AnnotatedChar.cs</Link>
-    </Compile>
-    <Compile Include="..\utInputLine\AnnotatedString.cs">
-      <Link>AnnotatedString.cs</Link>
-    </Compile>
+    <Compile Include="AnnotatedChar.cs" />
+    <Compile Include="AnnotatedString.cs" />
     <Compile Include="Driver.cs" />
     <Compile Include="InputLineProcessor.cs" />
     <Compile Include="InputLineUtils.cs" />
