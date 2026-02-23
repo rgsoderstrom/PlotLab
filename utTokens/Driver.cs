@@ -14,7 +14,7 @@ namespace utTokens
     internal class Driver
     {
      // static readonly string InputMFileName = @"D:\From_C_Visual Studio 2022\Visual Studio 2022\Projects\PlotLab\Examples\TokenUtilsTests.m";
-        static readonly string InputMFileName = @"D:\From_C_Visual Studio 2022\Visual Studio 2022\Projects\PlotLab\Examples\TokenTests.m";
+        static readonly string InputMFileName = @"..\..\..\Examples\TokenTests.m";
 
         private static readonly Workspace  workspace  = new Workspace ();
         private static readonly FileSystem fileSystem = new FileSystem ();
