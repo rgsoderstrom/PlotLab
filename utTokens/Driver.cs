@@ -13,7 +13,7 @@ namespace utTokens
 {
     internal class Driver
     {
-     // static readonly string InputMFileName = @"D:\From_C_Visual Studio 2022\Visual Studio 2022\Projects\PlotLab\Examples\TokenUtilsTests.m";
+     // static readonly string InputMFileName = @"..\..\..\TokenUtilsTests.m";
         static readonly string InputMFileName = @"..\..\..\Examples\TokenTests.m";
 
         private static readonly Workspace  workspace  = new Workspace ();
@@ -28,11 +28,6 @@ namespace utTokens
         {
             try
             {
-        
-            //    AnnotatedStringTest ();
-             //   return;
-
-
                 StreamReader inputFile = new StreamReader (InputMFileName);
                 string raw;
 
@@ -40,7 +35,8 @@ namespace utTokens
                 {
                     if (raw.Length > 0)
                     {
-                        TokenParsingTest (raw);
+                        AnnotatedStringTest (raw);
+                        //TokenParsingTest (raw);
                         //TokenUtilsTest (raw);
                     }
                 }
@@ -58,31 +54,22 @@ namespace utTokens
         //***********************************************************************
         //***********************************************************************
 
-        static private List<string> AnnotatedTestStrings = new List<string> () {
-            //"'c = a * b = %d'",
-            //"c = 3 * b;",
-            //"( 123, 456  )",
-            "n = -4;",
-            "z2 = a ~= -b;",
-            "z2 = a .* b;",
-        };
-
-        static private void AnnotatedStringTest ()
+        static private void AnnotatedStringTest (string str)
         {
-            Console.WriteLine ("AnnotatedStringTest\n");
+            string text = InputLineProcessor.RemovePromptAndComments (str);
 
+            if (text.Length == 0)
+                return;
 
-            foreach (string str in AnnotatedTestStrings)
-            {
-                AnnotatedString annotated = new AnnotatedString (str);
-                Print (annotated.ToString ());
-                Print ("===========================================");
-            }
+            text = InputLineProcessor.SqueezeConsecutiveSpaces (text);
+            AnnotatedString annotated = new AnnotatedString (text);
 
-        
-
+            Print (annotated.Plain.ToString ());
+            Print (annotated.ToString ());
+     
          //   AnnotatedString a2 = annotated.RemoveWrapper ();
          //   Print (a2.ToString ());
+            Print ("===========================================");
         }
 
         //***********************************************************************
