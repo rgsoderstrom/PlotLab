@@ -26,6 +26,8 @@ namespace Main
             edited = BindUnaryOperators (edited); // -, A => (-1 * A),
                                                   // -, 7 => -7
 
+            edited = RenameTwoCharOperator (edited); // rename to BinaryOperator
+
             return edited;
         }
 
@@ -403,6 +405,17 @@ namespace Main
                 edited.Add (initial [initial.Count - 1]); 
 
             return edited;
+        }
+
+        //*************************************************************************************************
+
+        private List<IToken> RenameTwoCharOperator (List<IToken> initial)
+        {
+            for (int i=0; i<initial.Count; i++)
+                if (initial [i].Type == TokenType.TwoCharOperator)
+                    initial [i].Type = TokenType.BinaryOperator;
+
+            return initial;
         }
     }
 }
