@@ -34,29 +34,28 @@ namespace Main
 
         public int Count {get {return annotatedChars.Count;}}
 
-        //*******************************************************************
+        //*************************************************************************
         //
         // ctors
         //
-        //internal AnnotatedString (List<AnnotatedChar> src)
-        //{
-        //    annotatedChars = src;
-        //}
 
-
+        // during pass1 note the locations of characters we may want to modify on pass 2
+        List<int> digits       = new List<int> ();
+        List<int> decimals     = new List<int> ();
+        List<int> exponentials = new List<int> (); // E or e
+        List<int> operators    = new List<int> ();
 
         internal AnnotatedString (string text)
         {
-            annotatedChars = new List<AnnotatedChar> (text.Length);
+            PassOne (text);
+            PassTwo ();
+        }
 
-            // note the locations of characters we may want to modify on pass 2
-            List<int> digits       = new List<int> ();
-            List<int> decimals     = new List<int> ();
-            List<int> exponentials = new List<int> (); // E or e
-            List<int> operators    = new List<int> ();
+        //*************************************************************************
 
-            // pass one
-            annotatedChars.Add (new AnnotatedChar (text [0])); 
+        private void PassOne (string text)
+        { 
+            annotatedChars = new List<AnnotatedChar> (text.Length) {new AnnotatedChar (text [0])};
 
             for (int i=1; i<text.Length; i++)
             {
@@ -68,16 +67,13 @@ namespace Main
 
                 annotatedChars.Add (nextAC);
             }
+        }
 
-            //*************************************************************************************
-            //
-            // pass two
-            //
-            //*********************************************************************
+        //*************************************************************************
 
-            // look for digits inside an alphanumeric (e.g. variable name A12).
-            // Set their override to "letter"
-
+        private void PassTwo ()
+        {
+            // look for digits that are part of a variable name, e.g. A12 = 8;
             foreach (int i in digits)
             {
                 int before = i - 1;
@@ -86,6 +82,8 @@ namespace Main
                     if (annotatedChars [before].IsAlpha && annotatedChars [before].IsExponential == false)
                         annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsLetter;
             }
+
+            //*********************************************************************
 
             // combine decimal point with number (e.g. .123 or 123.456)
             foreach (int i in decimals)
@@ -97,7 +95,6 @@ namespace Main
                     if (annotatedChars [before].IsNumber)
                     {
                         annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsNumber;
-                        break;
                     }
                 }
 
@@ -108,7 +105,6 @@ namespace Main
                     if (annotatedChars [after].IsNumber)
                     {
                         annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsNumber;
-                        break;
                     }
                 }
             }
@@ -446,6 +442,8 @@ namespace Main
         //
         // ToString ()
         //
+
+        // test for text line with something other than '.' after initial colon
         private bool NotAllDots (string str)
         {
             bool results = false;
@@ -462,7 +460,6 @@ namespace Main
 
                 i++;
             }
-
             return results;
         }
 
@@ -489,7 +486,7 @@ namespace Main
             string str14 = "Decimal:       ";
             string str15 = "Transpose:     ";
 
-         // string str16 = "Binary Op:    ";
+            string str16 = "Minus:         ";
          // string str17 = "Unary Op :    ";
             string str18 = "Exponent:      ";
             string str19 = "Colon:         ";
@@ -516,13 +513,13 @@ namespace Main
                 str9b += ac.IsCloseQuote   ? "1" : ".";
 
                 str10 += ac.IsEqualSign   ? "1" : ".";
-           //     str11 += ac.IsWhitespace  ? "1" : ".";
+                str11 += ac.IsWhitespace  ? "1" : ".";
                 str12 += ac.IsAlpha       ? "1" : ".";
                 str13 += ac.IsNumber      ? "1" : ".";
                 str14 += ac.IsDecimal     ? "1" : ".";
                 str15 += ac.IsTranspose   ? "1" : ".";
 
-             //   str16 += ac.IsBinaryOp    ? "1" : ".";
+                str16 += ac.IsMinus       ? "1" : ".";
              //   str17 += ac.IsUnaryOp     ? "1" : ".";
                 //str18 += ac.IsExponent    ? "1" : ".";
                 //str19 += ac.IsColon       ? "1" : ".";
@@ -554,6 +551,7 @@ namespace Main
             if (str13.Contains ("1")) str += '\n' + str13;
             if (str14.Contains ("1")) str += '\n' + str14;
             if (str15.Contains ("1")) str += '\n' + str15;
+            if (str16.Contains ("1")) str += '\n' + str16;
             if (str18.Contains ("1")) str += '\n' + str18;
             if (str19.Contains ("1")) str += '\n' + str19;
             if (str20.Contains ("1")) str += '\n' + str20;

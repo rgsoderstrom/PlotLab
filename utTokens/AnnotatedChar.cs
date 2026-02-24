@@ -87,6 +87,7 @@ namespace Main
 
         public bool IsExponential {get {return OverrideType == ContextType.None && char.ToUpper (character) == 'E';}}
 
+        public bool IsMinus       {get {return OverrideType == ContextType.None && (character == '-');}}
         public bool IsPlusMinus   {get {return OverrideType == ContextType.None && (character == '+' || character == '-');}}
 
         // these only exist as overrides
