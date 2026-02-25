@@ -30,16 +30,37 @@ namespace Main
                 return lineOut;
 
             //
-            // remove any comment
+            // remove any text after a comment sign
             //
-            bool inString = false;
+
+            // Usually a comment is any text following a %
+            // Exception is if % is inside a string, e.g. sprintf ('%3.4f', abc);
+            // Further complication is that a single quote doesn't always mark the start or end of a string.
+            // It can also mean Transpose but only when following a variable or array, e.g. [1:10]'
+
+            if (lineOut [0] == '%') // whole line comment
+                return "";
 
             if (lineOut.Contains ("%"))
             {
+                bool inString = false;
+
                 for (int i=0; i<lineOut.Length; i++)
                 {
-                    if (lineOut [i] == '\'') // then entering or leaving quoted string, where % doesn't indicate comment
-                        inString ^= true;
+                    if (lineOut [i] == '\'') // then may be entering a quoted string, where % doesn't indicate comment
+                    {
+                        if (i == 0) 
+                            inString = true;
+
+                        else if (inString == false)
+                        {
+                            if (CanPreceedTranspose (lineOut [i-1]) == false)
+                                inString = true;
+                        }
+
+                        else
+                            inString = false;
+                    }
 
                     if (lineOut [i] == '%' && inString == false)
                     { 
@@ -50,6 +71,15 @@ namespace Main
             }
 
             return lineOut.TrimEnd ();
+        }
+
+        static private bool CanPreceedTranspose (char c)
+        {
+            if (c == ')') return true;
+            if (c == ']') return true;
+            if (char.IsLetter (c)) return true;
+            if (char.IsNumber (c)) return true;
+            return false;
         }
 
         //**************************************************************************************
