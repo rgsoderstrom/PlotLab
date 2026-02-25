@@ -334,7 +334,7 @@ namespace Main
                     case '-':
                         Token t1 = new Token (TokenType.Numeric, initial [get].AnnotatedText + new AnnotatedString ("1"));
                         edited.Add (t1);
-                        Token t2 = new Token (TokenType.Operator, new AnnotatedString ("*"));
+                        Token t2 = new Token (TokenType.BinaryOperator, new AnnotatedString ("*"));
                         edited.Add (t2);
                         edited.Add (initial [get+1]);
                         get += 2;
