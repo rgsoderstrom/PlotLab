@@ -111,6 +111,40 @@ namespace Main
 
             //*********************************************************************
 
+            // mark leading +/- with number (e.g. -123.456) as numeric
+
+            foreach (int i in operators)
+            {
+                if (annotatedChars [i].IsPlusMinus)
+                { 
+                    bool beforeTest = false; // set true if char before the +/- indicates
+                                             // the +/- is a unary op
+
+                    for (int before = i - 1; before >= 0; before--)
+                    {
+                        if (annotatedChars [before].IsEqualSign) {beforeTest = true; break;}
+                        if (annotatedChars [before].IsOperator) {beforeTest = true; break;}
+                        if (annotatedChars [before].IsAlpha) {break;}
+                        if (annotatedChars [before].IsNumber) {break;}
+                    }
+
+                    if (beforeTest == true)
+                    { 
+                        int after = i + 1;
+
+                        if (after < Count)
+                        {
+                            if (annotatedChars [after].IsNumber)
+                            {
+                                annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsNumber;
+                            }
+                        }
+                    }
+                }
+            }
+
+            //*********************************************************************
+
             // look for exponentials
             foreach (int i in exponentials)
             {
