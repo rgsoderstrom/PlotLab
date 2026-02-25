@@ -74,7 +74,7 @@ namespace Main
         public bool IsOperator    
             {get 
                 {
-                    bool b1 = OverrideType == ContextType.None && Operators.Contains (character);
+                    bool b1 = OverrideType == ContextType.None && Operators.Contains (character) && QuoteLevel == 0;
                     bool b2 = false;//OverrideType == ContextType.IsTranspose;
                     return b1 || b2;
                 }
@@ -83,10 +83,11 @@ namespace Main
         public bool IsQuote       {get {return OverrideType == ContextType.None && character == '\'';}}
         public bool IsTilde       {get {return OverrideType == ContextType.None && character == '~';}}
 
-        public bool IsEqualSign   {get {return OverrideType == ContextType.None && character == '=';}}
+        public bool IsEqualSign   {get {return OverrideType == ContextType.None && character == '=' && QuoteLevel == 0;}}
 
         public bool IsExponential {get {return OverrideType == ContextType.None && char.ToUpper (character) == 'E';}}
 
+        public bool IsMinus       {get {return OverrideType == ContextType.None && (character == '-');}}
         public bool IsPlusMinus   {get {return OverrideType == ContextType.None && (character == '+' || character == '-');}}
 
         // these only exist as overrides
@@ -104,7 +105,7 @@ namespace Main
         public bool IsCloseQuote { get { return character == closequote; } }
         public bool IsWhitespace   {get {return (character == ' ' || character == '\t'); }}
 
-        public bool IsUnaryOp  {get {return unaryLeftOperators.Contains (character);}}
+      //  public bool IsUnaryOp  {get {return unaryLeftOperators.Contains (character);}}
 
         public bool IsExponent      {get {return character == '^';}}
         public bool IsColon         {get {return character == ':';}}
@@ -114,14 +115,14 @@ namespace Main
         //**********************************************************************************
 
         // all charcters in any operator: oneChar, twoChar, unary, transpose
-        static List<char> Operators = new List<char> () {';', ':', '\'', '.', '^', '*', '/', '+', '-', '=', '&', '|', '>', '<', '~' };
+        static List<char> Operators = new List<char> () {';', ':', '\'', '.', '^', '*', '/', '+', '-', '&', '|', '>', '<', '~' };
 
         static public bool IsTwoCharOpStr (string s) {return twoCharBinaryOperators.Contains (s);}
         static List<string> twoCharBinaryOperators = new List<string> () {".*", "./", ".^", "&&", "||", "~=", "==", ">=", "<="};
 
 
         // static List<char>   oneCharBinaryOperators = new List<char> ()   {'^', '*', '/', '+', '-', '=', '&', '|', '>', '<', '~'};
-        static List<char>   unaryLeftOperators     = new List<char> ()   {'+', '-', '~'}; // to the left of operand
+      //  static List<char>   unaryLeftOperators     = new List<char> ()   {'+', '-', '~'}; // to the left of operand
         // static List<char>   unaryRightOperators    = new List<char> ()   {'\''};          // "  "  right "  "
 
         //      public bool IsBinaryOp     {get {return oneCharBinaryOperators.Contains (character);}}
