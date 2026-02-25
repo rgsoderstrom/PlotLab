@@ -22,11 +22,14 @@ namespace Main
         Brackets,        // declare a matrix or vector
         String,
         Operator,        // +, -, etc.
+        EqualSign,
         Transpose,
         TwoCharOperator,
         SupressPrinting, // trailing semicolon
 
         // possibly revised to one of these on second pass
+        BinaryOperator,
+        UnaryOperator,
         VariableName,
         FunctionName,    // built-in or .m file
         ScriptFile,
@@ -42,6 +45,7 @@ namespace Main
         BracketsSpace,  // [1 2 3]
 
         Pair, // for class TokenPair
+        None, // used when stepping through list of tokens. Token before the first or after the last is assigned type "None"
     };
 
     public enum TokenPairType
