@@ -17,20 +17,24 @@ namespace Main
         internal void BuildNodeFrom_List (List<IToken> tokens)
         {
 
-            Console.WriteLine ("BuildNodeFrom_List of tokens:");
-            foreach (IToken it in tokens)
-                Console.WriteLine (it.ToString ());
-            Console.WriteLine ();
+            //Console.WriteLine ("BuildNodeFrom_List of tokens:");
+            //foreach (IToken it in tokens)
+            //    Console.WriteLine (it.ToString ());
+            //Console.WriteLine ();
 
             int lowestPriority = 999;
             int index = -1;
 
             for (int i = 0; i<tokens.Count; i++) // find lowest priority operator. if a tie, take the right-most one
             {
-                if (tokens [i].Type == TokenType.Operator)
+                bool isEqualSign = tokens [i].Type == TokenType.EqualSign;
+                bool isBinOp     = tokens [i].Type == TokenType.BinaryOperator;
+
+                if (isEqualSign || isBinOp)
                 {
                     AnnotatedString oper = tokens [i].AnnotatedText;
-                    int priority = TokenUtils.GetBinOpPriority (oper.Plain);
+
+                    int priority = isEqualSign ? 0 : TokenUtils.GetBinOpPriority (oper.Plain);
 
                     // two operators, equals and exponent, are evaluated right-to-left. e.g.: 2 ^ 3 ^ 4 evaluated as: 2 ^ (3 ^ 4)
                     // This priority adjustment increases priority as we move to the right so that happens
@@ -62,7 +66,7 @@ namespace Main
             Operator = tokens [index].AnnotatedText.Plain;
             NodeType = tokens [index].Type;
 
-            Console.WriteLine ("Operator: " + Operator + " Type: " + NodeType);
+            //Console.WriteLine ("Operator: " + Operator + " Type: " + NodeType);
 
             List<IToken> left  = new List<IToken> ();
             List<IToken> right = new List<IToken> ();
@@ -74,23 +78,23 @@ namespace Main
             }
 
 
-            Console.WriteLine ("left operand:");
-            foreach (IToken it in left)
-                Console.WriteLine (it.ToString ());
-            Console.WriteLine ();
+            //Console.WriteLine ("left operand:");
+            //foreach (IToken it in left)
+            //    Console.WriteLine (it.ToString ());
+            //Console.WriteLine ();
 
-            Console.WriteLine ("right operand:");
-            foreach (IToken it in right)
-                Console.WriteLine (it.ToString ());
-            Console.WriteLine ();
+            //Console.WriteLine ("right operand:");
+            //foreach (IToken it in right)
+            //    Console.WriteLine (it.ToString ());
+            //Console.WriteLine ();
 
-            Console.WriteLine ("-------------------------------");
+            //Console.WriteLine ("-------------------------------");
 
 
             Operands.Add (new ExpressionTreeNode (left));
             Operands.Add (new ExpressionTreeNode (right));
         
-            Console.WriteLine ("leaving BuildNodeFrom_List, " + tokens.Count + " tokens, " + Operands.Count + " operands");    
+            //Console.WriteLine ("leaving BuildNodeFrom_List, " + tokens.Count + " tokens, " + Operands.Count + " operands");    
         }
 
         //*************************************************************************************************
@@ -110,7 +114,7 @@ namespace Main
             // parse what's left
             //
             TokenParsing parser = new TokenParsing ();
-            ConstructorCommon (parser.StringToTokens (as2, Workspace, Library, FileSystem));
+            ConstructorCommon (parser.StringToTokens (as2, Workspace, FileSystem));
         }
 
         //*************************************************************************************************

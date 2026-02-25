@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using PLCommon;
+using FunctionLibrary;
 //using Main;
 
 // started as a copy of Main Workspace, then modified
@@ -17,7 +18,11 @@ namespace PLWorkspace
         Dictionary<string, PLVariable> Variables = new Dictionary<string, PLVariable> ();
         Dictionary<string, PLFunction> Commands  = new Dictionary<string, PLFunction> ();
 
-        public Dictionary<string, PLFunction> Functions = new Dictionary<string, PLFunction> ();
+
+    //  public Dictionary<string, PLFunction> Functions = new Dictionary<string, PLFunction> ();
+        private Dictionary<string, PLFunction> functions = new Dictionary<string, PLFunction> ();
+        public Dictionary<string, PLFunction> Functions { get { return functions;} }
+
 
         static Dictionary<string, PLVariable> Constants = new Dictionary<string, PLVariable> ();
 
@@ -43,6 +48,8 @@ namespace PLWorkspace
 
         static Workspace ()
         {
+    //        PLDouble minus1 = new PLDouble (-1);  minus1.Name = "minus1"; Constants.Add ("minus1", minus1);
+
             PLDouble PI = new PLDouble (Math.PI); PI.Name = "PI"; Constants.Add ("PI", PI); Constants.Add ("pi", PI);
             PLDouble e  = new PLDouble (Math.Exp (0)); e.Name = "e";   Constants.Add ("e", e);
 
@@ -75,11 +82,11 @@ namespace PLWorkspace
             return new PLNull ();
         }
 
-        public PLVariable Evaluate (PLString funcName, PLVariable args)
+        public PLVariable Evaluate (string funcName, PLVariable args)
         {
-            if (Functions.ContainsKey (funcName.Text))
+            if (Functions.ContainsKey (funcName))
             {
-                PLFunction func = Functions [funcName.Text];
+                PLFunction func = Functions [funcName];
                 return func (args);
             }
 

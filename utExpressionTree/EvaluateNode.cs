@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using PLCommon;
 using PLWorkspace;
-//using PLLibrary;
+using PLLibrary;
 
 namespace Main
 {
@@ -38,7 +38,8 @@ namespace Main
                 case TokenType.BracketsSemi:
                 case TokenType.BracketsComma:
                 case TokenType.BracketsSpace:
-                case TokenType.Operator:
+                case TokenType.BinaryOperator:
+                case TokenType.EqualSign:
                     Evaluate_Operator (Operator, Workspace);
                     break;
 
@@ -287,98 +288,96 @@ namespace Main
 
         void Evaluate_Function (IWorkspace workspace)//, string expression)
         {
-            throw new Exception ("Evaluate_Function not implemented");
+            if (Operands.Count == 0)
+            {
+                PLFunction func = LibraryManager.GetFunctionDelegate (Operator);
 
-            //bool forcePrint = false;
+                if (LibraryManager.IsZeroArgFunction (Operator)) // if function can be invoked with zero args ...
+                    Value = func (new PLNull ());
+                else
+                    Value = new PLFunctionWrapper (func);
+            }
 
-            //if (Operands.Count == 0)
-            //{
-            //    PLFunction func = LibraryManager.GetFunctionDelegate (Operator);
+            else if (Operands.Count == 1)
+            {
+                Operands [0].Evaluate (workspace);
 
-            //    if (LibraryManager.IsZeroArgFunction (Operator)) // if function can be invoked with zero args ...
-            //        Value = func (new PLNull ()); 
-            //    else
-            //        Value = new PLFunctionWrapper (func);
+                if (LibraryManager.Contains (Operator))
+                    Value = LibraryManager.Evaluate (Operator, Operands [0].Value);
+
+                else if (workspace.Functions.ContainsKey (Operator))
+                    Value = workspace.Evaluate (Operator, Operands [0].Value);
+
+                else throw new Exception ("EvaluateNode, Operands.Count == 1 not implemented for operator " + Operator);
+
+                //else // if (ValueValid == false)
+                //{
+                //    if (Operator == "Transpose")
+                //    {
+                //        if (Operands [0].Value is PLRMatrix)
+                //            Value = InternalFunctions.Transpose (Operands [0].Value as PLRMatrix);
+                //        else
+                //            throw new Exception ("Can only transpose matrices");
+                //    }
+
+                //    if (Operator == "Not")
+                //    {
+                //        Operator_Logical_Not ();
+                //    }
+                //}
+
+                //    if (ValueValid == false) throw new Exception ("Error evaluating expression");                
+
+            }
+
+            else // operand count > 1
+            {
+                PLList args = new PLList ();
+
+                foreach (ExpressionTreeNode op in Operands)
+                    args.Add (op.Evaluate (workspace));
+
+                if (LibraryManager.Contains (Operator))
+                    Value = LibraryManager.Evaluate (Operator, args);
+
+                else if (workspace.Functions.ContainsKey (Operator))
+                    Value = workspace.Evaluate (Operator, args);
+
+                else
+                    throw new Exception ("Can't find function " + Operator);
+            }
+
+            if (Value is PLList)
+                throw new Exception ("EvaluateNode, function returning list not implemented");
+
+                ////if (Value is PLList)
+                ////{
+                ////    PLList lst = Value as PLList;
+
+                ////    // look for an equal sign in output args
+                ////    int equalIndex = -1;
+
+                ////    for (int i = 0; i<expression.Length; i++) {if (expression [i] == '=') { equalIndex = i; break;}}
+
+                ////    if (equalIndex != -1) // then some outputs were specified
+                ////    {
+                ////        string [] outputsAsTokens = expression.Substring (0, equalIndex - 1).Split (new char [] { '[', ']', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                ////        //if (outputsAsTokens.Length != lst.Count)
+                ////        //    throw new Exception ("Function call must have 0 outputs or the same number as function formal param list: " + expression);
+
+                ////        int count = Math.Min (outputsAsTokens.Length, lst.Count);
+
+                ////        for (int i = 0; i<count; i++)
+                ////        {
+                ////            lst [i].Name = outputsAsTokens [i];
+                ////            workspace.Add (lst [i]);
+                ////        }
+                ////    }
+
+                ////    Value = lst [0]; // PlotLab code expects only a single value returned. Other output parameters have
+                ////                     // been placed in the caller's workspace so code will function as expected
             //}
-
-            //else if (Operands.Count == 1)
-            //{
-            //    Operands [0].Evaluate (workspace);
-
-            //    PLString functionName = new PLString (Operator);
-
-            //    if (LibraryManager.Contains (functionName))
-            //        Value = LibraryManager.Evaluate (new PLString (Operator), Operands [0].Value, ref forcePrint);
-
-            //    else if (workspace.Functions.ContainsKey (functionName.Data))
-            //        Value = workspace.Evaluate (functionName, Operands [0].Value);
-                
-            //    else // if (ValueValid == false)
-            //    {
-            //        if (Operator == "Transpose")
-            //        {
-            //            if (Operands [0].Value is PLRMatrix)
-            //                Value = InternalFunctions.Transpose (Operands [0].Value as PLRMatrix);
-            //            else
-            //                throw new Exception ("Can only transpose matrices");
-            //        }
-
-            //        if (Operator == "Not")
-            //        {
-            //            Operator_Logical_Not ();
-            //        }
-            //    }
-
-            //    if (ValueValid == false) throw new Exception ("Error evaluating expression");                
-
-            //}
-            //else // operand count > 1
-            //{
-            //    PLList args = new PLList ();
-
-            //    foreach (ExpressionTreeNode op in Operands)
-            //        args.Add (op.Evaluate (workspace));
-
-            //    PLString oper = new PLString (Operator);
-
-            //    if (LibraryManager.Contains (oper))
-            //        Value = LibraryManager.Evaluate (oper, args, ref forcePrint);
-
-            //    else if (workspace.Functions.ContainsKey (Operator))
-            //        Value = workspace.Evaluate (oper, args);
-
-            //    else
-            //        throw new Exception ("Can't find function " + Operator);
-            //}
-
-            ////if (Value is PLList)
-            ////{
-            ////    PLList lst = Value as PLList;
-
-            ////    // look for an equal sign in output args
-            ////    int equalIndex = -1;
-
-            ////    for (int i = 0; i<expression.Length; i++) {if (expression [i] == '=') { equalIndex = i; break;}}
-
-            ////    if (equalIndex != -1) // then some outputs were specified
-            ////    {
-            ////        string [] outputsAsTokens = expression.Substring (0, equalIndex - 1).Split (new char [] { '[', ']', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-            ////        //if (outputsAsTokens.Length != lst.Count)
-            ////        //    throw new Exception ("Function call must have 0 outputs or the same number as function formal param list: " + expression);
-
-            ////        int count = Math.Min (outputsAsTokens.Length, lst.Count);
-
-            ////        for (int i = 0; i<count; i++)
-            ////        {
-            ////            lst [i].Name = outputsAsTokens [i];
-            ////            workspace.Add (lst [i]);
-            ////        }
-            ////    }
-
-            ////    Value = lst [0]; // PlotLab code expects only a single value returned. Other output parameters have
-            ////                     // been placed in the caller's workspace so code will function as expected
-            ////}
         }
     }
 }

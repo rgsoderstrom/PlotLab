@@ -13,7 +13,7 @@ namespace Main
     public class ExpressionTree
     {
         readonly ExpressionTreeNode root;
-        readonly bool SupressPrinting = false;
+        readonly public bool SupressPrinting = false;
 
         public ExpressionTree (AnnotatedString expression) 
         {

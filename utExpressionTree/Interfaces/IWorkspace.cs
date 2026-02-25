@@ -17,5 +17,8 @@ namespace Main
         void OverwriteSubmatrix (string name,            // name of matrix already in workspace
                                  int tlcRow, int tlcCol, // 1-based
                                  PLVariable var);        // new data to overwrite some of old
+
+        Dictionary<string, PLFunction> Functions { get;}
+        PLVariable Evaluate (string funcName, PLVariable args);
     }
 }

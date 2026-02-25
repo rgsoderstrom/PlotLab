@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Controls;
 
 using PLCommon;
+using PLLibrary;
 
 namespace Main
 {
@@ -16,8 +17,8 @@ namespace Main
         // available all nodes
         //public static IWorkspace    BaseWorkspace;   // most user created variables
         //public static IWorkspace    GlobalWorkspace; // constants (e.g. pi) and variables explcitly marked "global"
-        public static IWorkspace    Workspace; // just 1 for initial testing
-        public static ILibrary      Library;
+        public static IWorkspace     Workspace; // just 1 for initial testing
+       // public static LibraryManager Library;
         public static IFileSystem   FileSystem;
         public static PrintFunction Print;
 
@@ -55,7 +56,7 @@ namespace Main
         public ExpressionTreeNode (AnnotatedString expr, ref bool SuppressPrinting)
         {
             TokenParsing parsing = new TokenParsing ();
-            List<IToken> tokens = parsing.StringToTokens (expr, Workspace, Library, FileSystem);
+            List<IToken> tokens = parsing.StringToTokens (expr, Workspace, FileSystem);
 
             if (tokens [tokens.Count - 1].Type == TokenType.SupressPrinting)
             {
@@ -73,7 +74,7 @@ namespace Main
         private ExpressionTreeNode (AnnotatedString expr)
         {
             TokenParsing parsing = new TokenParsing ();
-            List<IToken> tokens = parsing.StringToTokens (expr, Workspace, Library, FileSystem);
+            List<IToken> tokens = parsing.StringToTokens (expr, Workspace, FileSystem);
             
             ConstructorCommon (tokens);
         }

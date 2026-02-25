@@ -17,11 +17,9 @@ namespace utExpressionTree
 {
     public partial class MainWindow : Window
     {
-    //  static readonly string InputMFileName = @"D:\From_C_Visual Studio 2022\Visual Studio 2022\Projects\PlotLab\Examples\ExpressionTreeTests.m";
         static readonly string InputMFileName = @"..\..\..\Examples\ExpressionTreeTests.m";
 
         public static readonly Workspace  workspace  = new Workspace ();
-        public static readonly Library    library    = new Library ();
         public static readonly FileSystem fileSystem = new FileSystem ();
 
         static void Print (string str)
@@ -32,7 +30,7 @@ namespace utExpressionTree
         public MainWindow ()
         {
             InitializeComponent ();
-            EventLog.Open ("D:\\From_C_Visual Studio 2022\\Visual Studio 2022\\Projects\\PlotLab\\utExpressionTree\\log.txt");
+            EventLog.Open (@"..\..\log.txt");
         }
 
         private List<List<IToken>> TokensForFileLines = new List<List<IToken>> ();
@@ -54,14 +52,14 @@ namespace utExpressionTree
                         if (text.Length == 0)
                             continue;
 
+                        Counter++;
+
                         text = InputLineProcessor.SqueezeConsecutiveSpaces (text);
                         AnnotatedString annotated = new AnnotatedString (text);
 
-                     // Print (annotated.ToString ());
+                        Console.WriteLine (annotated.ToString ());
 
                         //**********************************************************************
-
-                        Counter++;
 
                         // first pass
                         TokenParsing parsing = new TokenParsing ();
@@ -74,7 +72,7 @@ namespace utExpressionTree
                         foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
 
                         // second pass
-                        tokens = parsing.ParsingPassTwo (tokens, workspace, library, fileSystem);
+                        tokens = parsing.ParsingPassTwo (tokens, workspace, fileSystem);
                         tb.Text += "\nSecond pass:\n";
                         foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
 
@@ -87,7 +85,6 @@ namespace utExpressionTree
                         //**********************************************************************
 
                         ExpressionTreeNode.Workspace  = workspace;
-                        ExpressionTreeNode.Library    = library;
                         ExpressionTreeNode.FileSystem = fileSystem;
                         ExpressionTreeNode.Print      = Print;
 
@@ -105,7 +102,9 @@ namespace utExpressionTree
                         //**********************************************************************
 
                         PLVariable answer = tree.Evaluate (workspace);
+                        Console.WriteLine ("SupressPrinting = " + tree.SupressPrinting);
                         Console.WriteLine ("answer: " + answer.ToString ());
+                        Console.WriteLine ("========================================");
                     }
                 }
 
