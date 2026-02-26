@@ -48,8 +48,6 @@ namespace PLWorkspace
 
         static Workspace ()
         {
-    //        PLDouble minus1 = new PLDouble (-1);  minus1.Name = "minus1"; Constants.Add ("minus1", minus1);
-
             PLDouble PI = new PLDouble (Math.PI); PI.Name = "PI"; Constants.Add ("PI", PI); Constants.Add ("pi", PI);
             PLDouble e  = new PLDouble (Math.Exp (0)); e.Name = "e";   Constants.Add ("e", e);
 
@@ -58,6 +56,17 @@ namespace PLWorkspace
 
             PLComplex i = new PLComplex (0, 1); i.Name = "i"; Constants.Add ("i", i);
             PLComplex j = new PLComplex (0, 1); j.Name = "j"; Constants.Add ("j", i);
+
+            // these are used in utExpressionTree
+            PLDouble a = new PLDouble (3); a.Name = "a"; Constants.Add ("a", a);
+            PLDouble b = new PLDouble (4); b.Name = "b"; Constants.Add ("b", b);
+            CommonMath.Matrix ASrc = new CommonMath.Matrix (1, 4); ASrc.FillByColumn (new double [] {10, 11, 12, 13});
+            PLRMatrix A = new PLRMatrix (ASrc); Constants.Add ("A", A);
+            CommonMath.Matrix BSrc = new CommonMath.Matrix (1, 4); BSrc.FillByColumn (new double [] {20, 21, 22, 23});
+            PLRMatrix B = new PLRMatrix (BSrc); Constants.Add ("B", B);
+            
+
+
 
             Constants.Add ("equal",  new PLString ("equal"));
             Constants.Add ("tight",  new PLString ("tight"));

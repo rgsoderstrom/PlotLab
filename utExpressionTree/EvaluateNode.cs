@@ -308,6 +308,14 @@ namespace Main
                 else if (workspace.Functions.ContainsKey (Operator))
                     Value = workspace.Evaluate (Operator, Operands [0].Value);
 
+
+                else if (Operator == "not")
+                {
+                    Operator_Logical_Not ();
+                }
+
+
+
                 else throw new Exception ("EvaluateNode, Operands.Count == 1 not implemented for operator " + Operator);
 
                 //else // if (ValueValid == false)

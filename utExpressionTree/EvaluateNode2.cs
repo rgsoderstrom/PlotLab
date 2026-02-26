@@ -203,7 +203,16 @@ namespace Main
 
         private void Operator_Logical_Not ()
         {
-            Value = new PLBool (!(Operands [0].Value as PLBool).Data);
+            try
+            { 
+                PLBool op = new PLBool (Operands [0].nodeValue);
+                Value = new PLBool (!op.Data);
+            }
+
+            catch (Exception)
+            {
+                throw new Exception ("Error converting operand to a boolean");
+            }
         }
 
         //*******************************************************************************************

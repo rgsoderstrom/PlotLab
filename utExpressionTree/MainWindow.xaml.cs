@@ -61,26 +61,26 @@ namespace utExpressionTree
 
                         //**********************************************************************
 
-                        // first pass
-                        TokenParsing parsing = new TokenParsing ();
-                        Window win = new Window ();
-                        TextBox tb = new TextBox ();
+                        //// first pass
+                        //TokenParsing parsing = new TokenParsing ();
+                        //Window win = new Window ();
+                        //TextBox tb = new TextBox ();
 
-                        // first pass
-                        List<IToken> tokens = parsing.ParsingPassOne (annotated);
-                        tb.Text += "First pass:\n";
-                        foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
+                        //// first pass
+                        //List<IToken> tokens = parsing.ParsingPassOne (annotated);
+                        //tb.Text += "First pass:\n";
+                        //foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
 
-                        // second pass
-                        tokens = parsing.ParsingPassTwo (tokens, workspace, fileSystem);
-                        tb.Text += "\nSecond pass:\n";
-                        foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
+                        //// second pass
+                        //tokens = parsing.ParsingPassTwo (tokens, workspace, fileSystem);
+                        //tb.Text += "\nSecond pass:\n";
+                        //foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
 
-                        win.Content = tb;
-                        win.SizeToContent = SizeToContent.Height;
-                        win.Title = "Parsing " + Counter;
-                        win.Width = 400;
-                        win.Show ();
+                        //win.Content = tb;
+                        //win.SizeToContent = SizeToContent.Height;
+                        //win.Title = "Parsing " + Counter;
+                        //win.Width = 400;
+                        //win.Show ();
 
                         //**********************************************************************
 
@@ -90,14 +90,14 @@ namespace utExpressionTree
 
                         ExpressionTree tree = new ExpressionTree (annotated);
 
-                        Window win2 = new Window ();
-                        TreeView tv = new TreeView ();
-                        tv.Items.Add (tree.TreeView ());
-                        win2.Content = tv;
-                        win2.Title = "Tree " + Counter;
-                        win2.Width = 400;
-                        win2.Height = 300;
-                        win2.Show ();
+                        //Window win2 = new Window ();
+                        //TreeView tv = new TreeView ();
+                        //tv.Items.Add (tree.TreeView ());
+                        //win2.Content = tv;
+                        //win2.Title = "Tree " + Counter;
+                        //win2.Width = 400;
+                        //win2.Height = 300;
+                        //win2.Show ();
 
                         //**********************************************************************
 
