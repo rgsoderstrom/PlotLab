@@ -147,12 +147,8 @@ namespace PLLibrary
 
             if (IOFunctions.ContainsKey (name))
             {
-                throw new Exception ("function disp not implemented");
-                //if (name == "disp")
-                //    forcePrint = true;
-
-                //PLFunction func = IOFunctions [name];
-                //return func (args);
+                PLFunction func = IOFunctions [name];
+                return func (args);
             }
 
             if (PlotFunctions.ContainsKey (name))

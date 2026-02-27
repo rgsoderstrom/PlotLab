@@ -45,6 +45,7 @@ namespace FunctionLibrary
                 {"inv",  Inverse},
                 {"atan2", Atan2},
                 {"rand", Rand},
+                {"transpose", Transpose},
                 {"Transpose", Transpose},
                 {"log",   Log},
                 {"log2",  Log2},
