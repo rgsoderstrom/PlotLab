@@ -363,6 +363,42 @@ namespace Main
 
         //*******************************************************************
         //
+        // Add outer square brackets
+        //
+
+        internal AnnotatedString AddOuterBrackets ()
+        {
+            List<AnnotatedChar> newChars = new List<AnnotatedChar> (Count + 2);
+
+            foreach (AnnotatedChar ac in annotatedChars)
+            {
+                AnnotatedChar newChar = ac;
+                newChar.BracketLevel++;
+                newChars.Add (newChar); 
+            }
+
+            // new initial character
+            AnnotatedChar c1 = new AnnotatedChar ('[');
+
+            // if the previous first char raised a nesting level, we need to undo that for new first char
+            c1.ParenLevel   = (sbyte) (annotatedChars [0].IsOpenParen   ? annotatedChars [0].ParenLevel - 1   : annotatedChars [0].ParenLevel);
+            c1.BracketLevel = (sbyte) (annotatedChars [0].IsOpenBracket ? annotatedChars [0].BracketLevel - 1 : annotatedChars [0].BracketLevel);
+            c1.QuoteLevel   = (sbyte) (annotatedChars [0].IsQuote       ? annotatedChars [0].QuoteLevel - 1   : annotatedChars [0].QuoteLevel);
+
+            newChars.Insert (0, c1);
+
+            // new final close paren
+            AnnotatedChar c2 = new AnnotatedChar (annotatedChars [annotatedChars.Count - 1], ']');
+            newChars.Add (c2);
+
+          //  return new AnnotatedString (newChars);
+
+            annotatedChars = newChars;
+            return this;
+        }
+
+        //*******************************************************************
+        //
         // Indexer
         //
         internal AnnotatedChar this [int index]
