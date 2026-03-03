@@ -7,6 +7,8 @@ namespace FunctionLibrary
 {
     static public partial class IOFunctions
     {
+        static public PrintFunction Print = null; // print directly to PlotLab console
+
         //*********************************************************************************************
         //
         // map function name strings to executable functions
@@ -176,49 +178,43 @@ namespace FunctionLibrary
 
         static public PLVariable Display (PLVariable a)
         {
-            PLString  str = a as PLString;
-            PLList    lst = a as PLList;
-            PLRMatrix  mat = a as PLRMatrix;
-            PLDouble  dbl = a as PLDouble;
-            PLInteger igr = a as PLInteger;
-            PLBool bl     = a as PLBool;
-
-            if (str != null && str.Data != null && str.Data.Length > 1)
+            if (a is PLString str && str.Data != null && str.Data.Length > 1)
             {
                 if (str.Data [str.Data.Length - 1] == '\'') str.Data = str.Data.Substring (0, str.Data.Length - 1);
                 if (str.Data [0] == '\'') str.Data = str.Data.Substring (1, str.Data.Length - 1);
 
-                return str;
+                Print?.Invoke (str.Text);
             }
 
-            if (lst != null)
+            else if (a is PLRMatrix mat)
             {
-                return new PLString ("list");
+                Print?.Invoke (mat.ToString ());
             }
 
-            if (mat != null)
+            else if (a is PLDouble dbl)
             {
-                return new PLString (mat.ToString ()); // new PLString ("mat");
+                Print?.Invoke (dbl.ToString ());
             }
 
-            if (dbl != null)
+            else if (a is PLList lst)
             {
-                return new PLString (dbl.ToString ());
+                Print?.Invoke ("list");
             }
 
-            if (igr != null)
+            else if (a is PLInteger igr)
             {
-                return new PLString (igr.ToString ());
+                Print?.Invoke (igr.ToString ());
             }
 
-            if (bl != null)
+            else if (a is PLBool bl)
             {
-                return new PLString (bl.ToString ());
+                Print?.Invoke (bl.ToString ());
             }
 
+            else
+                throw new Exception ("Unsupported type passed to function disp: " + a.GetType ().ToString ());
 
-            return new PLString (a.GetType ().ToString ()); // PLNull ();
+            return new PLNull ();
         }
-
     }
 }
