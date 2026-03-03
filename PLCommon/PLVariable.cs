@@ -27,6 +27,40 @@ namespace PLCommon
             return 0;
         }
 
+
+        //*************************************************************************************
+        //*************************************************************************************
+        //*************************************************************************************
+
+        internal static string DoubleToString (double dbl)
+        {
+            int digits = (int) Math.Ceiling (Math.Log10 (Math.Abs (dbl)));
+
+            string formatString;
+
+            if (PrintFormat == PrintFormatType.Short)
+            {
+                if (digits > 3 || digits < -1) formatString = "{0:E2}";
+                else formatString = "{0:0.###}";
+            }
+
+            else if (PrintFormat == PrintFormatType.Long)
+            {
+                if (digits > 5 || digits < -2) formatString = "{0:E6}";
+                else formatString = "{0:0.######}";
+            }
+
+            else
+                throw new Exception ("Unsupported print format");
+
+            return string.Format (formatString, dbl);
+        }
+
+        //*************************************************************************************
+        //*************************************************************************************
+        //*************************************************************************************
+
+
         public virtual int Rows {get {return 1;}}
         public virtual int Cols {get {return 1;}}
         public virtual int Size {get {return 1;}}
@@ -201,55 +235,156 @@ namespace PLCommon
 
         public override string ToString (string cfmt)
         {
-            int a = 8, b = 5; // defaults
-            string str = "";
+            throw new Exception ("PLMatrix.ToString (cfmt) not implemented");
+            //int a = 8, b = 5; // defaults
+            //string str = "";
 
-            //PLVariable p1; 
-            //PLComplex  p2;
-            //PLDouble   p3;
+            ////PLVariable p1; 
+            ////PLComplex  p2;
+            ////PLDouble   p3;
+
+            //try
+            //{
+            //    List<string> cfmtParts = base.SplitFormatString (cfmt);
+
+            //    if (cfmtParts.Count == 3)  // --------------------- use defaults if error in format
+            //    {
+            //        a = int.Parse (cfmtParts [0]);
+            //        b = int.Parse (cfmtParts [1]);
+            //    }
+
+            //    string fmt = "{0," + a + ":0.";
+            //    for (int i = 0; i<b; i++) fmt += '#';
+            //    fmt += "}";
+
+            //    for (int r = 0; r<Rows; r++)
+            //    {
+            //        for (int c = 0; c<Cols; c++)
+            //        {
+            //            //p1 = Get (r, c);
+            //            //p2 = p1 as PLComplex;
+            //            //p3 = p1 as PLDouble;
+
+            //            str += string.Format (fmt, Get (r, c)) + ", ";
+            //        }
+
+            //        if (r < Rows - 1)
+            //            str += "\n";
+            //    }
+            //}
+
+            //catch (Exception ex)
+            //{
+            //    EventLog.WriteLine ("Exception: " + ex.Message);
+            //  //EventLog.WriteLine (ex.StackTrace);
+            //}
+
+            //return str;
+        }
+
+        //**************************************************************************
+
+        // 
+
+        public override string ToString ()
+        {
+            string str = "\n";
 
             try
-            {
-                List<string> cfmtParts = base.SplitFormatString (cfmt);
+            { 
+                // make a parallel matrix of strings, one for each entry of "this" matrix
+                string [,] textForNumbers = new string [Rows, Cols];
 
-                if (cfmtParts.Count == 3)  // --------------------- use defaults if error in format
-                {
-                    a = int.Parse (cfmtParts [0]);
-                    b = int.Parse (cfmtParts [1]);
+                if (this is PLCMatrix)
+                { 
+                    for (int i=0; i<Rows; i++)
+                    {
+                        for (int j=0; j<Cols; j++)
+                        {
+                            PLComplex cplex = (Get (i, j) as PLComplex);
+                            textForNumbers [i, j] = cplex.ToString ();
+                        }
+                    }
                 }
 
-                string fmt = "{0," + a + ":0.";
-                for (int i = 0; i<b; i++) fmt += '#';
-                fmt += "}";
-
-                for (int r = 0; r<Rows; r++)
-                {
-                    for (int c = 0; c<Cols; c++)
+                else if (this is PLRMatrix)
+                { 
+                    for (int i=0; i<Rows; i++)
                     {
-                        //p1 = Get (r, c);
-                        //p2 = p1 as PLComplex;
-                        //p3 = p1 as PLDouble;
+                        for (int j=0; j<Cols; j++)
+                        {
+                            double dbl = (Get (i, j) as PLDouble).Data;
+                            textForNumbers [i, j] = DoubleToString (dbl);
+                        }
+                    }
+                }
 
-                        str += string.Format (fmt, Get (r, c)) + ", ";
+                else
+                    throw new Exception ("Unsupported matrix type");
+
+                // find the widest in each column
+                List<int> columnWidth = new List<int> (Cols);
+
+                for (int j=0; j<Cols; j++)
+                    columnWidth.Add (textForNumbers [0, j].Length); 
+            
+                for (int i=1; i<Rows; i++)
+                {
+                    for (int j=0; j<Cols; j++)
+                        if (columnWidth [j] < textForNumbers [i, j].Length) 
+                            columnWidth [j] = textForNumbers [i, j].Length;
+                }
+
+                // pad all textForNumbers strings in a column to same width
+                for (int i=0; i<Rows; i++)
+                {
+                    for (int j=0; j<Cols; j++)
+                    {
+                        if (columnWidth [j] > textForNumbers [i, j].Length)
+                        {
+                            int padLength = columnWidth [j] - textForNumbers [i, j].Length;
+                            string padString = new string (' ', padLength);  
+                            textForNumbers [i, j] = padString + textForNumbers [i, j];
+                        }
+                    }
+                }
+
+                //*****************************************************
+
+                // add array delimiters
+
+                // add left bracket before text (0,0) 
+                textForNumbers [0, 0] = "[" + textForNumbers [0, 0];
+
+                // pad all column 0 entries below it with one more space
+                for (int i = 1; i<Rows; i++)
+                    textForNumbers [i, 0] = " " + textForNumbers [i, 0];
+
+                // add right bracket after last entry in last row
+                textForNumbers [Rows-1, Cols-1] = textForNumbers [Rows-1, Cols-1] + "]";
+
+                //*****************************************************
+
+                // copy all that to results string
+                for (int i=0; i<Rows; i++)
+                {
+                    for (int j=0; j<Cols; j++)
+                    {
+                        str += textForNumbers [i, j];
+                        str += "  ";
                     }
 
-                    if (r < Rows - 1)
+                    if (i != Rows-1)
                         str += "\n";
                 }
             }
 
             catch (Exception ex)
             {
-                EventLog.WriteLine ("Exception: " + ex.Message);
-              //EventLog.WriteLine (ex.StackTrace);
+                throw new Exception ("Exception in matrix ToString (): " + ex.Message);
             }
 
-            return str;
-        }
-
-        public override string ToString ()
-        {
-            return ToString ("%8.3f");
+            return str;        
         }
     }
 
@@ -798,33 +933,32 @@ namespace PLCommon
 
         public override string ToString (string cfmt)
         {
-            int a = 8, b = 5; // defaults
+            throw new Exception ("PLDouble.ToString (cfmt) not implemented");
 
-            List<string> cfmtParts = SplitFormatString (cfmt);
+            //int a = 8, b = 5; // defaults
 
-            if (cfmtParts.Count == 3)  // --------------------- use defaults if error in format
-            {
-                a = int.Parse (cfmtParts [0]);
-                b = int.Parse (cfmtParts [1]);
-            }
+            //List<string> cfmtParts = SplitFormatString (cfmt);
 
-            string fmt = "{0," + a + ":0.";
-            for (int i = 0; i<b; i++) fmt += '#';
-            fmt += "}";
+            //if (cfmtParts.Count == 3)  // --------------------- use defaults if error in format
+            //{
+            //    a = int.Parse (cfmtParts [0]);
+            //    b = int.Parse (cfmtParts [1]);
+            //}
 
-            return string.Format (fmt, Data);
+            //string fmt = "{0," + a + ":0.";
+            //for (int i = 0; i<b; i++) fmt += '#';
+            //fmt += "}";
+
+            //return string.Format (fmt, Data);
         }
+
+        //*************************************************************************************
+        //*************************************************************************************
+        //*************************************************************************************
 
         public override string ToString ()
         {
-            if      (PrintFormat == PrintFormatType.Short) return string.Format ("{0:0.##}", Data);         
-            else if (PrintFormat == PrintFormatType.Long)  return string.Format ("{0:0.#######}", Data);
-            else  throw new Exception ("Unsupported print format");
-
-            //if (Math.Abs (Data) > 1e4 || Math.Abs (Data) < 1e-4)
-            //    return string.Format ("{0:E5}", Data);
-            //else
-            //    return string.Format ("{0:0.#####}", Data);
+            return DoubleToString (Data);
         }
     }
 
@@ -940,32 +1074,15 @@ namespace PLCommon
 
         public override string ToString (string cfmt)
         {
-            int a = 4, b = 5; // defaults
-
-            List<string> cfmtParts = SplitFormatString (cfmt);
-
-            if (cfmtParts.Count == 3)  // --------------------- use defaults if error in format
-            {
-                a = int.Parse (cfmtParts [0]);
-                b = int.Parse (cfmtParts [1]);
-            }
-
-            string fmt1 = "{0," + a + ":0.";
-            for (int i = 0; i<b; i++) fmt1 += '#';
-            fmt1 += "}";
-
-            string fmt2 = "{1," + a + ":0.";
-            for (int i = 0; i<b; i++) fmt2 += '#';
-            fmt2 += "}";
-
-            string fmt = "(" + fmt1 + ", " + fmt2 + ")";
-
-            return string.Format (fmt, Real, Imag);
+            return "PLComplex.ToString (cfmt) not implmented";
         }
 
         public override string ToString ()
         {
-            return "(" + Real.ToString () + ", " + Imag.ToString () + ")";
+            string realStr = DoubleToString (Real);
+            string imagStr = DoubleToString (Imag);
+
+            return "(" + realStr + ", " + imagStr + ")";
         }
     }
 
