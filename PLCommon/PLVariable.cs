@@ -74,6 +74,7 @@ namespace PLCommon
             if (op1 is PLRMatrix && op2 is PLRMatrix) return (op1 as PLRMatrix).Add (op2 as PLRMatrix);
             if (op1 is PLRMatrix && op2 is PLCMatrix) return (op1 as PLRMatrix).Add (op2 as PLCMatrix);
             if (op1 is PLRMatrix && op2 is PLDouble)  return (op1 as PLRMatrix).Add (op2 as PLDouble);
+            if (op1 is PLRMatrix && op2 is PLComplex)  return (op1 as PLRMatrix).Add (op2 as PLComplex);
 
             if (op1 is PLCMatrix && op2 is PLRMatrix) return (op2 as PLRMatrix).Add (op1 as PLCMatrix);
             if (op1 is PLCMatrix && op2 is PLCMatrix) return (op1 as PLCMatrix).Add (op2 as PLCMatrix);
@@ -495,6 +496,22 @@ namespace PLCommon
 
         public PLRMatrix Add (PLRMatrix op2) {return new PLRMatrix ("", Data + op2.Data);}
         public PLRMatrix Add (PLDouble op2)  {return new PLRMatrix ("", Data + op2.Data);}
+
+
+
+     // public PLCMatrix Add (PLComplex op2) {return new PLCMatrix ("", Data + op2.Data);}
+        public PLCMatrix Add (PLComplex op2) 
+        {
+            PLCMatrix results = new PLCMatrix (Rows, Cols);
+
+            for (int i = 0; i<Rows; i++)
+                for (int j = 0; j<Cols; j++)
+                    results [i, j] = new PLComplex (this [i, j] + op2.Real, op2.Imag);
+
+            return results;
+        }
+
+
 
         public PLRMatrix Sub (PLRMatrix op2) {return new PLRMatrix ("", Data - op2.Data);}
         public PLRMatrix Sub (PLDouble op2)  {return new PLRMatrix ("", Data - op2.Data);}
