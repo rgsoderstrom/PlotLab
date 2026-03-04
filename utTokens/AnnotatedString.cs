@@ -1,6 +1,6 @@
 ﻿
 /*
-    AnnotatedString - 
+    AnnotatedString - list of AnnotatedCharacters
 */
 
 using System;
@@ -40,10 +40,10 @@ namespace Main
         //
 
         // during pass1 note the locations of characters we may want to modify on pass 2
-        List<int> digits       = new List<int> ();
-        List<int> decimals     = new List<int> ();
-        List<int> exponentials = new List<int> (); // E or e
-        List<int> operators    = new List<int> ();
+        private readonly List<int> digits       = new List<int> ();
+        private readonly List<int> decimals     = new List<int> ();
+        private readonly List<int> exponentials = new List<int> (); // E or e
+        private readonly List<int> operators    = new List<int> ();
 
         internal AnnotatedString (string text)
         {
@@ -74,6 +74,7 @@ namespace Main
         private void PassTwo ()
         {
             // look for digits that are part of a variable name, e.g. A12 = 8;
+            // change their type to Letter
             foreach (int i in digits)
             {
                 int before = i - 1;
@@ -86,6 +87,7 @@ namespace Main
             //*********************************************************************
 
             // combine decimal point with number (e.g. .123 or 123.456)
+            // change their type to Number
             foreach (int i in decimals)
             {
                 int before = i - 1;
@@ -145,7 +147,7 @@ namespace Main
 
             //*********************************************************************
 
-            // look for exponentials
+            // look for exponentials. Mark the "E" as a number
             foreach (int i in exponentials)
             {
                 int before = i - 1;
@@ -168,9 +170,9 @@ namespace Main
             //*********************************************************************
 
             // look for:
-            //   two char operators
-            //   transpose
-            //   supress output (trailing semicolon)
+            //   two char operators, e.g. A >= B
+            //   transpose, A'
+            //   mark trailing semicolon as an operator to supress output
             foreach (int i in operators)
             {
                 int before = i - 1;
@@ -420,22 +422,6 @@ namespace Main
                     throw new IndexOutOfRangeException ("Index is out of range in AnnotatedString set.");
             }
         }
-
-        //*******************************************************************
-        //
-        // Operator overloading
-        //
-        //public static AnnotatedString operator + (AnnotatedString left, char right)
-        //{
-        //    return new AnnotatedString (left.Text + right);
-        //}
-
-        //public static AnnotatedString operator + (AnnotatedString left, AnnotatedChar right)
-        //{
-        //    AnnotatedString AS = new AnnotatedString (left.Text + right);
-
-        //    return new AnnotatedString (left.Text + right);
-        //}
 
         //*******************************************************************
         //

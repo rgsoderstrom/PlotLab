@@ -91,21 +91,19 @@ namespace Main
         public bool IsPlusMinus   {get {return OverrideType == ContextType.None && (character == '+' || character == '-');}}
 
         // these only exist as overrides
-        public bool IsTwoCharOp { get { return OverrideType == ContextType.IsTwoCharOperator; } }
-        public bool IsTranspose { get { return OverrideType == ContextType.IsTranspose; } }
-        public bool IsSupress   { get { return OverrideType == ContextType.IsSupressOutput; } }
+        public bool IsTwoCharOp {get {return OverrideType == ContextType.IsTwoCharOperator;}}
+        public bool IsTranspose {get {return OverrideType == ContextType.IsTranspose;}}
+        public bool IsSupress   {get {return OverrideType == ContextType.IsSupressOutput;}}
 
         // these are never overriden
-        public bool IsOpenParen { get { return character == '('; } }
-        public bool IsCloseParen { get { return character == ')'; } }
-        public bool IsOpenBracket { get { return character == '['; } }
-        public bool IsCloseBracket { get { return character == ']'; } }
+        public bool IsOpenParen    {get {return character == '(';}}
+        public bool IsCloseParen   {get {return character == ')';}}
+        public bool IsOpenBracket  {get {return character == '[';}}
+        public bool IsCloseBracket {get {return character == ']';}}
 
-        public bool IsOpenQuote { get { return character == openquote; } }
-        public bool IsCloseQuote { get { return character == closequote; } }
-        public bool IsWhitespace   {get {return (character == ' ' || character == '\t'); }}
-
-      //  public bool IsUnaryOp  {get {return unaryLeftOperators.Contains (character);}}
+        public bool IsOpenQuote    {get {return character == openquote;}}
+        public bool IsCloseQuote   {get {return character == closequote;}}
+        public bool IsWhitespace   {get {return (character == ' ' || character == '\t');}}
 
         public bool IsExponent      {get {return character == '^';}}
         public bool IsColon         {get {return character == ':';}}
@@ -120,15 +118,8 @@ namespace Main
         static public bool IsTwoCharOpStr (string s) {return twoCharBinaryOperators.Contains (s);}
         static List<string> twoCharBinaryOperators = new List<string> () {".*", "./", ".^", "&&", "||", "~=", "==", ">=", "<="};
 
-
-        // static List<char>   oneCharBinaryOperators = new List<char> ()   {'^', '*', '/', '+', '-', '=', '&', '|', '>', '<', '~'};
-      //  static List<char>   unaryLeftOperators     = new List<char> ()   {'+', '-', '~'}; // to the left of operand
-        // static List<char>   unaryRightOperators    = new List<char> ()   {'\''};          // "  "  right "  "
-
-        //      public bool IsBinaryOp     {get {return oneCharBinaryOperators.Contains (character);}}
-
-        public bool CanPreceedTranspose { get {return PreceedTranspose.Contains (character) || IsAlpha; } }
-        static List<char>   PreceedTranspose = new List<char> ()   {']', ')'};
+        public bool CanPreceedTranspose {get {return PreceedTranspose.Contains (character) || IsAlpha;}}
+        private static readonly List<char> PreceedTranspose = new List<char> () {']', ')'};
 
         //**********************************************************************************
 

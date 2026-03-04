@@ -35,8 +35,8 @@ namespace utTokens
                 {
                     if (raw.Length > 0)
                     {
-                        AnnotatedStringTest (raw);
-                        //TokenParsingTest (raw);
+                        //AnnotatedStringTest (raw);
+                        TokenParsingTest (raw);
                         //TokenUtilsTest (raw);
                     }
                 }

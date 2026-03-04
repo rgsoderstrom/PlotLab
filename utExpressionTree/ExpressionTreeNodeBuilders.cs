@@ -155,8 +155,8 @@ namespace Main
 
                     foreach (AnnotatedString str in args)
                     {
-                      //AnnotatedString editted = EnsureRowVector (str);
-                        Operands.Add (new ExpressionTreeNode (str));//(editted));
+                        AnnotatedString editted = EnsureRowVector (str);
+                        Operands.Add (new ExpressionTreeNode (editted));
                     }
                 }
                 break;
@@ -180,35 +180,19 @@ namespace Main
         //*************************************************************************************************
         //*************************************************************************************************
 
-        // 
+        // Add outer brackets if original string doesn't have tham
 
-        //AnnotatedString EnsureRowVector (AnnotatedString orig)
-        //{
-        //    if (orig [0] != '[')
-        //        return "[" + orig.Trim () + "]";
+        AnnotatedString EnsureRowVector (AnnotatedString orig)
+        {
+            AnnotatedString edited = orig.TrimmedSubstring (0, orig.Count);
 
-        //    return orig.Trim ();
+            if (edited [0].IsOpenBracket == false)
+            {
+                edited.AddOuterBrackets ();
+            }
 
-            //TokenParsing parser = new TokenParsing ();
-            //List<Token> toks = parser.ParsingPassOne (orig);
-            //toks = parser.ParsingPassTwo (toks, workspace);
-
-            //foreach (Token tok in toks)
-            //    if (tok.type == TokenType.ArithmeticOperator)
-            //        return orig;
-
-            //string editted = "";
-
-            //for (int i = 0; i<toks.Count; i++)
-            //{
-            //    editted += toks [i].text + " ";
-
-            //    if (i<toks.Count-1)
-            //        editted += ", ";
-            //}
-
-            //return editted;
-        //}
+            return edited;
+        }
 
         //*************************************************************************************************
         //*************************************************************************************************
@@ -350,84 +334,83 @@ namespace Main
 
         void BuildNodeFrom_SubmatrixPair (TokenPair tokens)
         {
-            throw new Exception ("BuildNodeFrom_SubmatrixPair not implemented");
+            if (tokens is TokenPair == false)
+                throw new Exception ("BuildNodeFrom_SubmatrixPair must be passed a token pair. Got " + tokens.AnnotatedText.Plain);
 
-            //if (tokens is TokenPair == false)
-            //    throw new Exception ("BuildNodeFrom_SubmatrixPair must be passed a token pair. Got " + tokens.AnnotatedText.Plain);
+            TokenParsing parsing = new TokenParsing ();
+            TokenPair Pair = tokens as TokenPair;
 
-            //TokenPair Pair = tokens as TokenPair;
+            Operator = Pair.Get1.AnnotatedText.Plain;
+            NodeType = Pair.Get1.Type;
 
-            //Operator = Pair.Get1.AnnotatedText.Plain;
-            //NodeType = Pair.Get1.Type;
+            List<AnnotatedString> args = parsing.SplitSubmatrixArgs (Pair.Get2.AnnotatedText);
 
-            //List<AnnotatedString> args = TokenParsing.SplitSubmatrixArgs (Pair.Get2.AnnotatedText);
+            foreach (AnnotatedString str in args)
+            {
+                Operands.Add (new ExpressionTreeNode (str));
+            }
 
-            //foreach (AnnotatedString str in args)
-            //{
-            //    Operands.Add (new ExpressionTreeNode (str));
-            //}
+            // search the operand tree for "end". replace any with appropriate number
+            // of rows or colums
 
-            //// search the operand tree for "end". replace any with appropriate number
-            //// of rows or colums
+            Compact ();
 
-            //Compact ();
+            string matrixName = Operator;
 
-            //string matrixName = Operator;
+            int rows;
+            int cols;
 
-            //int rows;
-            //int cols;
+            if (Workspace.Get (matrixName) is PLRMatrix)
+            {
+                PLRMatrix mat = Workspace.Get (matrixName) as PLRMatrix;
+                rows = mat.Rows; // (workspace.Rows (mat) as PLInteger).Data;
+                cols = mat.Cols; // (workspace.Cols (mat) as PLInteger).Data;
+            }
 
-            //if (Workspace.Get (matrixName) is PLRMatrix)
-            //{
-            //    PLRMatrix mat = Workspace.Get (matrixName) as PLRMatrix;
-            //    rows = mat.Rows; // (workspace.Rows (mat) as PLInteger).Data;
-            //    cols = mat.Cols; // (workspace.Cols (mat) as PLInteger).Data;
-            //}
+            else if (Workspace.Get (matrixName) is PLCMatrix)
+            {
+                PLCMatrix mat = Workspace.Get (matrixName) as PLCMatrix;
+                rows = mat.Rows;
+                cols = mat.Cols;
+            }
 
-            //else if (workspace.Get (matrixName) is PLCMatrix)
-            //{
-            //    PLCMatrix mat = workspace.Get (matrixName) as PLCMatrix;
-            //    rows = mat.Rows;
-            //    cols = mat.Cols;
-            //}
+            else
+                throw new Exception ("Unrecognized matrix type");
 
-            //else
-            //    throw new Exception ("Unrecognized matrix type");
+            bool IsRowVector = rows == 1 && cols > 1;
+            bool IsColVector = rows > 1  && cols == 1;
 
-            //bool IsRowVector = rows == 1 && cols > 1;
-            //bool IsColVector = rows > 1  && cols == 1;
+            for (int i = 0; i<Operands.Count; i++)
+            {
+                for (int j = 0; j<Operands [i].Operands.Count; j++)
+                {
+                    if (Operands [i].Operands [j].Operator == "end")
+                    {
+                        if (IsRowVector)
+                        {
+                            Operands [i].Operands [j] = new ExpressionTreeNode (new AnnotatedString (cols.ToString ()));//, Workspace);
+                        }
 
-            //for (int i = 0; i<Operands.Count; i++)
-            //{
-            //    for (int j = 0; j<Operands [i].Operands.Count; j++)
-            //    {
-            //        if (Operands [i].Operands [j].Operator == "end")
-            //        {
-            //            if (IsRowVector)
-            //            {
-            //                Operands [i].Operands [j] = new ExpressionTreeNode (cols.ToString (), workspace);
-            //            }
+                        else if (IsColVector)
+                        {
+                            Operands [i].Operands [j] = new ExpressionTreeNode (new AnnotatedString (rows.ToString ()));
+                        }
 
-            //            else if (IsColVector)
-            //            { 
-            //                Operands [i].Operands [j] = new ExpressionTreeNode (rows.ToString (), workspace);
-            //            }
+                        else
+                        {
+                            if (i == 0)
+                            {
+                                Operands [i].Operands [j] = new ExpressionTreeNode (new AnnotatedString (rows.ToString ()));
+                            }
 
-            //            else
-            //            {
-            //                if (i == 0)
-            //                {
-            //                    Operands [i].Operands [j] = new ExpressionTreeNode (rows.ToString (), workspace);
-            //                }
-
-            //                else
-            //                {
-            //                    Operands [i].Operands [j] = new ExpressionTreeNode (cols.ToString (), workspace);
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
+                            else
+                            {
+                                Operands [i].Operands [j] = new ExpressionTreeNode (new AnnotatedString (cols.ToString ()));
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

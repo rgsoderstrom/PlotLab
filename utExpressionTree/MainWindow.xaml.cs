@@ -12,6 +12,7 @@ using Main;
 using PLWorkspace;
 using Common;
 using PLCommon;
+using FunctionLibrary;
 
 namespace utExpressionTree
 {
@@ -31,6 +32,7 @@ namespace utExpressionTree
         {
             InitializeComponent ();
             EventLog.Open (@"..\..\log.txt");
+            IOFunctions.Print = Print;
         }
 
         private List<List<IToken>> TokensForFileLines = new List<List<IToken>> ();
@@ -52,12 +54,14 @@ namespace utExpressionTree
                         if (text.Length == 0)
                             continue;
 
+                      Console.WriteLine (text);
+
                         Counter++;
 
                         text = InputLineProcessor.SqueezeConsecutiveSpaces (text);
                         AnnotatedString annotated = new AnnotatedString (text);
 
-                        Console.WriteLine (annotated.ToString ());
+                      //Console.WriteLine (annotated.ToString ());
 
                         //**********************************************************************
 
@@ -102,8 +106,11 @@ namespace utExpressionTree
                         //**********************************************************************
 
                         PLVariable answer = tree.Evaluate (workspace);
-                        Console.WriteLine ("SupressPrinting = " + tree.SupressPrinting);
-                        Console.WriteLine ("answer: " + answer.ToString ());
+
+                        //Console.WriteLine ("SupressPrinting = " + tree.SupressPrinting);
+                        if (answer is PLNull == false)  Console.WriteLine ("answer: " + answer.ToString ());
+                        else                            Console.WriteLine ("null answer");
+
                         Console.WriteLine ("========================================");
                     }
                 }
@@ -117,6 +124,5 @@ namespace utExpressionTree
                 EventLog.WriteLine ("Exception in Window_Loaded: " + ex.StackTrace);
             }
         }
-
     }
 }
