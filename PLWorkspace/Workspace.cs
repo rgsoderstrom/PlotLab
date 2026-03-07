@@ -1,4 +1,9 @@
-﻿using System;
+﻿
+/*
+    Workspace.cs - abstract base class 
+*/
+
+using System;
 using System.Windows;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,14 +14,11 @@ using PLCommon;
 
 namespace PLWorkspace
 {
-    public partial class Workspace
+    abstract public class Workspace
     {
-        Dictionary<string, PLVariable> Variables = new Dictionary<string, PLVariable> ();
-        Dictionary<string, PLFunction> Commands  = new Dictionary<string, PLFunction> ();
-
-        public Dictionary<string, PLFunction> Functions = new Dictionary<string, PLFunction> ();
-
-        static Dictionary<string, PLVariable> Constants = new Dictionary<string, PLVariable> ();
+        protected readonly Dictionary<string, PLVariable> Variables = new Dictionary<string, PLVariable> ();
+        protected readonly Dictionary<string, PLFunction> Commands  = new Dictionary<string, PLFunction> ();
+        protected readonly Dictionary<string, PLFunction> Functions = new Dictionary<string, PLFunction> ();
 
         public static PrintFunction Print = null;
 
@@ -31,28 +33,6 @@ namespace PLWorkspace
 
         //***************************************************************************************************
 
-        static Workspace ()
-        {
-            PLDouble PI = new PLDouble (Math.PI); PI.Name = "PI"; Constants.Add ("PI", PI); Constants.Add ("pi", PI);
-            PLDouble e  = new PLDouble (Math.Exp (0)); e.Name = "e";   Constants.Add ("e", e);
-
-            PLBool TRUE  = new PLBool (true);  TRUE.Name = "true";   Constants.Add ("true", TRUE);
-            PLBool FALSE = new PLBool (false); FALSE.Name = "false"; Constants.Add ("false", FALSE);
-
-            PLComplex i = new PLComplex (0, 1); i.Name = "i"; Constants.Add ("i", i);
-            PLComplex j = new PLComplex (0, 1); j.Name = "j"; Constants.Add ("j", i);
-
-            Constants.Add ("equal",  new PLString ("equal"));
-            Constants.Add ("tight",  new PLString ("tight"));
-            Constants.Add ("frozen", new PLString ("frozen"));
-            Constants.Add ("auto",   new PLString ("auto"));
-            Constants.Add ("on",     new PLString ("on"));
-            Constants.Add ("off",    new PLString ("off"));
-            Constants.Add ("long",   new PLString ("long"));
-            Constants.Add ("short",  new PLString ("short"));
-        }
-
-    //***************************************************************************************************
 
         public PLVariable RunCommand (PLString cmnd, PLList args)
         {
@@ -147,28 +127,25 @@ namespace PLWorkspace
         /// <param name="str"></param>
         /// <returns></returns>
         
-        public SymbolicNameTypes WhatIs (string str)
+        public virtual SymbolicNameTypes WhatIs (string str)
         {
             SymbolicNameTypes type = SymbolicNameTypes.Unknown;
 
             if      (Variables.ContainsKey (str)) {type = SymbolicNameTypes.Variable;}
-            else if (Constants.ContainsKey (str)) {type = SymbolicNameTypes.Variable;}
             else if (Commands.ContainsKey  (str)) {type = SymbolicNameTypes.WorkspaceCommand;}
             else if (Functions.ContainsKey (str)) {type = SymbolicNameTypes.Function;}  // WorkspaceFunction
 
             return type;
         }
 
-        public List<string> PartialMatch (string str)
+        public virtual List<string> PartialMatch (string str)
         {
             List<string> matches = new List<string> ();
 
             foreach (string cmd in Variables.Keys) {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
-            foreach (string cmd in Constants.Keys) {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
             foreach (string cmd in Commands.Keys)  {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
             foreach (string cmd in Functions.Keys) {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
 
-            //if (matches.Count > 0) matches.Add ("\n");
             return matches;
         }
 
@@ -236,13 +213,13 @@ namespace PLWorkspace
         //
         // Get a variable
         //
-        public PLVariable Get (string name)
+        public virtual PLVariable Get (string name)
         {
             if (Variables.ContainsKey (name))
                 return Variables [name];
 
-            if (Constants.ContainsKey (name))
-                return Constants [name];
+            //if (Constants.ContainsKey (name))
+            //    return Constants [name];
 
             throw new Exception ("Variable " + name + " undefined");
         }
@@ -325,18 +302,21 @@ namespace PLWorkspace
 
         //***********************************************************************************************
 
-        public PLVariable Exists (PLVariable arg)
+        public virtual PLVariable Exists (PLVariable arg)
         {
             if (arg != null)
             {
                 PLString str = arg as PLString;
-                //PLList lst = arg as PLList;
-                //PLString str = lst [0] as PLString;
                 if (Variables.ContainsKey (str.Text))
                     return new PLBool (true);
             }
 
             return new PLBool (false);
+        }
+
+        public virtual bool Exists (string str)
+        {
+            return Variables.ContainsKey (str);
         }
 
         //***********************************************************************************************
