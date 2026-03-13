@@ -6,19 +6,17 @@ using System.Threading.Tasks;
 
 namespace PLWorkspace
 {
-    public class BaseWorkspace : Workspace
+    internal class BaseWorkspace : WorkspaceBase
     {
         static int InstanceCounter = 0;
 
-        public BaseWorkspace ()
+        internal BaseWorkspace (string name) : base (name)
         {
             if (++InstanceCounter > 1)
-            {
                 throw new Exception ("Only one BaseWorkspace allowed");
 
+           
 
-
-            }
         }
     }
 }

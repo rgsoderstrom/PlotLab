@@ -36,6 +36,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "utExpressionTree", "utExpre
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "utTokens", "utTokens\utTokens.csproj", "{9C990113-69F8-44D1-AC11-4FEACDFD139E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "utWorkspace", "utWorkspace\utWorkspace.csproj", "{56956CBF-D5F5-4BD6-ACC7-ED4F3581A59F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3769E3A7-B965-4B82-9430-402D88227140} = {3769E3A7-B965-4B82-9430-402D88227140}
+		{509D9AD1-4FFF-4DDB-AB62-1385FC175CA8} = {509D9AD1-4FFF-4DDB-AB62-1385FC175CA8}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +80,10 @@ Global
 		{9C990113-69F8-44D1-AC11-4FEACDFD139E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C990113-69F8-44D1-AC11-4FEACDFD139E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C990113-69F8-44D1-AC11-4FEACDFD139E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56956CBF-D5F5-4BD6-ACC7-ED4F3581A59F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56956CBF-D5F5-4BD6-ACC7-ED4F3581A59F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56956CBF-D5F5-4BD6-ACC7-ED4F3581A59F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56956CBF-D5F5-4BD6-ACC7-ED4F3581A59F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

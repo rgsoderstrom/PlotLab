@@ -13,16 +13,59 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using PLCommon;
+
 namespace PLWorkspace
 {
-    public class WorkspaceManager
+    internal class WorkspaceManager
     {
-        Workspace Primary;  // either base or a function worksace
-        Workspace Seconday; // global 
+        private readonly WorkspaceBase Working; // primary, either base or a local workspace created for a function
+        private static   WorkspaceBase Global;  // secondary for retrieval. Must be explicitly specified for storage 
 
-        public WorkspaceManager (Workspace primary, Workspace secondary)
+        //**************************************************************************
+
+        internal static void SetGlobalWorkspace (GlobalWorkspace ws)
         {
-
+            Global = ws;
         }
+
+        //**************************************************************************
+
+        internal WorkspaceManager (WorkspaceBase primary)
+        {
+            Working = primary;
+        }
+
+        //**************************************************************************
+
+        internal PLVariable Get (string name)
+        { 
+            if (Working.Exists (name))   
+                return Working.Get (name);// as PLDouble;
+
+            else if (Global.Exists (name)) 
+                return Global.Get (name);// as PLDouble;
+                
+            else throw new Exception (name + " not found");
+        }
+
+        //*****************************************************************************************
+        //
+        // Add or change a variable
+        //
+        internal void Add (PLVariable var)
+        {
+            Working.Add (var);
+        }
+
+        internal void AddGlobal (PLVariable var)
+        {
+            Global.Add (var);
+        }
+
+
     }
 }
+
+
+

@@ -849,6 +849,12 @@ namespace PLCommon
             Data = d;
         }
 
+        public PLDouble (string name, double d)
+        {
+            Name = name;
+            Data = d;
+        }
+
         public PLDouble (PLVariable src)
         {
             PLDouble  pld = src as PLDouble;

@@ -8,19 +8,22 @@ namespace PLCommon
     {
         Unknown, 
         Variable, 
-        Function, 
-      //  WorkspaceFunction,
-        ScriptFile, 
-        FunctionFile,       // single output function
-        //FunctionFile_Multi, // multiple output function file
-        PlotCommand, 
+        Constant,
+        
         WorkspaceCommand, 
-        SystemCommand, 
-        FlowCtrl,
+        Function, 
+
+        //  WorkspaceFunction,
+        //ScriptFile, 
+        //FunctionFile,       // single output function
+        //FunctionFile_Multi, // multiple output function file
+        //PlotCommand, 
+        //SystemCommand, 
+        //FlowCtrl,
     };
 
-    public enum Results  // DO I NEED THIS???
-    {
-        NotFound, Handled, Failed
-    }
+    //public enum Results  // DO I NEED THIS???
+    //{
+    //    NotFound, Handled, Failed
+    //}
 }

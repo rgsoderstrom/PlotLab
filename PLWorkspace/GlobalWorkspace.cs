@@ -10,7 +10,7 @@ using PLCommon;
 
 namespace PLWorkspace
 {
-    public class GlobalWorkspace : Workspace
+    internal class GlobalWorkspace : WorkspaceBase
     {
         static int InstanceCounter;
 
@@ -41,7 +41,7 @@ namespace PLWorkspace
 
     //***************************************************************************************************
 
-        public GlobalWorkspace ()
+        internal GlobalWorkspace () : base ("Global")
         {
             if (++InstanceCounter > 1)
                 throw new Exception ("Only one GlobalWorkspace allowed");
@@ -49,7 +49,7 @@ namespace PLWorkspace
 
     //***************************************************************************************************
 
-        public override SymbolicNameTypes WhatIs (string str)
+        internal override SymbolicNameTypes WhatIs (string str)
         {
             SymbolicNameTypes type = base.WhatIs (str);
 
@@ -62,7 +62,7 @@ namespace PLWorkspace
 
     //***************************************************************************************************
 
-        public override List<string> PartialMatch (string str)
+        internal override List<string> PartialMatch (string str)
         {
             List<string> matches = base.PartialMatch (str);
 
@@ -77,7 +77,7 @@ namespace PLWorkspace
 
     //***************************************************************************************************
 
-        public override PLVariable Exists (PLVariable arg)
+        internal override PLVariable Exists (PLVariable arg)
         {
             if (arg != null)
             {
@@ -90,12 +90,12 @@ namespace PLWorkspace
             return new PLBool (false);
         }
 
-        public override bool Exists (string str)
+        internal override bool Exists (string str)
         {
             return Variables.ContainsKey (str) || Constants.ContainsKey (str);
         }
 
-        public override PLVariable Get (string name)
+        internal override PLVariable Get (string name)
         {
             if (Variables.ContainsKey (name))
                 return Variables [name];
