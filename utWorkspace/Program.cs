@@ -16,35 +16,10 @@ namespace PLWorkspace
         {
             try
             {
-              //  Workspace.Print = Console.Write;
+                Workspace.Print = Console.Write;
 
-                PLDouble X1 = new PLDouble ("X1", 2.456);
-                PLDouble X2 = new PLDouble ("X2", 3.33);
+                PushPopTest ();
 
-                Workspace.Add (X1);
-                Workspace.Add (X2);
-
-                Workspace.Dump ();
-
-                //************************************************
-
-                List<string> ActualParameters = new List<string> () {"X1"};
-                List<string> FormalParameters = new List<string> () {"XX1"};
-                
-                Workspace.PushNew ("Func1", ActualParameters, FormalParameters);
-
-                PLDouble X3 = new PLDouble ("X3", 88);
-                Workspace.Add (X3);
-
-                Workspace.Dump ();
-
-                //************************************************
-
-                List<string> callersNames   = new List<string> () {"XXX1"};
-                List<string> functionsNames = new List<string> () {"XX1"};
-
-                Workspace.Pop (callersNames, functionsNames);
-                Workspace.Dump ();
 
                 //BaseWorkspace baseWorkspace = new BaseWorkspace ("Base");
 
@@ -135,5 +110,39 @@ namespace PLWorkspace
                 Console.WriteLine (ex.StackTrace);
             }
         }
+
+        //********************************************************************************
+
+        static void PushPopTest ()
+        {
+            PLDouble X1 = new PLDouble ("X1", 2.456);
+            PLDouble X2 = new PLDouble ("X2", 3.33);
+
+            Workspace.Add (X1);
+            Workspace.Add (X2);
+
+            Workspace.Dump ();
+
+            //************************************************
+
+            List<string> ActualInputParameters = new List<string> () {"X1"};
+            List<string> FormalInputParameters = new List<string> () {"XX1"};
+                
+            Workspace.PushNew ("Func1", ActualInputParameters, FormalInputParameters);
+
+            PLDouble X3 = new PLDouble ("X3", 88);
+            Workspace.Add (X3);
+
+            Workspace.Dump ();
+
+            //************************************************
+
+            List<string> ActualOutputParameters = new List<string> () {"XXX1"};
+            List<string> FormalOutputParameters = new List<string> () {"X3"};
+
+            Workspace.PopFunction (ActualOutputParameters, FormalOutputParameters);
+            Workspace.Dump ();
+        }
+
     }
 }
