@@ -19,10 +19,8 @@ namespace PLWorkspace
 
         static Workspace ()
         {
-            WorkspaceBase.Print = Console.Write;
             workSpaces.Push (new BaseWorkspace ("Base1"));
         }
-
 
         static private WorkspaceBase Current 
         {
@@ -35,25 +33,19 @@ namespace PLWorkspace
             }
         }
 
-        static public bool Contains (string var)
+        //************************************************************************************
+
+        static public PrintFunction Print
         {
-            return Current.Contains (var);
+            set
+            { 
+                WorkspaceBase.Print = value;
+            }
         }
 
-        static public void Add (PLVariable var)
-        {
-            Current.Add (var);
-        }
+        //************************************************************************************
 
-        static public PLVariable Get (string name)
-        {
-            return Current.Get (name);
-        }
-
-        static public void Dump ()
-        {
-            Current.Dump ();
-        }
+        // stack management
 
         static public void PushNew (string name, List<string> callersNames, List<string> functionsNames)
         {
@@ -64,7 +56,7 @@ namespace PLWorkspace
             workSpaces.Push (new FunctionWorkspace (name, caller, callersNames, functionsNames));
         }
 
-        static public void Pop (List<string> callersNames, List<string> functionsNames)
+        static public void PopFunction (List<string> callersNames, List<string> functionsNames)
         {
             FunctionWorkspace function = workSpaces.Pop () as FunctionWorkspace;
 
@@ -72,6 +64,33 @@ namespace PLWorkspace
                                  callersNames,    // parallel array of their names in this workspace
                                  functionsNames); // names in the caller's workspace
         }
+
+        //************************************************************************************
+
+        // low-level functions and commands just passed to Current
+
+        static public bool Contains (string var) {return Current.Contains (var);}
+
+        static public void Add (PLVariable var)  {Current.Add (var);}
+
+        static public PLVariable Get (string name) {return Current.Get (name);}
+
+        static public void Dump ()  {Current.Dump ();}
+
+        static public void Clear (PLVariable lst)  {Current.Clear (lst);} // one or several variables
+
+
+
+        //**********************************************************************************************
+
+        static void OverwriteSubmatrix (string name,            // name of matrix already in workspace
+                                        int tlcRow, int tlcCol, // 1-based
+                                        PLVariable var)         // new data to overwrite some of old
+        {
+            Current.OverwriteSubmatrix (name, tlcRow, tlcCol, var);
+        }
+
+
 
 
     }

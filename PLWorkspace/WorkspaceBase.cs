@@ -24,7 +24,7 @@ namespace PLWorkspace
         protected readonly Dictionary<string, PLFunction> Functions = new Dictionary<string, PLFunction> ();
 
         internal readonly string Name;
-        internal static PrintFunction Print = null;
+        internal static PrintFunction Print = Console.Write;
 
         internal WorkspaceBase (string name)
         {
