@@ -31,9 +31,24 @@ namespace PLWorkspace
 
             for (int i=0; i<callersNames.Count; i++)
             {
-                PLVariable var = callersWorkspace.Get (callersNames [i]);
-                var.Name = functionsNames [i]; // change to local name
-                Add (var); // store in local function workspace
+                PLVariable vvar = null;
+
+                // true if caller local variable passed to a function
+                if (callersWorkspace.Get (callersNames [i], ref vvar) == true) 
+                { 
+                    vvar.Name = functionsNames [i]; // change to local name
+                    Add (vvar); // store in local function workspace
+                }
+
+                // check for a global variable passed to a function
+                else if (Workspace.Global.Get (callersNames [i], ref vvar))
+                {
+                    vvar.Name = functionsNames [i]; // change to local name
+                    Add (vvar); // store in local function workspace
+                }
+
+                else
+                    throw new Exception ("Variable " + callersNames [i] + " undefined");
             }
         }
 
@@ -50,9 +65,16 @@ namespace PLWorkspace
 
             for (int i=0; i<callersNames.Count; i++)
             {
-                PLVariable var = Get (localNames [i]);
-                var.Name = callersNames [i];
-                callersWorkspace.Add (var);
+                PLVariable var = null;
+                
+                if (Get (localNames [i], ref var))
+                { 
+                    var.Name = callersNames [i];
+                    callersWorkspace.Add (var);
+                }
+
+                else
+                    throw new Exception ("Error copying output " + callersNames [i] + " to caller's workspace");
             }
         }
 

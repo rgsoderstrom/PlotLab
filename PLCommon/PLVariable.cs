@@ -2,7 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Numerics;
+//using System.Numerics;
 
 using Common;
 using CommonMath;
@@ -34,6 +34,9 @@ namespace PLCommon
 
         internal static string DoubleToString (double dbl)
         {
+            if (Math.Abs (dbl) < 100 * Double.Epsilon)
+                return ("0");
+
             int digits = (int) Math.Ceiling (Math.Log10 (Math.Abs (dbl)));
 
             string formatString;
@@ -602,6 +605,12 @@ namespace PLCommon
             }
         }
 
+        public PLCMatrix (string name, CommonMath.CMatrix data)
+        {
+            Name = name;
+            Data = data;
+        }
+
 
 
 
@@ -792,7 +801,8 @@ namespace PLCommon
 
         public PLCMatrix Div (PLComplex op2)
         {
-            return new PLCMatrix (Data / new CommonMath.Complex (op2.Data.Real, op2.Data.Imaginary));
+            return new PLCMatrix (Data / new CommonMath.Complex (op2.Data.Real, op2.Data.Imag));
+            //return new PLCMatrix (Data / new CommonMath.Complex (op2.Data.Real, op2.Data.Imaginary));
         }
     }
 
@@ -839,7 +849,7 @@ namespace PLCommon
 
     public class PLDouble : PLScalar
     {
-        readonly public double Data;
+        /*readonly*/ public double Data;
 
         public override int    DataAsInteger {get {return (int) Math.Round (Data);}}
         public override double DataAsDouble  {get {return Data;}}
@@ -885,7 +895,8 @@ namespace PLCommon
 
         public PLComplex Add (PLComplex op2)
         {
-            return new PLComplex (Data + op2.Data.Real, op2.Data.Imaginary);
+            return new PLComplex (Data + op2.Data.Real, op2.Data.Imag);
+          //return new PLComplex (Data + op2.Data.Real, op2.Data.Imaginary);
         }
 
         public PLCMatrix Add (PLCMatrix op2)
@@ -991,10 +1002,13 @@ namespace PLCommon
 
     public class PLComplex : PLScalar
     {
-        public System.Numerics.Complex Data = new System.Numerics.Complex (0, 0);
+     // public System.Numerics.Complex Data = new System.Numerics.Complex (0, 0);
+        public CommonMath.Complex Data = new CommonMath.Complex (0, 0);
 
-        public double Real {get {return Data.Real;}      set {Data = new System.Numerics.Complex (value, Data.Imaginary);}}
-        public double Imag {get {return Data.Imaginary;} set {Data = new System.Numerics.Complex (Data.Real, value);}}
+        //public double Real {get {return Data.Real;}      set {Data = new System.Numerics.Complex (value, Data.Imaginary);}}
+        //public double Imag {get {return Data.Imaginary;} set {Data = new System.Numerics.Complex (Data.Real, value);}}
+        public double Real {get {return Data.Real;}      set {Data = new CommonMath.Complex (value, Data.Imag);}}
+        public double Imag {get {return Data.Imag;}      set {Data = new CommonMath.Complex (Data.Real, value);}}
 
         public PLComplex (double re, double im)
         {
@@ -1002,18 +1016,33 @@ namespace PLCommon
             Imag = im;
         }
 
+        public PLComplex (string name, double re, double im)
+        {
+            Name = name;
+            Real = re;
+            Imag = im;
+        }
+
+        public PLComplex (double re)
+        {
+            Real = re;
+            Imag = 0;
+        }
+
         public override int    DataAsInteger {get {throw new Exception ("DataAsInteger not implemented for complex");}}
         public override double DataAsDouble  {get {throw new Exception ("DataAsDouble not implemented for complex");}}
 
-        public PLComplex (System.Numerics.Complex src)
-        {
-            Data = new System.Numerics.Complex (src.Real, src.Imaginary);
-        }
-
         public PLComplex (CommonMath.Complex src)
         {
-            Data = new System.Numerics.Complex (src.Real, src.Imag);
+          //Data = new System.Numerics.Complex (src.Real, src.Imaginary);
+            Data = new CommonMath.Complex (src.Real, src.Imag);
         }
+
+        //public PLComplex (CommonMath.Complex src)
+        //{
+        //    Data = new CommonMath.Complex (src.Real, src.Imag);
+        //  //Data = new System.Numerics.Complex (src.Real, src.Imag);
+        //}
 
         public PLComplex (PLVariable src)
         {
@@ -1040,7 +1069,7 @@ namespace PLCommon
 
         public double Angle // in radians
         {
-            get {return Data.Phase;}
+            get {return Data.Angle;}
         }
 
         public PLCMatrix Mul (PLRMatrix op2)

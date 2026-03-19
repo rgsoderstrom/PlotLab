@@ -95,15 +95,32 @@ namespace PLWorkspace
             return Variables.ContainsKey (str) || Constants.ContainsKey (str);
         }
 
-        internal override PLVariable Get (string name)
+        //internal PLVariable Get (string name)
+        //{
+        //    if (Variables.ContainsKey (name))
+        //        return Variables [name];
+
+        //    if (Constants.ContainsKey (name))
+        //        return Constants [name];
+
+        //    throw new Exception ("Variable " + name + " undefined");
+        //}
+
+        internal override bool Get (string name, ref PLVariable var)
         {
             if (Variables.ContainsKey (name))
-                return Variables [name];
+            {
+                var = Variables [name];
+                return true;
+            }
 
             if (Constants.ContainsKey (name))
-                return Constants [name];
+            {
+                var = Constants [name];
+                return true;
+            }
 
-            throw new Exception ("Variable " + name + " undefined");
+            return false;
         }
 
     }

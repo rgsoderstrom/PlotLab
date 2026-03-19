@@ -30,144 +30,146 @@ namespace FunctionLibrary
 
         static public PLVariable FFT (PLVariable arg)
         {
-            //
-            // unpack input
-            //
-            bool returnFreqScale = false;
-            double sampleRate = 0; // in samples per second
-            int length;
+            throw new Exception ("FFT not implemented");
 
-            PLRMatrix  realInput = null; 
-            PLCMatrix complexInput = null;
+            ////
+            //// unpack input
+            ////
+            //bool returnFreqScale = false;
+            //double sampleRate = 0; // in samples per second
+            //int length;
 
-            try
-            {
-                if (arg is PLList) // then sample rate is specified
-                {
-                    PLList lst = arg as PLList;
-                    if (lst [0].IsVector == false) 
-                        throw new Exception ("Input signal must be vector");
+            //PLRMatrix  realInput = null; 
+            //PLCMatrix complexInput = null;
 
-                    length = lst [0].Size;
+            //try
+            //{
+            //    if (arg is PLList) // then sample rate is specified
+            //    {
+            //        PLList lst = arg as PLList;
+            //        if (lst [0].IsVector == false) 
+            //            throw new Exception ("Input signal must be vector");
 
-                    sampleRate = (lst [1] as PLDouble).Data;
-                    returnFreqScale = true;
-                    realInput    = lst [0] as PLRMatrix;  // only one of these will be non-null
-                    complexInput = lst [0] as PLCMatrix;
+            //        length = lst [0].Size;
 
-                    if (realInput == null && complexInput == null)
-                        throw new Exception ("Unsupported in type " + lst [0].GetType ());
-                }
+            //        sampleRate = (lst [1] as PLDouble).Data;
+            //        returnFreqScale = true;
+            //        realInput    = lst [0] as PLRMatrix;  // only one of these will be non-null
+            //        complexInput = lst [0] as PLCMatrix;
 
-                else if (arg is PLRMatrix) // real input
-                {
-                    realInput = arg as PLRMatrix;
-                    if (realInput.IsVector == false) throw new Exception ("Input signal must be vector");
-                    length = realInput.Size;
-                }
+            //        if (realInput == null && complexInput == null)
+            //            throw new Exception ("Unsupported in type " + lst [0].GetType ());
+            //    }
 
-                else if (arg is PLCMatrix) // complex input
-                {
-                    complexInput = arg as PLCMatrix;
-                    if (complexInput.IsVector == false) throw new Exception ("Input signal must be vector");
-                    length = complexInput.Size;
-                }
+            //    else if (arg is PLRMatrix) // real input
+            //    {
+            //        realInput = arg as PLRMatrix;
+            //        if (realInput.IsVector == false) throw new Exception ("Input signal must be vector");
+            //        length = realInput.Size;
+            //    }
 
-                else
-                    throw new Exception ("unreconized input: " + arg.GetType ());
-            }
+            //    else if (arg is PLCMatrix) // complex input
+            //    {
+            //        complexInput = arg as PLCMatrix;
+            //        if (complexInput.IsVector == false) throw new Exception ("Input signal must be vector");
+            //        length = complexInput.Size;
+            //    }
 
-            catch (Exception ex)
-            {
-                throw new Exception ("FFT Input error: " + ex.Message);
-            }
+            //    else
+            //        throw new Exception ("unreconized input: " + arg.GetType ());
+            //}
 
-            //****************************************************************
-            //
-            // run appropriate transform
-            //
+            //catch (Exception ex)
+            //{
+            //    throw new Exception ("FFT Input error: " + ex.Message);
+            //}
 
-            PLRMatrix results;
+            ////****************************************************************
+            ////
+            //// run appropriate transform
+            ////
 
-            // buffers for input to and output from Math.Net functions
-            if (complexInput != null) // then is complex in
-            {
-                //ComplexFourierTransformation cft = new ComplexFourierTransformation ();
-                System.Numerics.Complex [] workBuffer = new System.Numerics.Complex [length];
+            //PLRMatrix results;
 
-                for (int i = 0; i<length; i++)
-                    workBuffer [i] = new System.Numerics.Complex (complexInput [i].Real, (float) complexInput [i].Imag);
+            //// buffers for input to and output from Math.Net functions
+            //if (complexInput != null) // then is complex in
+            //{
+            //    //ComplexFourierTransformation cft = new ComplexFourierTransformation ();
+            //    System.Numerics.Complex [] workBuffer = new System.Numerics.Complex [length];
 
-                Fourier.Forward (workBuffer);
-                results = FormatResults (workBuffer, returnFreqScale, sampleRate);
-            }
+            //    for (int i = 0; i<length; i++)
+            //        workBuffer [i] = new System.Numerics.Complex (complexInput [i].Real, (float) complexInput [i].Imag);
 
-            else // real input
-            {
-                int sampleCount = realInput.Cols;
-                int pad = sampleCount.IsEven () ? 2 : 1;
+            //    Fourier.Forward (workBuffer);
+            //    results = FormatResults (workBuffer, returnFreqScale, sampleRate);
+            //}
 
-                double [] fftReal    = new double [sampleCount];
-                double [] fftImag    = new double [sampleCount];
-                double [] workBuffer = new double [sampleCount + pad]; // before FFT: input signal
-                                                                       // after FFT: half of complex spectrum
+            //else // real input
+            //{
+            //    int sampleCount = realInput.Cols;
+            //    int pad = sampleCount.IsEven () ? 2 : 1;
 
-                for (int i=0; i<sampleCount; i++)
-                    workBuffer [i] = realInput [i];
+            //    double [] fftReal    = new double [sampleCount];
+            //    double [] fftImag    = new double [sampleCount];
+            //    double [] workBuffer = new double [sampleCount + pad]; // before FFT: input signal
+            //                                                           // after FFT: half of complex spectrum
 
-                Fourier.ForwardReal (workBuffer, sampleCount, FourierOptions.NoScaling);
+            //    for (int i=0; i<sampleCount; i++)
+            //        workBuffer [i] = realInput [i];
 
-                int put = 0;
+            //    Fourier.ForwardReal (workBuffer, sampleCount, FourierOptions.NoScaling);
+
+            //    int put = 0;
                 
-                for (int k=0; k<workBuffer.Length; k+=2, put++)
-                { 
-                    fftReal [put] = workBuffer [k];
-                    fftImag [put] = workBuffer [k+1];
-                }
+            //    for (int k=0; k<workBuffer.Length; k+=2, put++)
+            //    { 
+            //        fftReal [put] = workBuffer [k];
+            //        fftImag [put] = workBuffer [k+1];
+            //    }
 
-                put = fftReal.Length - 1;
+            //    put = fftReal.Length - 1;
 
-                for (int k = 2; k<workBuffer.Length; k+=2, put--)
-                {
-                    fftReal [put] = workBuffer [k];
-                    fftImag [put] = workBuffer [k+1] * -1;
-                }
+            //    for (int k = 2; k<workBuffer.Length; k+=2, put--)
+            //    {
+            //        fftReal [put] = workBuffer [k];
+            //        fftImag [put] = workBuffer [k+1] * -1;
+            //    }
 
-                results = FormatResults (fftReal, fftImag, returnFreqScale, sampleRate);
-            }
+            //    results = FormatResults (fftReal, fftImag, returnFreqScale, sampleRate);
+            //}
 
-            return results;
+            //return results;
         }
 
         //********************************************************************************
 
-        private static PLRMatrix FormatResults (System.Numerics.Complex [] workBuffer, bool doFreqScale, double sampleRate)
-        {
-            int length = workBuffer.Length;
-            PLRMatrix results = new PLRMatrix (3, length);
+        //private static PLRMatrix FormatResults (System.Numerics.Complex [] workBuffer, bool doFreqScale, double sampleRate)
+        //{
+        //    int length = workBuffer.Length;
+        //    PLRMatrix results = new PLRMatrix (3, length);
 
-            double [] frequencyScale = doFreqScale ? Fourier.FrequencyScale (length, sampleRate) : GenerateBinCount (length);
+        //    double [] frequencyScale = doFreqScale ? Fourier.FrequencyScale (length, sampleRate) : GenerateBinCount (length);
 
-            // copy to output buffer, swapping halves
-            int put = 0;
-            int L2 = 1 + length / 2;
+        //    // copy to output buffer, swapping halves
+        //    int put = 0;
+        //    int L2 = 1 + length / 2;
 
-            for (int i = L2; i<length; i++, put++)
-            {
-                results [0, put] = frequencyScale [i];
-                results [1, put] = PowerSpectrum (workBuffer [i].Real, workBuffer [i].Imaginary, length);
-                results [2, put] = PhaseAngle    (workBuffer [i].Real, workBuffer [i].Imaginary);
-            }
+        //    for (int i = L2; i<length; i++, put++)
+        //    {
+        //        results [0, put] = frequencyScale [i];
+        //        results [1, put] = PowerSpectrum (workBuffer [i].Real, workBuffer [i].Imaginary, length);
+        //        results [2, put] = PhaseAngle    (workBuffer [i].Real, workBuffer [i].Imaginary);
+        //    }
 
-            for (int i = 0; i<L2; i++, put++)
-            {
-                results [0, put] = frequencyScale [i];
-                results [1, put] = PowerSpectrum (workBuffer [i].Real, workBuffer [i].Imaginary, length);
-                results [2, put] = PhaseAngle    (workBuffer [i].Real, workBuffer [i].Imaginary);
-            }
+        //    for (int i = 0; i<L2; i++, put++)
+        //    {
+        //        results [0, put] = frequencyScale [i];
+        //        results [1, put] = PowerSpectrum (workBuffer [i].Real, workBuffer [i].Imaginary, length);
+        //        results [2, put] = PhaseAngle    (workBuffer [i].Real, workBuffer [i].Imaginary);
+        //    }
 
-            return results;
-        }
+        //    return results;
+        //}
 
         //********************************************************************************
 

@@ -1,6 +1,10 @@
 ﻿
 /*
-    Workspace - actually a stack of Workspaces 
+    Workspace - Two components:
+                    - a single GlobalWorkspace
+                    - a stack of:
+                        - one BaseWorkspace
+                        - possibly one or more FunctionWorkspaces 
 */
 
 using System;
@@ -15,20 +19,19 @@ namespace PLWorkspace
 {
     static public class Workspace
     {
-        static private readonly Stack<WorkspaceBase> workSpaces = new Stack<WorkspaceBase> ();
+        private  static readonly Stack<WorkspaceBase> workSpaces = new Stack<WorkspaceBase> ();
+        internal static readonly WorkspaceBase Global;  // secondary for retrieval. Must be explicitly specified for storage 
 
         static Workspace ()
         {
             workSpaces.Push (new BaseWorkspace ("Base1"));
+            Global = new GlobalWorkspace ();
         }
 
         static private WorkspaceBase Current 
         {
             get 
             {
-                if (workSpaces.Count == 0)
-                    throw new Exception ("Workspace stack underflow");
-
                 return workSpaces.Peek ();
             }
         }
@@ -44,6 +47,7 @@ namespace PLWorkspace
         }
 
         //************************************************************************************
+        //************************************************************************************
 
         // stack management
 
@@ -56,8 +60,13 @@ namespace PLWorkspace
             workSpaces.Push (new FunctionWorkspace (name, caller, callersNames, functionsNames));
         }
 
+        //************************************************************************************
+
         static public void PopFunction (List<string> callersNames, List<string> functionsNames)
         {
+            if (workSpaces.Count == 1)
+                throw new Exception ("Workspace stack underflow, attempt to pop base workspace");
+
             FunctionWorkspace function = workSpaces.Pop () as FunctionWorkspace;
 
             function.GetOutputs (Current,
@@ -66,14 +75,27 @@ namespace PLWorkspace
         }
 
         //************************************************************************************
+        //************************************************************************************
 
         // low-level functions and commands just passed to Current
 
         static public bool Contains (string var) {return Current.Contains (var);}
 
-        static public void Add (PLVariable var)  {Current.Add (var);}
+        static public void Add       (PLVariable var)  {Current.Add (var);}
+        static public void AddGlobal (PLVariable var)  {Global.Add (var);}
 
-        static public PLVariable Get (string name) {return Current.Get (name);}
+
+        // check Current first. if not there check global 
+        static public PLVariable Get (string name) 
+        {
+            PLVariable plv = null;
+
+            if (Current.Get (name, ref plv)) return plv;
+            if (Global.Get  (name, ref plv)) return plv;
+
+            throw new Exception ("Cannot find " + name + " in Workspace");
+        }
+
 
         static public void Dump ()  {Current.Dump ();}
 
@@ -83,9 +105,9 @@ namespace PLWorkspace
 
         //**********************************************************************************************
 
-        static void OverwriteSubmatrix (string name,            // name of matrix already in workspace
-                                        int tlcRow, int tlcCol, // 1-based
-                                        PLVariable var)         // new data to overwrite some of old
+        static public void OverwriteSubmatrix (string name,            // name of matrix already in workspace
+                                               int tlcRow, int tlcCol, // 1-based
+                                               PLVariable var)         // new data to overwrite some of old
         {
             Current.OverwriteSubmatrix (name, tlcRow, tlcCol, var);
         }

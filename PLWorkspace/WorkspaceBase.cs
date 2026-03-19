@@ -63,10 +63,10 @@ namespace PLWorkspace
             return new Dictionary<string, PLFunction> ()
             {
                 {"exists", Exists},
-                {"rows",   Rows},
-                {"cols",   Cols},
-                {"length", Length},
-                {"size",   Size},
+                {"rows",   WorkspaceUtils.Rows},
+                {"cols",   WorkspaceUtils.Cols},
+                {"length", WorkspaceUtils.Length},
+                {"size",   WorkspaceUtils.Size},
             };
         }
 
@@ -211,6 +211,19 @@ namespace PLWorkspace
             else Variables.Add (var.Name, var);
         }
 
+        internal void OverwriteSubmatrix (string name,            // name of matrix already in workspace
+                                          int tlcRow, int tlcCol, // 1-based
+                                          PLVariable newData)     // new data to overwrite some of old
+        {
+            WorkspaceUtils.OverwriteSubmatrix (this,
+                                               name,           // name of matrix already in workspace
+                                               tlcRow, tlcCol, // 1-based
+                                               newData);       // new data to overwrite some of old
+
+        }
+
+
+
         //*****************************************************************************************
         //
         // See whether workspace contains a variable
@@ -220,66 +233,25 @@ namespace PLWorkspace
             return Variables.ContainsKey (var);
         }
 
-        //*****************************************************************************************
-        //
-        // Replace part of a matrix
-        //    - LIMITATION: assumes data will overwrite consecutive rows, cols
-        //
-        internal void OverwriteSubmatrix (string name,            // name of matrix already in workspace
-                                          int tlcRow, int tlcCol, // 1-based
-                                          PLVariable var)         // new data to overwrite some of old
-        {
-            PLRMatrix mat = Get (name) as PLRMatrix ?? throw new Exception (name + " is not a matrix");
-
-
-            PLRMatrix submat = var as PLRMatrix; // see what type the input data is
-            PLDouble  value  = var as PLDouble;
-            PLInteger iValue = var as PLInteger;
-
-            if (Get (name) is PLCMatrix)
-                throw new Exception ("Overwrite sub matrix not supported for complex");
-
-            if (submat != null)
-            {
-                // ensure it will fit
-                if (tlcRow + submat.Rows > mat.Rows + 1 || tlcCol + submat.Cols > mat.Cols + 1)
-                    throw new Exception ("Attempt to write outside of matrix " + name);
-
-                for (int c=0; c<submat.Cols; c++)
-                    for (int r=0; r<submat.Rows; r++)
-                        mat [tlcRow - 1 + r, tlcCol - 1 + c] = submat [r, c];
-            }
-
-            else if (value != null)
-                mat [tlcRow - 1, tlcCol - 1] = value.Data;
-
-            else if (iValue != null)
-                mat [tlcRow - 1, tlcCol - 1] = iValue.Data;
-
-            else
-                throw new Exception ("OverwriteSubmatrix error");
-        }
 
         //*****************************************************************************************
         //
-        // Get a variable
+        // Read a variable
         //
-        internal virtual PLVariable Get (string name)
+        internal virtual bool Get (string name, ref PLVariable var)
         {
             if (Variables.ContainsKey (name))
-                return Variables [name];
+            {
+                var = Variables [name];
+                return true;
+            }
 
-            //if (Constants.ContainsKey (name))
-            //    return Constants [name];
-
-            throw new Exception ("Variable " + name + " undefined");
+            return false;
         }
 
         //***************************************************************************************************
         //***************************************************************************************************
         //***************************************************************************************************
-        
-        //***********************************************************************************************
 
         internal PLVariable Clear (PLVariable sel)
         {
@@ -392,68 +364,6 @@ namespace PLWorkspace
 
             return null;
         }
-
-        //***********************************************************************************************
-
-        internal PLVariable Rows (PLVariable a)
-        {
-            PLRMatrix p1 = a as PLRMatrix; if (p1 != null) return new PLInteger (p1.Rows); 
-            PLList    p2 = a as PLList;    if (p2 != null) return new PLInteger (1); 
-            PLDouble  p3 = a as PLDouble;  if (p3 != null) return new PLInteger (1); 
-            PLInteger p4 = a as PLInteger; if (p4 != null) return new PLInteger (1);  
-            PLString  p5 = a as PLString;  if (p5 != null) return new PLInteger (1);  
-            throw new Exception ("Can\'t count the rows of a " + a.ToString ());
-        }
-
-        internal PLVariable Cols (PLVariable a)
-        {
-            PLRMatrix p1 = a as PLRMatrix; if (p1 != null) return new PLInteger (p1.Cols); 
-            PLList    p2 = a as PLList;    if (p2 != null) return new PLInteger (p2.Count); 
-            PLDouble  p3 = a as PLDouble;  if (p3 != null) return new PLInteger (1); 
-            PLInteger p4 = a as PLInteger; if (p4 != null) return new PLInteger (1);  
-            PLString  p5 = a as PLString;  if (p5 != null) return new PLInteger (p5.Text.Length);  
-            throw new Exception ("Can\'t count the columns of a " + a.ToString ());
-        }
-
-        internal PLVariable Size (PLVariable a)
-        {
-            PLList lst = a as PLList;
-
-            if (lst != null)
-            {
-                if (lst.Count == 1)
-                    return Length (lst);
-
-                if (lst.Count == 2)
-                {
-                    PLInteger intg = lst [1] as PLInteger;
-                    PLDouble  doub = lst [1] as PLDouble;
-                    int select = 1; // 1 => return number rows, 2 => return number cols
-
-                    if (intg != null) select = intg.Data;
-                    if (doub != null) select = (int) doub.Data;
-
-                    if (select == 1) return Rows (lst [0]);
-                    if (select == 2) return Cols (lst [0]);
-                    throw new Exception ("Argument error in \"size\" function");
-                }
-            }
-
-            PLRMatrix s = new PLRMatrix (1, 2);
-            s [0, 0] = (Rows (a) as PLInteger).Data; 
-            s [0, 1] = (Cols (a) as PLInteger).Data; 
-
-            return s;
-        }
-
-        internal PLVariable Length (PLVariable a)
-        {
-            int rows = (Rows (a) as PLInteger).Data;
-            int cols = (Cols (a) as PLInteger).Data;
-            return new PLInteger (Math.Max (rows, cols));
-        }
-
-        //***********************************************************************************************
 
     }
 }
