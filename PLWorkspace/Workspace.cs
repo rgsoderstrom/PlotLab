@@ -20,7 +20,7 @@ namespace PLWorkspace
     static public class Workspace
     {
         private  static readonly Stack<WorkspaceBase> workSpaces = new Stack<WorkspaceBase> ();
-        internal static readonly WorkspaceBase Global;  // secondary for retrieval. Must be explicitly specified for storage 
+        internal static readonly GlobalWorkspace Global;  // secondary for retrieval. Must be explicitly specified for storage 
 
         static Workspace ()
         {
@@ -77,9 +77,10 @@ namespace PLWorkspace
         //************************************************************************************
         //************************************************************************************
 
-        // low-level functions and commands just passed to Current
+        // low-level functions and commands
 
-        static public bool Contains (string var) {return Current.Contains (var);}
+        static public bool Contains  (string var) {return Current.Contains (var) || Global.Contains (var);}
+        static public bool IsDefined (string var) {return Contains (var);}
 
         static public void Add       (PLVariable var)  {Current.Add (var);}
         static public void AddGlobal (PLVariable var)  {Global.Add (var);}

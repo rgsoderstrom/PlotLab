@@ -2,18 +2,18 @@
 using System.Collections.Generic;   
 
 ////using PLCommon;
-////using PLWorkspace;
+using PLWorkspace;
 using PLLibrary;
 
 namespace Main
 {
     public partial class TokenParsing
     {
-        internal List<IToken> ParsingPassTwo (List<IToken> initial, IWorkspace workspace, IFileSystem files)
+        internal List<IToken> ParsingPassTwo (List<IToken> initial, IFileSystem files)
         {
-            List<IToken> edited = LookupAlphanumerics (initial, workspace, files);
+            List<IToken> edited = LookupAlphanumerics (initial, files);
 
-            edited = IdentifyParens (edited, workspace); // grouping, function args, sub matrix
+            edited = IdentifyParens (edited); // grouping, function args, sub matrix
 
             edited = IdentifyBrackets (edited); // by separator: :, ;, etc.
 
@@ -91,14 +91,13 @@ namespace Main
         // Assign a more specific type to an Alphanumeric
 
         List<IToken> LookupAlphanumerics (List<IToken> initial,
-                                          IWorkspace workspace,
                                           IFileSystem files)
         {
             for (int i = 0; i<initial.Count; i++)
             {
                 if (initial [i].Type == TokenType.Alphanumeric)
                 {
-                    if (workspace.IsDefined (initial [i].AnnotatedText.Plain))
+                    if (Workspace.IsDefined (initial [i].AnnotatedText.Plain))
                         initial [i].Type = TokenType.VariableName;
 
                     else if (LibraryManager.Contains (initial [i].AnnotatedText.Plain))
@@ -124,7 +123,7 @@ namespace Main
         //    FunctionParens,  // Func1 (P, Q, R, S)
         //    SubmatrixParens, // ZMat (Rs, Cs); % (row select, col select)
 
-        List<IToken> IdentifyParens (List<IToken> tokens, IWorkspace final)
+        List<IToken> IdentifyParens (List<IToken> tokens)
         {
             List<IToken> edited = new List<IToken> ();
 

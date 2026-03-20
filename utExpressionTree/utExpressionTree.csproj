@@ -50,6 +50,9 @@
     <Reference Include="PLLibrary">
       <HintPath>..\PLLibrary\bin\Debug\PLLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="PLWorkspace">
+      <HintPath>..\PLWorkspace\bin\Debug\PLWorkspace.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Numerics" />
@@ -76,8 +79,6 @@
     </Compile>
     <Compile Include="InputLineProcessor.cs" />
     <Compile Include="InputLineUtils.cs" />
-    <Compile Include="Interfaces\IWorkspace.cs" />
-    <Compile Include="Stubs\Workspace2.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="TokenParsing.cs" />
     <Compile Include="TokenParsing2.cs" />

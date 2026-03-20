@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Common;
 using PLCommon;
+using PLWorkspace;
 
 namespace Main
 {
@@ -100,7 +101,7 @@ namespace Main
         //*************************************************************************************************
         //*************************************************************************************************
 
-        void BuildNodeFrom_GroupingParens (List<IToken> tokens, IWorkspace workspace)
+        void BuildNodeFrom_GroupingParens (List<IToken> tokens)
         {
             //
             // remove leading and trailing parens
@@ -114,7 +115,7 @@ namespace Main
             // parse what's left
             //
             TokenParsing parser = new TokenParsing ();
-            ConstructorCommon (parser.StringToTokens (as2, Workspace, FileSystem));
+            ConstructorCommon (parser.StringToTokens (as2, FileSystem));
         }
 
         //*************************************************************************************************
@@ -122,7 +123,7 @@ namespace Main
 
         // passed a single token of the form: [xxxxxx]
 
-        void BuildNodeFrom_Brackets (List<IToken> tokens, IWorkspace workspace)
+        void BuildNodeFrom_Brackets (List<IToken> tokens)
         {
             TokenParsing parser = new TokenParsing ();
 
@@ -213,7 +214,7 @@ namespace Main
         //*************************************************************************************************
         //*************************************************************************************************
 
-        void BuildNodeFrom_VariableName (List<IToken> tokens, IWorkspace workspace)
+        void BuildNodeFrom_VariableName (List<IToken> tokens)
         {
             Operator = tokens [0].AnnotatedText.Plain;
             NodeType = tokens [0].Type;

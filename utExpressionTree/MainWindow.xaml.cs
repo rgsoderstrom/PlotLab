@@ -20,7 +20,6 @@ namespace utExpressionTree
     {
         static readonly string InputMFileName = @"..\..\..\Examples\ExpressionTreeTests.m";
 
-        public static readonly Workspace  workspace  = new Workspace ();
         public static readonly FileSystem fileSystem = new FileSystem ();
 
         static void Print (string str)
@@ -61,51 +60,56 @@ namespace utExpressionTree
                         text = InputLineProcessor.SqueezeConsecutiveSpaces (text);
                         AnnotatedString annotated = new AnnotatedString (text);
 
-                      //Console.WriteLine (annotated.ToString ());
+                        //Console.WriteLine (annotated.ToString ());
 
                         //**********************************************************************
 
-                        //// first pass
-                        //TokenParsing parsing = new TokenParsing ();
-                        //Window win = new Window ();
-                        //TextBox tb = new TextBox ();
+                        if (false) // show token parsing
+                        { 
+                            // first pass
+                            TokenParsing parsing = new TokenParsing ();
+                            Window win = new Window ();
+                            TextBox tb = new TextBox ();
 
-                        //// first pass
-                        //List<IToken> tokens = parsing.ParsingPassOne (annotated);
-                        //tb.Text += "First pass:\n";
-                        //foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
+                            // first pass
+                            List<IToken> tokens = parsing.ParsingPassOne (annotated);
+                            tb.Text += "First pass:\n";
+                            foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
 
-                        //// second pass
-                        //tokens = parsing.ParsingPassTwo (tokens, workspace, fileSystem);
-                        //tb.Text += "\nSecond pass:\n";
-                        //foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
+                            // second pass
+                            tokens = parsing.ParsingPassTwo (tokens, fileSystem);
+                            tb.Text += "\nSecond pass:\n";
+                            foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
 
-                        //win.Content = tb;
-                        //win.SizeToContent = SizeToContent.Height;
-                        //win.Title = "Parsing " + Counter;
-                        //win.Width = 400;
-                        //win.Show ();
+                            win.Content = tb;
+                            win.SizeToContent = SizeToContent.Height;
+                            win.Title = "Parsing " + Counter;
+                            win.Width = 400;
+                            win.Show ();
+                        }
 
                         //**********************************************************************
 
-                        ExpressionTreeNode.Workspace  = workspace;
                         ExpressionTreeNode.FileSystem = fileSystem;
                         ExpressionTreeNode.Print      = Print;
 
                         ExpressionTree tree = new ExpressionTree (annotated);
 
-                        //Window win2 = new Window ();
-                        //TreeView tv = new TreeView ();
-                        //tv.Items.Add (tree.TreeView ());
-                        //win2.Content = tv;
-                        //win2.Title = "Tree " + Counter;
-                        //win2.Width = 400;
-                        //win2.Height = 300;
-                        //win2.Show ();
+                        if (false) // show expression tree
+                        { 
+                            Window win2 = new Window ();
+                            TreeView tv = new TreeView ();
+                            tv.Items.Add (tree.TreeView ());
+                            win2.Content = tv;
+                            win2.Title = "Tree " + Counter;
+                            win2.Width = 400;
+                            win2.Height = 300;
+                            win2.Show ();
+                        }
 
                         //**********************************************************************
 
-                        PLVariable answer = tree.Evaluate (workspace);
+                        PLVariable answer = tree.Evaluate ();
 
                         //Console.WriteLine ("SupressPrinting = " + tree.SupressPrinting);
                         if (answer is PLNull == false)  Console.WriteLine ("answer: " + answer.ToString ());

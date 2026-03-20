@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using PLCommon;
+using System.Linq.Expressions;
 
 namespace PLWorkspace
 {
@@ -228,7 +229,7 @@ namespace PLWorkspace
         //
         // See whether workspace contains a variable
         //
-        internal bool Contains (string var)
+        internal virtual bool Contains (string var)
         {
             return Variables.ContainsKey (var);
         }

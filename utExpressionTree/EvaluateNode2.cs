@@ -17,7 +17,7 @@ namespace Main
 
         // return true if all operands are same size or are scalars
 
-        private bool AllOperandsSameSize (out int rows, out int cols, Workspace workspace)
+        private bool AllOperandsSameSize (out int rows, out int cols)
         {
             rows = 1;
             cols = 1;
@@ -25,7 +25,7 @@ namespace Main
             // find first matrix operand. use it to set numb rows & cols
             foreach (ExpressionTreeNode op in Operands)
             {
-                op.Evaluate (workspace);
+                op.Evaluate ();
 
                 if (op.Value is PLRMatrix || op.Value is PLCMatrix)
                 {
@@ -73,7 +73,7 @@ namespace Main
 
             if (Operands.Count == 1)
             {
-                PLVariable select = Operands [0].Evaluate (Workspace);
+                PLVariable select = Operands [0].Evaluate ();
 
                 PLRMatrix selectVect   = select as PLRMatrix;
                 PLDouble  selectDouble = select as PLDouble;
@@ -144,8 +144,8 @@ namespace Main
 
             else if (Operands.Count == 2)
             {
-                PLVariable selectRows = Operands [0].Evaluate (Workspace);
-                PLVariable selectCols = Operands [1].Evaluate (Workspace);
+                PLVariable selectRows = Operands [0].Evaluate ();
+                PLVariable selectCols = Operands [1].Evaluate ();
 
                 PLRMatrix selectRowsVect  = selectRows as PLRMatrix; // actually a vector
                 PLDouble  selectRowScalar = selectRows as PLDouble;
@@ -333,7 +333,7 @@ namespace Main
 
 
                         Workspace.OverwriteSubmatrix (LeftSideName,       // name of matrix already in workspace
-                                                      rows [0], cols [0], // 1-based   <-------------------------------- ONLY FIRST NUMBER PASSED
+                                                      rows [0], cols [0], // 1-based
                                                       overwriteData);     // new data to overwrite some of old
 
                         Value = Workspace.Get (LeftSideName);
@@ -475,11 +475,11 @@ namespace Main
 
         private void Operator_Divide ()
         {
-            Value = Operands [0].Evaluate (Workspace);
+            Value = Operands [0].Evaluate ();
 
             for (int i = 1; i<Operands.Count; i++)
             {
-                Operands [i].Evaluate (Workspace);
+                Operands [i].Evaluate ();
                 Value /= Operands [i].Value;
             }
         }
@@ -492,7 +492,7 @@ namespace Main
             Value = InternalFunctions.DotDivide (Operands [0].Value, Operands [1].Value);
 
             for (int i = 2; i<Operands.Count; i++)
-                Value = InternalFunctions.DotDivide (Value, Operands [i].Evaluate (Workspace));
+                Value = InternalFunctions.DotDivide (Value, Operands [i].Evaluate ());
         }
 
         //*******************************************************************************************
@@ -541,7 +541,7 @@ namespace Main
             PLList values = new PLList ();
 
             foreach (ExpressionTreeNode node in Operands)
-                values.Add (node.Evaluate (Workspace));
+                values.Add (node.Evaluate ());
 
             Value = InternalFunctions.RowVector (values);
         }

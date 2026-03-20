@@ -15,7 +15,7 @@ namespace Main
         //*********************************************************************************
         //*********************************************************************************
 
-        public PLVariable Evaluate (IWorkspace workspace)
+        public PLVariable Evaluate ()//IWorkspace workspace)
         {
             if (ValueValid)
                 return Value;
@@ -26,8 +26,8 @@ namespace Main
                     GetVariable (Operator);
                     break;
 
-                //case TokenType.Numeric:
-                //break;
+                case TokenType.Numeric:
+                    break;
 
                 //case TokenType.String:
                 //    break;
@@ -40,19 +40,19 @@ namespace Main
                 case TokenType.BracketsSpace:
                 case TokenType.BinaryOperator:
                 case TokenType.EqualSign:
-                    Evaluate_Operator (Operator, Workspace);
+                    Evaluate_Operator (Operator);
                     break;
 
                 case TokenType.FunctionName:
-                    Evaluate_Function (Workspace);
+                    Evaluate_Function ();
                     break;
 
                 //case TokenType.FunctionFile:
-                //    Evaluate_MFileFunction (workspace);//, expression);
+                //    Evaluate_MFileFunction (expression);
                 //    break;
 
 
-                default: throw new Exception ("Not found: " + Operator.ToString ());
+                default: throw new Exception ("Operator not found: " + Operator.ToString ());
                 //default: throw new Exception ("Evaluate: node type not supported: " + NodeType.ToString ());
             }
 
@@ -62,7 +62,7 @@ namespace Main
         //*********************************************************************************
         //*********************************************************************************
 
-        PLVariable Evaluate_MFileFunction (Workspace callersWorkspace)//, string expression)
+        PLVariable Evaluate_MFileFunction (string expression)
         {
 
             // Create new (empty) local workspace
@@ -181,7 +181,7 @@ namespace Main
         //*********************************************************************************
         //*********************************************************************************
 
-         PLVariable Evaluate_Operator (string Operator, IWorkspace workspace)
+         PLVariable Evaluate_Operator (string Operator)
         {
             switch (Operator)
             {
@@ -286,7 +286,7 @@ namespace Main
         //*****************************************************************************************************
         //*****************************************************************************************************
 
-        void Evaluate_Function (IWorkspace workspace)//, string expression)
+        void Evaluate_Function ()//, string expression)
         {
             if (Operands.Count == 0)
             {
@@ -300,13 +300,13 @@ namespace Main
 
             else if (Operands.Count == 1)
             {
-                Operands [0].Evaluate (workspace);
+                Operands [0].Evaluate ();
 
                 if (LibraryManager.Contains (Operator))
                     Value = LibraryManager.Evaluate (Operator, Operands [0].Value);
 
-                else if (workspace.Functions.ContainsKey (Operator))
-                    Value = workspace.Evaluate (Operator, Operands [0].Value);
+                //else if (workspace.Functions.ContainsKey (Operator))
+                //    Value = workspace.Evaluate (Operator, Operands [0].Value);
 
 
                 else if (Operator == "not")
@@ -343,13 +343,13 @@ namespace Main
                 PLList args = new PLList ();
 
                 foreach (ExpressionTreeNode op in Operands)
-                    args.Add (op.Evaluate (workspace));
+                    args.Add (op.Evaluate ());
 
                 if (LibraryManager.Contains (Operator))
                     Value = LibraryManager.Evaluate (Operator, args);
 
-                else if (workspace.Functions.ContainsKey (Operator))
-                    Value = workspace.Evaluate (Operator, args);
+                //else if (Workspace.Functions.ContainsKey (Operator))
+                //    Value = Workspace.Evaluate (Operator, args);
 
                 else
                     throw new Exception ("Can't find function " + Operator);

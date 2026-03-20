@@ -60,6 +60,11 @@ namespace PLWorkspace
             return type;
         }
 
+        internal override bool Contains (string var)
+        {
+            return Variables.ContainsKey (var) || Constants.ContainsKey (var);
+        }
+
     //***************************************************************************************************
 
         internal override List<string> PartialMatch (string str)

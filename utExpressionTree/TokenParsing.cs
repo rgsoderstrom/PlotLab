@@ -37,10 +37,10 @@ namespace Main
 
         //*****************************************************************************************************
 
-        public List<IToken> StringToTokens (AnnotatedString expression, IWorkspace workspace, IFileSystem files)
+        public List<IToken> StringToTokens (AnnotatedString expression, IFileSystem files)
         {
             List<IToken> tokens = ParsingPassOne (expression);
-            tokens = ParsingPassTwo (tokens, workspace, files);
+            tokens = ParsingPassTwo (tokens, files);
             return tokens;
         }
 

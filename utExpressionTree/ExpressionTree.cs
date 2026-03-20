@@ -57,9 +57,9 @@ namespace Main
 
         //******************************************************************************
 
-        public PLVariable Evaluate (Workspace workspace)
+        public PLVariable Evaluate ()
         {
-            return root.Evaluate (workspace);
+            return root.Evaluate ();
         }
 
 
