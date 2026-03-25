@@ -16,22 +16,20 @@ namespace PLWorkspace
 
         internal static PLVariable Rows (PLVariable a)
         {
-            PLRMatrix p1 = a as PLRMatrix; if (p1 != null) return new PLInteger (p1.Rows); 
-            PLList    p2 = a as PLList;    if (p2 != null) return new PLInteger (1); 
-            PLDouble  p3 = a as PLDouble;  if (p3 != null) return new PLInteger (1); 
-            PLInteger p4 = a as PLInteger; if (p4 != null) return new PLInteger (1);  
-            PLString  p5 = a as PLString;  if (p5 != null) return new PLInteger (1);  
-            throw new Exception ("Can\'t count the rows of a " + a.ToString ());
+            if (a is PLMatrix p1) return new PLInteger (p1.Rows);
+            if (a is PLScalar)    return new PLInteger (1);
+            if (a is PLList)      return new PLInteger (1);
+            if (a is PLString)    return new PLInteger (1);
+            throw new Exception ("Can\'t count the rows of a " + a.GetType ().ToString ());
         }
 
         internal static PLVariable Cols (PLVariable a)
         {
-            PLRMatrix p1 = a as PLRMatrix; if (p1 != null) return new PLInteger (p1.Cols); 
-            PLList    p2 = a as PLList;    if (p2 != null) return new PLInteger (p2.Count); 
-            PLDouble  p3 = a as PLDouble;  if (p3 != null) return new PLInteger (1); 
-            PLInteger p4 = a as PLInteger; if (p4 != null) return new PLInteger (1);  
-            PLString  p5 = a as PLString;  if (p5 != null) return new PLInteger (p5.Text.Length);  
-            throw new Exception ("Can\'t count the columns of a " + a.ToString ());
+            if (a is PLMatrix p1) return new PLInteger (p1.Cols);
+            if (a is PLScalar)    return new PLInteger (1);
+            if (a is PLList   p3) return new PLInteger (p3.Count);
+            if (a is PLString p4) return new PLInteger (p4.Text.Length);
+            throw new Exception ("Can\'t count the columns of a " + a.GetType ().ToString ());
         }
 
         internal static PLVariable Size (PLVariable a)
