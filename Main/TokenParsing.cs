@@ -34,10 +34,10 @@ namespace Main
 
         //*****************************************************************************************************
 
-        public List<Token> StringToTokens (string expression, Workspace workspace)
+        public List<Token> StringToTokens (string expression)
         {
             List<Token> tokens = ParsingPassOne (expression);
-            tokens = ParsingPassTwo (tokens, workspace);
+            tokens = ParsingPassTwo (tokens);
             return tokens;
         }
 
@@ -392,7 +392,7 @@ namespace Main
 
         //static TokenType LookupNameType (string name, Workspace workspace)
         //{
-        //    SymbolicNameTypes ty = workspace.WhatIs (name);
+        //    SymbolicNameTypes ty = Workspace.WhatIs (name);
 
         //    if (ty == SymbolicNameTypes.Unknown) ty = PLLibrary.LibraryManager.WhatIs (name);
 

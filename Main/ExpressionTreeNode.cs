@@ -18,8 +18,6 @@ namespace Main
         public List<ExpressionTreeNode> Operands = new List<ExpressionTreeNode> ();
 
 
-        private Workspace workspace; // copy of passed-in value
-
         private PLVariable nodeValue = null;
         public bool ValueValid {get {return nodeValue != null;}}
 
@@ -28,7 +26,7 @@ namespace Main
             get
             {
                 if (ValueValid) return nodeValue;
-                else return Evaluate (workspace);
+                else return Evaluate ();
             }
 
             set
@@ -47,11 +45,10 @@ namespace Main
         //
         // public ctor
         //
-        public ExpressionTreeNode (string expr, Workspace ws)
+        public ExpressionTreeNode (string expr)
         {
-            workspace = ws;
             TokenParsing parsing = new TokenParsing ();
-            List<Token> tokens = parsing.StringToTokens (expr, workspace);
+            List<Token> tokens = parsing.StringToTokens (expr);
             
             ConstructorCommon (tokens);
         }
@@ -59,9 +56,8 @@ namespace Main
         //
         // private ctor
         //
-        ExpressionTreeNode (List<Token> tokens, Workspace ws)//, string expr)
+        ExpressionTreeNode (List<Token> tokens)
         {
-            workspace = ws;
             ConstructorCommon (tokens);
         }
 
@@ -90,7 +86,7 @@ namespace Main
                     switch (tokens [0].type)
                     {
                        case TokenType.GroupingParens:  // e.g. (a * b + c) 
-                            BuildNodeFrom_GroupingParens (tokens, workspace);
+                            BuildNodeFrom_GroupingParens (tokens);
                             break;
 
                         case TokenType.Brackets:
@@ -98,17 +94,17 @@ namespace Main
                         case TokenType.BracketsComma:
                         case TokenType.BracketsSemi:
                         case TokenType.BracketsSpace:
-                            BuildNodeFrom_Brackets (tokens, workspace);                                
+                            BuildNodeFrom_Brackets (tokens);                                
                             break;
                        
                         case TokenType.Numeric:  // scalar 
-                            BuildNodeFrom_Numeric (tokens, workspace);
+                            BuildNodeFrom_Numeric (tokens);
                             break;
 
                         case TokenType.FunctionName:
                         case TokenType.Undefined:
                         case TokenType.VariableName:  // symbolic name for a variable or constant
-                            BuildNodeFrom_VariableName (tokens, workspace);
+                            BuildNodeFrom_VariableName (tokens);
                             break;
 
                         case TokenType.ArithmeticOperator:

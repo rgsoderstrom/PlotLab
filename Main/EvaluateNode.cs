@@ -15,7 +15,7 @@ namespace Main
         //*********************************************************************************
         //*********************************************************************************
 
-        public PLVariable Evaluate (Workspace workspace)
+        public PLVariable Evaluate ()
         {
             if (ValueValid)
                 return Value;
@@ -39,15 +39,15 @@ namespace Main
                 case TokenType.BracketsComma:
                 case TokenType.BracketsSpace:
                 case TokenType.ArithmeticOperator:
-                    Evaluate_Operator (Operator, workspace);
+                    Evaluate_Operator (Operator);
                     break;
 
                 case TokenType.FunctionName:
-                    Evaluate_Function (workspace);//, expression);
+                    Evaluate_Function ();//workspace);//, expression);
                     break;
 
                 case TokenType.FunctionFile:
-                    Evaluate_MFileFunction (workspace);//, expression);
+                    Evaluate_MFileFunction ();//workspace);//, expression);
                     break;
 
 
@@ -61,7 +61,7 @@ namespace Main
         //*********************************************************************************
         //*********************************************************************************
 
-        PLVariable Evaluate_MFileFunction (Workspace callersWorkspace)//, string expression)
+        PLVariable Evaluate_MFileFunction ()
         {
             throw new Exception ("M-file not implemented");
 
@@ -181,8 +181,8 @@ namespace Main
         //*********************************************************************************
         //*********************************************************************************
 
-         PLVariable Evaluate_Operator (string Operator, Workspace workspace)
-        {
+         PLVariable Evaluate_Operator (string Operator)
+         {
             switch (Operator)
             {
                 case "=":
@@ -286,10 +286,8 @@ namespace Main
         //*****************************************************************************************************
         //*****************************************************************************************************
 
-        void Evaluate_Function (Workspace workspace)
-        {
-            bool forcePrint = false;
-
+        void Evaluate_Function ()
+        {            
             if (Operands.Count == 0)
             {
                 PLFunction func = LibraryManager.GetFunctionDelegate (Operator);
@@ -302,15 +300,15 @@ namespace Main
 
             else if (Operands.Count == 1)
             {
-                Operands [0].Evaluate (workspace);
+                Operands [0].Evaluate ();
 
                 PLString functionName = new PLString (Operator);
 
-                if (LibraryManager.Contains (functionName))
-                    Value = LibraryManager.Evaluate (new PLString (Operator), Operands [0].Value, ref forcePrint);
+                if (LibraryManager.Contains (functionName.Text))
+                    Value = LibraryManager.Evaluate (Operator, Operands [0].Value);//, ref forcePrint);
 
-                else if (workspace.Functions.ContainsKey (functionName.Data))
-                    Value = workspace.Evaluate (functionName, Operands [0].Value);
+                else if (Workspace.Functions.ContainsKey (functionName.Data))
+                    Value = Workspace.Evaluate (functionName, Operands [0].Value);
                 
                 else // if (ValueValid == false)
                 {
@@ -336,15 +334,15 @@ namespace Main
                 PLList args = new PLList ();
 
                 foreach (ExpressionTreeNode op in Operands)
-                    args.Add (op.Evaluate (workspace));
+                    args.Add (op.Evaluate ());
 
                 PLString oper = new PLString (Operator);
 
-                if (LibraryManager.Contains (oper))
-                    Value = LibraryManager.Evaluate (oper, args, ref forcePrint);
+                if (LibraryManager.Contains (oper.Text))
+                    Value = LibraryManager.Evaluate (oper.Text, args);
 
-                else if (workspace.Functions.ContainsKey (Operator))
-                    Value = workspace.Evaluate (oper, args);
+                else if (Workspace.Functions.ContainsKey (Operator))
+                    Value = Workspace.Evaluate (oper, args);
 
                 else
                     throw new Exception ("Can't find function " + Operator);
@@ -373,7 +371,7 @@ namespace Main
                 //    for (int i = 0; i<count; i++)
                 //    {
                 //        lst [i].Name = outputsAsTokens [i];
-                //        workspace.Add (lst [i]);
+                //        Workspace.Add (lst [i]);
                 //    }
                 //}
 

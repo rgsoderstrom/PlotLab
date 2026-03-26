@@ -66,14 +66,14 @@ namespace Main
                 if (i > index) right.Add (tokens [i]);
             }
 
-            Operands.Add (new ExpressionTreeNode (left,  workspace));
-            Operands.Add (new ExpressionTreeNode (right, workspace));
+            Operands.Add (new ExpressionTreeNode (left));
+            Operands.Add (new ExpressionTreeNode (right));
         }
 
         //*************************************************************************************************
         //*************************************************************************************************
 
-        void BuildNodeFrom_GroupingParens (List<Token> tokens, Workspace workspace)
+        void BuildNodeFrom_GroupingParens (List<Token> tokens)
         {
             //
             // remove leading and trailing parens
@@ -89,7 +89,7 @@ namespace Main
             // parse what's left
             //
             TokenParsing parser = new TokenParsing ();
-            ConstructorCommon (parser.StringToTokens (expr, workspace));
+            ConstructorCommon (parser.StringToTokens (expr));
         }
 
         //*************************************************************************************************
@@ -97,7 +97,7 @@ namespace Main
 
         // passed a single token of the form: [xxxxxx]
 
-        void BuildNodeFrom_Brackets (List<Token> tokens, Workspace workspace)
+        void BuildNodeFrom_Brackets (List<Token> tokens)
         {
             TokenParsing parser = new TokenParsing ();
          //   List<string> args = new List<string> ();
@@ -111,7 +111,7 @@ namespace Main
                     Operator = "RowVectorIterator";
                     List<string> args = parser.SplitBracketArgs_Colon (tokens [0].text);
                     foreach (string str in args)
-                        Operands.Add (new ExpressionTreeNode (str, workspace));
+                        Operands.Add (new ExpressionTreeNode (str));
                 }
                 break;
 
@@ -120,7 +120,7 @@ namespace Main
                     Operator = "RowVectorElements";
                     List<string> args = parser.SplitBracketArgs_Comma (tokens [0].text);
                     foreach (string str in args)
-                        Operands.Add (new ExpressionTreeNode (str, workspace));
+                        Operands.Add (new ExpressionTreeNode (str));
                 }
                 break;
 
@@ -132,7 +132,7 @@ namespace Main
                     foreach (string str in args)
                     {
                         string editted = EnsureRowVector (str);
-                        Operands.Add (new ExpressionTreeNode (editted, workspace));
+                        Operands.Add (new ExpressionTreeNode (editted));
                     }
                 }
                 break;
@@ -144,7 +144,7 @@ namespace Main
                     List<string> args = parser.SplitBracketArgs_Space (tokens [0].text);
                     foreach (string str in args)
                         if (str.Length > 0)                                 //   <==========================================================
-                            Operands.Add (new ExpressionTreeNode (str, workspace));
+                            Operands.Add (new ExpressionTreeNode (str));
                 }
                 break;
 
@@ -188,7 +188,7 @@ namespace Main
         //*************************************************************************************************
         //*************************************************************************************************
 
-        void BuildNodeFrom_Numeric (List<Token> tokens, Workspace workspace)
+        void BuildNodeFrom_Numeric (List<Token> tokens)
         {
             bool valid = double.TryParse (tokens [0].text, out double scalar);
 
@@ -204,14 +204,14 @@ namespace Main
         //*************************************************************************************************
         //*************************************************************************************************
 
-        void BuildNodeFrom_VariableName (List<Token> tokens, Workspace workspace)
+        void BuildNodeFrom_VariableName (List<Token> tokens)
         {
             Operator = tokens [0].text;
             NodeType = tokens [0].type;
 
             if (tokens.Count > 1)
                 for (int i = 1; i<tokens.Count; i++)
-                    Operands.Add (new ExpressionTreeNode (tokens [i].text, workspace));
+                    Operands.Add (new ExpressionTreeNode (tokens [i].text));
         }
 
         //*************************************************************************************************
@@ -252,20 +252,20 @@ namespace Main
                     List<string> args = parser.SplitFunctionArgs (tokens.t1.text);
 
                     foreach (string str in args)
-                        Operands.Add (new ExpressionTreeNode (str, workspace));
+                        Operands.Add (new ExpressionTreeNode (str));
                 }
                 break;
 
                 case TokenType.VariableName:
                 {
-                    Operands.Add (new ExpressionTreeNode (tokens.t1.text, workspace));
+                    Operands.Add (new ExpressionTreeNode (tokens.t1.text));
                 }
                 break;
 
                 case TokenType.Pair:
                 {
                     List<Token> tok = new List<Token> () { tokens.t1 };
-                    Operands.Add (new ExpressionTreeNode (tok, workspace));
+                    Operands.Add (new ExpressionTreeNode (tok));
                 }
                 break;
                 
@@ -274,7 +274,7 @@ namespace Main
                     List<string> tok = parser.SplitBracketArgs_Comma (tokens.t1.text);
 
                     foreach (string str in tok)
-                        Operands.Add (new ExpressionTreeNode (str, workspace));
+                        Operands.Add (new ExpressionTreeNode (str));
                 }
                 break;
 
@@ -283,7 +283,7 @@ namespace Main
                     List<string> tok = parser.SplitBracketArgs_Colon (tokens.t1.text);
 
                     foreach (string str in tok)
-                        Operands.Add (new ExpressionTreeNode (str, workspace));
+                        Operands.Add (new ExpressionTreeNode (str));
                 }
                 break;
 
@@ -292,7 +292,7 @@ namespace Main
                     List<string> tok = parser.SplitBracketArgs_Semi (tokens.t1.text);
 
                     foreach (string str in tok)
-                        Operands.Add (new ExpressionTreeNode (str, workspace));
+                        Operands.Add (new ExpressionTreeNode (str));
                 }
                 break;
 
@@ -301,7 +301,7 @@ namespace Main
                     List<string> tok = parser.SplitBracketArgs_Space (tokens.t1.text);
 
                     foreach (string str in tok)
-                        Operands.Add (new ExpressionTreeNode (str, workspace));
+                        Operands.Add (new ExpressionTreeNode (str));
                 }
                 break;
 
@@ -332,7 +332,7 @@ namespace Main
 
             foreach (string str in args)
             {
-                Operands.Add (new ExpressionTreeNode (str, workspace));
+                Operands.Add (new ExpressionTreeNode (str));
             }
 
             // search the operand tree for "end". replace any with appropriate number
@@ -345,16 +345,16 @@ namespace Main
             int rows;
             int cols;
 
-            if (workspace.Get (matrixName) is PLRMatrix)
+            if (Workspace.Get (matrixName) is PLRMatrix)
             {
-                PLRMatrix mat = workspace.Get (matrixName) as PLRMatrix;
-                rows = mat.Rows; // (workspace.Rows (mat) as PLInteger).Data;
-                cols = mat.Cols; // (workspace.Cols (mat) as PLInteger).Data;
+                PLRMatrix mat = Workspace.Get (matrixName) as PLRMatrix;
+                rows = mat.Rows; // (Workspace.Rows (mat) as PLInteger).Data;
+                cols = mat.Cols; // (Workspace.Cols (mat) as PLInteger).Data;
             }
 
-            else if (workspace.Get (matrixName) is PLCMatrix)
+            else if (Workspace.Get (matrixName) is PLCMatrix)
             {
-                PLCMatrix mat = workspace.Get (matrixName) as PLCMatrix;
+                PLCMatrix mat = Workspace.Get (matrixName) as PLCMatrix;
                 rows = mat.Rows;
                 cols = mat.Cols;
             }
@@ -373,24 +373,24 @@ namespace Main
                     {
                         if (IsRowVector)
                         {
-                            Operands [i].Operands [j] = new ExpressionTreeNode (cols.ToString (), workspace);
+                            Operands [i].Operands [j] = new ExpressionTreeNode (cols.ToString ());
                         }
 
                         else if (IsColVector)
                         { 
-                            Operands [i].Operands [j] = new ExpressionTreeNode (rows.ToString (), workspace);
+                            Operands [i].Operands [j] = new ExpressionTreeNode (rows.ToString ());
                         }
 
                         else
                         {
                             if (i == 0)
                             {
-                                Operands [i].Operands [j] = new ExpressionTreeNode (rows.ToString (), workspace);
+                                Operands [i].Operands [j] = new ExpressionTreeNode (rows.ToString ());
                             }
 
                             else
                             {
-                                Operands [i].Operands [j] = new ExpressionTreeNode (cols.ToString (), workspace);
+                                Operands [i].Operands [j] = new ExpressionTreeNode (cols.ToString ());
                             }
                         }
                     }

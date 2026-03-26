@@ -9,11 +9,11 @@ namespace Main
 {
     public partial class TokenParsing
     {
-        public List<Token> ParsingPassTwo (List<Token> initial, Workspace workspace) // public just for unit test
+        public List<Token> ParsingPassTwo (List<Token> initial) // public just for unit test
         {
-            List<Token> editted = LookupAlphanumerics (initial, workspace);
+            List<Token> editted = LookupAlphanumerics (initial);
             
-            editted = IdentifyParens (editted, workspace); // grouping, function args, sub matrix
+            editted = IdentifyParens (editted); // grouping, function args, sub matrix
 
             editted = IdentifyBrackets (editted); // by separator: :, ;, etc.
 
@@ -30,13 +30,13 @@ namespace Main
 
         //*************************************************************************************************
 
-        List<Token> LookupAlphanumerics (List<Token> initial, Workspace workspace) 
+        List<Token> LookupAlphanumerics (List<Token> initial) 
         {
             for (int i=0; i<initial.Count; i++)
             {
                 if (initial [i].type == TokenType.Alphanumeric)
                 {
-                    SymbolicNameTypes ty = workspace.WhatIs (initial [i].text);
+                    SymbolicNameTypes ty = Workspace.WhatIs (initial [i].text);
 
                     if (ty == SymbolicNameTypes.Unknown)
                         ty = LibraryManager.WhatIs (initial [i].text); 
@@ -59,7 +59,7 @@ namespace Main
 
         //*************************************************************************************************
 
-        List<Token> IdentifyParens (List<Token> tokens, Workspace final)
+        List<Token> IdentifyParens (List<Token> tokens)
         {
             List<Token> editted = new List<Token> ();
 

@@ -14,11 +14,11 @@ namespace Main
     {
         readonly ExpressionTreeNode root;
 
-        public ExpressionTree (string expression, Workspace workspace, PrintFunction Print = null)
+        public ExpressionTree (string expression, PrintFunction Print = null)
         {
             ExpressionTreeNode.InstanceCounter = 0;
             ExpressionTreeNode.PF = Print;
-            root = new ExpressionTreeNode (expression, workspace);
+            root = new ExpressionTreeNode (expression);
             Compact ();
         }
 
@@ -57,9 +57,9 @@ namespace Main
 
         //******************************************************************************
 
-        public PLVariable Evaluate (Workspace workspace)
+        public PLVariable Evaluate ()
         {
-            return root.Evaluate (workspace);
+            return root.Evaluate ();
         }
 
 

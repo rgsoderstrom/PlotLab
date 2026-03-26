@@ -11,18 +11,15 @@ namespace Main
 {
     public class InputLineProcessor
     {
-        Workspace workspace;
         PrintFunction Print;
 
-        public InputLineProcessor (Workspace ws, PrintFunction pr) //, Button res) //, UserConsole uc)
+        public InputLineProcessor (PrintFunction pr) //, Button res) //, UserConsole uc)
         {
-            workspace = ws;
             Print = pr;
         }
 
-        public InputLineProcessor (Workspace ws)
+        public InputLineProcessor ()
         {
-            workspace = ws;
             Print = null;
         }
 
@@ -82,7 +79,7 @@ namespace Main
             //
             if (FileSearch.WhatIs (firstWord) == SymbolicNameTypes.ScriptFile)
             {
-                ScriptProcessor sp = new ScriptProcessor (workspace, Print);
+                ScriptProcessor sp = new ScriptProcessor (Print);
                 ScriptProcessor.ScriptTerminationReason reason = sp.FindAndRunScript (firstWord);
 
                 if (reason == ScriptProcessor.ScriptTerminationReason.Failed)
@@ -118,9 +115,9 @@ namespace Main
             // Workspace commands return information on things in the
             // workspace, e.g. length (a)
             // 
-            if (workspace.WhatIs (firstWord) == SymbolicNameTypes.WorkspaceCommand)
+            if (Workspace.WhatIs (firstWord) == SymbolicNameTypes.WorkspaceCommand)
             {
-                results = workspace.RunCommand (new PLString (firstWord), args);
+                results = Workspace.RunCommand (firstWord, args);
                 return;
             }
 
@@ -128,7 +125,7 @@ namespace Main
             // Most arithmetic, plotting and function statements will come here
             //
             EntryPoint kernel = new EntryPoint ();
-            kernel.ProcessArithmeticExpression (ref results, text, workspace, Print);
+            kernel.ProcessArithmeticExpression (ref results, text, Print);
         }
     }
 }

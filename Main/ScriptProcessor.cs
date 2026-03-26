@@ -15,15 +15,13 @@ namespace Main
     public class ScriptProcessor
     {
         PrintFunction print = null;
-        Workspace workspace = null;
 
         NumberedScript expanded = null; // preprocessor output
 
         public enum ScriptTerminationReason {Complete, Failed};
 
-        public ScriptProcessor (Workspace ws, PrintFunction pf)
+        public ScriptProcessor (PrintFunction pf)
         {
-            workspace = ws;
             print = pf;
         }
         
@@ -145,7 +143,7 @@ namespace Main
                         PLVariable results = new PLNull ();
 
                         foreach (string str in stmts)
-                            ep.ProcessArithmeticExpression (ref results, str, workspace, print);
+                            ep.ProcessArithmeticExpression (ref results, str, print);
 
                         lineNumber = script.NextLineNumber (lineNumber);
                     }
@@ -157,7 +155,7 @@ namespace Main
                         TestParsing tp = ParseTEST (words);
 
                         EntryPoint ep = new EntryPoint ();
-                        ep.ProcessArithmeticExpression (ref results, tp.expression, workspace, print);
+                        ep.ProcessArithmeticExpression (ref results, tp.expression, print);
 
                         //PLBool res = results as PLBool;
                         PLBool res = new PLBool (results);
@@ -208,7 +206,7 @@ namespace Main
                         for (int i = 1; i<words.Length; i++)
                             expression += words [i] + " ";
 
-                        InputLineProcessor ip = new InputLineProcessor (workspace);
+                        InputLineProcessor ip = new InputLineProcessor ();
                         PLVariable ans = new PLInteger (-1);
                         ip.ProcessOneStatement (ref ans, expression, ref unused);
                         lineNumber = script.NextLineNumber (lineNumber);
@@ -237,7 +235,7 @@ namespace Main
         void RunOneScriptLine (string raw)
         {
             bool unused = false;
-            InputLineProcessor ip = new InputLineProcessor (workspace, print);
+            InputLineProcessor ip = new InputLineProcessor (print);
             Utils.CleanupRawInput (raw, inputLines, ref nestingLevel);
 
             int startIndex = 0;
@@ -259,7 +257,7 @@ namespace Main
                     if (ans != null && ans is PLNull == false && ans is PLCanvasObject == false)
                     {
                         ans.Name = "ans";
-                        workspace.Add (ans);
+                        Workspace.Add (ans);
 
                         // kludge to print "disp" results
                         bool forcePrint = false;

@@ -16,7 +16,7 @@ namespace Main
         static public bool ShowExprTree      = false;
         static int Counter = 0;
 
-        public void ProcessArithmeticExpression (ref PLVariable answer, string expression, Workspace workspace, PrintFunction pf)
+        public void ProcessArithmeticExpression (ref PLVariable answer, string expression, PrintFunction pf)
         {
             try
             {
@@ -35,7 +35,7 @@ namespace Main
                     foreach (Token tok in tokens) tb.Text += tok.ToString () + "\n";
 
                     // second pass
-                    tokens = parsing.ParsingPassTwo (tokens, workspace);
+                    tokens = parsing.ParsingPassTwo (tokens);
                     tb.Text += "\nSecond pass:\n";
                     foreach (Token tok in tokens) tb.Text += tok.ToString () + "\n";
 
@@ -46,7 +46,7 @@ namespace Main
                     win.Show ();
                 }
 
-                ExpressionTree tree = new ExpressionTree (expression, workspace, pf);
+                ExpressionTree tree = new ExpressionTree (expression, pf);
 
                 if (ShowExprTree)
                 {
@@ -60,7 +60,7 @@ namespace Main
                     win.Show ();
                 }
 
-                answer = tree.Evaluate (workspace);
+                answer = tree.Evaluate ();
             }
 
             catch (Exception ex)

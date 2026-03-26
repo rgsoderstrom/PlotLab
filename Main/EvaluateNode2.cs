@@ -17,7 +17,7 @@ namespace Main
 
         // return true if all operands are same size or are scalars
 
-        private bool AllOperandsSameSize (out int rows, out int cols, Workspace workspace)
+        private bool AllOperandsSameSize (out int rows, out int cols)
         {
             rows = 1;
             cols = 1;
@@ -25,7 +25,7 @@ namespace Main
             // find first matrix operand. use it to set numb rows & cols
             foreach (ExpressionTreeNode op in Operands)
             {
-                op.Evaluate (workspace);
+                op.Evaluate ();
 
                 if (op.Value is PLRMatrix || op.Value is PLCMatrix)
                 {
@@ -50,7 +50,7 @@ namespace Main
 
         private void GetVariable (string variable)
         {
-            Value = workspace.Get (variable);            
+            Value = Workspace.Get (variable);            
 
             if (Value is PLScalar)
                 return;
@@ -73,7 +73,7 @@ namespace Main
 
             if (Operands.Count == 1)
             {
-                PLVariable select = Operands [0].Evaluate (workspace);
+                PLVariable select = Operands [0].Evaluate ();
 
                 PLRMatrix selectVect   = select as PLRMatrix;
                 PLDouble  selectDouble = select as PLDouble;
@@ -144,8 +144,8 @@ namespace Main
 
             else if (Operands.Count == 2)
             {
-                PLVariable selectRows = Operands [0].Evaluate (workspace);
-                PLVariable selectCols = Operands [1].Evaluate (workspace);
+                PLVariable selectRows = Operands [0].Evaluate ();
+                PLVariable selectCols = Operands [1].Evaluate ();
 
                 PLRMatrix selectRowsVect  = selectRows as PLRMatrix; // actually a vector
                 PLDouble  selectRowScalar = selectRows as PLDouble;
@@ -271,9 +271,9 @@ namespace Main
             /***/
             string LeftSideName = Operands [0].Operator;
 
-            if (workspace.Contains (LeftSideName))
+            if (Workspace.Contains (LeftSideName))
             {
-                PLRMatrix LeftSide = workspace.Get (LeftSideName) as PLRMatrix;
+                PLRMatrix LeftSide = Workspace.Get (LeftSideName) as PLRMatrix;
 
                 if (LeftSide != null) // left side is a matrix
                 {
@@ -323,11 +323,11 @@ namespace Main
                         else for (int i = 0; i<ccc.Size; i++) cols.Add ((int)ccc [0, i]);
 
 
-                        workspace.OverwriteSubmatrix (LeftSideName,       // name of matrix already in workspace
+                        Workspace.OverwriteSubmatrix (LeftSideName,       // name of matrix already in workspace
                                                       rows [0], cols [0], // 1-based   <-------------------------------- ONLY FIRST NUMBER PASSED
                                                       overwriteData);     // new data to overwrite some of old
 
-                        Value = workspace.Get (LeftSideName);
+                        Value = Workspace.Get (LeftSideName);
                         return;
                     }
                 }
@@ -336,7 +336,7 @@ namespace Main
 
             Value = Operands [1].Value;
             Value.Name = Operands [0].Operator;
-            workspace.Add (Value);
+            Workspace.Add (Value);
         }
 
         //*******************************************************************************************
@@ -466,11 +466,11 @@ namespace Main
 
         private void Operator_Divide ()
         {
-            Value = Operands [0].Evaluate (workspace);
+            Value = Operands [0].Evaluate ();
 
             for (int i = 1; i<Operands.Count; i++)
             {
-                Operands [i].Evaluate (workspace);
+                Operands [i].Evaluate ();
                 Value /= Operands [i].Value;
             }
         }
@@ -483,7 +483,7 @@ namespace Main
             Value = InternalFunctions.DotDivide (Operands [0].Value, Operands [1].Value);
 
             for (int i = 2; i<Operands.Count; i++)
-                Value = InternalFunctions.DotDivide (Value, Operands [i].Evaluate (workspace));
+                Value = InternalFunctions.DotDivide (Value, Operands [i].Evaluate ());
         }
 
         //*******************************************************************************************
@@ -532,7 +532,7 @@ namespace Main
             PLList values = new PLList ();
 
             foreach (ExpressionTreeNode node in Operands)
-                values.Add (node.Evaluate (workspace));
+                values.Add (node.Evaluate ());
 
             Value = InternalFunctions.RowVector (values);
         }

@@ -15,7 +15,6 @@ namespace Main
     public partial class UserConsole : Window
     {
         internal static UserConsole thisConsole = null;
-        Workspace userWorkspace = new Workspace ();
 
         // record any startup error messages generated until the window is ready to display them
         List<string> StartupMessages = new List<string> ();
@@ -51,7 +50,7 @@ namespace Main
             {
                 PLVariable ans = new PLNull ();
                 bool fp = false;
-                InputLineProcessor ip = new InputLineProcessor (userWorkspace, Print);
+                InputLineProcessor ip = new InputLineProcessor (Print);
                 ip.ProcessOneStatement (ref ans, "startup", ref fp);
 
                 MFileFunctionMgr.CurrentDir = FileSearch.CurrentDirectory;
@@ -181,7 +180,7 @@ namespace Main
                                 foreach (string str2 in scriptLines)
                                     TextPane.Text += str2 + '\n';
 
-                                ScriptProcessor sp = new ScriptProcessor (userWorkspace, Print);
+                                ScriptProcessor sp = new ScriptProcessor (Print);
                                 sp.RunScriptLines (scriptLines);
                             }
 
@@ -235,7 +234,7 @@ namespace Main
                 TextPane.CaretIndex = TextPane.Text.Length;
                 caretLowerLimit     = TextPane.CaretIndex;
 
-                InputLineProcessor ip = new InputLineProcessor (userWorkspace, Print);
+                InputLineProcessor ip = new InputLineProcessor (Print);
 
                 //
                 // Look for bang (i.e. !) followed by a number and maybe the letter 'p'. Number is index of command
@@ -300,7 +299,7 @@ namespace Main
                         if (ans != null && ans is PLNull == false && ans is PLCanvasObject == false && ans is PLViewportObject == false)
                         {
                             ans.Name = "ans";
-                            userWorkspace.Add (ans);
+                            Workspace.Add (ans);
 
                             if (forcePrint || inputLines [endIndex].printFlag)
                             {
@@ -406,7 +405,7 @@ namespace Main
             if (token.Length < 2) // need at least 2 chars to search
                 return lines;
 
-            lines.AddRange (userWorkspace.PartialMatch   (token));
+            lines.AddRange (Workspace.PartialMatch       (token));
             lines.AddRange (SystemFunctions.PartialMatch (token));
             lines.AddRange (FileSearch.PartialNameSearch (token));
             lines.AddRange (LibraryManager.PartialMatch  (token));
