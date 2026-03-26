@@ -86,6 +86,14 @@ namespace PLWorkspace
         static public void AddGlobal (PLVariable var)  {Global.Add (var);}
 
 
+        static public Dictionary<string, PLFunction> Functions {get             {return Current.Functions;}}
+        static public PLVariable Evaluate (string    funcName, PLVariable args) {return Current.Evaluate (funcName, args);}
+        static public PLVariable Evaluate (PLString  funcName, PLVariable args) {return Current.Evaluate (funcName, args);}
+
+
+        static public PLVariable RunCommand (string cmnd, PLList args) {return Current.RunCommand (cmnd, args);}
+
+
         // check Current first. if not there check global 
         static public PLVariable Get (string name) 
         {
@@ -102,6 +110,25 @@ namespace PLWorkspace
 
         static public void Clear (PLVariable lst)  {Current.Clear (lst);} // one or several variables
 
+
+        static public List<string> PartialMatch (string str)
+        {
+            //List<string> matches = new List<string> ();
+            //return matches;
+
+            return Current.PartialMatch (str);
+
+        }
+
+        static public SymbolicNameTypes WhatIs (string str)
+        {
+            SymbolicNameTypes type = Current.WhatIs (str);
+
+            if (type == SymbolicNameTypes.Unknown) 
+                type = Global.WhatIs (str);
+
+            return type;
+        }
 
 
         //**********************************************************************************************

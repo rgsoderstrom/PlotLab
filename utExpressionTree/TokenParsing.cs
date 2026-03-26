@@ -67,7 +67,7 @@ namespace Main
             // Parse expression
             //
 
-            ParsingStatus status = new ParsingStatus ();
+            ParsingStatus status = new ParsingStatus (); // inital state is "Between"
 
             bool done = false;
             int get = 0;  // next character index

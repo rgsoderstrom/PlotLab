@@ -26,7 +26,9 @@ namespace Main
             edited = BindUnaryOperators (edited); // -, A => (-1 * A),
                                                   // -, 7 => -7
 
-            edited = RenameTwoCharOperator (edited); // rename to BinaryOperator
+            edited = RenameTwoCharOperator (edited); // classify as Unary or Binary Operator
+
+            edited = TernaryOperator (edited); // 3 : 5 : 29
 
             return edited;
         }
@@ -413,6 +415,38 @@ namespace Main
             for (int i=0; i<initial.Count; i++)
                 if (initial [i].Type == TokenType.TwoCharOperator)
                     initial [i].Type = TokenType.BinaryOperator;
+
+            return initial;
+        }
+
+        //*************************************************************************************************
+
+        // look for A:B:C syntax. Combine all three into single Ternary token
+
+        List<IToken> TernaryOperator (List<IToken> initial)
+        {
+            // find all colon binary operators
+            List<int> operatorIndices = new List<int> ();
+
+            int start = 0;
+
+            while (start < initial.Count)
+            {
+                int index = initial.FindIndex (start, delegate (IToken tok) {return tok.Type == TokenType.BinaryOperator
+                                                                                 && tok.AnnotatedText [0].IsColon;});
+                if (index == -1)
+                    break;
+
+                operatorIndices.Add (index);
+                start = index + 1;
+            }
+
+            // if none found, just return
+            if (operatorIndices.Count == 0)
+                return initial;  
+
+            //*******************************************************
+
 
             return initial;
         }

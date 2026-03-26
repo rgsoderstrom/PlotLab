@@ -20,8 +20,10 @@ namespace PLWorkspace
 
                 //PushPopTest ();
                 //ReadWriteTest ();
-                //MatrixOverwriteMatrixTest ();
-                ScalarOverwriteTest ();
+                //OverwriteSubmatrix_Test2 ();
+                //OverwriteSubmatrix_Test1 ();
+                Functions_Test1 ();
+
 
 
                 //List<string> baseNames = new List<string> () {"X2"};
@@ -99,10 +101,41 @@ namespace PLWorkspace
 
         //********************************************************************************
 
-        static void ScalarOverwriteTest ()
+        static void Functions_Test1 ()
+        {
+            PLVariable RealScalar = new PLDouble ("RealScalar", 123);
+            Workspace.Add (RealScalar);
+
+            PLVariable ComplexScalar = new PLComplex ("ComplexScalar", 777, 888);
+            Workspace.Add (ComplexScalar);
+
+            CMatrix mat3 = new CMatrix (2, 3);
+            mat3.FillByRow (new Complex [] {new Complex (12, 34),  new Complex (22, 22),  new Complex (33, 33),  
+                                            new Complex (44, 44),  new Complex (55, 55),  new Complex (67, 89)});
+            PLMatrix ComplexMat = new PLCMatrix ("ComplexMat", mat3);
+            Workspace.Add (ComplexMat);
+
+
+
+            PLVariable results = Workspace.Evaluate ("exists", new PLString ("RealScalar"));
+            Console.WriteLine ("RealScalar: " + results.ToString ());
+
+            results = Workspace.Evaluate ("cols", Workspace.Get ("ComplexMat"));
+            Console.WriteLine ("ComplexMat: " + results.ToString ());
+
+            results = Workspace.Evaluate ("rows", ComplexMat);
+            Console.WriteLine ("ComplexMat: " + results.ToString ());
+
+
+        }
+
+        //********************************************************************************
+
+        static void OverwriteSubmatrix_Test1 ()
         {
             Matrix mat2 = new Matrix (2, 2);
-            mat2.FillByRow (new double [] { 101, 102, 103, 104 });
+            mat2.FillByRow (new double [] {101, 102, 
+                                           103, 104});
             PLMatrix RealMat = new PLRMatrix ("RealMat", mat2);
             Workspace.Add (RealMat);
 
@@ -118,23 +151,26 @@ namespace PLWorkspace
             PLVariable ComplexScalar = new PLComplex ("ComplexScalar", 777, 888);
             Workspace.Add (ComplexScalar);
 
-            Console.WriteLine (RealMat.ToString ());
+            Console.WriteLine ("before: " + RealMat.ToString ());
             Console.WriteLine ();
 
             Workspace.OverwriteSubmatrix ("RealMat",    // name of matrix already in workspace
                                           1, 1,   // 1-based
-                                          ComplexScalar);    // new data to overwrite some of old
+                                          RealScalar);    // new data to overwrite some of old
 
             RealMat = Workspace.Get ("RealMat") as PLMatrix;
-            Console.WriteLine (RealMat.ToString ());
+            Console.WriteLine ("After: " + RealMat.ToString ());
         }
 
         //********************************************************************************
 
-        static void MatrixOverwriteMatrixTest ()
+        static void OverwriteSubmatrix_Test2 ()
         {
             Matrix mat1 = new Matrix (4, 5);
-            mat1.FillByRow (new double [] { 11, 12, 13, 14, 15, 21, 22, 23, 24, 25, 31, 32, 33, 34, 35, 41, 42, 43, 44, 45 });
+            mat1.FillByRow (new double [] {11, 12, 13, 14, 15, 
+                                           21, 22, 23, 24, 25, 
+                                           31, 32, 33, 34, 35, 
+                                           41, 42, 43, 44, 45 });
             PLMatrix Z1 = new PLRMatrix ("Z1", mat1);
             Workspace.Add (Z1);
 

@@ -22,7 +22,7 @@ namespace PLWorkspace
     {
         protected readonly Dictionary<string, PLVariable> Variables = new Dictionary<string, PLVariable> ();
         protected readonly Dictionary<string, PLFunction> Commands  = new Dictionary<string, PLFunction> ();
-        protected readonly Dictionary<string, PLFunction> Functions = new Dictionary<string, PLFunction> ();
+        internal  readonly Dictionary<string, PLFunction> Functions = new Dictionary<string, PLFunction> ();
 
         internal readonly string Name;
         internal static PrintFunction Print = Console.Write;
@@ -232,6 +232,11 @@ namespace PLWorkspace
         internal virtual bool Contains (string var)
         {
             return Variables.ContainsKey (var);
+        }
+
+        internal virtual bool FunctionsContains (string var)
+        {
+            return Functions.ContainsKey (var);
         }
 
 

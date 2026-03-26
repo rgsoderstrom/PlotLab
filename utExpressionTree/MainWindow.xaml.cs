@@ -40,6 +40,8 @@ namespace utExpressionTree
         {
             try
             { 
+                WindowState = WindowState.Minimized;
+
                 StreamReader inputFile = new StreamReader (InputMFileName);
                 string raw;
                 int Counter = 0;
@@ -53,18 +55,18 @@ namespace utExpressionTree
                         if (text.Length == 0)
                             continue;
 
-                      Console.WriteLine (text);
+                        Console.WriteLine (text);
 
                         Counter++;
 
                         text = InputLineProcessor.SqueezeConsecutiveSpaces (text);
                         AnnotatedString annotated = new AnnotatedString (text);
 
-                        //Console.WriteLine (annotated.ToString ());
+                        Console.WriteLine (annotated.ToString ());
 
                         //**********************************************************************
 
-                        if (false) // show token parsing
+                        if (true) // show token parsing
                         { 
                             // first pass
                             TokenParsing parsing = new TokenParsing ();
@@ -95,7 +97,7 @@ namespace utExpressionTree
 
                         ExpressionTree tree = new ExpressionTree (annotated);
 
-                        if (false) // show expression tree
+                        if (true) // show expression tree
                         { 
                             Window win2 = new Window ();
                             TreeView tv = new TreeView ();
@@ -125,7 +127,7 @@ namespace utExpressionTree
             catch (Exception ex)
             {
                 Console.WriteLine ("Exception in Window_Loaded: " + ex.Message);
-                EventLog.WriteLine ("Exception in Window_Loaded: " + ex.StackTrace);
+                EventLog.WriteLine (ex.StackTrace);
             }
         }
     }
