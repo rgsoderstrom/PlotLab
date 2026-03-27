@@ -15,15 +15,8 @@ namespace Main
         public List<ExpressionTreeNode> Operands = new List<ExpressionTreeNode> ();
 
         // available all nodes
-        //public static IWorkspace    BaseWorkspace;   // most user created variables
-        //public static IWorkspace    GlobalWorkspace; // constants (e.g. pi) and variables explcitly marked "global"
-        //public static IWorkspace     Workspace; // just 1 for initial testing
-       // public static LibraryManager Library;
         public static IFileSystem   FileSystem;
         public static PrintFunction Print;
-
-
-
 
 
         private PLVariable nodeValue = null;
@@ -47,7 +40,7 @@ namespace Main
         //******************************************************************************************
         //******************************************************************************************
 
-        public static PrintFunction PF = null;
+    //    public static PrintFunction PF = null;
         public static int InstanceCounter = 0; // zeroed when new tree started
 
         //
@@ -66,6 +59,7 @@ namespace Main
 
             InstanceCounter = 0;
             ConstructorCommon (tokens);
+            Compact ();
         }
 
         //
@@ -77,11 +71,13 @@ namespace Main
             List<IToken> tokens = parsing.StringToTokens (expr, FileSystem);
             
             ConstructorCommon (tokens);
+            Compact ();
         }
 
         ExpressionTreeNode (List<IToken> tokens)
         {
             ConstructorCommon (tokens);
+            Compact ();
         }
 
         //***************************************************************************************
