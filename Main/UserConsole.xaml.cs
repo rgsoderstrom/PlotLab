@@ -68,43 +68,6 @@ namespace Main
 
         //*****************************************************************************************
 
-        public static string LogFileDirectory = "";
-        public static string HistoryFileDirectory = "";
-        public static string ScriptsDirectory = "";
-
-        private void CheckDocumentDirectories (string baseDirName, List<string> msgs)
-        {
-            try
-            {
-                string myDocs = Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments);
-
-                if (myDocs == null)
-                    throw new Exception ("Can't find user's \"Documents\" folder");
-
-                string fullPathAndName = myDocs + "\\" + baseDirName;
-                ScriptsDirectory = fullPathAndName + "\\" + "Scripts";
-                string startup = ScriptsDirectory + "\\startup.m";
-
-                if (Directory.Exists (fullPathAndName) == false)
-                {
-                    msgs.Add ("Creating folder " + baseDirName + " in user's Documents folder");
-                    Directory.CreateDirectory (fullPathAndName);
-                    Directory.CreateDirectory (ScriptsDirectory);
-
-                    StreamWriter str = File.CreateText (startup);
-                    str.Write ("% startup.m - this script runs automatically on start up");
-                    str.Close ();
-                }
-
-                LogFileDirectory = fullPathAndName;
-                HistoryFileDirectory = fullPathAndName;
-            }
-
-            catch (Exception ex)
-            {
-                msgs.Add ("Startup exception: " + ex.Message);
-            }
-        }
 
         //*****************************************************************************************
 
@@ -407,7 +370,7 @@ namespace Main
 
             lines.AddRange (Workspace.PartialMatch       (token));
             lines.AddRange (SystemFunctions.PartialMatch (token));
-            lines.AddRange (FileSearch.PartialNameSearch (token));
+            lines.AddRange (FileSystem.PartialNameSearch (token));
             lines.AddRange (LibraryManager.PartialMatch  (token));
 
             return lines;
@@ -420,7 +383,7 @@ namespace Main
             if (token.Length < 2) // need at least 2 chars to search
                 return lines;
 
-            lines.AddRange (FileSearch.PartialDirectoryNameSearch (token));
+            lines.AddRange (FileSystem.PartialDirectoryNameSearch (token));
 
             return lines;
         }
