@@ -39,7 +39,7 @@ namespace Main
                                                                                                       new BinaryOperatorPriority ("+",   400),
                                                                                                       new BinaryOperatorPriority ("-",   400),
                                                                                                       new BinaryOperatorPriority (":",   300),
-                                                                                                      new BinaryOperatorPriority ("=",   100),                                                                                                      new BinaryOperatorPriority ("==",   70),
+                                                                                                 //   new BinaryOperatorPriority ("=",   100),                                                                                                      new BinaryOperatorPriority ("==",   70),
 
                                                                                                       new BinaryOperatorPriority ("~=",   70),
                                                                                                       new BinaryOperatorPriority ("==",   70),

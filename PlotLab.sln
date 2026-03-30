@@ -42,6 +42,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "utWorkspace", "utWorkspace\
 		{509D9AD1-4FFF-4DDB-AB62-1385FC175CA8} = {509D9AD1-4FFF-4DDB-AB62-1385FC175CA8}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PLFileSystem", "PLFileSystem\PLFileSystem.csproj", "{DA28C2EF-EBBA-4C54-8E46-5B9E13842E8E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,6 +86,10 @@ Global
 		{56956CBF-D5F5-4BD6-ACC7-ED4F3581A59F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56956CBF-D5F5-4BD6-ACC7-ED4F3581A59F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56956CBF-D5F5-4BD6-ACC7-ED4F3581A59F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA28C2EF-EBBA-4C54-8E46-5B9E13842E8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA28C2EF-EBBA-4C54-8E46-5B9E13842E8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA28C2EF-EBBA-4C54-8E46-5B9E13842E8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA28C2EF-EBBA-4C54-8E46-5B9E13842E8E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

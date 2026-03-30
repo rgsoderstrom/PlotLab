@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 //using PLCommon;
-//using PLWorkspace;
+using PLWorkspace;
+using PLLibrary;
 
 namespace Main
 {
@@ -23,6 +24,7 @@ namespace Main
             InTwoCharOperator,
             InTranspose,
             SupressOutput,
+            EqualSign,
             Leaving,
             Error
         };
@@ -35,10 +37,10 @@ namespace Main
 
         //*****************************************************************************************************
 
-        public List<IToken> StringToTokens (AnnotatedString expression, IWorkspace workspace, ILibrary lib, IFileSystem files)
+        public List<IToken> StringToTokens (AnnotatedString expression, IFileSystem files)
         {
             List<IToken> tokens = ParsingPassOne (expression);
-            tokens = ParsingPassTwo (tokens, workspace, lib, files);
+            tokens = ParsingPassTwo (tokens, files);
             return tokens;
         }
 
@@ -65,7 +67,7 @@ namespace Main
             // Parse expression
             //
 
-            ParsingStatus status = new ParsingStatus ();
+            ParsingStatus status = new ParsingStatus (); // inital state is "Between"
 
             bool done = false;
             int get = 0;  // next character index
@@ -93,6 +95,10 @@ namespace Main
                 {
                     case ParsingState.Leaving:
                         ExitProcessing (tokens, ref CurrentToken, status);
+                        break;
+
+                    case ParsingState.EqualSign:
+                        getNextChar = EqualSignProcessing (tokens, ref CurrentToken, status);
                         break;
 
                     case ParsingState.SupressOutput:
@@ -136,9 +142,14 @@ namespace Main
                         break;
 
                     case ParsingState.Error:
-                        if      (CurrentToken == null)       throw new Exception (string.Format ("Parsing error, CurrentToken == null"));
-                        else if (CurrentToken.AnnotatedText != null) throw new Exception (string.Format ("Parsing error, Text = {0}, char = {1}", CurrentToken.AnnotatedText, status.currentChar));
-                        else                                 throw new Exception (string.Format ("Parsing error, atext == null, char = {0}", status.currentChar));
+                        if (CurrentToken == null)       
+                            throw new Exception (string.Format ("Parsing error, CurrentToken == null, currentChar is " + status.currentChar));
+                        
+                        else if (CurrentToken.AnnotatedText != null) 
+                            throw new Exception (string.Format ("Parsing error, Text = {0}, char = {1}", CurrentToken.AnnotatedText, status.currentChar));
+                        
+                        else
+                            throw new Exception (string.Format ("Parsing error, atext == null, char = {0}", status.currentChar));
 
                     default:
                         throw new Exception ("Parsing state error");
@@ -152,13 +163,13 @@ namespace Main
 
         static bool BetweenProcessing (ParsingStatus status)
         {
-          //  Console.WriteLine ("Between, " + status.currentChar);
-
             bool accepted = false;
 
             if      (status.currentChar.IsWhitespace)  accepted = true;
 
             else if (status.currentChar.IsSupress)     status.state = ParsingState.SupressOutput;
+            
+            else if (status.currentChar.IsEqualSign)   status.state = ParsingState.EqualSign;
             
             else if (status.currentChar.IsTwoCharOp)   status.state = ParsingState.InTwoCharOperator;
 
@@ -177,7 +188,7 @@ namespace Main
             else if (status.currentChar.IsOpenQuote)   status.state = ParsingState.InString;
 
             else
-                status.state = ParsingState.Error;
+                throw new Exception ("In TokenParsing, BetweenProcessing unsupported character type: " + status.currentChar);
 
             return accepted;
         }
@@ -309,6 +320,18 @@ namespace Main
           //  Console.WriteLine ("SupressOutputProcessing, " + status.currentChar);
 
             token = new Token (TokenType.SupressPrinting, status.currentChar);
+            tokens.Add (token);
+            token = null;
+            status.state = ParsingState.Between;//.Leaving;
+
+            return true;
+        }
+
+        static bool EqualSignProcessing (List<IToken> tokens, ref IToken token, ParsingStatus status)
+        {
+          //  Console.WriteLine ("EqualSignProcessing, " + status.currentChar);
+
+            token = new Token (TokenType.EqualSign, status.currentChar);
             tokens.Add (token);
             token = null;
             status.state = ParsingState.Between;//.Leaving;

@@ -13,15 +13,11 @@ namespace Main
 
     internal partial class InputLineProcessor
     {
-        IWorkspace    workspace;
-        ILibrary      library;
         IFileSystem   files;
         PrintFunction Print;
 
-        internal InputLineProcessor (IWorkspace ws, ILibrary lib, IFileSystem fs, PrintFunction pr)
+        internal InputLineProcessor (IFileSystem fs, PrintFunction pr)
         {
-            workspace = ws;
-            library = lib;
             files = fs;
             Print = pr;
         }
@@ -65,7 +61,7 @@ namespace Main
                     //Console.WriteLine (annotatedText);
                     //Console.WriteLine ();
 
-                    List<IToken> statementTokens = parser.StringToTokens (annotatedText, workspace, library, files);
+                    List<IToken> statementTokens = parser.StringToTokens (annotatedText, files);
                     TokenLists.Add (statementTokens);
 
                     //Print (text);

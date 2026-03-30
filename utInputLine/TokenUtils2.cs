@@ -123,9 +123,15 @@ namespace Main
         //  - eg: (2:4, 6:7) => "2:4", "6:7"
         //  
 
+        private void VerifyParenthesis (AnnotatedString str)
+        {
+            if (str [0].IsOpenParen == false)              throw new Exception ("Missing opening parenthesis: " + str.Plain);
+            if (str [str.Count - 1].IsCloseParen == false) throw new Exception ("Missing closing parenthesis: " + str.Plain);
+        }
+
         public List<AnnotatedString> SplitSubmatrixArgs (AnnotatedString str)
         {
-            VerifyBrackets (str);
+            VerifyParenthesis (str);
 
             // split arguments string at any commas at same nesting level as first char
             List<AnnotatedString> args = new List<AnnotatedString> ();
