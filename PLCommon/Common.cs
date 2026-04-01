@@ -14,8 +14,8 @@ namespace PLCommon
         Function, 
 
         //  WorkspaceFunction,
-        //ScriptFile, 
-        //FunctionFile,       // single output function
+        ScriptFile, 
+        FunctionFile,       // m-file function
         //FunctionFile_Multi, // multiple output function file
         PlotCommand, 
         SystemCommand, 

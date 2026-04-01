@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using PLCommon;
-
+﻿
 /*
     PLFileSystem - created as an Empty Project (.Net Framework)
                  - framework changed to .Net 4.8
                  - output type changed to Class Library
 */
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+using PLCommon;
 
 namespace PLFileSystem
 {
@@ -22,55 +20,71 @@ namespace PLFileSystem
     public static class FileSystem
     {
         private static PrintFunction Print;
-        private static string baseFolder = "PlotLabV1";
-        private static string StartupScript = "utStartup"; //
+        private static readonly string baseFolder = "PlotLabV2";
+        private static readonly string startupScript = "startup.m";
+        public  static          string StartupScript {get {return startupScript;}}
 
         // base directory is one level below user's Documents
         private static string baseDirectory = "";
         public  static string BaseDirectory {get {return baseDirectory;}
-                                             private set {if (Directory.Exists (value)) currentDirectory = value;}}
+                                             private set {baseDirectory = value;}}
+        
+        // scripts directory is one level below base, contains startup script
+        private static string scriptDirectory = "";
+        public  static string ScriptDirectory {get {return scriptDirectory;}
+                                               private set {scriptDirectory = value;}}
 
         private static string currentDirectory = "";
         public  static string CurrentDirectory {get {return currentDirectory;}
-                                                set {if (Directory.Exists (value)) currentDirectory = value;}}
+                                                set {if (Directory.Exists (value)) currentDirectory = value;
+                                                         else throw new Exception ("Dir " + value + "doesn't exist");}}
 
         private static List<string> searchPath = new List<string> ();
         public  static List<string> SearchPath {get {return searchPath;}}
 
-        public static string LogFileDirectory     {get {return BaseDirectory;}}
-        public static string HistoryFileDirectory {get {return BaseDirectory;}}
+        public static string LogFileDir            {get {return BaseDirectory;}}
+        public static string CommandHistoryFileDir {get {return BaseDirectory;}}
 
         //***********************************************************************************
         //***********************************************************************************
 
-        // constructor
+        // constructor & initialization
 
         static FileSystem ()
         {
         }
 
-        public static bool Open (PrintFunction pf)
+        public static void Open (PrintFunction pf)
         { 
-            Print = pf;
+            try
+            { 
+                Print = pf;
 
-            string myDocs = Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments)
-                         ?? throw new Exception ("Can't find user's \"Documents\" folder");
-            BaseDirectory = myDocs + "\\" + baseFolder;
+                string myDocs = Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments)
+                             ?? throw new Exception ("Can't find user's \"Documents\" folder");
 
-            if (Directory.Exists (BaseDirectory) == false)
-            {
-                Print ("Creating folder " + baseFolder + " in user's Documents folder");
-                Directory.CreateDirectory (BaseDirectory);
+                BaseDirectory   = myDocs + "\\" + baseFolder;
+                ScriptDirectory = BaseDirectory + "\\" + "Scripts";
 
-                StreamWriter str = File.CreateText (StartupScript);
-                str.Write ("% startup.m - this script runs automatically on start up");
-                str.Close ();
+                if (Directory.Exists (BaseDirectory) == false)
+                {
+                    Print ("Creating folder " + baseFolder + " in user's Documents folder");
+                    Directory.CreateDirectory (BaseDirectory);
+
+                    Directory.CreateDirectory (ScriptDirectory);
+
+                    StreamWriter str = File.CreateText (ScriptDirectory + "\\" + StartupScript);
+                    str.Write ("\n% startup.m - this script runs automatically on start up\n");
+                    str.Close ();
+                }
+
+                AddPath (ScriptDirectory);
             }
 
-            SearchPath.Add (BaseDirectory);
-
-
-            return true;
+            catch (Exception ex)
+            {
+                throw new Exception ("Error opening file system: " + ex.Message);
+            }
         }
 
         //*******************************************************************************************
@@ -185,15 +199,16 @@ namespace PLFileSystem
 
         //******************************************************************************************
 
-        //public static List<string> GetPathCopy ()
-        //{
-        //    List<string> pathCopy = new List<string> ();
+        // return a copy, for client use, so actual path is protected
+        public static List<string> GetPathCopy ()
+        {
+            List<string> pathCopy = new List<string> ();
 
-        //    foreach (string str in searchPath)
-        //        pathCopy.Add (new string (str.ToCharArray ()));
+            foreach (string str in searchPath)
+                pathCopy.Add (new string (str.ToCharArray ()));
 
-        //    return pathCopy;
-        //}
+            return pathCopy;
+        }
 
         //******************************************************************************************
         //******************************************************************************************
@@ -215,6 +230,10 @@ namespace PLFileSystem
 
             return fileType;
         }
-    }
     
+        public static bool IsMFileFunction (string name)
+        {
+            return WhatIs (name) == FileTypes.FunctionFile;
+        }
+    }
 }
