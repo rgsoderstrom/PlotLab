@@ -78,6 +78,7 @@ namespace PLFileSystem
                     str.Close ();
                 }
 
+                CurrentDirectory = BaseDirectory;
                 AddPath (ScriptDirectory);
             }
 
