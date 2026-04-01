@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using PLCommon;
+using PLFileSystem;
 using PLWorkspace;
 //using ScriptPreprocess;
 
@@ -56,7 +57,7 @@ namespace Main
         {
             string fullName = "";
 
-            if (FileSearch.NameSearch (scriptName, ref fullName))
+            if (FileSystem.NameSearch (scriptName, ref fullName))
                 return RunScript (fullName);
 
             else

@@ -100,6 +100,9 @@
     <Reference Include="CommonMath">
       <HintPath>..\..\CommonMath\bin\Debug\CommonMath.dll</HintPath>
     </Reference>
+    <Reference Include="PLFileSystem">
+      <HintPath>..\PLFileSystem\bin\Debug\PLFileSystem.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />

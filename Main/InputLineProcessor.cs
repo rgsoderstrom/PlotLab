@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 using PLCommon;
 using PLLibrary;
+using PLFileSystem;
 using PLWorkspace;
-//using PLKernel;
 
 namespace Main
 {
@@ -77,7 +77,7 @@ namespace Main
             //
             // Search the path to see if it's the name of a script file
             //
-            if (FileSearch.WhatIs (firstWord) == SymbolicNameTypes.ScriptFile)
+            if (FileSystem.WhatIs (firstWord) == FileTypes.ScriptFile)
             {
                 ScriptProcessor sp = new ScriptProcessor (Print);
                 ScriptProcessor.ScriptTerminationReason reason = sp.FindAndRunScript (firstWord);

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Common;
+using PLFileSystem;
 
 namespace Main
 {
@@ -25,7 +26,7 @@ namespace Main
         {
             try
             {
-                StreamReader file = new StreamReader (UserConsole.HistoryFileDirectory + "\\" + historyFileName);
+                StreamReader file = new StreamReader (FileSystem.CommandHistoryFileDir + "\\" + historyFileName);
                 string raw;
 
                 while ((raw = file.ReadLine ()) != null)
@@ -63,7 +64,7 @@ namespace Main
         {
             try
             {
-                StreamWriter file = new StreamWriter (UserConsole.HistoryFileDirectory + "\\" + historyFileName);
+                StreamWriter file = new StreamWriter (FileSystem.CommandHistoryFileDir + "\\" + historyFileName);
                 List<string> writeList;
 
                 if (writeOption == CommandHistoryWriteOptions.WriteAll)
@@ -98,7 +99,7 @@ namespace Main
                 {
                     try
                     {
-                        System.Diagnostics.Process.Start (UserConsole.HistoryFileDirectory + "\\" + historyFileName);
+                        System.Diagnostics.Process.Start (FileSystem.CommandHistoryFileDir + "\\" + historyFileName);
                     }
 
                     catch (Exception ex)

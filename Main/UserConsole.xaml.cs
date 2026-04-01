@@ -8,6 +8,7 @@ using Common;
 using PLCommon;
 using PLWorkspace;
 using PLLibrary;
+using PLFileSystem;
 using System.Windows.Controls;
 
 namespace Main
@@ -17,22 +18,22 @@ namespace Main
         internal static UserConsole thisConsole = null;
 
         // record any startup error messages generated until the window is ready to display them
-        List<string> StartupMessages = new List<string> ();
+      //  List<string> StartupMessages = new List<string> ();
 
         public UserConsole ()
         {
-            CheckDocumentDirectories ("PlotLabV1", StartupMessages);  //-------------------------- CHANGE TO V2
-            EventLog.Open (UserConsole.LogFileDirectory + "\\Log.txt", true); // false);
-            FileSearch.Open ();
-            CommandLineHistory.Open ();
+          //  FileSystem.Open (Print);            
+          ////CheckDocumentDirectories ("PlotLabV1", StartupMessages);  //-------------------------- CHANGE TO V2
+          //  EventLog.Open (FileSystem.LogFileDirectory + "\\Log.txt", true); // false);
+          //  CommandLineHistory.Open ();
 
             InitializeComponent ();
             thisConsole = this;
 
             TextPane.AddHandler (CommandManager.PreviewExecutedEvent, new RoutedEventHandler (CommandPreview), true);
 
-            foreach (string str in StartupMessages)
-                Print (str + "\n");
+         //   foreach (string str in StartupMessages)
+          //      Print (str + "\n");
 
             // get initial state of check boxes
             EntryPoint.ShowParsingTokens = (bool) ShowParse_Checkbox.IsChecked;
@@ -41,25 +42,31 @@ namespace Main
 
         private void Window_Loaded (object sender, RoutedEventArgs e)
         {
-            Print ("PlotLab, Ver. 2\n");
-            Print ("Kernel & FrontEnd combined into \"Main\"\n\n");
-            Workspace.Print = Print;
-            TextPane.Focus ();
-
             try
             {
+                FileSystem.Open (Print);
+
+                string s1 = FileSystem.LogFileDir;
+
+                EventLog.Open (FileSystem.LogFileDir + "\\Log.txt", true); // false);
+                CommandLineHistory.Open ();
+
+                Print ("PlotLab, Ver. 2\n");
+                Workspace.Print = Print;
+                TextPane.Focus ();
+
                 PLVariable ans = new PLNull ();
                 bool fp = false;
                 InputLineProcessor ip = new InputLineProcessor (Print);
                 ip.ProcessOneStatement (ref ans, "startup", ref fp);
 
-                MFileFunctionMgr.CurrentDir = FileSearch.CurrentDirectory;
-                MFileFunctionMgr.SearchPathCopy = FileSearch.GetPathCopy ();
+        //        MFileFunctionMgr.CurrentDir = FileSearch.CurrentDirectory;
+          //      MFileFunctionMgr.SearchPathCopy = FileSearch.GetPathCopy ();
             }
 
             catch (Exception ex)
             {
-                Print ("Startup error: " + ex.Message + "\n");
+                Console.WriteLine ("Startup error: " + ex.Message + "\n");
                 //Print ("Startup error: " + ex.StackTrace + "\n");
             }
 

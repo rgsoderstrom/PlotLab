@@ -6,6 +6,7 @@ using System.IO;
 
 using PLCommon;
 using PLLibrary;
+using PLFileSystem;
 
 namespace Main
 {
@@ -136,7 +137,7 @@ namespace Main
 
             string fullName = "";
 
-            bool found = FileSearch.NameSearch (str, ref fullName);
+            bool found = FileSystem.NameSearch (str, ref fullName);
 
             if (found)
                 System.Diagnostics.Process.Start (fullName);
@@ -175,12 +176,12 @@ namespace Main
 
                 if (path [0] == '\\') // absolute path on same disk
                 {
-                    int i = FileSearch.CurrentDirectory.IndexOf ("\\");
+                    int i = FileSystem.CurrentDirectory.IndexOf ("\\");
 
                     if (i == -1)
                         throw new Exception ("Error reading current disk");
 
-                    string disk = FileSearch.CurrentDirectory.Substring (0, i);
+                    string disk = FileSystem.CurrentDirectory.Substring (0, i);
 
                     nextCurrentDir = disk + path;
                 }
@@ -200,7 +201,7 @@ namespace Main
 
                     else // relative path
                     {
-                        nextCurrentDir = FileSearch.CurrentDirectory;
+                        nextCurrentDir = FileSystem.CurrentDirectory;
 
                         foreach (string tok in tokens)
                         {
@@ -223,7 +224,7 @@ namespace Main
 
                 if (Directory.Exists (nextCurrentDir))
                 {
-                    FileSearch.CurrentDirectory = nextCurrentDir;
+                    FileSystem.CurrentDirectory = nextCurrentDir;
                     MFileFunctionMgr.CurrentDir = nextCurrentDir;
                 }
                 else
@@ -281,7 +282,7 @@ namespace Main
         
         public static PLVariable Pwd (PLVariable _)
         {
-            return new PLString (FileSearch.CurrentDirectory);
+            return new PLString (FileSystem.CurrentDirectory);
         }
 
         //*********************************************************************************************
@@ -308,8 +309,8 @@ namespace Main
             //*******************************************************************************
 
             // get list of all subdirectories in current directory
-            string [] dirs = searchPattern == null ? System.IO.Directory.GetDirectories (FileSearch.CurrentDirectory)
-                                                   : System.IO.Directory.GetDirectories (FileSearch.CurrentDirectory, searchPattern);
+            string [] dirs = searchPattern == null ? System.IO.Directory.GetDirectories (FileSystem.CurrentDirectory)
+                                                   : System.IO.Directory.GetDirectories (FileSystem.CurrentDirectory, searchPattern);
             for (int i = 0; i<dirs.Length; i++)
             {
                 // strip off all but subdirs name           
@@ -326,8 +327,8 @@ namespace Main
             //*******************************************************************************
 
             // get list of all regular files in current directory
-            string [] files = searchPattern == null ? System.IO.Directory.GetFiles (FileSearch.CurrentDirectory)
-                                                    : System.IO.Directory.GetFiles (FileSearch.CurrentDirectory, searchPattern);
+            string [] files = searchPattern == null ? System.IO.Directory.GetFiles (FileSystem.CurrentDirectory)
+                                                    : System.IO.Directory.GetFiles (FileSystem.CurrentDirectory, searchPattern);
             for (int i = 0; i<files.Length; i++)
             {
                 // strip off all but file name and extension           
@@ -369,8 +370,8 @@ namespace Main
                 if (path [0] == '\'') path = path.Substring (1);
                 if (path [path.Length - 1] == '\'') path = path.Substring (0, path.Length - 1);
 
-                FileSearch.AddPath (path);
-                MFileFunctionMgr.SearchPathCopy = FileSearch.GetPathCopy ();
+                FileSystem.AddPath (path);
+            //  MFileFunctionMgr.SearchPathCopy = FileSystem.GetPathCopy ();
             }
 
             return new PLNull ();
@@ -378,9 +379,10 @@ namespace Main
 
         //*********************************************************************************************
 
+        // invoked when user requests path
         public static PLVariable Path (PLVariable _)
         {
-            List<string> pathStrings = FileSearch.GetPathCopy ();
+            List<string> pathStrings = FileSystem.GetPathCopy ();
             PLList copy = new PLCommon.PLList ();
 
             foreach (string str in pathStrings)
