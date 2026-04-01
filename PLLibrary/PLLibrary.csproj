@@ -52,6 +52,9 @@
     <Reference Include="PLCommon">
       <HintPath>..\PLCommon\bin\Debug\PLCommon.dll</HintPath>
     </Reference>
+    <Reference Include="PLFileSystem">
+      <HintPath>..\PLFileSystem\bin\Debug\PLFileSystem.dll</HintPath>
+    </Reference>
     <Reference Include="Plot2D_Embedded">
       <HintPath>..\..\Plotting\Plot2D_Embedded\bin\Debug\Plot2D_Embedded.dll</HintPath>
     </Reference>
