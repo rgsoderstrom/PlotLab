@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;   
 
-////using PLCommon;
+using PLFileSystem;
 using PLWorkspace;
 using PLLibrary;
 
@@ -9,9 +9,9 @@ namespace Main
 {
     public partial class TokenParsing
     {
-        internal List<IToken> ParsingPassTwo (List<IToken> initial, IFileSystem files)
+        internal List<IToken> ParsingPassTwo (List<IToken> initial)
         {
-            List<IToken> edited = LookupAlphanumerics (initial, files);
+            List<IToken> edited = LookupAlphanumerics (initial);
 
             edited = IdentifyParens (edited); // grouping, function args, sub matrix
 
@@ -26,7 +26,7 @@ namespace Main
             edited = BindUnaryOperators (edited); // -, A => (-1 * A),
                                                   // -, 7 => -7
 
-            edited = RenameTwoCharOperator (edited); // classify as Unary or Binary Operator
+            edited = RenameTwoCharOperator (edited); // rename to BinaryOperator
 
             return edited;
         }
@@ -90,8 +90,7 @@ namespace Main
 
         // Assign a more specific type to an Alphanumeric
 
-        List<IToken> LookupAlphanumerics (List<IToken> initial,
-                                          IFileSystem files)
+        List<IToken> LookupAlphanumerics (List<IToken> initial)
         {
             for (int i = 0; i<initial.Count; i++)
             {
@@ -103,10 +102,10 @@ namespace Main
                     else if (LibraryManager.Contains (initial [i].AnnotatedText.Plain))
                         initial [i].Type = TokenType.FunctionName;
 
-                    else if (files.IsFunctionFile (initial [i].AnnotatedText.Plain))
-                        initial [i].Type = TokenType.FunctionName;
+                    else if (FileSystem.IsFunctionFile (initial [i].AnnotatedText.Plain))
+                        initial [i].Type = TokenType.FunctionFile;
 
-                    else if (files.IsScriptFile (initial [i].AnnotatedText.Plain))
+                    else if (FileSystem.IsScriptFile (initial [i].AnnotatedText.Plain))
                         initial [i].Type = TokenType.ScriptFile;
 
                     else initial [i].Type = TokenType.Undefined;
@@ -416,9 +415,6 @@ namespace Main
 
             return initial;
         }
-
-        //*************************************************************************************************
-
     }
 }
 

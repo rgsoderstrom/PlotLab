@@ -37,10 +37,10 @@ namespace Main
 
         //*****************************************************************************************************
 
-        public List<IToken> StringToTokens (AnnotatedString expression, IWorkspace workspace, IFileSystem files)
+        public List<IToken> StringToTokens (AnnotatedString expression)
         {
             List<IToken> tokens = ParsingPassOne (expression);
-            tokens = ParsingPassTwo (tokens, workspace, files);
+            tokens = ParsingPassTwo (tokens);
             return tokens;
         }
 
@@ -67,7 +67,7 @@ namespace Main
             // Parse expression
             //
 
-            ParsingStatus status = new ParsingStatus ();
+            ParsingStatus status = new ParsingStatus (); // inital state is "Between"
 
             bool done = false;
             int get = 0;  // next character index

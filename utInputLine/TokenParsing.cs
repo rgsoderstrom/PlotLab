@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 //using PLCommon;
-using PLWorkspace;
+//using PLWorkspace;
 using PLLibrary;
 
 namespace Main
@@ -37,10 +37,10 @@ namespace Main
 
         //*****************************************************************************************************
 
-        public List<IToken> StringToTokens (AnnotatedString expression, IFileSystem files)
+        public List<IToken> StringToTokens (AnnotatedString expression)
         {
             List<IToken> tokens = ParsingPassOne (expression);
-            tokens = ParsingPassTwo (tokens, files);
+            tokens = ParsingPassTwo (tokens);
             return tokens;
         }
 

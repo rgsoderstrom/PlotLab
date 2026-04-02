@@ -31,8 +31,9 @@ namespace Main
         BinaryOperator,
         UnaryOperator,
         VariableName,
-        FunctionName,    // built-in or .m file
+        FunctionName,    // built-in
         ScriptFile,
+        FunctionFile,    // .m file
         Undefined,       // on LHS a new variable, on RHS will be an error
 
         GroupingParens,  // A * (B + C)
