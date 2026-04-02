@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Controls;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using PLCommon;
-using PLWorkspace;
+using PLLibrary;
 
 namespace Main
 {
     internal partial class ExpressionTreeNode
     {
-        public string Operator = "";
-        public TokenType NodeType = TokenType.None;
+        public TokenType NodeType;// = TokenType.None;
 
+        public string                   Operator = "";
         public List<ExpressionTreeNode> Operands = new List<ExpressionTreeNode> ();
+
+        // available all nodes
+        public static PrintFunction Print;
 
 
         private PLVariable nodeValue = null;
@@ -39,26 +39,44 @@ namespace Main
         //******************************************************************************************
         //******************************************************************************************
 
-        public static PrintFunction PF = null;
+    //    public static PrintFunction PF = null;
         public static int InstanceCounter = 0; // zeroed when new tree started
 
         //
-        // public ctor
+        // public ctor used to construct root node
         //
-        public ExpressionTreeNode (string expr)
+        public ExpressionTreeNode (AnnotatedString expr, ref bool SuppressPrinting)
         {
             TokenParsing parsing = new TokenParsing ();
-            List<Token> tokens = parsing.StringToTokens (expr);
-            
+            List<IToken> tokens = parsing.StringToTokens (expr);
+
+            if (tokens [tokens.Count - 1].Type == TokenType.SupressPrinting)
+            {
+                SuppressPrinting = true;
+                tokens.Remove (tokens [tokens.Count - 1]);
+            }
+
+            InstanceCounter = 0;
             ConstructorCommon (tokens);
+            Compact ();
         }
 
         //
         // private ctor
         //
-        ExpressionTreeNode (List<Token> tokens)
+        private ExpressionTreeNode (AnnotatedString expr)
+        {
+            TokenParsing parsing = new TokenParsing ();
+            List<IToken> tokens = parsing.StringToTokens (expr);
+            
+            ConstructorCommon (tokens);
+            Compact ();
+        }
+
+        ExpressionTreeNode (List<IToken> tokens)
         {
             ConstructorCommon (tokens);
+            Compact ();
         }
 
         //***************************************************************************************
@@ -68,12 +86,12 @@ namespace Main
         //
         // Invoked by both constructors
         //
-        void ConstructorCommon (List<Token> tokens)
+        void ConstructorCommon (List<IToken> tokens)
         {
-            //if (InstanceCounter++ > 100)
-            //{
-            //    throw new Exception ("Too many nodes in expression tree");
-            //}
+            if (InstanceCounter++ > 1000)
+            {
+                throw new Exception ("Too many nodes in expression tree");
+            }
 
             try
             {
@@ -83,7 +101,7 @@ namespace Main
 
                 else if (tokens.Count == 1)
                 {
-                    switch (tokens [0].type)
+                    switch (tokens [0].Type)
                     {
                        case TokenType.GroupingParens:  // e.g. (a * b + c) 
                             BuildNodeFrom_GroupingParens (tokens);
@@ -107,7 +125,7 @@ namespace Main
                             BuildNodeFrom_VariableName (tokens);
                             break;
 
-                        case TokenType.ArithmeticOperator:
+                        case TokenType.Operator:
                             BuildNodeFrom_Operator (tokens);
                             break;
 
@@ -117,7 +135,7 @@ namespace Main
 
                         case TokenType.Pair:
                         {
-                            switch ((tokens [0] as TokenPair).pairType)
+                            switch ((tokens [0] as TokenPair).PairType)
                             {
                                 case TokenPairType.Function:
                                     BuildNodeFrom_FunctionPair (tokens [0] as TokenPair);
@@ -131,7 +149,7 @@ namespace Main
                         break;
 
                         default:
-                            throw new Exception (string.Format ("Token Type {0} not supported", tokens [0].type));
+                            throw new Exception (string.Format ("Token Type {0} not supported", tokens [0].Type));
                     }
                 }
 
@@ -209,6 +227,8 @@ namespace Main
                 }
             }
 
+       //     string exp = expression; // temp for debug
+
             List<ExpressionTreeNode> newOperands = new List<ExpressionTreeNode> ();
 
             foreach (ExpressionTreeNode op in Operands)
@@ -227,5 +247,9 @@ namespace Main
 
             Operands = newOperands;
         }
+
+
+
+
     }
 }
