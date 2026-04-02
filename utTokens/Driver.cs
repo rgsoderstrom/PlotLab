@@ -16,9 +16,6 @@ namespace utTokens
      // static readonly string InputMFileName = @"..\..\..\TokenUtilsTests.m";
         static readonly string InputMFileName = @"..\..\..\Examples\TokenTests.m";
 
-        private static readonly Workspace  workspace  = new Workspace ();
-        private static readonly FileSystem fileSystem = new FileSystem ();
-
         static void Print (string str)
         {
             Console.WriteLine (str);
@@ -92,7 +89,7 @@ namespace utTokens
             // pass each annotated string to token processor
             //
             TokenParsing parser = new TokenParsing ();
-            List<IToken> statementtokens = parser.StringToTokens (annotated, workspace, fileSystem);
+            List<IToken> statementtokens = parser.StringToTokens (annotated);
 
             foreach (IToken tok in statementtokens)
                 Print (tok.ToString ());

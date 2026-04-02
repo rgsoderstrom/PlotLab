@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
+using PLFileSystem;
 using Main;
 
 namespace utInputLine
@@ -9,8 +10,6 @@ namespace utInputLine
     class Driver
     {
         static readonly string InputMFileName = @"D:\From_C_Visual Studio 2022\Visual Studio 2022\Projects\PlotLab\Examples\InputLineTests.m";
-
-        private static readonly FileSystem fileSystem = new FileSystem ();
 
         static void Print (string str)
         {
@@ -23,7 +22,7 @@ namespace utInputLine
             {
                 List<List<IToken>> TokensForFileLines = new List<List<IToken>> ();
 
-                InputLineProcessor inputProcessor = new InputLineProcessor (fileSystem, Print);
+                InputLineProcessor inputProcessor = new InputLineProcessor (Print);
 
                 StreamReader inputFile = new StreamReader (InputMFileName);
                 string raw;

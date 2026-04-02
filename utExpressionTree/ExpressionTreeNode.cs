@@ -15,7 +15,6 @@ namespace Main
         public List<ExpressionTreeNode> Operands = new List<ExpressionTreeNode> ();
 
         // available all nodes
-        public static IFileSystem   FileSystem;
         public static PrintFunction Print;
 
 
@@ -49,7 +48,7 @@ namespace Main
         public ExpressionTreeNode (AnnotatedString expr, ref bool SuppressPrinting)
         {
             TokenParsing parsing = new TokenParsing ();
-            List<IToken> tokens = parsing.StringToTokens (expr, FileSystem);
+            List<IToken> tokens = parsing.StringToTokens (expr);
 
             if (tokens [tokens.Count - 1].Type == TokenType.SupressPrinting)
             {
@@ -68,7 +67,7 @@ namespace Main
         private ExpressionTreeNode (AnnotatedString expr)
         {
             TokenParsing parsing = new TokenParsing ();
-            List<IToken> tokens = parsing.StringToTokens (expr, FileSystem);
+            List<IToken> tokens = parsing.StringToTokens (expr);
             
             ConstructorCommon (tokens);
             Compact ();

@@ -115,7 +115,7 @@ namespace Main
             // parse what's left
             //
             TokenParsing parser = new TokenParsing ();
-            ConstructorCommon (parser.StringToTokens (as2, FileSystem));
+            ConstructorCommon (parser.StringToTokens (as2));
         }
 
         //*************************************************************************************************

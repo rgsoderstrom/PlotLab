@@ -20,8 +20,6 @@ namespace utExpressionTree
     {
         static readonly string InputMFileName = @"..\..\..\Examples\ExpressionTreeTests.m";
 
-        public static readonly FileSystem fileSystem = new FileSystem ();
-
         static void Print (string str)
         {
             Console.WriteLine (str);
@@ -79,7 +77,7 @@ namespace utExpressionTree
                             foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
 
                             // second pass
-                            tokens = parsing.ParsingPassTwo (tokens, fileSystem);
+                            tokens = parsing.ParsingPassTwo (tokens);
                             tb.Text += "\nSecond pass:\n";
                             foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
 
@@ -92,7 +90,6 @@ namespace utExpressionTree
 
                         //**********************************************************************
 
-                        ExpressionTreeNode.FileSystem = fileSystem;
                         ExpressionTreeNode.Print      = Print;
 
                         ExpressionTree tree = new ExpressionTree (annotated);

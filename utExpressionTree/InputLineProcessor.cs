@@ -13,12 +13,10 @@ namespace Main
 
     internal partial class InputLineProcessor
     {
-        IFileSystem   files;
         PrintFunction Print;
 
-        internal InputLineProcessor (IFileSystem fs, PrintFunction pr)
+        internal InputLineProcessor (PrintFunction pr)
         {
-            files = fs;
             Print = pr;
         }
 
@@ -61,7 +59,7 @@ namespace Main
                     //Console.WriteLine (annotatedText);
                     //Console.WriteLine ();
 
-                    List<IToken> statementTokens = parser.StringToTokens (annotatedText, files);
+                    List<IToken> statementTokens = parser.StringToTokens (annotatedText);
                     TokenLists.Add (statementTokens);
 
                     //Print (text);
