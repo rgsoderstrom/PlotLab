@@ -47,21 +47,35 @@ namespace Main
 
         internal AnnotatedString (string text)
         {
-            PassOne (text);
-            PassTwo ();
+            try
+            { 
+                PassOne (text);
+                PassTwo ();
+            }
+
+            catch (Exception ex)
+            {
+                throw new Exception ("Exception in AnnotatedString ctor: " + ex.Message);
+            }
         }
 
         //*************************************************************************
 
         private void PassOne (string text)
         { 
-            annotatedChars = new List<AnnotatedChar> (text.Length) {new AnnotatedChar (text [0])};
+            AnnotatedChar firstAC = new AnnotatedChar (text [0]);
+            if (firstAC.IsNumber)      digits.Add (0);   
+            if (firstAC.IsDecimal)     decimals.Add (0); // decimals will also be in "operator" list
+            if (firstAC.IsExponential) exponentials.Add (0);
+            if (firstAC.IsOperator)    operators.Add (0);
+
+            annotatedChars = new List<AnnotatedChar> (text.Length) {firstAC};
 
             for (int i=1; i<text.Length; i++)
             {
                 AnnotatedChar nextAC = new AnnotatedChar (annotatedChars [i-1], text [i]);
                 if (nextAC.IsNumber)      digits.Add (i);   
-                if (nextAC.IsDecimal)     decimals.Add (i); // decimals will also be in "operator" list
+                if (nextAC.IsDecimal)     decimals.Add (i); 
                 if (nextAC.IsExponential) exponentials.Add (i);
                 if (nextAC.IsOperator)    operators.Add (i);
 
@@ -122,13 +136,17 @@ namespace Main
                     bool beforeTest = false; // set true if char before the +/- indicates
                                              // the +/- is a unary op
 
-                    for (int before = i - 1; before >= 0; before--)
-                    {
-                        if (annotatedChars [before].IsEqualSign) {beforeTest = true; break;}
-                        if (annotatedChars [before].IsOperator) {beforeTest = true; break;}
-                        if (annotatedChars [before].IsAlpha) {break;}
-                        if (annotatedChars [before].IsNumber) {break;}
-                    }
+                    if (i == 0)
+                        beforeTest = true;
+
+                    else
+                        for (int before = i - 1; before >= 0; before--)
+                        {
+                            if (annotatedChars [before].IsEqualSign) {beforeTest = true; break;}
+                            if (annotatedChars [before].IsOperator) {beforeTest = true; break;}
+                            if (annotatedChars [before].IsAlpha) {break;}
+                            if (annotatedChars [before].IsNumber) {break;}
+                        }
 
                     if (beforeTest == true)
                     { 
