@@ -13,13 +13,15 @@ namespace Main
     public class ExpressionTree
     {
         readonly ExpressionTreeNode root;
-        readonly public bool SupressPrinting = false;
 
-        public ExpressionTree (AnnotatedString expression) 
+        private bool suppressPrinting = false;
+        public bool SuppressPrinting {get {return suppressPrinting;}}
+
+        public ExpressionTree (AnnotatedString expression)
         {
             ExpressionTreeNode.InstanceCounter = 0;
-            root = new ExpressionTreeNode (expression, ref SupressPrinting);
-         //   Compact ();
+            root = new ExpressionTreeNode (expression, ref suppressPrinting);
+            Compact ();
         }
 
         //******************************************************************************
@@ -50,10 +52,10 @@ namespace Main
 
         // this is necessary for A:B:C expressions ouside of brackets, streamlines other trees
 
-        //void Compact ()
-        //{
-        //    root.Compact ();
-        //}
+        void Compact ()
+        {
+            root.Compact ();
+        }
 
         //******************************************************************************
 
