@@ -1,6 +1,6 @@
 ﻿
 /*
-    Workspace.cs - model of a worksoace for utInputLine
+    Workspace.cs - model of a workspace for utInputLine
 */
 
 using System;
@@ -9,13 +9,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Main
+namespace PLWorkspace
 {
-    internal class Workspace : IWorkspace
+    internal static class Workspace
     {
-        List<string> definedVariables = new List<string> () {"a1" , "b12", "c123"};
+        static List<string> definedVariables = new List<string> () {"a1" , "b12", "c123"};
 
-        public bool IsDefined (string varName)
+        static public bool IsDefined (string varName)
         {
             return definedVariables.Contains (varName);
         }

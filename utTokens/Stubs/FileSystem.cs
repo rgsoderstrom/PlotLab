@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Main
+namespace PLFileSystem
 {
-    internal class FileSystem : IFileSystem
+    static internal class FileSystem
     {
-        List<string> ScriptFiles   = new List<string> () {"Ex1" , "ShowSamples", "PlotTests"};
-        List<string> FunctionFiles = new List<string> () {"F1Func" , "F2", "PlotVector"};
+        static List<string> ScriptFiles   = new List<string> () {"Ex1" , "ShowSamples", "PlotTests"};
+        static List<string> FunctionFiles = new List<string> () {"F1Func" , "F2", "PlotVector"};
         
-        public bool IsScriptFile   (string fileName) {return ScriptFiles.Contains (fileName);}
-        public bool IsFunctionFile (string fileName) {return FunctionFiles.Contains (fileName);}
+        static public bool IsScriptFile   (string fileName) {return ScriptFiles.Contains (fileName);}
+        static public bool IsFunctionFile (string fileName) {return FunctionFiles.Contains (fileName);}
 
     }
 }
