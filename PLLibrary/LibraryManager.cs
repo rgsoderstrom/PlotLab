@@ -113,6 +113,7 @@ namespace PLLibrary
         //***************************************************************************************************
         //***************************************************************************************************
         //
+        // Contains - looks for a named function in a dictionary and if found, returns "true"
         // Evaluate - looks for a named function in a dictionary and if found, calls it
         //
         
