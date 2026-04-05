@@ -32,10 +32,12 @@ namespace utTokens
                 {
                     if (raw.Length > 0)
                     {
-                        //AnnotatedStringTest (raw);
-                        TokenParsingTest (raw);
-                        //TokenUtilsTest (raw);
-                    }
+                        bool ps = false; // print separator
+                        ps |= AnnotatedStringTest (raw);
+                        //ps |= TokenParsingTest (raw);
+                        //pr |= TokenUtilsTest (raw);
+                        
+                        if (ps) Print ("===========================================");                    }
                 }
 
                 inputFile.Close ();
@@ -51,12 +53,12 @@ namespace utTokens
         //***********************************************************************
         //***********************************************************************
 
-        static private void AnnotatedStringTest (string str)
+        static private bool AnnotatedStringTest (string str)
         {
             string text = InputLineProcessor.RemovePromptAndComments (str);
 
             if (text.Length == 0)
-                return;
+                return false;
 
             text = InputLineProcessor.SqueezeConsecutiveSpaces (text);
             AnnotatedString annotated = new AnnotatedString (text);
@@ -66,19 +68,20 @@ namespace utTokens
      
          //   AnnotatedString a2 = annotated.RemoveWrapper ();
          //   Print (a2.ToString ());
-            Print ("===========================================");
+
+            return true;
         }
 
         //***********************************************************************
         //***********************************************************************
         //***********************************************************************
 
-        static private void TokenParsingTest (string raw)
+        static private bool TokenParsingTest (string raw)
         {
             string text = InputLineProcessor.RemovePromptAndComments (raw);
 
             if (text.Length == 0)
-                return;
+                return false;
 
             text = InputLineProcessor.SqueezeConsecutiveSpaces (text);
             AnnotatedString annotated = new AnnotatedString (text);
@@ -94,21 +97,21 @@ namespace utTokens
             foreach (IToken tok in statementtokens)
                 Print (tok.ToString ());
 
-             Print ("======================================");
+            return true;
         }
 
         //***********************************************************************
         //***********************************************************************
         //***********************************************************************
 
-        static private void TokenUtilsTest (string raw)
+        static private bool TokenUtilsTest (string raw)
         {
             TokenParsing parsing = new TokenParsing ();
 
             string text = InputLineProcessor.RemovePromptAndComments (raw);
 
             if (text.Length == 0)
-                return;
+                return false;
 
             text = InputLineProcessor.SqueezeConsecutiveSpaces (text);
             AnnotatedString annotated = new AnnotatedString (text);
@@ -119,8 +122,7 @@ namespace utTokens
             foreach (AnnotatedString AS in fargs)
                 Print (AS.ToString () + "\n");
  
-            Print ("======================================");
+            return true;
         }
-
     }
 }

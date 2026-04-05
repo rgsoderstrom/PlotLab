@@ -18,8 +18,10 @@ namespace Main
         // private members
         private List<AnnotatedChar> annotatedChars;
 
+        //*************************************************************************
+
         // public access properties
-        public string Plain // plain test without annotation
+        public string Plain // plain text without annotation
         {
             get
             {
@@ -33,6 +35,10 @@ namespace Main
         }
 
         public int Count {get {return annotatedChars.Count;}}
+        public int FinalBracketLevel {get {return annotatedChars [Count-1].BracketLevel;}}
+
+        private bool continues = false;
+        public  bool Continues {get {return continues;} private set {continues = value;}}
 
         //*************************************************************************
         //
@@ -51,6 +57,7 @@ namespace Main
             { 
                 PassOne (text);
                 PassTwo ();
+                PassThree ();
             }
 
             catch (Exception ex)
@@ -231,6 +238,26 @@ namespace Main
                     annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsSupressOutput;
                 }
             }
+        }
+
+        //*************************************************************************
+
+        // look for continuation, ending with ...
+
+        private void PassThree ()
+        {
+            Continues = false;
+
+            int index = Count - 1;
+            if (annotatedChars [index--].IsDecimal == false) return;
+            if (annotatedChars [index--].IsDecimal == false) return;
+            if (annotatedChars [index].IsDecimal   == false) return;
+
+            Continues = true;
+            annotatedChars.RemoveRange (Count-3, 3); // delete ...
+
+            if (annotatedChars [Count-1].IsWhitespace) 
+                annotatedChars.RemoveRange (Count-1, 1); // remove trailing space
         }
 
         //*******************************************************************
@@ -633,6 +660,8 @@ namespace Main
             if (str22.Contains ("1")) str += '\n' + str22;
             if (str23.Contains ("1")) str += '\n' + str23;
             if (str24.Contains ("1")) str += '\n' + str24;
+
+            if (Continues) str += "\n" + "Continues = true";
             
             return str;
         }
