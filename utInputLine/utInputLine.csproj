@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{D2ED8747-ECB5-4D55-8E21-333AE6AEA6E0}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>utInputLine</RootNamespace>
+    <RootNamespace>Main</RootNamespace>
     <AssemblyName>utInputLine</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -72,6 +72,7 @@
       <Link>TokenUtils2.cs</Link>
     </Compile>
     <Compile Include="InputLineProcessor.cs" />
+    <Compile Include="InputTypes.cs" />
     <Compile Include="InputLineUtils.cs" />
     <Compile Include="Interfaces\ICmndHistory.cs" />
     <Compile Include="Driver.cs" />
