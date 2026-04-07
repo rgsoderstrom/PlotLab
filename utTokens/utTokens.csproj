@@ -47,11 +47,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\utInputLine\InputLineProcessor.cs">
+      <Link>InputLineProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\utInputLine\InputLineUtils.cs">
+      <Link>InputLineUtils.cs</Link>
+    </Compile>
     <Compile Include="AnnotatedChar.cs" />
     <Compile Include="AnnotatedString.cs" />
     <Compile Include="Driver.cs" />
-    <Compile Include="InputLineProcessor.cs" />
-    <Compile Include="InputLineUtils.cs" />
     <Compile Include="Interfaces\ICmndHistory.cs" />
     <Compile Include="Interfaces\IFileSystem.cs" />
     <Compile Include="Interfaces\IWorkspace.cs" />
