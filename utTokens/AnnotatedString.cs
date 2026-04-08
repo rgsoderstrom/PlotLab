@@ -37,8 +37,32 @@ namespace Main
         public int Count {get {return annotatedChars.Count;}}
         public int FinalBracketLevel {get {return annotatedChars [Count-1].BracketLevel;}}
 
-        private bool continues = false;
+        private bool continues = false; // set true if ends in "..."
         public  bool Continues {get {return continues;} private set {continues = value;}}
+        
+        private int wordCount = 1; // words are separated by spaces at nesting level 0
+        public  int WordCount {get {return wordCount;} private set {wordCount = value;}}
+
+        public bool  HasOperators {get {return operators.Count > 0;}}
+
+        private bool hasOpenParen = false;
+        public  bool HasOpenParen {get {return hasOpenParen;}}
+
+        public string FirstWord 
+        { 
+            get 
+            { 
+                if (WordCount == 0) return "";
+                if (WordCount == 1) return Plain;
+                int stopAt = whiteSpaces [0];
+                string str = "";
+
+                for (int i = 0; i<stopAt; i++)
+                    str += annotatedChars [i].Character;
+
+                return str;
+            } 
+        }
 
         //*************************************************************************
         //
@@ -50,6 +74,7 @@ namespace Main
         private readonly List<int> decimals     = new List<int> ();
         private readonly List<int> exponentials = new List<int> (); // E or e
         private readonly List<int> operators    = new List<int> ();
+        private readonly List<int> whiteSpaces  = new List<int> ();
 
         internal AnnotatedString (string text)
         {
@@ -58,6 +83,7 @@ namespace Main
                 PassOne (text);
                 PassTwo ();
                 PassThree ();
+                PassFour ();
             }
 
             catch (Exception ex)
@@ -72,9 +98,10 @@ namespace Main
         { 
             AnnotatedChar firstAC = new AnnotatedChar (text [0]);
             if (firstAC.IsNumber)      digits.Add (0);   
-            if (firstAC.IsDecimal)     decimals.Add (0); // decimals will also be in "operator" list
+            if (firstAC.IsDecimal)     decimals.Add (0);
             if (firstAC.IsExponential) exponentials.Add (0);
             if (firstAC.IsOperator)    operators.Add (0);
+            if (firstAC.IsOpenParen)   hasOpenParen = true;
 
             annotatedChars = new List<AnnotatedChar> (text.Length) {firstAC};
 
@@ -85,6 +112,8 @@ namespace Main
                 if (nextAC.IsDecimal)     decimals.Add (i); 
                 if (nextAC.IsExponential) exponentials.Add (i);
                 if (nextAC.IsOperator)    operators.Add (i);
+                if (nextAC.IsWhitespace)  whiteSpaces.Add (i);
+                if (nextAC.IsOpenParen)   hasOpenParen = true;
 
                 annotatedChars.Add (nextAC);
             }
@@ -94,7 +123,7 @@ namespace Main
 
         private void PassTwo ()
         {
-            // look for digits that are part of a variable name, e.g. A12 = 8;
+            // look for digits that are part of a variable name, e.g. A12;
             // change their type to Letter
             foreach (int i in digits)
             {
@@ -108,7 +137,7 @@ namespace Main
             //*********************************************************************
 
             // combine decimal point with number (e.g. .123 or 123.456)
-            // change their type to Number
+            // change its type to Number
             foreach (int i in decimals)
             {
                 int before = i - 1;
@@ -206,13 +235,11 @@ namespace Main
                 if (before >= 0 && after < annotatedChars.Count)
                 {
                     // two-char operators
-                    AnnotatedChar bb = annotatedChars [i];
-                    AnnotatedChar cc = annotatedChars [after];
-
                     bool t1 = annotatedChars [i].IsOperator;
                     bool t2 = annotatedChars [after].IsOperator || annotatedChars [after].IsEqualSign;
+                    bool t3 = annotatedChars [before].IsDecimal;
 
-                    if (t1 && t2)
+                    if (t1 && t2) // e.g. ">="
                     {
                         string str = annotatedChars [i].Character.ToString ();
                         str += annotatedChars [after].Character;
@@ -223,6 +250,21 @@ namespace Main
                             annotatedChars [after].OverrideType = AnnotatedChar.ContextType.IsTwoCharOperator;
                         }
                     }
+            
+                    else if (t1 && t3) // e.g. ".*"
+                    {
+                        string str = annotatedChars [before].Character.ToString ();
+                        str += annotatedChars [i].Character;
+
+                        if (AnnotatedChar.IsTwoCharOpStr (str))
+                        {
+                            annotatedChars [before].OverrideType = AnnotatedChar.ContextType.IsTwoCharOperator;
+                            annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsTwoCharOperator;
+                        }
+                    }
+
+
+
                 }
 
                 // transpose
@@ -254,10 +296,20 @@ namespace Main
             if (annotatedChars [index].IsDecimal   == false) return;
 
             Continues = true;
-            annotatedChars.RemoveRange (Count-3, 3); // delete ...
+            annotatedChars.RemoveRange (Count-3, 3); // delete 3 chars of "..."
 
             if (annotatedChars [Count-1].IsWhitespace) 
                 annotatedChars.RemoveRange (Count-1, 1); // remove trailing space
+        }
+
+        //*************************************************************************
+
+        // count words
+
+        private void PassFour ()
+        {
+            foreach (AnnotatedChar AC in annotatedChars)
+                if (AC.IsWhitespace && AC.NestingLevel == 0) WordCount++;
         }
 
         //*******************************************************************
@@ -647,7 +699,7 @@ namespace Main
             if (str9b.Contains ("1")) str += '\n' + str9b;
 
             if (str10.Contains ("1")) str += '\n' + str10;
-         //   if (str11.Contains ("1")) str += '\n' + str11;
+            if (str11.Contains ("1")) str += '\n' + str11;
             if (str12.Contains ("1")) str += '\n' + str12;
             if (str13.Contains ("1")) str += '\n' + str13;
             if (str14.Contains ("1")) str += '\n' + str14;
@@ -662,7 +714,11 @@ namespace Main
             if (str24.Contains ("1")) str += '\n' + str24;
 
             if (Continues) str += "\n" + "Continues = true";
-            
+            if (HasOpenParen) str += "\n" + "OpenParen = true";
+            str += "\nWordCount = " + WordCount.ToString ();
+
+            //str += "\n" + "FirstWord " + FirstWord;
+
             return str;
         }
     }

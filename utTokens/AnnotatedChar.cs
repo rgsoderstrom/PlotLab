@@ -1,7 +1,7 @@
 ﻿
 /*
-    NestingLevel - an object containing one character and the depth it is
-                   nested in by parens, square brackets and quotes
+    AnnotatedChar - an object containing one character and the depth it is
+                    nested in by parens, square brackets and quotes
 */
 
 using System;
@@ -113,7 +113,8 @@ namespace Main
         //**********************************************************************************
 
         // all charcters in any operator: oneChar, twoChar, unary, transpose
-        static List<char> Operators = new List<char> () {';', ':', '\'', '.', '^', '*', '/', '+', '-', '&', '|', '>', '<', '~' };
+     // static List<char> Operators = new List<char> () {';', ':', '\'', '.', '^', '*', '/', '+', '-', '&', '|', '>', '<', '~' };
+        static List<char> Operators = new List<char> () {';', ':', '\'',      '^', '*', '/', '+', '-', '&', '|', '>', '<', '~' };
 
         static public bool IsTwoCharOpStr (string s) {return twoCharBinaryOperators.Contains (s);}
         static List<string> twoCharBinaryOperators = new List<string> () {".*", "./", ".^", "&&", "||", "~=", "==", ">=", "<="};

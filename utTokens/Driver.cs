@@ -9,6 +9,8 @@ using Main;
 
 using PLLibrary;
 
+using static System.Net.Mime.MediaTypeNames;
+
 namespace utTokens
 {
     internal class Driver
@@ -55,12 +57,11 @@ namespace utTokens
 
         static private bool AnnotatedStringTest (string str)
         {
-            string text = InputLineProcessor.RemovePromptAndComments (str);
+            string text = InputLineProcessor.Preprocess (str);
 
             if (text.Length == 0)
                 return false;
 
-            text = InputLineProcessor.SqueezeConsecutiveSpaces (text);
             AnnotatedString annotated = new AnnotatedString (text);
 
             Print (annotated.Plain.ToString ());
@@ -78,12 +79,11 @@ namespace utTokens
 
         static private bool TokenParsingTest (string raw)
         {
-            string text = InputLineProcessor.RemovePromptAndComments (raw);
+            string text = InputLineProcessor.Preprocess (raw);
 
             if (text.Length == 0)
                 return false;
 
-            text = InputLineProcessor.SqueezeConsecutiveSpaces (text);
             AnnotatedString annotated = new AnnotatedString (text);
 
             Print (annotated.Plain.ToString ());
@@ -108,12 +108,11 @@ namespace utTokens
         {
             TokenParsing parsing = new TokenParsing ();
 
-            string text = InputLineProcessor.RemovePromptAndComments (raw);
+            string text = InputLineProcessor.Preprocess (raw);
 
             if (text.Length == 0)
                 return false;
 
-            text = InputLineProcessor.SqueezeConsecutiveSpaces (text);
             AnnotatedString annotated = new AnnotatedString (text);
 
             Print (annotated.ToString () + "\n");
