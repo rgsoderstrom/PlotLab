@@ -20,21 +20,27 @@ namespace utInputLine
         {
             try
             {
-                List<List<IToken>> TokensForFileLines = new List<List<IToken>> ();
-
-                InputLineProcessor inputProcessor = new InputLineProcessor (Print);
-
                 StreamReader inputFile = new StreamReader (InputMFileName);
                 string raw;
 
                 while ((raw = inputFile.ReadLine ()) != null)
                 {
+                    string pp = InputLineProcessor.Preprocess (raw);
+
+                    if (pp.Length > 0)
+                    { 
+                        AnnotatedString annot = new AnnotatedString (pp);
+                        Console.WriteLine (annot.ToString ());
+                        Console.WriteLine ("==========================================");
+                    }
+
+
                     if (raw.Length > 0)
                     {
-                        List<List<IToken>> tok = inputProcessor.ParseOneInputLine (raw);
+                        //List<List<IToken>> tok = inputProcessor.ParseOneInputLine (raw);
                         
-                        foreach (List<IToken> lt in tok)
-                            TokensForFileLines.Add (lt);
+                        //foreach (List<IToken> lt in tok)
+                        //    TokensForFileLines.Add (lt);
                     }
                 }
 
@@ -44,22 +50,23 @@ namespace utInputLine
                 // print results to console
                 //
 
-                foreach (List<IToken> lt in TokensForFileLines)
-                {
-                    foreach (IToken tok in lt)
-                        Print (tok.ToString ());
+                //foreach (List<IToken> lt in TokensForFileLines)
+                //{
+                //    foreach (IToken tok in lt)
+                //        Print (tok.ToString ());
 
-                    Print ("=======================================");
-
-
+                //    Print ("=======================================");
 
 
-                }
+
+
+                //}
             }
 
             catch (Exception ex)
             {
                 Print ("Exception: " + ex.Message);
+                Print (ex.StackTrace);
             }
         }
     }

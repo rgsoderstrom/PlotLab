@@ -24,57 +24,58 @@ namespace Main
         //**************************************************************************************
         //**************************************************************************************
 
-        public List<List<IToken>> ParseOneInputLine (string inputLine)
-        {
-            // One List<Token> for each input statement. Since a line can contain
-            // more than one statement, we may need to return more than one list
-            List<List<IToken>> TokenLists = new List<List<IToken>> ();
 
-            try
-            { 
-                string text = RemovePromptAndComments (inputLine);
+        //public List<List<IToken>> ParseOneInputLine (string inputLine)
+        //{
+        //    // One List<Token> for each input statement. Since a line can contain
+        //    // more than one statement, we may need to return more than one list
+        //    List<List<IToken>> TokenLists = new List<List<IToken>> ();
 
-                if (text.Length == 0)
-                    return TokenLists;
+        //    try
+        //    { 
+        //        string text = RemovePromptAndComments (inputLine);
 
-                text = SqueezeConsecutiveSpaces (text);
-                AnnotatedString annotated = new AnnotatedString (text);
+        //        if (text.Length == 0)
+        //            return TokenLists;
 
-                // Split compound lines like:
-                // a = 1; b = 2; c = 3;
-                // into individual statements, while leaving lines like:
-                // a = [1 ; 2 ; 4];
-                // as a single statement
-                List<AnnotatedString> annotated2 = annotated.SplitAtLevel0Semicolon ();
+        //        text = SqueezeConsecutiveSpaces (text);
+        //        AnnotatedString annotated = new AnnotatedString (text);
 
-                //
-                // pass each annotated string to token processor
-                //
-                TokenParsing parser = new TokenParsing ();
+        //        // Split compound lines like:
+        //        // a = 1; b = 2; c = 3;
+        //        // into individual statements, while leaving lines like:
+        //        // a = [1 ; 2 ; 4];
+        //        // as a single statement
+        //        List<AnnotatedString> annotated2 = annotated.SplitAtLevel0Semicolon ();
 
-                foreach (AnnotatedString annotatedText in annotated2)
-                {
-                    //Print ("----------------------------------------");
+        //        //
+        //        // pass each annotated string to token processor
+        //        //
+        //        TokenParsing parser = new TokenParsing ();
 
-                    //Console.WriteLine (annotatedText);
-                    //Console.WriteLine ();
+        //        foreach (AnnotatedString annotatedText in annotated2)
+        //        {
+        //            //Print ("----------------------------------------");
 
-                    List<IToken> statementTokens = parser.StringToTokens (annotatedText);
-                    TokenLists.Add (statementTokens);
+        //            //Console.WriteLine (annotatedText);
+        //            //Console.WriteLine ();
 
-                    //Print (text);
+        //            List<IToken> statementTokens = parser.StringToTokens (annotatedText);
+        //            TokenLists.Add (statementTokens);
 
-                    //foreach (Token tok in statementTokens)
-                    //    Print (tok.ToString ());
-                }
-            }
+        //            //Print (text);
 
-            catch (Exception ex)
-            {
-                Console.WriteLine ("Exception in ParseOneInputLine: " + ex.Message);
-            }
+        //            //foreach (Token tok in statementTokens)
+        //            //    Print (tok.ToString ());
+        //        }
+        //    }
 
-            return TokenLists;
-        }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine ("Exception in ParseOneInputLine: " + ex.Message);
+        //    }
+
+        //    return TokenLists;
+        //}
     }
 }

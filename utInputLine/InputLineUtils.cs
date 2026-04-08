@@ -15,7 +15,22 @@ namespace Main
 
         //**************************************************************************************
 
-        public static string RemovePromptAndComments (string lineIn)
+        // first processing on each input line
+        //  - remove prompt and any comments
+        //  - remove extra spaces & tabs
+
+        public static string Preprocess (string lineIn)
+        {
+            if (lineIn.Length == 0) return lineIn;
+            string s1 = RemovePromptAndComments (lineIn);
+            if (s1.Length == 0) return s1;
+            string s2 = SqueezeConsecutiveSpaces (s1);
+            return s2;
+        }
+
+        //**************************************************************************************
+
+        private static string RemovePromptAndComments (string lineIn)
         {
             string lineOut = lineIn.Trim (); // remove leading and trailing spaces
 
@@ -84,7 +99,7 @@ namespace Main
 
         //**************************************************************************************
 
-        public static string SqueezeConsecutiveSpaces (string text)
+        private static string SqueezeConsecutiveSpaces (string text)
         {
             string results = "";
 
