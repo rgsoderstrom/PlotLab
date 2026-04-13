@@ -187,7 +187,7 @@ namespace Main
 
                     int initalNesting = tokenText [0].NestingLevel;
 
-                    for (int j = 0; j<tokenText.Count; j++)
+                    for (int j = 0; j<tokenText.CharacterCount; j++)
                     {
                         AnnotatedChar tokenChar = tokenText [j];
 
@@ -323,7 +323,7 @@ namespace Main
                 while (get < index)
                     edited.Add (initial [get++]);
 
-                if (initial [index].AnnotatedText.Count > 1)
+                if (initial [index].AnnotatedText.CharacterCount > 1)
                     throw new Exception ("Error in unary operator string: " + initial [index].AnnotatedText.Plain [0]);
 
                 switch (initial [index].AnnotatedText.Plain [0])

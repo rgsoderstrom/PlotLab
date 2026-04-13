@@ -60,7 +60,7 @@ namespace Main
             if (expression == null)
                 return tokens; // empty list
 
-            if (expression.Count == 0)
+            if (expression.CharacterCount == 0)
                 return tokens; // empty list
 
             //
@@ -78,13 +78,13 @@ namespace Main
             {
                 if (getNextChar) 
                 {
-                    if (get < expression.Count)
+                    if (get < expression.CharacterCount)
                     {
                         status.currentChar = expression [get++];
                         getNextChar = false;
                     }
 
-                    else if (get == expression.Count)
+                    else if (get == expression.CharacterCount)
                     {
                         done = true;
                         status.state = ParsingState.Leaving;
@@ -167,7 +167,7 @@ namespace Main
 
             if      (status.currentChar.IsWhitespace)  accepted = true;
 
-            else if (status.currentChar.IsSupress)     status.state = ParsingState.SupressOutput;
+         //   else if (status.currentChar.IsSupress)     status.state = ParsingState.SupressOutput;
             
             else if (status.currentChar.IsEqualSign)   status.state = ParsingState.EqualSign;
             

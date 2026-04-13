@@ -28,7 +28,7 @@ namespace Main
             List <int> copyEndpoints = new List<int> ();
             copyEndpoints.Add (0); // start first copy here
 
-            int lastIndex = src.Count - 1;
+            int lastIndex = src.CharacterCount - 1;
 
             // look for commas at same nesting level
             for (int i=1; i<lastIndex; i++)
@@ -57,7 +57,7 @@ namespace Main
         public List<AnnotatedString> SplitFunctionArgs (AnnotatedString str)
         {
             // Error checking - verify first character is an open paren and last is close paren
-            int lastIndex = str.Count - 1;
+            int lastIndex = str.CharacterCount - 1;
             if (str [0].IsOpenParen          == false) throw new Exception ("Function arg syntax error at open paren: " + str.Plain);
             if (str [lastIndex].IsCloseParen == false) throw new Exception ("Function arg syntax error at close paren: " + str.Plain);
             
@@ -82,7 +82,7 @@ namespace Main
         private void VerifyBrackets (AnnotatedString str)
         {
             if (str [0].IsOpenBracket == false)              throw new Exception ("Missing opening bracket: " + str.Plain);
-            if (str [str.Count - 1].IsCloseBracket == false) throw new Exception ("Missing closing bracket: " + str.Plain);
+            if (str [str.CharacterCount - 1].IsCloseBracket == false) throw new Exception ("Missing closing bracket: " + str.Plain);
         }
 
         public List<AnnotatedString> SplitBracketArgs_Comma (AnnotatedString str)
@@ -126,7 +126,7 @@ namespace Main
         private void VerifyParenthesis (AnnotatedString str)
         {
             if (str [0].IsOpenParen == false)              throw new Exception ("Missing opening parenthesis: " + str.Plain);
-            if (str [str.Count - 1].IsCloseParen == false) throw new Exception ("Missing closing parenthesis: " + str.Plain);
+            if (str [str.CharacterCount - 1].IsCloseParen == false) throw new Exception ("Missing closing parenthesis: " + str.Plain);
         }
 
         public List<AnnotatedString> SplitSubmatrixArgs (AnnotatedString str)
