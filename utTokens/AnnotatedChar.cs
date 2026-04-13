@@ -1,7 +1,7 @@
 ﻿
 /*
     AnnotatedChar - an object containing one character and the depth it is
-                    nested in by parens, square brackets and quotes
+                    nested by parens, square brackets and quotes
 */
 
 using System;
@@ -32,7 +32,7 @@ namespace Main
 
         //***************************************************************************
 
-        internal enum ContextType {None, IsNumber, IsTwoCharOperator, IsTranspose, IsLetter, IsSupressOutput};
+        internal enum ContextType {None, IsNumber, IsTwoCharOperator, IsTranspose, IsLetter };//, IsSupressOutput};
 
         internal ContextType OverrideType
         {
@@ -93,7 +93,7 @@ namespace Main
         // these only exist as overrides
         public bool IsTwoCharOp {get {return OverrideType == ContextType.IsTwoCharOperator;}}
         public bool IsTranspose {get {return OverrideType == ContextType.IsTranspose;}}
-        public bool IsSupress   {get {return OverrideType == ContextType.IsSupressOutput;}}
+     // public bool IsSupress   {get {return OverrideType == ContextType.IsSupressOutput;}}
 
         // these are never overriden
         public bool IsOpenParen    {get {return character == '(';}}

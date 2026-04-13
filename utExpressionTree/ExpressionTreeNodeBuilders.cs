@@ -169,7 +169,7 @@ namespace Main
                     List<AnnotatedString> args = parser.SplitBracketArgs_Space (tokens [0].AnnotatedText);
 
                     foreach (AnnotatedString str in args)
-                        if (str.Count > 0)                                 //   <==========================================================
+                        if (str.CharacterCount > 0)        //   <==========================================================
                             Operands.Add (new ExpressionTreeNode (str));
                 }
                 break;
@@ -185,7 +185,7 @@ namespace Main
 
         AnnotatedString EnsureRowVector (AnnotatedString orig)
         {
-            AnnotatedString edited = orig.TrimmedSubstring (0, orig.Count);
+            AnnotatedString edited = orig.TrimmedSubstring (0, orig.CharacterCount);
 
             if (edited [0].IsOpenBracket == false)
             {

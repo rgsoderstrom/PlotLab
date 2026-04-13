@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using Main;
 
-using PLLibrary;
+//using PLLibrary;
 
 using static System.Net.Mime.MediaTypeNames;
 
@@ -35,8 +35,8 @@ namespace utTokens
                     if (raw.Length > 0)
                     {
                         bool ps = false; // print separator
-                        ps |= AnnotatedStringTest (raw);
-                        //ps |= TokenParsingTest (raw);
+                        //ps |= AnnotatedStringTest (raw);
+                        ps |= TokenParsingTest (raw);
                         //pr |= TokenUtilsTest (raw);
                         
                         if (ps) Print ("===========================================");                    }
@@ -57,7 +57,7 @@ namespace utTokens
 
         static private bool AnnotatedStringTest (string str)
         {
-            string text = InputLineProcessor.Preprocess (str);
+            string text = InputLineProcessor.PreprocessInputLine (str);
 
             if (text.Length == 0)
                 return false;
@@ -66,9 +66,6 @@ namespace utTokens
 
             Print (annotated.Plain.ToString ());
             Print (annotated.ToString ());
-     
-         //   AnnotatedString a2 = annotated.RemoveWrapper ();
-         //   Print (a2.ToString ());
 
             return true;
         }
@@ -79,13 +76,14 @@ namespace utTokens
 
         static private bool TokenParsingTest (string raw)
         {
-            string text = InputLineProcessor.Preprocess (raw);
+            string text = InputLineProcessor.PreprocessInputLine (raw);
 
             if (text.Length == 0)
                 return false;
 
             AnnotatedString annotated = new AnnotatedString (text);
 
+          //Print (annotated.ToString ());
             Print (annotated.Plain.ToString ());
 
             //
@@ -108,7 +106,7 @@ namespace utTokens
         {
             TokenParsing parsing = new TokenParsing ();
 
-            string text = InputLineProcessor.Preprocess (raw);
+            string text = InputLineProcessor.PreprocessInputLine (raw);
 
             if (text.Length == 0)
                 return false;

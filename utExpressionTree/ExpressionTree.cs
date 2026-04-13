@@ -15,12 +15,13 @@ namespace Main
         readonly ExpressionTreeNode root;
 
         private bool suppressPrinting = false;
-        public bool SuppressPrinting {get {return suppressPrinting;}}
+        public  bool SuppressPrinting {get {return suppressPrinting;} private set {suppressPrinting = value;}}
 
         public ExpressionTree (AnnotatedString expression)
         {
-            ExpressionTreeNode.InstanceCounter = 0;
-            root = new ExpressionTreeNode (expression, ref suppressPrinting);
+            ExpressionTreeNode.NodeCounter = 0;
+            SuppressPrinting = expression.SuppressOutput;
+            root = new ExpressionTreeNode (expression);
             Compact ();
         }
 

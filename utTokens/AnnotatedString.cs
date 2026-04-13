@@ -34,33 +34,34 @@ namespace Main
             }
         }
 
-        public int Count {get {return annotatedChars.Count;}}
-        public int FinalBracketLevel {get {return annotatedChars [Count-1].BracketLevel;}}
+        public int CharacterCount {get {return annotatedChars.Count;}}
+        public int FinalBracketLevel {get {return annotatedChars [CharacterCount-1].BracketLevel;}}
 
         private bool continues = false; // set true if ends in "..."
         public  bool Continues {get {return continues;} private set {continues = value;}}
         
-        private int wordCount = 1; // words are separated by spaces at nesting level 0
-        public  int WordCount {get {return wordCount;} private set {wordCount = value;}}
+        private bool alphanumericOnly = true;
+        public  bool AlphanumericOnly {get {return alphanumericOnly;} set {alphanumericOnly = value;}}
 
-        public bool  HasOperators {get {return operators.Count > 0;}}
-
-        private bool hasOpenParen = false;
-        public  bool HasOpenParen {get {return hasOpenParen;}}
+        private bool suppressOutput = false; // set true if last char is semicolon
+        public  bool SuppressOutput {get {return suppressOutput;} set {suppressOutput = value;}}
 
         public string FirstWord 
         { 
             get 
             { 
-                if (WordCount == 0) return "";
-                if (WordCount == 1) return Plain;
-                int stopAt = whiteSpaces [0];
-                string str = "";
+                if (AlphanumericOnly)
+                {
+                    int stopAt = whiteSpaces.Count > 0 ? whiteSpaces [0] : CharacterCount;
+                    string str = "";
 
-                for (int i = 0; i<stopAt; i++)
-                    str += annotatedChars [i].Character;
+                    for (int i = 0; i<stopAt; i++)
+                        str += annotatedChars [i].Character;
+                    return str;
+                }
 
-                return str;
+                else 
+                    throw new Exception ("FirstWord only valid for strings with alphanumerics only");
             } 
         }
 
@@ -80,10 +81,15 @@ namespace Main
         {
             try
             { 
+                if (text [text.Length-1] == ';')
+                {
+                    SuppressOutput = true;
+                    text = text.Remove (text.Length-1, 1);
+                }
+
                 PassOne (text);
                 PassTwo ();
                 PassThree ();
-                PassFour ();
             }
 
             catch (Exception ex)
@@ -101,7 +107,8 @@ namespace Main
             if (firstAC.IsDecimal)     decimals.Add (0);
             if (firstAC.IsExponential) exponentials.Add (0);
             if (firstAC.IsOperator)    operators.Add (0);
-            if (firstAC.IsOpenParen)   hasOpenParen = true;
+            if (firstAC.IsOpenParen)   AlphanumericOnly = false;
+            if (firstAC.IsOpenBracket) AlphanumericOnly = false;
 
             annotatedChars = new List<AnnotatedChar> (text.Length) {firstAC};
 
@@ -113,10 +120,13 @@ namespace Main
                 if (nextAC.IsExponential) exponentials.Add (i);
                 if (nextAC.IsOperator)    operators.Add (i);
                 if (nextAC.IsWhitespace)  whiteSpaces.Add (i);
-                if (nextAC.IsOpenParen)   hasOpenParen = true;
+                if (nextAC.IsOpenParen)   AlphanumericOnly = false;
+                if (nextAC.IsOpenBracket) AlphanumericOnly = false;
 
                 annotatedChars.Add (nextAC);
             }
+
+            if (operators.Count > 0) AlphanumericOnly = false;
         }
 
         //*************************************************************************
@@ -152,7 +162,7 @@ namespace Main
 
                 int after = i + 1;
 
-                if (after < Count)
+                if (after < CharacterCount)
                 {
                     if (annotatedChars [after].IsNumber)
                     {
@@ -188,7 +198,7 @@ namespace Main
                     { 
                         int after = i + 1;
 
-                        if (after < Count)
+                        if (after < CharacterCount)
                         {
                             if (annotatedChars [after].IsNumber)
                             {
@@ -207,7 +217,7 @@ namespace Main
                 int before = i - 1;
                 int after = i + 1;
 
-                if (before >= 0 && after < Count)
+                if (before >= 0 && after < CharacterCount)
                 {
                     if (annotatedChars [before].IsNumber && (annotatedChars [after].IsNumber || annotatedChars [after].IsPlusMinus))
                     {
@@ -262,9 +272,6 @@ namespace Main
                             annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsTwoCharOperator;
                         }
                     }
-
-
-
                 }
 
                 // transpose
@@ -274,11 +281,11 @@ namespace Main
                         annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsTranspose;
                 }
 
-                // supress output
-                if (annotatedChars [i].IsSemicolon && annotatedChars [i].NestingLevel == 0)
-                {
-                    annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsSupressOutput;
-                }
+                //// supress output
+                //if (annotatedChars [i].IsSemicolon && annotatedChars [i].NestingLevel == 0)
+                //{
+                //    annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsSupressOutput;
+                //}
             }
         }
 
@@ -286,33 +293,26 @@ namespace Main
 
         // look for continuation, ending with ...
 
+        private readonly string continuationString = "...";
+       
         private void PassThree ()
         {
             Continues = false;
 
-            int index = Count - 1;
+            int index = CharacterCount - 1;
             if (annotatedChars [index--].IsDecimal == false) return;
             if (annotatedChars [index--].IsDecimal == false) return;
             if (annotatedChars [index].IsDecimal   == false) return;
 
             Continues = true;
-            annotatedChars.RemoveRange (Count-3, 3); // delete 3 chars of "..."
+            int L = continuationString.Length;
+            annotatedChars.RemoveRange (CharacterCount - L, L); // delete 3 chars of "..."
 
-            if (annotatedChars [Count-1].IsWhitespace) 
-                annotatedChars.RemoveRange (Count-1, 1); // remove trailing space
+            if (annotatedChars [CharacterCount-1].IsWhitespace) 
+                annotatedChars.RemoveRange (CharacterCount-1, 1); // remove trailing space
         }
 
         //*************************************************************************
-
-        // count words
-
-        private void PassFour ()
-        {
-            foreach (AnnotatedChar AC in annotatedChars)
-                if (AC.IsWhitespace && AC.NestingLevel == 0) WordCount++;
-        }
-
-        //*******************************************************************
 
         internal AnnotatedString (char Character)
         {
@@ -357,11 +357,11 @@ namespace Main
 
         private AnnotatedString (AnnotatedString source)
         {
-            annotatedChars = new List<AnnotatedChar> (source.Count);
+            annotatedChars = new List<AnnotatedChar> (source.CharacterCount);
 
             try
             {
-                for (int i = 0; i<source.Count; i++)
+                for (int i = 0; i<source.CharacterCount; i++)
                     annotatedChars.Add (source [i]);
             }
 
@@ -394,7 +394,7 @@ namespace Main
 
         internal void Append (AnnotatedString astr)
         {
-            for (int i=0; i<astr.Count; i++)
+            for (int i=0; i<astr.CharacterCount; i++)
                 annotatedChars.Add (astr [i]);
         }
 
@@ -431,7 +431,7 @@ namespace Main
 
         internal AnnotatedString AddOuterParens ()
         {
-            List<AnnotatedChar> newChars = new List<AnnotatedChar> (Count + 2);
+            List<AnnotatedChar> newChars = new List<AnnotatedChar> (CharacterCount + 2);
 
             foreach (AnnotatedChar ac in annotatedChars)
             {
@@ -467,7 +467,7 @@ namespace Main
 
         internal AnnotatedString AddOuterBrackets ()
         {
-            List<AnnotatedChar> newChars = new List<AnnotatedChar> (Count + 2);
+            List<AnnotatedChar> newChars = new List<AnnotatedChar> (CharacterCount + 2);
 
             foreach (AnnotatedChar ac in annotatedChars)
             {
@@ -680,7 +680,7 @@ namespace Main
                 //str21 += ac.IsComma       ? "1" : ".";
                 str22 += ac.IsOperator    ? "1" : ".";
                 str23 += ac.IsTwoCharOp   ? "1" : ".";
-                str24 += ac.IsSupress     ? "1" : ".";
+            //    str24 += ac.IsSupress     ? "1" : ".";
             }
 
             string str = str1;
@@ -714,10 +714,15 @@ namespace Main
             if (str24.Contains ("1")) str += '\n' + str24;
 
             if (Continues) str += "\n" + "Continues = true";
-            if (HasOpenParen) str += "\n" + "OpenParen = true";
-            str += "\nWordCount = " + WordCount.ToString ();
 
-            //str += "\n" + "FirstWord " + FirstWord;
+            if (AlphanumericOnly)
+            {
+                str += "\n" + "AlphanumericOnly = true";
+                str += "\n" + "FirstWord = " + FirstWord;
+            }
+
+            if (SuppressOutput)
+                str += "\n" + "SuppressOutput = true";
 
             return str;
         }

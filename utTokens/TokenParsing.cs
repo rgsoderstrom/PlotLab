@@ -101,9 +101,9 @@ namespace Main
                         getNextChar = EqualSignProcessing (tokens, ref CurrentToken, status);
                         break;
 
-                    case ParsingState.SupressOutput:
-                        getNextChar = SupressOutputProcessing (tokens, ref CurrentToken, status);
-                        break;
+                    //case ParsingState.SupressOutput:
+                    //    getNextChar = SupressOutputProcessing (tokens, ref CurrentToken, status);
+                    //    break;
 
                     case ParsingState.Between:
                         getNextChar = BetweenProcessing (status);
@@ -315,17 +315,17 @@ namespace Main
             return true;
         }
 
-        static bool SupressOutputProcessing (List<IToken> tokens, ref IToken token, ParsingStatus status)
-        {
-          //  Console.WriteLine ("SupressOutputProcessing, " + status.currentChar);
+        //static bool SupressOutputProcessing (List<IToken> tokens, ref IToken token, ParsingStatus status)
+        //{
+        //  //  Console.WriteLine ("SupressOutputProcessing, " + status.currentChar);
 
-            token = new Token (TokenType.SupressPrinting, status.currentChar);
-            tokens.Add (token);
-            token = null;
-            status.state = ParsingState.Between;//.Leaving;
+        //    token = new Token (TokenType.SupressPrinting, status.currentChar);
+        //    tokens.Add (token);
+        //    token = null;
+        //    status.state = ParsingState.Between;//.Leaving;
 
-            return true;
-        }
+        //    return true;
+        //}
 
         static bool EqualSignProcessing (List<IToken> tokens, ref IToken token, ParsingStatus status)
         {

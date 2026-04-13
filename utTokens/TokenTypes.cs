@@ -25,7 +25,7 @@ namespace Main
         EqualSign,
         Transpose,
         TwoCharOperator,
-        SupressPrinting, // trailing semicolon
+      //  SupressPrinting, // trailing semicolon
 
         // possibly revised to one of these on second pass
         BinaryOperator,
