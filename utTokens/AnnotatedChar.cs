@@ -32,7 +32,7 @@ namespace Main
 
         //***************************************************************************
 
-        internal enum ContextType {None, IsNumber, IsTwoCharOperator, IsTranspose, IsLetter };//, IsSupressOutput};
+        internal enum ContextType {None, IsNumber, IsTwoCharOperator, IsTranspose, IsLetter };
 
         internal ContextType OverrideType
         {
@@ -93,7 +93,6 @@ namespace Main
         // these only exist as overrides
         public bool IsTwoCharOp {get {return OverrideType == ContextType.IsTwoCharOperator;}}
         public bool IsTranspose {get {return OverrideType == ContextType.IsTranspose;}}
-     // public bool IsSupress   {get {return OverrideType == ContextType.IsSupressOutput;}}
 
         // these are never overriden
         public bool IsOpenParen    {get {return character == '(';}}
@@ -113,8 +112,8 @@ namespace Main
         //**********************************************************************************
 
         // all charcters in any operator: oneChar, twoChar, unary, transpose
-     // static List<char> Operators = new List<char> () {';', ':', '\'', '.', '^', '*', '/', '+', '-', '&', '|', '>', '<', '~' };
-        static List<char> Operators = new List<char> () {';', ':', '\'',      '^', '*', '/', '+', '-', '&', '|', '>', '<', '~' };
+     // static List<char> Operators = new List<char> () {';', ':', '\'', '.', '^', '*', '/', '+', '-', '&', '|', '>', '<', '~'};
+        static List<char> Operators = new List<char> () {';', ':', '\'',      '^', '*', '/', '+', '-', '&', '|', '>', '<', '~', '='};
 
         static public bool IsTwoCharOpStr (string s) {return twoCharBinaryOperators.Contains (s);}
         static List<string> twoCharBinaryOperators = new List<string> () {".*", "./", ".^", "&&", "||", "~=", "==", ">=", "<="};

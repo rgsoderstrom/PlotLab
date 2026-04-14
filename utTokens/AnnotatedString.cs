@@ -236,7 +236,6 @@ namespace Main
             // look for:
             //   two char operators, e.g. A >= B
             //   transpose, A'
-            //   mark trailing semicolon as an operator to supress output
             foreach (int i in operators)
             {
                 int before = i - 1;
@@ -245,8 +244,8 @@ namespace Main
                 if (before >= 0 && after < annotatedChars.Count)
                 {
                     // two-char operators
-                    bool t1 = annotatedChars [i].IsOperator;
-                    bool t2 = annotatedChars [after].IsOperator || annotatedChars [after].IsEqualSign;
+                    bool t1 = annotatedChars [i].IsOperator;// || annotatedChars [i].IsEqualSign;
+                    bool t2 = annotatedChars [after].IsOperator;// || annotatedChars [after].IsEqualSign;
                     bool t3 = annotatedChars [before].IsDecimal;
 
                     if (t1 && t2) // e.g. ">="
@@ -280,12 +279,6 @@ namespace Main
                     if (annotatedChars [i].IsQuote && annotatedChars [before].CanPreceedTranspose)
                         annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsTranspose;
                 }
-
-                //// supress output
-                //if (annotatedChars [i].IsSemicolon && annotatedChars [i].NestingLevel == 0)
-                //{
-                //    annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsSupressOutput;
-                //}
             }
         }
 
@@ -647,7 +640,6 @@ namespace Main
             string str21 = "Comma:         ";
             string str22 = "Operator:      ";
             string str23 = "TwoCharOp:     ";
-            string str24 = "SupressOutput: ";
 
             foreach (AnnotatedChar ac in annotatedChars)
             {
@@ -680,7 +672,6 @@ namespace Main
                 //str21 += ac.IsComma       ? "1" : ".";
                 str22 += ac.IsOperator    ? "1" : ".";
                 str23 += ac.IsTwoCharOp   ? "1" : ".";
-            //    str24 += ac.IsSupress     ? "1" : ".";
             }
 
             string str = str1;
@@ -711,7 +702,6 @@ namespace Main
             if (str21.Contains ("1")) str += '\n' + str21;
             if (str22.Contains ("1")) str += '\n' + str22;
             if (str23.Contains ("1")) str += '\n' + str23;
-            if (str24.Contains ("1")) str += '\n' + str24;
 
             if (Continues) str += "\n" + "Continues = true";
 
