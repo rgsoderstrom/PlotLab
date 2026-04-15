@@ -49,19 +49,19 @@ namespace Main
         public string FirstWord 
         { 
             get 
-            { 
-                if (AlphanumericOnly)
-                {
-                    int stopAt = whiteSpaces.Count > 0 ? whiteSpaces [0] : CharacterCount;
-                    string str = "";
+            {
+                string str = "";
+                int i = 0;
 
-                    for (int i = 0; i<stopAt; i++)
-                        str += annotatedChars [i].Character;
-                    return str;
+                while (annotatedChars [i].IsAlpha || annotatedChars [i].IsNumber)
+                {
+                    str += annotatedChars [i].Character;
+
+                    if (++i == CharacterCount)
+                        break;
                 }
 
-                else 
-                    throw new Exception ("FirstWord only valid for strings with alphanumerics only");
+                return str;
             } 
         }
 
@@ -703,16 +703,11 @@ namespace Main
             if (str22.Contains ("1")) str += '\n' + str22;
             if (str23.Contains ("1")) str += '\n' + str23;
 
-            if (Continues) str += "\n" + "Continues = true";
+            str += "\n" + "FirstWord = " + FirstWord;
 
-            if (AlphanumericOnly)
-            {
-                str += "\n" + "AlphanumericOnly = true";
-                str += "\n" + "FirstWord = " + FirstWord;
-            }
-
-            if (SuppressOutput)
-                str += "\n" + "SuppressOutput = true";
+            if (Continues)        str += "\n" + "Continues = true";
+            if (AlphanumericOnly) str += "\n" + "AlphanumericOnly = true";
+            if (SuppressOutput)   str += "\n" + "SuppressOutput = true";
 
             return str;
         }

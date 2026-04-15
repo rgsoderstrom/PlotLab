@@ -47,9 +47,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\utInputLine\InputLineProcessor.cs">
-      <Link>InputLineProcessor.cs</Link>
-    </Compile>
     <Compile Include="..\utInputLine\InputLineUtils.cs">
       <Link>InputLineUtils.cs</Link>
     </Compile>
