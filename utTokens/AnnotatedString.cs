@@ -46,23 +46,41 @@ namespace Main
         private bool suppressOutput = false; // set true if last char is semicolon
         public  bool SuppressOutput {get {return suppressOutput;} set {suppressOutput = value;}}
 
-        public string FirstWord 
-        { 
-            get 
+        public string FirstWord
+        {
+            get
             {
+                if (whiteSpaces.Count == 0)
+                    return Plain;
+
                 string str = "";
-                int i = 0;
 
-                while (annotatedChars [i].IsAlpha || annotatedChars [i].IsNumber)
+                for (int i=0; i<CharacterCount; i++)
                 {
-                    str += annotatedChars [i].Character;
-
-                    if (++i == CharacterCount)
+                    if (i == whiteSpaces [0])
                         break;
+
+                    str += annotatedChars [i].Character;
                 }
 
                 return str;
-            } 
+            }
+        }
+
+        public string ArgumentChars // all chars after the first word
+        {
+            get
+            {
+                string str = "";
+
+                if (whiteSpaces.Count == 0)
+                    return str;
+
+                for (int i=whiteSpaces [0] + 1; i<CharacterCount; i++)
+                    str += annotatedChars [i].Character;
+
+                return str;
+            }
         }
 
         //*************************************************************************
@@ -339,7 +357,7 @@ namespace Main
 
             catch (Exception ex)
             {
-                throw new Exception ("Exception: " + ex.Message);
+                throw new Exception ("Exception in AnnotatedStringCtor: " + ex.Message);
                 //Console.WriteLine ("Exception: " + ex.Message);
             }
         }
@@ -360,7 +378,7 @@ namespace Main
 
             catch (Exception ex)
             {
-                throw new Exception ("Exception: " + ex.Message);
+                throw new Exception ("Exception in AnnotatedStringCtor: " + ex.Message);
                 //Console.WriteLine ("Exception: " + ex.Message);
             }
         }
@@ -703,7 +721,10 @@ namespace Main
             if (str22.Contains ("1")) str += '\n' + str22;
             if (str23.Contains ("1")) str += '\n' + str23;
 
-            str += "\n" + "FirstWord = " + FirstWord;
+            str += "\n" + "FirstWord: " + FirstWord;
+
+            
+            str += "\n" + "Args: " + ArgumentChars;
 
             if (Continues)        str += "\n" + "Continues = true";
             if (AlphanumericOnly) str += "\n" + "AlphanumericOnly = true";
