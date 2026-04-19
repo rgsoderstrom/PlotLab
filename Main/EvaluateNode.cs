@@ -15,7 +15,7 @@ namespace Main
         //*********************************************************************************
         //*********************************************************************************
 
-        public PLVariable Evaluate ()
+        public PLVariable Evaluate ()//IWorkspace workspace)
         {
             if (ValueValid)
                 return Value;
@@ -26,8 +26,8 @@ namespace Main
                     GetVariable (Operator);
                     break;
 
-                //case TokenType.Numeric:
-                //break;
+                case TokenType.Numeric:
+                    break;
 
                 //case TokenType.String:
                 //    break;
@@ -38,20 +38,21 @@ namespace Main
                 case TokenType.BracketsSemi:
                 case TokenType.BracketsComma:
                 case TokenType.BracketsSpace:
-                case TokenType.ArithmeticOperator:
+                case TokenType.BinaryOperator:
+                case TokenType.EqualSign:
                     Evaluate_Operator (Operator);
                     break;
 
                 case TokenType.FunctionName:
-                    Evaluate_Function ();//workspace);//, expression);
+                    Evaluate_Function ();
                     break;
 
-                case TokenType.FunctionFile:
-                    Evaluate_MFileFunction ();//workspace);//, expression);
-                    break;
+                //case TokenType.FunctionFile:
+                //    Evaluate_MFileFunction (expression);
+                //    break;
 
 
-                default: throw new Exception ("Not found: " + Operator.ToString ());
+                default: throw new Exception ("Operator not found: " + Operator.ToString ());
                 //default: throw new Exception ("Evaluate: node type not supported: " + NodeType.ToString ());
             }
 
@@ -61,15 +62,14 @@ namespace Main
         //*********************************************************************************
         //*********************************************************************************
 
-        PLVariable Evaluate_MFileFunction ()
+        PLVariable Evaluate_MFileFunction (string expression)
         {
-            throw new Exception ("M-file not implemented");
 
-            //// Create new (empty) local workspace
-            //// Copy passed-in operands into that workspace, with names of input parameters (from m-file)
-            //// Pass function lines to ScriptProcessor
-            //// Copy output parameters to Value, as ordered list
-            ////  - PLList
+            // Create new (empty) local workspace
+            // Copy passed-in operands into that workspace, with names of input parameters (from m-file)
+            // Pass function lines to ScriptProcessor
+            // Copy output parameters to Value, as ordered list
+            //  - PLList
 
 
             //Workspace functionsWorkspace = new Workspace ();
@@ -128,45 +128,45 @@ namespace Main
             //        //
 
             //        // look for an equal sign
-            //        int equalIndex = -1;
+            //        //int equalIndex = -1;
 
-            //        for (int i = 0; i<expression.Length; i++) {if (expression [i] == '=') {equalIndex = i; break;}}
+            //        //for (int i = 0; i<expression.Length; i++) {if (expression [i] == '=') {equalIndex = i; break;}}
 
-            //        if (equalIndex != -1) // then some outputs were specified
-            //        {
-            //            string [] outputsAsTokens = expression.Substring (0, equalIndex - 1).Split (new char [] { '[', ']', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            //        //if (equalIndex != -1) // then some outputs were specified
+            //        //{
+            //        //    string [] outputsAsTokens = expression.Substring (0, equalIndex - 1).Split (new char [] { '[', ']', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-            //            if (outputsAsTokens.Length != mfileProc.OutputFormalParams.Count)
-            //                throw new Exception ("Function call must have 0 outputs or the same number as function formal param list: " + funcName);
+            //        //    if (outputsAsTokens.Length != mfileProc.OutputFormalParams.Count)
+            //        //        throw new Exception ("Function call must have 0 outputs or the same number as function formal param list: " + funcName);
 
-            //            if (mfileProc.OutputFormalParams.Count > 1)
-            //            {
-            //                for (int i = 0; i<mfileProc.OutputFormalParams.Count; i++)
-            //                {
-            //                    PLDouble dbl = new PLDouble (functionsWorkspace.Get (mfileProc.OutputFormalParams [i]));
-            //                    dbl.Name = outputsAsTokens [i];
-            //                    callersWorkspace.Add (dbl);
-            //                }
-            //            }
-            //        }
+            //        //    if (mfileProc.OutputFormalParams.Count > 1)
+            //        //    {
+            //        //        for (int i = 0; i<mfileProc.OutputFormalParams.Count; i++)
+            //        //        {
+            //        //            PLDouble dbl = new PLDouble (functionsWorkspace.Get (mfileProc.OutputFormalParams [i]));
+            //        //            dbl.Name = outputsAsTokens [i];
+            //        //            callersWorkspace.Add (dbl);
+            //        //        }
+            //        //    }
+            //        //}
 
             //        //
             //        // ... and in this node's Value field
             //        //
 
-            //        if (mfileProc.OutputFormalParams.Count == 1)
-            //        {
-            //            Value = functionsWorkspace.Get (mfileProc.OutputFormalParams [0]);
-            //        }
-            //        else
-            //        {
-            //            Value = new PLList ();
+            //        //if (mfileProc.OutputFormalParams.Count == 1)
+            //        //{
+            //        //    Value = functionsWorkspace.Get (mfileProc.OutputFormalParams [0]);
+            //        //}
+            //        //else
+            //        //{
+            //        //    Value = new PLList ();
 
-            //            foreach (string str in mfileProc.OutputFormalParams)
-            //            {
-            //                (Value as PLList).Add (functionsWorkspace.Get (str));
-            //            }
-            //        }
+            //        //    foreach (string str in mfileProc.OutputFormalParams)
+            //        //    {
+            //        //        (Value as PLList).Add (functionsWorkspace.Get (str));
+            //        //    }
+            //        //}
             //    }
             //}
 
@@ -175,14 +175,14 @@ namespace Main
             //    throw new Exception ("Error evaluating m-file function " + funcName + ": " + ex.Message);
             //}
 
-            //return new PLNull ();
+            return new PLNull ();
         }
 
         //*********************************************************************************
         //*********************************************************************************
 
          PLVariable Evaluate_Operator (string Operator)
-         {
+        {
             switch (Operator)
             {
                 case "=":
@@ -286,14 +286,14 @@ namespace Main
         //*****************************************************************************************************
         //*****************************************************************************************************
 
-        void Evaluate_Function ()
-        {            
+        void Evaluate_Function ()//, string expression)
+        {
             if (Operands.Count == 0)
             {
                 PLFunction func = LibraryManager.GetFunctionDelegate (Operator);
 
                 if (LibraryManager.IsZeroArgFunction (Operator)) // if function can be invoked with zero args ...
-                    Value = func (new PLNull ()); 
+                    Value = func (new PLNull ());
                 else
                     Value = new PLFunctionWrapper (func);
             }
@@ -302,33 +302,42 @@ namespace Main
             {
                 Operands [0].Evaluate ();
 
-                PLString functionName = new PLString (Operator);
+                if (LibraryManager.Contains (Operator))
+                    Value = LibraryManager.Evaluate (Operator, Operands [0].Value);
 
-                if (LibraryManager.Contains (functionName.Text))
-                    Value = LibraryManager.Evaluate (Operator, Operands [0].Value);//, ref forcePrint);
+                //else if (workspace.Functions.ContainsKey (Operator))
+                //    Value = workspace.Evaluate (Operator, Operands [0].Value);
 
-                else if (Workspace.Functions.ContainsKey (functionName.Data))
-                    Value = Workspace.Evaluate (functionName, Operands [0].Value);
-                
-                else // if (ValueValid == false)
+
+                else if (Operator == "not")
                 {
-                    if (Operator == "Transpose")
-                    {
-                        if (Operands [0].Value is PLRMatrix)
-                            Value = InternalFunctions.Transpose (Operands [0].Value as PLRMatrix);
-                        else
-                            throw new Exception ("Can only transpose matrices");
-                    }
-
-                    if (Operator == "Not")
-                    {
-                        Operator_Logical_Not ();
-                    }
+                    Operator_Logical_Not ();
                 }
 
-                if (ValueValid == false) throw new Exception ("Error evaluating expression");                
+
+
+                else throw new Exception ("EvaluateNode, Operands.Count == 1 not implemented for operator " + Operator);
+
+                //else // if (ValueValid == false)
+                //{
+                //    if (Operator == "Transpose")
+                //    {
+                //        if (Operands [0].Value is PLRMatrix)
+                //            Value = InternalFunctions.Transpose (Operands [0].Value as PLRMatrix);
+                //        else
+                //            throw new Exception ("Can only transpose matrices");
+                //    }
+
+                //    if (Operator == "Not")
+                //    {
+                //        Operator_Logical_Not ();
+                //    }
+                //}
+
+                //    if (ValueValid == false) throw new Exception ("Error evaluating expression");                
 
             }
+
             else // operand count > 1
             {
                 PLList args = new PLList ();
@@ -336,48 +345,47 @@ namespace Main
                 foreach (ExpressionTreeNode op in Operands)
                     args.Add (op.Evaluate ());
 
-                PLString oper = new PLString (Operator);
+                if (LibraryManager.Contains (Operator))
+                    Value = LibraryManager.Evaluate (Operator, args);
 
-                if (LibraryManager.Contains (oper.Text))
-                    Value = LibraryManager.Evaluate (oper.Text, args);
-
-                else if (Workspace.Functions.ContainsKey (Operator))
-                    Value = Workspace.Evaluate (oper, args);
+                //else if (Workspace.Functions.ContainsKey (Operator))
+                //    Value = Workspace.Evaluate (Operator, args);
 
                 else
                     throw new Exception ("Can't find function " + Operator);
             }
 
             if (Value is PLList)
-            {
-                throw new Exception ("Not implemented");
+                throw new Exception ("EvaluateNode, function returning list not implemented");
 
-                //PLList lst = Value as PLList;
+                ////if (Value is PLList)
+                ////{
+                ////    PLList lst = Value as PLList;
 
-                //// look for an equal sign in output args
-                //int equalIndex = -1;
+                ////    // look for an equal sign in output args
+                ////    int equalIndex = -1;
 
-                //for (int i = 0; i<expression.Length; i++) {if (expression [i] == '=') { equalIndex = i; break;}}
+                ////    for (int i = 0; i<expression.Length; i++) {if (expression [i] == '=') { equalIndex = i; break;}}
 
-                //if (equalIndex != -1) // then some outputs were specified
-                //{
-                //    string [] outputsAsTokens = expression.Substring (0, equalIndex - 1).Split (new char [] { '[', ']', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                ////    if (equalIndex != -1) // then some outputs were specified
+                ////    {
+                ////        string [] outputsAsTokens = expression.Substring (0, equalIndex - 1).Split (new char [] { '[', ']', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                //    //if (outputsAsTokens.Length != lst.Count)
-                //    //    throw new Exception ("Function call must have 0 outputs or the same number as function formal param list: " + expression);
+                ////        //if (outputsAsTokens.Length != lst.Count)
+                ////        //    throw new Exception ("Function call must have 0 outputs or the same number as function formal param list: " + expression);
 
-                //    int count = Math.Min (outputsAsTokens.Length, lst.Count);
+                ////        int count = Math.Min (outputsAsTokens.Length, lst.Count);
 
-                //    for (int i = 0; i<count; i++)
-                //    {
-                //        lst [i].Name = outputsAsTokens [i];
-                //        Workspace.Add (lst [i]);
-                //    }
-                //}
+                ////        for (int i = 0; i<count; i++)
+                ////        {
+                ////            lst [i].Name = outputsAsTokens [i];
+                ////            workspace.Add (lst [i]);
+                ////        }
+                ////    }
 
-                //Value = lst [0]; // PlotLab code expects only a single value returned. Other output parameters have
-                //                 // been placed in the caller's workspace so code will function as expected
-            }
+                ////    Value = lst [0]; // PlotLab code expects only a single value returned. Other output parameters have
+                ////                     // been placed in the caller's workspace so code will function as expected
+            //}
         }
     }
 }

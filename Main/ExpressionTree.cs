@@ -14,10 +14,13 @@ namespace Main
     {
         readonly ExpressionTreeNode root;
 
-        public ExpressionTree (string expression, PrintFunction Print = null)
+        private bool suppressPrinting = false;
+        public  bool SuppressPrinting {get {return suppressPrinting;} private set {suppressPrinting = value;}}
+
+        public ExpressionTree (AnnotatedString expression)
         {
-            ExpressionTreeNode.InstanceCounter = 0;
-            ExpressionTreeNode.PF = Print;
+            ExpressionTreeNode.NodeCounter = 0;
+            SuppressPrinting = expression.SuppressOutput;
             root = new ExpressionTreeNode (expression);
             Compact ();
         }

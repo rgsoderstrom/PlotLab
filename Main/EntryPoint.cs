@@ -30,7 +30,7 @@ namespace Main
                     TextBox tb = new TextBox ();
 
                     // first pass
-                    List<Token> tokens = parsing.ParsingPassOne (expression);
+                    List<IToken> tokens = parsing.ParsingPassOne (new AnnotatedString (expression));
                     tb.Text += "First pass:\n";
                     foreach (Token tok in tokens) tb.Text += tok.ToString () + "\n";
 
@@ -46,7 +46,7 @@ namespace Main
                     win.Show ();
                 }
 
-                ExpressionTree tree = new ExpressionTree (expression, pf);
+                ExpressionTree tree = new ExpressionTree (new AnnotatedString (expression));//, pf);
 
                 if (ShowExprTree)
                 {

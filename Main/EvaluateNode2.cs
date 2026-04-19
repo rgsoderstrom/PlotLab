@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using PLCommon;
 using PLWorkspace;
-using PLLibrary;
+//using PLLibrary;
 
 namespace Main
 {
@@ -203,7 +203,16 @@ namespace Main
 
         private void Operator_Logical_Not ()
         {
-            Value = new PLBool (!(Operands [0].Value as PLBool).Data);
+            try
+            { 
+                PLBool op = new PLBool (Operands [0].nodeValue);
+                Value = new PLBool (!op.Data);
+            }
+
+            catch (Exception)
+            {
+                throw new Exception ("Error converting operand to a boolean");
+            }
         }
 
         //*******************************************************************************************
@@ -324,7 +333,7 @@ namespace Main
 
 
                         Workspace.OverwriteSubmatrix (LeftSideName,       // name of matrix already in workspace
-                                                      rows [0], cols [0], // 1-based   <-------------------------------- ONLY FIRST NUMBER PASSED
+                                                      rows [0], cols [0], // 1-based
                                                       overwriteData);     // new data to overwrite some of old
 
                         Value = Workspace.Get (LeftSideName);
@@ -574,7 +583,6 @@ namespace Main
         }
 
         //*******************************************************************************************
-        //*******************************************************************************************
 
         private void Operator_ColVectorElements ()
         {
@@ -583,15 +591,10 @@ namespace Main
             foreach (ExpressionTreeNode node in Operands)
                 ops.Add (node.Value);
 
-            Value = InternalFunctions.ColVector (ops); 
+            Value = InternalFunctions.ColVector (ops);
         }
 
         //*******************************************************************************************
-        //*******************************************************************************************
-
-        //*******************************************************************************************
-        //*******************************************************************************************
-
 
 
     }

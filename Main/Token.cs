@@ -6,75 +6,73 @@ using System.Threading.Tasks;
 
 namespace Main
 {
-    public enum TokenType
-    {
-        // assigned during first pass
-        Numeric,        // 123		        
-        Alphanumeric,   // used until complete token read and identified
-        Parens,         // (a, b)
-        Brackets,       // declare a matrix or vector
-        String,
-        ArithmeticOperator,   // +, -, etc.
-        TransposeOperator,
-        Decimal,        // number that begins with a leading decimal, .34
-
-
-        // revised on second pass
-        VariableName, 
-        FunctionName, 
-        FunctionFile, 
-        Undefined,       // on LHS a new variable, on RHS will be an error
-
-        GroupingParens,  // A * (B + C)
-        FunctionParens,  // (P, Q, R, S)
-        SubmatrixParens, // (Rs, Cs)
-
-        BracketsColon,  // [A : B : C] or [A : B]
-        BracketsSemi,   // [a ; b ; c ; d] or [1 2 3 ; 4 5 6]
-        BracketsComma,  // [1, 2, 3]
-        BracketsSpace,  // [1 2 3]
-    
-        Pair, // for derived class TokenPair
-        None, // for default ctor
-    };
-
-    public enum TokenPairType
-    {
-        Function,
-        Submatrix,
-    };
-
     //***************************************************************************************************
 
-    public class Token
+    public interface IToken
     {
-	    public TokenType type;
-	    public string    text;
-
-        public Token (TokenType ty, string txt) {type = ty; text = txt;}
-
-        public Token () : this (TokenType.None, null) { }
-
-        public Token (TokenType ty, char txt) : this (ty, new string (txt, 1)) { }
-
-        public override string ToString () {return string.Format ("Type: {0}: {1}", type, text);}
+        TokenType Type {get ; set ;}
+        AnnotatedString AnnotatedText {get ;}
     }
 
     //***************************************************************************************************
 
-    public class TokenPair : Token
+    public class Token : IToken
     {
-        public TokenPairType pairType;
-        public Token t0;
-        public Token t1;
+        // private storage
+	    private TokenType       type;
+	    private AnnotatedString annotatedText;
 
-        public TokenPair () {type = TokenType.Pair; text = "";}
+        // public properties
+        public TokenType Type {get {return type;} set {type = value;}}
+        public AnnotatedString AnnotatedText {get {return annotatedText;}}
 
-        public override string ToString ()
+        // constructors
+        public Token (TokenType ty, AnnotatedChar   txt) {type = ty; annotatedText = new AnnotatedString (txt);}
+        public Token (TokenType ty, AnnotatedString txt) {type = ty; annotatedText = txt;}
+
+        // Remove first & last characters
+        //public void StripOuter ()
+        //{
+        //    annotatedText = new AnnotatedString (annotatedText, 0, 1);
+
+        //}
+
+        // ToString
+        public override string ToString () {return string.Format ("Token type: {0}, Token Text: {1}", type, annotatedText.Plain);}
+    }
+
+    //***************************************************************************************************
+
+    public class TokenPair : IToken
+    {
+        // private storage
+	    private          TokenPairType   pairType;  // this will be Submatrix or Function
+	    //private readonly AnnotatedString annotatedText;
+
+        private readonly IToken t1;
+        private readonly IToken t2;
+
+        // public properties
+        public TokenType     Type     {get {return TokenType.Pair;} set {;}} // "set" is a nop but is required by interface IToken
+        public TokenPairType PairType {get {return pairType;} set {pairType = value;}}
+
+        public IToken Get1 {get {return t1;}}
+        public IToken Get2 {get {return t2;}}
+
+        public AnnotatedString AnnotatedText {get {return new AnnotatedString ("None");}}
+      //public AnnotatedString AnnotatedText {get {return annotatedText;}}
+
+        // constructors
+        public TokenPair (TokenPairType ty, IToken tok1, IToken tok2) 
         {
-            string str = "Pair: [" + t0.ToString () + ", " + t1.ToString () + "]";
-            return str;
+            pairType = ty; 
+            t1 = tok1;
+            t2 = tok2;
         }
+
+        // ToString
+        public override string ToString () {return string.Format ("Token pair type: {0}, Token Text: {1}", pairType, t1.AnnotatedText.Plain + " " + t2.AnnotatedText.Plain);}
+        
     }
 }
 

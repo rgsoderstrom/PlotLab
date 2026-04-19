@@ -6,6 +6,7 @@ using PLCommon;
 using PLLibrary;
 using PLFileSystem;
 using PLWorkspace;
+using PLSystem;
 
 namespace Main
 {
@@ -93,14 +94,14 @@ namespace Main
             // and will eventually moved down to the RunCOmmand () functions
             //
             TokenParsing tp = new TokenParsing ();
-            List<Token> tok = tp.ParsingPassOne (text);
+            List<IToken> tok = tp.ParsingPassOne (new AnnotatedString (text));
 
             if (tok.Count == 0)
                 return;
 
             PLList  args  = new PLList ();
             for (i = 1; i<tok.Count; i++)
-                args.Add (new PLString (tok [i].text));
+                args.Add (new PLString (tok [i].AnnotatedText.Plain));
             
             //
             // PlotCommand act on figures, they don't plot any data

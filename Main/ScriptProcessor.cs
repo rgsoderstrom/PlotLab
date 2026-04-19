@@ -231,57 +231,57 @@ namespace Main
         //***********************************************************************************
 
         List<Utils.InputLine> inputLines = new List<Utils.InputLine> (); 
-        Utils.NestingLevel nestingLevel = new Utils.NestingLevel ();
+    //    Utils.NestingLevel nestingLevel = new Utils.NestingLevel ();
 
         void RunOneScriptLine (string raw)
         {
-            bool unused = false;
-            InputLineProcessor ip = new InputLineProcessor (print);
-            Utils.CleanupRawInput (raw, inputLines, ref nestingLevel);
+            //bool unused = false;
+            //InputLineProcessor ip = new InputLineProcessor (print);
+            //Utils.CleanupRawInput (raw, inputLines, ref nestingLevel);
 
-            int startIndex = 0;
-            int endIndex = -1;
+            //int startIndex = 0;
+            //int endIndex = -1;
 
-            for (int i=0; i<inputLines.Count; i++)
-            {
-                if (inputLines [i].complete)
-                {
-                    endIndex = i;
-                    string expr = "";
+            //for (int i=0; i<inputLines.Count; i++)
+            //{
+            //    if (inputLines [i].complete)
+            //    {
+            //        endIndex = i;
+            //        string expr = "";
 
-                    for (int j=startIndex; j<=endIndex; j++)
-                        expr += inputLines [j].text;
+            //        for (int j=startIndex; j<=endIndex; j++)
+            //            expr += inputLines [j].text;
 
-                    PLVariable ans = new PLNull ();
-                    ip.ProcessOneStatement (ref ans, expr, ref unused);
+            //        PLVariable ans = new PLNull ();
+            //        ip.ProcessOneStatement (ref ans, expr, ref unused);
 
-                    if (ans != null && ans is PLNull == false && ans is PLCanvasObject == false)
-                    {
-                        ans.Name = "ans";
-                        Workspace.Add (ans);
+            //        if (ans != null && ans is PLNull == false && ans is PLCanvasObject == false)
+            //        {
+            //            ans.Name = "ans";
+            //            Workspace.Add (ans);
 
-                        // kludge to print "disp" results
-                        bool forcePrint = false;
+            //            // kludge to print "disp" results
+            //            bool forcePrint = false;
 
-                        if (expr.Length > 4)
-                            if (expr.Substring (0, 4) == "disp")
-                                forcePrint = true;
+            //            if (expr.Length > 4)
+            //                if (expr.Substring (0, 4) == "disp")
+            //                    forcePrint = true;
 
-                        if (inputLines [endIndex].printFlag || forcePrint)
-                        {
-                            print (ans.ToString ());
-                            print ("\n");
-                        }
-                    }
+            //            if (inputLines [endIndex].printFlag || forcePrint)
+            //            {
+            //                print (ans.ToString ());
+            //                print ("\n");
+            //            }
+            //        }
 
-                    startIndex = endIndex + 1;
-                }
-            }
+            //        startIndex = endIndex + 1;
+            //    }
+            //}
 
-            if (endIndex != -1)
-            {
-                inputLines.RemoveRange (0, endIndex + 1);
-            }
+            //if (endIndex != -1)
+            //{
+            //    inputLines.RemoveRange (0, endIndex + 1);
+            //}
         }
 
         //*******************************************************************************************************

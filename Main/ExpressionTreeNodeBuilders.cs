@@ -15,25 +15,35 @@ namespace Main
         //*************************************************************************************************
         //*************************************************************************************************
 
-        internal void BuildNodeFrom_List (List<Token> tokens)
+        internal void BuildNodeFrom_List (List<IToken> tokens)
         {
+
+            //Console.WriteLine ("BuildNodeFrom_List of tokens:");
+            //foreach (IToken it in tokens)
+            //    Console.WriteLine (it.ToString ());
+            //Console.WriteLine ();
+
             int lowestPriority = 999;
             int index = -1;
 
             for (int i = 0; i<tokens.Count; i++) // find lowest priority operator. if a tie, take the right-most one
             {
-                if (tokens [i].type == TokenType.ArithmeticOperator)
-                {
-                    string oper = tokens [i].text;
-                    int priority = TokenUtils.GetBinOpPriority (oper);
+                bool isEqualSign = tokens [i].Type == TokenType.EqualSign;
+                bool isBinOp     = tokens [i].Type == TokenType.BinaryOperator;
 
-                    // two operators, equals and exponent, are evaluated right-to-left. e.g.: 2 ^ 3 ^ 4 = 2 ^ (3 ^ 4)
+                if (isEqualSign || isBinOp)
+                {
+                    AnnotatedString oper = tokens [i].AnnotatedText;
+
+                    int priority = isEqualSign ? 0 : TokenUtils.GetBinOpPriority (oper.Plain);
+
+                    // two operators, equals and exponent, are evaluated right-to-left. e.g.: 2 ^ 3 ^ 4 evaluated as: 2 ^ (3 ^ 4)
                     // This priority adjustment increases priority as we move to the right so that happens
 
-                    if (TokenUtils.IsEqualSign (oper))
+                    if (oper [0].IsEqualSign)
                         priority += i;
 
-                    if (TokenUtils.IsExponent (oper))
+                    if (oper [0].IsExponent)
                         priority += i;
 
                     if (lowestPriority >= priority)
@@ -49,16 +59,18 @@ namespace Main
                 string str = "";
 
                 foreach (Token t in tokens)
-                    str += t.text + " ";
+                    str += t.AnnotatedText.Plain + " ";
 
                 throw new Exception ("Error: No operators found in expression: " + str);
             }
 
-            Operator = tokens [index].text;
-            NodeType = tokens [index].type;
+            Operator = tokens [index].AnnotatedText.Plain;
+            NodeType = tokens [index].Type;
 
-            List<Token> left = new List<Token> ();
-            List<Token> right = new List<Token> ();
+            //Console.WriteLine ("Operator: " + Operator + " Type: " + NodeType);
+
+            List<IToken> left  = new List<IToken> ();
+            List<IToken> right = new List<IToken> ();
 
             for (int i = 0; i<tokens.Count; i++)
             {
@@ -66,30 +78,44 @@ namespace Main
                 if (i > index) right.Add (tokens [i]);
             }
 
+
+            //Console.WriteLine ("left operand:");
+            //foreach (IToken it in left)
+            //    Console.WriteLine (it.ToString ());
+            //Console.WriteLine ();
+
+            //Console.WriteLine ("right operand:");
+            //foreach (IToken it in right)
+            //    Console.WriteLine (it.ToString ());
+            //Console.WriteLine ();
+
+            //Console.WriteLine ("-------------------------------");
+
+
             Operands.Add (new ExpressionTreeNode (left));
             Operands.Add (new ExpressionTreeNode (right));
+        
+            //Console.WriteLine ("leaving BuildNodeFrom_List, " + tokens.Count + " tokens, " + Operands.Count + " operands");    
         }
 
         //*************************************************************************************************
         //*************************************************************************************************
 
-        void BuildNodeFrom_GroupingParens (List<Token> tokens)
+        void BuildNodeFrom_GroupingParens (List<IToken> tokens)
         {
             //
             // remove leading and trailing parens
             //
-            int index = tokens [0].text.IndexOf ('(');
-            if (index == -1) throw new Exception ("Syntax error, missing opening paren");
-            string expr = tokens [0].text.Remove (0, index + 1);
-            index = expr.LastIndexOf (')');
-            if (index == -1) throw new Exception ("Syntax error, missing closing paren");
-            expr = expr.Remove (index);
+            
+            //tokens [0].StripOuter ();
+            AnnotatedString as1 = tokens [0].AnnotatedText;
+            AnnotatedString as2 = as1.RemoveWrapper ();
 
             //
             // parse what's left
             //
             TokenParsing parser = new TokenParsing ();
-            ConstructorCommon (parser.StringToTokens (expr));
+            ConstructorCommon (parser.StringToTokens (as2));
         }
 
         //*************************************************************************************************
@@ -97,20 +123,19 @@ namespace Main
 
         // passed a single token of the form: [xxxxxx]
 
-        void BuildNodeFrom_Brackets (List<Token> tokens)
+        void BuildNodeFrom_Brackets (List<IToken> tokens)
         {
             TokenParsing parser = new TokenParsing ();
-         //   List<string> args = new List<string> ();
 
-            NodeType = tokens [0].type;
+            NodeType = tokens [0].Type;
 
             switch (NodeType)
             {
                 case TokenType.BracketsColon:
                 {
                     Operator = "RowVectorIterator";
-                    List<string> args = parser.SplitBracketArgs_Colon (tokens [0].text);
-                    foreach (string str in args)
+                    List<AnnotatedString> args = parser.SplitBracketArgs_Colon (tokens [0].AnnotatedText);
+                    foreach (AnnotatedString str in args)
                         Operands.Add (new ExpressionTreeNode (str));
                 }
                 break;
@@ -118,8 +143,8 @@ namespace Main
                 case TokenType.BracketsComma:
                 {
                     Operator = "RowVectorElements";
-                    List<string> args = parser.SplitBracketArgs_Comma (tokens [0].text);
-                    foreach (string str in args)
+                    List<AnnotatedString> args = parser.SplitBracketArgs_Comma (tokens [0].AnnotatedText);
+                    foreach (AnnotatedString str in args)
                         Operands.Add (new ExpressionTreeNode (str));
                 }
                 break;
@@ -127,11 +152,11 @@ namespace Main
                 case TokenType.BracketsSemi:
                 {
                     Operator = "ColVectorElements";
-                    List<string> args = parser.SplitBracketArgs_Semi (tokens [0].text);
+                    List<AnnotatedString> args = parser.SplitBracketArgs_Semi (tokens [0].AnnotatedText);
 
-                    foreach (string str in args)
+                    foreach (AnnotatedString str in args)
                     {
-                        string editted = EnsureRowVector (str);
+                        AnnotatedString editted = EnsureRowVector (str);
                         Operands.Add (new ExpressionTreeNode (editted));
                     }
                 }
@@ -141,56 +166,41 @@ namespace Main
                 case TokenType.BracketsSpace:
                 {
                     Operator = "RowVectorElements";
-                    List<string> args = parser.SplitBracketArgs_Space (tokens [0].text);
-                    foreach (string str in args)
-                        if (str.Length > 0)                                 //   <==========================================================
+                    List<AnnotatedString> args = parser.SplitBracketArgs_Space (tokens [0].AnnotatedText);
+
+                    foreach (AnnotatedString str in args)
+                        if (str.CharacterCount > 0)        //   <==========================================================
                             Operands.Add (new ExpressionTreeNode (str));
                 }
                 break;
 
-                default: throw new Exception ("Unrecognized bracket syntax: " + tokens [0].text);
+                default: throw new Exception ("Unrecognized bracket syntax: " + tokens [0].AnnotatedText.Plain);
             }
         }
 
         //*************************************************************************************************
         //*************************************************************************************************
 
-        // 
+        // Add outer brackets if original string doesn't have tham
 
-        string EnsureRowVector (string orig)
+        AnnotatedString EnsureRowVector (AnnotatedString orig)
         {
-            if (orig [0] != '[')
-                return "[" + orig.Trim () + "]";
+            AnnotatedString edited = orig.TrimmedSubstring (0, orig.CharacterCount);
 
-            return orig.Trim ();
+            if (edited [0].IsOpenBracket == false)
+            {
+                edited.AddOuterBrackets ();
+            }
 
-            //TokenParsing parser = new TokenParsing ();
-            //List<Token> toks = parser.ParsingPassOne (orig);
-            //toks = parser.ParsingPassTwo (toks, workspace);
-
-            //foreach (Token tok in toks)
-            //    if (tok.type == TokenType.ArithmeticOperator)
-            //        return orig;
-
-            //string editted = "";
-
-            //for (int i = 0; i<toks.Count; i++)
-            //{
-            //    editted += toks [i].text + " ";
-
-            //    if (i<toks.Count-1)
-            //        editted += ", ";
-            //}
-
-            //return editted;
+            return edited;
         }
 
         //*************************************************************************************************
         //*************************************************************************************************
 
-        void BuildNodeFrom_Numeric (List<Token> tokens)
+        void BuildNodeFrom_Numeric (List<IToken> tokens)
         {
-            bool valid = double.TryParse (tokens [0].text, out double scalar);
+            bool valid = double.TryParse (tokens [0].AnnotatedText.Plain, out double scalar);
 
             if (valid)
             {
@@ -198,29 +208,29 @@ namespace Main
                 Value = new PLDouble (scalar);
             }
             else
-               throw new Exception (string.Format ("Numeric token {0} has invalid value", tokens [0].text));
+               throw new Exception (string.Format ("Numeric token {0} has invalid value", tokens [0].AnnotatedText.Plain));
         }
 
         //*************************************************************************************************
         //*************************************************************************************************
 
-        void BuildNodeFrom_VariableName (List<Token> tokens)
+        void BuildNodeFrom_VariableName (List<IToken> tokens)
         {
-            Operator = tokens [0].text;
-            NodeType = tokens [0].type;
+            Operator = tokens [0].AnnotatedText.Plain;
+            NodeType = tokens [0].Type;
 
             if (tokens.Count > 1)
                 for (int i = 1; i<tokens.Count; i++)
-                    Operands.Add (new ExpressionTreeNode (tokens [i].text));
+                    Operands.Add (new ExpressionTreeNode (tokens [i].AnnotatedText));
         }
 
         //*************************************************************************************************
         //*************************************************************************************************
 
-        void BuildNodeFrom_String (List<Token> tokens)
+        void BuildNodeFrom_String (List<IToken> tokens)
         {
-            NodeType = tokens [0].type;
-            Value = new PLString (tokens [0].text);
+            NodeType = tokens [0].Type;
+            Value = new PLString (tokens [0].AnnotatedText.Plain);
         }
 
         //*************************************************************************************************
@@ -228,79 +238,84 @@ namespace Main
 
         // an operator with no operands
 
-        void BuildNodeFrom_Operator (List<Token> tokens)
+        void BuildNodeFrom_Operator (List<IToken> tokens)
         {
-            Operator = tokens [0].text;
-            NodeType = tokens [0].type;
+            Operator = tokens [0].AnnotatedText.Plain;
+            NodeType = tokens [0].Type;
         }
 
         //*************************************************************************************************
         //*************************************************************************************************
 
-        void BuildNodeFrom_FunctionPair (TokenPair tokens)
+        void BuildNodeFrom_FunctionPair (IToken tokens)
         {
-            Operator = tokens.t0.text;
-            NodeType = tokens.t0.type;
+            if (tokens is TokenPair == false)
+                throw new Exception ("BuildNodeFrom_FunctionPair must be passed a token pair. Got " + tokens.AnnotatedText.Plain);
 
             TokenParsing parser = new TokenParsing ();
+            TokenPair Pair = tokens as TokenPair;
 
-            switch (tokens.t1.type)
+            Operator = Pair.Get1.AnnotatedText.Plain;
+            NodeType = Pair.Get1.Type;
+
+            switch (Pair.Get2.Type)
             {
                 case TokenType.GroupingParens:
                 case TokenType.FunctionParens:
                 {
-                    List<string> args = parser.SplitFunctionArgs (tokens.t1.text);
+                    List<AnnotatedString> args = parser.SplitFunctionArgs (Pair.Get2.AnnotatedText);
 
-                    foreach (string str in args)
+                    foreach (AnnotatedString str in args)
                         Operands.Add (new ExpressionTreeNode (str));
                 }
                 break;
 
                 case TokenType.VariableName:
                 {
-                    Operands.Add (new ExpressionTreeNode (tokens.t1.text));
+                    Operands.Add (new ExpressionTreeNode (Pair.Get2.AnnotatedText));
                 }
                 break;
 
                 case TokenType.Pair:
                 {
-                    List<Token> tok = new List<Token> () { tokens.t1 };
-                    Operands.Add (new ExpressionTreeNode (tok));
+                    throw new Exception ("BuildNodeFrom_FunctionPair, TokenType.Pair not implemented");
+                    //List<Token> tok = new List<Token> () { tokens.t1 };
+                    //Operands.Add (new ExpressionTreeNode (tok));
                 }
-                break;
+                //break;
                 
                 case TokenType.BracketsComma:
                 {
-                    List<string> tok = parser.SplitBracketArgs_Comma (tokens.t1.text);
+                    List<AnnotatedString> tok = parser.SplitBracketArgs_Comma (Pair.Get2.AnnotatedText);
 
-                    foreach (string str in tok)
+                    foreach (AnnotatedString str in tok)
                         Operands.Add (new ExpressionTreeNode (str));
                 }
                 break;
 
                 case TokenType.BracketsColon:
                 {
-                    List<string> tok = parser.SplitBracketArgs_Colon (tokens.t1.text);
+                    List<AnnotatedString> tok = parser.SplitBracketArgs_Colon (Pair.Get2.AnnotatedText);
 
-                    foreach (string str in tok)
+                    foreach (AnnotatedString str in tok)
                         Operands.Add (new ExpressionTreeNode (str));
                 }
                 break;
 
                 case TokenType.BracketsSemi:
                 {
-                    List<string> tok = parser.SplitBracketArgs_Semi (tokens.t1.text);
+                    List<AnnotatedString> tok = parser.SplitBracketArgs_Semi (Pair.Get2.AnnotatedText);
 
-                    foreach (string str in tok)
+                    foreach (AnnotatedString str in tok)
                         Operands.Add (new ExpressionTreeNode (str));
                 }
                 break;
 
                 case TokenType.BracketsSpace:
                 {
-                    List<string> tok = parser.SplitBracketArgs_Space (tokens.t1.text);
+                    List<AnnotatedString> tok = parser.SplitBracketArgs_Space (Pair.Get2.AnnotatedText);
 
-                    foreach (string str in tok)
+                    foreach (AnnotatedString str in tok)
                         Operands.Add (new ExpressionTreeNode (str));
                 }
                 break;
@@ -311,12 +326,8 @@ namespace Main
                 //}
                 //break;
 
-                default: throw new Exception ("BuildNodeFrom_FunctionPair, Unsupported token type " + tokens.t1.type);
+                default: throw new Exception ("BuildNodeFrom_FunctionPair, Unsupported token type " + Pair.Get2.Type);
             }
-
-
-
-
         }
 
         //*************************************************************************************************
@@ -324,13 +335,18 @@ namespace Main
 
         void BuildNodeFrom_SubmatrixPair (TokenPair tokens)
         {
-            Operator = tokens.t0.text;
-            NodeType = tokens.t0.type;
+            if (tokens is TokenPair == false)
+                throw new Exception ("BuildNodeFrom_SubmatrixPair must be passed a token pair. Got " + tokens.AnnotatedText.Plain);
 
-            TokenParsing parser = new TokenParsing ();
-            List<string> args = parser.SplitSubmatrixArgs (tokens.t1.text);
+            TokenParsing parsing = new TokenParsing ();
+            TokenPair Pair = tokens as TokenPair;
 
-            foreach (string str in args)
+            Operator = Pair.Get1.AnnotatedText.Plain;
+            NodeType = Pair.Get1.Type;
+
+            List<AnnotatedString> args = parsing.SplitSubmatrixArgs (Pair.Get2.AnnotatedText);
+
+            foreach (AnnotatedString str in args)
             {
                 Operands.Add (new ExpressionTreeNode (str));
             }
@@ -348,8 +364,8 @@ namespace Main
             if (Workspace.Get (matrixName) is PLRMatrix)
             {
                 PLRMatrix mat = Workspace.Get (matrixName) as PLRMatrix;
-                rows = mat.Rows; // (Workspace.Rows (mat) as PLInteger).Data;
-                cols = mat.Cols; // (Workspace.Cols (mat) as PLInteger).Data;
+                rows = mat.Rows; // (workspace.Rows (mat) as PLInteger).Data;
+                cols = mat.Cols; // (workspace.Cols (mat) as PLInteger).Data;
             }
 
             else if (Workspace.Get (matrixName) is PLCMatrix)
@@ -373,24 +389,24 @@ namespace Main
                     {
                         if (IsRowVector)
                         {
-                            Operands [i].Operands [j] = new ExpressionTreeNode (cols.ToString ());
+                            Operands [i].Operands [j] = new ExpressionTreeNode (new AnnotatedString (cols.ToString ()));//, Workspace);
                         }
 
                         else if (IsColVector)
-                        { 
-                            Operands [i].Operands [j] = new ExpressionTreeNode (rows.ToString ());
+                        {
+                            Operands [i].Operands [j] = new ExpressionTreeNode (new AnnotatedString (rows.ToString ()));
                         }
 
                         else
                         {
                             if (i == 0)
                             {
-                                Operands [i].Operands [j] = new ExpressionTreeNode (rows.ToString ());
+                                Operands [i].Operands [j] = new ExpressionTreeNode (new AnnotatedString (rows.ToString ()));
                             }
 
                             else
                             {
-                                Operands [i].Operands [j] = new ExpressionTreeNode (cols.ToString ());
+                                Operands [i].Operands [j] = new ExpressionTreeNode (new AnnotatedString (cols.ToString ()));
                             }
                         }
                     }

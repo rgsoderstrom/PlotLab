@@ -40,35 +40,16 @@ namespace Main
         //******************************************************************************************
 
     //    public static PrintFunction PF = null;
-        public static int InstanceCounter = 0; // zeroed when new tree started
+        public static int NodeCounter = 0; // zeroed when new tree started
 
         //
         // public ctor used to construct root node
         //
-        public ExpressionTreeNode (AnnotatedString expr, ref bool SuppressPrinting)
+        public ExpressionTreeNode (AnnotatedString expr)
         {
             TokenParsing parsing = new TokenParsing ();
             List<IToken> tokens = parsing.StringToTokens (expr);
 
-            if (tokens [tokens.Count - 1].Type == TokenType.SupressPrinting)
-            {
-                SuppressPrinting = true;
-                tokens.Remove (tokens [tokens.Count - 1]);
-            }
-
-            InstanceCounter = 0;
-            ConstructorCommon (tokens);
-            Compact ();
-        }
-
-        //
-        // private ctor
-        //
-        private ExpressionTreeNode (AnnotatedString expr)
-        {
-            TokenParsing parsing = new TokenParsing ();
-            List<IToken> tokens = parsing.StringToTokens (expr);
-            
             ConstructorCommon (tokens);
             Compact ();
         }
@@ -88,7 +69,7 @@ namespace Main
         //
         void ConstructorCommon (List<IToken> tokens)
         {
-            if (InstanceCounter++ > 1000)
+            if (NodeCounter++ > 1000)
             {
                 throw new Exception ("Too many nodes in expression tree");
             }
