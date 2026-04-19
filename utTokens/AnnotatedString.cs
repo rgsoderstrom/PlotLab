@@ -4,12 +4,7 @@
 */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Main
 {
@@ -46,6 +41,10 @@ namespace Main
         private bool suppressOutput = false; // set true if last char is semicolon
         public  bool SuppressOutput {get {return suppressOutput;} set {suppressOutput = value;}}
 
+        //************************************************************************
+
+        // Used for input lines with alphanumerics only.
+
         public string FirstWord
         {
             get
@@ -67,7 +66,11 @@ namespace Main
             }
         }
 
-        public string ArgumentChars // all chars after the first word
+        // Used for input lines with alphanumerics only.
+        // Gets args to pass to a command
+        //  - e.g. clear a b c
+
+        public string ArgumentString // all chars after the first word
         {
             get
             {
@@ -724,7 +727,7 @@ namespace Main
             str += "\n" + "FirstWord: " + FirstWord;
 
             
-            str += "\n" + "Args: " + ArgumentChars;
+            str += "\n" + "Args: " + ArgumentString;
 
             if (Continues)        str += "\n" + "Continues = true";
             if (AlphanumericOnly) str += "\n" + "AlphanumericOnly = true";
