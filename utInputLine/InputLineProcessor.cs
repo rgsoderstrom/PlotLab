@@ -7,23 +7,92 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
+using PLFileSystem;
+using PLLibrary;
+using PLWorkspace;
+
 namespace Main
 {
     public delegate void PrintFunction (string str);
 
-    internal partial class InputLineProcessor
+    public partial class InputLineProcessor
     {
-        PrintFunction Print;
+        static PrintFunction Print;
 
-        internal InputLineProcessor (PrintFunction pr)
+        public InputLineProcessor (PrintFunction pr)
         {
             Print = pr;
+        }
+
+        public InputLineProcessor ()
+        {
         }
 
         //**************************************************************************************
         //**************************************************************************************
         //**************************************************************************************
 
+        // Passed a string entered by user or read from a .m file
+        //
+        // returns parallel lists of line types and annotated strings
+        //
+        public void IdentifyInputLine (string str, 
+                                       ref List<LineType> statementTypes, 
+                                       ref List<AnnotatedString> individualStatements)
+        {
+            statementTypes.Clear ();
+            individualStatements.Clear ();
+
+            // remove prompt, comments and extra spaces
+            string cleaned = PreprocessInputLine (str);
+
+            // annotate entire input line
+            AnnotatedString annotated = new AnnotatedString (cleaned);
+
+            // split a line containing several statements into serparate lines
+            individualStatements = annotated.SplitAtLevel0Semicolon ();
+
+            // initial statement type of Unknown for each statement
+            for (int i=0; i<individualStatements.Count; i++)
+                statementTypes.Add (LineType.Unknown);
+
+            for (int i=0; i<individualStatements.Count; i++)
+            {
+                AnnotatedString statement = individualStatements [i];
+
+                if (statement.AlphanumericOnly)
+                {
+                    string firstWord = statement.FirstWord;
+                    string arguments = statement.ArgumentString;
+
+                    if (arguments.Length == 0) // no arguments
+                    {
+                        if      (FileSystem.WhatIs (firstWord) == FileTypes.ScriptFile) statementTypes [i] = LineType.Script;
+                        else if (Workspace.Contains (firstWord)) statementTypes [i] = LineType.VariableName;
+                   //     else if ()
+                    }
+
+                    else
+                    {
+
+                    }
+
+                }
+
+                else
+                {
+
+                }
+
+                //if (AS.WordCount == 1)
+                //{
+                //    if (PLLibrary.LibraryManager.Contains )
+                //}
+            }
+
+
+
+        }
 
         //public List<List<IToken>> ParseOneInputLine (string inputLine)
         //{

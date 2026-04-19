@@ -37,6 +37,15 @@
     <Reference Include="PLCommon">
       <HintPath>..\PLCommon\bin\Debug\PLCommon.dll</HintPath>
     </Reference>
+    <Reference Include="PLFileSystem">
+      <HintPath>..\PLFileSystem\bin\Debug\PLFileSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="PLLibrary">
+      <HintPath>..\PLLibrary\bin\Debug\PLLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="PLWorkspace">
+      <HintPath>..\PLWorkspace\bin\Debug\PLWorkspace.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -78,9 +87,6 @@
     <Compile Include="Driver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stubs\CommandHistory.cs" />
-    <Compile Include="Stubs\FileSystem.cs" />
-    <Compile Include="Stubs\Library.cs" />
-    <Compile Include="Stubs\Workspace.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

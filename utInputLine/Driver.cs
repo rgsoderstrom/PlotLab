@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 
-using PLFileSystem;
 using Main;
+
+using PLFileSystem;
+
+using static Main.InputLineProcessor;
 
 namespace utInputLine
 {
@@ -21,26 +24,24 @@ namespace utInputLine
             try
             {
                 StreamReader inputFile = new StreamReader (InputMFileName);
-                string raw;
+                string inputString;
 
-                while ((raw = inputFile.ReadLine ()) != null)
+                InputLineProcessor inputLineProc = new InputLineProcessor ();
+                List<LineType> lineTypes = new List<LineType> ();
+                List<AnnotatedString> annotStrings = new List<AnnotatedString> ();
+
+                while ((inputString = inputFile.ReadLine ()) != null)
                 {
-                    string pp = InputLineProcessor.Preprocess (raw);
-
-                    if (pp.Length > 0)
+                    if (inputString.Length > 0)
                     { 
-                        AnnotatedString annot = new AnnotatedString (pp);
-                        Console.WriteLine (annot.ToString ());
+                        Console.WriteLine (inputString);
+
+                     //   lineTypes.Clear ();
+                     //   annotStrings.Clear ();
+                        inputLineProc.IdentifyInputLine (inputString, ref lineTypes, ref annotStrings);
+
+
                         Console.WriteLine ("==========================================");
-                    }
-
-
-                    if (raw.Length > 0)
-                    {
-                        //List<List<IToken>> tok = inputProcessor.ParseOneInputLine (raw);
-                        
-                        //foreach (List<IToken> lt in tok)
-                        //    TokensForFileLines.Add (lt);
                     }
                 }
 

@@ -4,10 +4,11 @@
 */
 
 using System;
+using System.Collections.Generic;
 
 namespace Main
 {
-    internal partial class InputLineProcessor
+    public partial class InputLineProcessor
     {
         public static readonly string Prompt = "--> ";
         public static readonly string LineContinued = "...";
@@ -15,11 +16,29 @@ namespace Main
 
         //**************************************************************************************
 
+        // identify keywords
+
+        static private List<string> BlockStartKeywords = new List<string> () 
+                                                    {"while", "for", "if", "else", "elseif"};
+
+        static private List<string> BlockEndKeywords = new List<string> () {"end", };
+
+        static private List<string> Keywords = new List<string> () 
+                                                    {"function", "global",
+                                                     "return", "switch", "case"};
+
+        public static bool IsKeyword (string str)
+        {
+            return Keywords.Contains (str);
+        }
+
+        //**************************************************************************************
+
         // first processing on each input line
         //  - remove prompt and any comments
         //  - remove extra spaces & tabs
 
-        public static string Preprocess (string lineIn)
+        public static string PreprocessInputLine (string lineIn)
         {
             if (lineIn.Length == 0) return lineIn;
             string s1 = RemovePromptAndComments (lineIn);
@@ -119,13 +138,6 @@ namespace Main
         }
 
         //**************************************************************************************
-
-        private string IdentifyInputLine (string lineIn)
-        {
-
-            return "";
-        }
-
 
     }
 }

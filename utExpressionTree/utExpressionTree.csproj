@@ -47,6 +47,10 @@
     <Reference Include="PLCommon">
       <HintPath>..\PLCommon\bin\Debug\PLCommon.dll</HintPath>
     </Reference>
+    <Reference Include="PLFileSystem, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\PLFileSystem\bin\Debug\PLFileSystem.dll</HintPath>
+    </Reference>
     <Reference Include="PLLibrary">
       <HintPath>..\PLLibrary\bin\Debug\PLLibrary.dll</HintPath>
     </Reference>
