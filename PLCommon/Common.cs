@@ -3,22 +3,23 @@ namespace PLCommon
 {
     public delegate PLVariable PLFunction    (PLVariable var);
     public delegate void       PrintFunction (string str);
+    public delegate bool       PLRequest     (string str);
 
     public enum SymbolicNameTypes
     {
-        Unknown, 
-        Variable, 
+        Unknown,
+        Variable,
         Constant,
-        
-        WorkspaceCommand, 
-        Function, 
+
+        WorkspaceCommand,
+        Function,
 
         //  WorkspaceFunction,
-        ScriptFile, 
+        ScriptFile,
         FunctionFile,       // m-file function
         //FunctionFile_Multi, // multiple output function file
-        PlotCommand, 
-        SystemCommand, 
+        PlotCommand,
+        SystemCommand,
         //FlowCtrl,
     };
 

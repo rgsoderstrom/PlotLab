@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Windows;
 using System.IO;
 using System.Windows.Input;
+using System.Windows.Controls;
 
 using Common;
 using PLCommon;
 using PLWorkspace;
 using PLLibrary;
 using PLFileSystem;
-using System.Windows.Controls;
+using PLSystem;
 
 namespace Main
 {
@@ -40,6 +41,17 @@ namespace Main
             EntryPoint.ShowExprTree      = (bool) ShowTree_Checkbox.IsChecked;
         }
 
+
+
+        private bool SystemRequests (string str)
+        {
+
+            Console.WriteLine ("SystemRequest: " + str);
+            return true;
+        }
+
+
+
         private void Window_Loaded (object sender, RoutedEventArgs e)
         {
             try
@@ -58,7 +70,12 @@ namespace Main
                 PLVariable ans = new PLNull ();
                 bool fp = false;
                 InputLineProcessor ip = new InputLineProcessor (Print);
-                ip.ProcessOneStatement (ref ans, "startup", ref fp);
+                ip.ProcessOneStatement (ref ans, "startup", ref fp); 
+
+
+                SystemFunctions.UserConsoleRequests = SystemRequests;
+
+
 
         //        MFileFunctionMgr.CurrentDir = FileSearch.CurrentDirectory;
           //      MFileFunctionMgr.SearchPathCopy = FileSearch.GetPathCopy ();
@@ -376,7 +393,7 @@ namespace Main
                 return lines;
 
             lines.AddRange (Workspace.PartialMatch       (token));
-            lines.AddRange (SystemFunctions.PartialMatch (token));
+         // lines.AddRange (PLSystemFunctions.PartialMatch (token));
             lines.AddRange (FileSystem.PartialNameSearch (token));
             lines.AddRange (LibraryManager.PartialMatch  (token));
 
@@ -622,16 +639,16 @@ namespace Main
 
         private void ShowHistory_Click (object sender, RoutedEventArgs e)
         {
-            PLVariable hist = SystemFunctions.History (new PLNull ());
-            PLList lst = hist as PLList;
+            //PLVariable hist = PLSystemFunctions.History (new PLNull ());
+            //PLList lst = hist as PLList;
 
-            Print ("\n");
-            foreach (PLString str in lst)
-                Print (str.ToString () + '\n');
+            //Print ("\n");
+            //foreach (PLString str in lst)
+            //    Print (str.ToString () + '\n');
 
-            Print ('\n' + Utils.Prompt);
-            ClearInputLine ();
-            TextPane.Focus ();
+            //Print ('\n' + Utils.Prompt);
+            //ClearInputLine ();
+            //TextPane.Focus ();
         }
 
         private void ClearHistory_Click (object sender, RoutedEventArgs e)

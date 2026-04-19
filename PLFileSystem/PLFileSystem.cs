@@ -232,7 +232,12 @@ namespace PLFileSystem
             return fileType;
         }
     
-        public static bool IsMFileFunction (string name)
+        public static bool IsScriptFile (string name)
+        {
+            return WhatIs (name) == FileTypes.ScriptFile;
+        }
+    
+        public static bool IsFunctionFile (string name)
         {
             return WhatIs (name) == FileTypes.FunctionFile;
         }
