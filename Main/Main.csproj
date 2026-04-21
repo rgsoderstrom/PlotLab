@@ -39,6 +39,21 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\utExpressionTree\EvaluateNode.cs">
+      <Link>EvaluateNode.cs</Link>
+    </Compile>
+    <Compile Include="..\utExpressionTree\EvaluateNode2.cs">
+      <Link>EvaluateNode2.cs</Link>
+    </Compile>
+    <Compile Include="..\utExpressionTree\ExpressionTree.cs">
+      <Link>ExpressionTree.cs</Link>
+    </Compile>
+    <Compile Include="..\utExpressionTree\ExpressionTreeNode.cs">
+      <Link>ExpressionTreeNode.cs</Link>
+    </Compile>
+    <Compile Include="..\utExpressionTree\ExpressionTreeNodeBuilders.cs">
+      <Link>ExpressionTreeNodeBuilders.cs</Link>
+    </Compile>
     <Compile Include="..\utTokens\AnnotatedChar.cs">
       <Link>AnnotatedChar.cs</Link>
     </Compile>
@@ -48,11 +63,6 @@
     <Compile Include="App.xaml.cs" />
     <Compile Include="CommandLineHistory.cs" />
     <Compile Include="EntryPoint.cs" />
-    <Compile Include="EvaluateNode.cs" />
-    <Compile Include="EvaluateNode2.cs" />
-    <Compile Include="ExpressionTree.cs" />
-    <Compile Include="ExpressionTreeNode.cs" />
-    <Compile Include="ExpressionTreeNodeBuilders.cs" />
     <Compile Include="FileSearch.cs" />
     <Compile Include="InputLineProcessor.cs" />
     <Compile Include="InternalFunctions.cs" />
