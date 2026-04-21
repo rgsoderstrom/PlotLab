@@ -102,11 +102,11 @@ namespace Main
         {
             try
             { 
-                if (text [text.Length-1] == ';')
-                {
-                    SuppressOutput = true;
-                    text = text.Remove (text.Length-1, 1);
-                }
+                //if (text [text.Length-1] == ';')
+                //{
+                //    SuppressOutput = true;
+                //    text = text.Remove (text.Length-1, 1);
+                //}
 
                 PassOne (text);
                 PassTwo ();
@@ -115,7 +115,7 @@ namespace Main
 
             catch (Exception ex)
             {
-                throw new Exception ("Exception in AnnotatedString ctor: " + ex.Message);
+                throw new Exception ("Exception in AnnotatedString ctor: " + ex.StackTrace);// Message);
             }
         }
 
@@ -123,6 +123,9 @@ namespace Main
 
         private void PassOne (string text)
         { 
+            if (text.Length == 0)
+                return;
+
             AnnotatedChar firstAC = new AnnotatedChar (text [0]);
             if (firstAC.IsNumber)      digits.Add (0);   
             if (firstAC.IsDecimal)     decimals.Add (0);
@@ -141,6 +144,8 @@ namespace Main
                 if (nextAC.IsExponential) exponentials.Add (i);
                 if (nextAC.IsOperator)    operators.Add (i);
                 if (nextAC.IsWhitespace)  whiteSpaces.Add (i);
+
+              //  if (nextAC.IsEqualSign)   AlphanumericOnly = false;
                 if (nextAC.IsOpenParen)   AlphanumericOnly = false;
                 if (nextAC.IsOpenBracket) AlphanumericOnly = false;
 
@@ -581,7 +586,7 @@ namespace Main
                 if (indicesEmpty || lastCharNotSemi)
                     indices.Add (annotatedChars.Count - 1);
 
-                List<AnnotatedString> nlStrings = new List<AnnotatedString> ();
+                List<AnnotatedString> individual = new List<AnnotatedString> ();
 
                 int startIndex = 0;
                 int endIndex;
@@ -592,11 +597,11 @@ namespace Main
                     if (annotatedChars [startIndex].Character == ' ') startIndex++;
 
                     endIndex = indices [i];
-                    nlStrings.Add (new AnnotatedString (annotatedChars, startIndex, endIndex - startIndex + 1));
+                    individual.Add (new AnnotatedString (annotatedChars, startIndex, endIndex - startIndex + 1));
                     startIndex = endIndex + 1;
                 }
             
-                return nlStrings;
+                return individual;
             }
     
             catch (Exception ex)
@@ -725,9 +730,7 @@ namespace Main
             if (str23.Contains ("1")) str += '\n' + str23;
 
             str += "\n" + "FirstWord: " + FirstWord;
-
-            
-            str += "\n" + "Args: " + ArgumentString;
+            if (ArgumentString.Length > 0) str += "\n" + "Args: " + ArgumentString;
 
             if (Continues)        str += "\n" + "Continues = true";
             if (AlphanumericOnly) str += "\n" + "AlphanumericOnly = true";

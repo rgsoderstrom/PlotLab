@@ -36,23 +36,24 @@ namespace Main
         //
         // returns parallel lists of line types and annotated strings
         //
-        public void IdentifyInputLine (string str, 
+        public void ClassifyInputLine (string str, 
                                        ref List<LineType> statementTypes, 
                                        ref List<AnnotatedString> individualStatements)
         {
-            statementTypes.Clear ();
-            individualStatements.Clear ();
-
             // remove prompt, comments and extra spaces
             string cleaned = PreprocessInputLine (str);
+
+            // comment-only lines
+            if (cleaned.Length == 0)
+                return;
 
             // annotate entire input line
             AnnotatedString annotated = new AnnotatedString (cleaned);
 
-            // split a line containing several statements into serparate lines
+            // split a line containing several statements into separate lines
             individualStatements = annotated.SplitAtLevel0Semicolon ();
 
-            // initial statement type of Unknown for each statement
+            // initially mark each statement as Unknown
             for (int i=0; i<individualStatements.Count; i++)
                 statementTypes.Add (LineType.Unknown);
 
@@ -65,10 +66,10 @@ namespace Main
                     string firstWord = statement.FirstWord;
                     string arguments = statement.ArgumentString;
 
-                    if (arguments.Length == 0) // no arguments
+                    if (arguments.Length == 0) // command only, no arguments
                     {
-                        if      (FileSystem.WhatIs (firstWord) == FileTypes.ScriptFile) statementTypes [i] = LineType.Script;
-                        else if (Workspace.Contains (firstWord)) statementTypes [i] = LineType.VariableName;
+                        if      (FileSystem.WhatIs  (firstWord) == FileTypes.ScriptFile) statementTypes [i] = LineType.Script;
+                        else if (Workspace.Contains (firstWord))                         statementTypes [i] = LineType.VariableName;
                    //     else if ()
                     }
 

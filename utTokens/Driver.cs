@@ -35,9 +35,9 @@ namespace utTokens
                     if (raw.Length > 0)
                     {
                         bool ps = false; // print separator
-                        ps |= AnnotatedStringTest (raw);
-                        ps |= TokenParsingTest (raw);
-                        //pr |= TokenUtilsTest (raw);
+                        //ps |= AnnotatedStringTest (raw);
+                        //ps |= TokenParsingTest (raw);
+                        ps |= TokenUtilsTest (raw);
                         
                         if (ps) Print ("===========================================");                    }
                 }
@@ -113,7 +113,11 @@ namespace utTokens
 
             AnnotatedString annotated = new AnnotatedString (text);
 
+            Print ("Before split:");
             Print (annotated.ToString () + "\n");
+
+            Print ("\nAfter split:");
+
             List<AnnotatedString> fargs = parsing.SplitBracketArgs_Space (annotated);
 
             foreach (AnnotatedString AS in fargs)
