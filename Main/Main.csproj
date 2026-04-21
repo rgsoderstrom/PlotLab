@@ -39,8 +39,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnnotatedChar.cs" />
-    <Compile Include="AnnotatedString.cs" />
+    <Compile Include="..\utTokens\AnnotatedChar.cs">
+      <Link>AnnotatedChar.cs</Link>
+    </Compile>
+    <Compile Include="..\utTokens\AnnotatedString.cs">
+      <Link>AnnotatedString.cs</Link>
+    </Compile>
     <Compile Include="App.xaml.cs" />
     <Compile Include="CommandLineHistory.cs" />
     <Compile Include="EntryPoint.cs" />
