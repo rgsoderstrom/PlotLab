@@ -81,6 +81,12 @@
     <Compile Include="..\Main\InternalFunctions.cs">
       <Link>InternalFunctions.cs</Link>
     </Compile>
+    <Compile Include="..\utInputLine\InputLineProcessor.cs">
+      <Link>InputLineProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\utInputLine\InputLineUtils.cs">
+      <Link>InputLineUtils.cs</Link>
+    </Compile>
     <Compile Include="..\utTokens\AnnotatedChar.cs">
       <Link>AnnotatedChar.cs</Link>
     </Compile>
@@ -105,8 +111,6 @@
     <Compile Include="..\utTokens\TokenUtils2.cs">
       <Link>TokenUtils2.cs</Link>
     </Compile>
-    <Compile Include="InputLineProcessor.cs" />
-    <Compile Include="InputLineUtils.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
