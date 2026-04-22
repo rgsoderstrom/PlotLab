@@ -59,6 +59,7 @@
     </Compile>
     <Compile Include="AnnotatedChar.cs" />
     <Compile Include="AnnotatedString.cs" />
+    <Compile Include="AnnotatedStringSet.cs" />
     <Compile Include="Driver.cs" />
     <Compile Include="Interfaces\ICmndHistory.cs" />
     <Compile Include="Interfaces\IFileSystem.cs" />

@@ -35,9 +35,9 @@ namespace utTokens
                     if (raw.Length > 0)
                     {
                         bool ps = false; // print separator
-                        //ps |= AnnotatedStringTest (raw);
+                        ps |= AnnotatedStringTest (raw);
                         //ps |= TokenParsingTest (raw);
-                        ps |= TokenUtilsTest (raw);
+                        //ps |= TokenUtilsTest (raw);
                         
                         if (ps) Print ("===========================================");                    }
                 }
@@ -62,10 +62,16 @@ namespace utTokens
             if (text.Length == 0)
                 return false;
 
-            AnnotatedString annotated = new AnnotatedString (text);
+            AnnotatedStringSet annotated = new AnnotatedStringSet (text);
 
-            Print (annotated.Plain.ToString ());
-            Print (annotated.ToString ());
+            for (int i=0; i<annotated.Count; i++)
+            { 
+                Print (annotated [i].Plain.ToString ());
+                Print (annotated [i].ToString ());
+
+                if (i != annotated.Count - 1)
+                    Print ("------------------------");
+            }
 
             return true;
         }

@@ -15,6 +15,19 @@ namespace Main
 
         //*************************************************************************
 
+        // during pass1 note the locations of characters we may want to modify during subsequent processing
+        private readonly List<int> digits       = new List<int> ();
+        private readonly List<int> decimals     = new List<int> ();
+        private readonly List<int> exponentials = new List<int> (); // E or e
+        private readonly List<int> operators    = new List<int> ();
+        private readonly List<int> whiteSpaces  = new List<int> ();
+        private readonly List<int> semicolons   = new List<int> ();
+        private readonly List<int> level0Semis  = new List<int> ();
+
+        public List<int> Level0Semis {get {return level0Semis;}}
+
+        //*************************************************************************
+
         // public access properties
         public string Plain // plain text without annotation
         {
@@ -40,6 +53,9 @@ namespace Main
 
         private bool suppressOutput = false; // set true if last char is semicolon
         public  bool SuppressOutput {get {return suppressOutput;} set {suppressOutput = value;}}
+
+        private bool isCompound = false; // set true for stmts of the form: a = 7; b = 10; c = 12;
+        public  bool IsCompound {get {return isCompound;} private set {isCompound = value;}}
 
         //************************************************************************
 
@@ -76,11 +92,14 @@ namespace Main
             {
                 string str = "";
 
-                if (whiteSpaces.Count == 0)
-                    return str;
+                if (AlphanumericOnly)
+                {
+                    if (whiteSpaces.Count == 0)
+                        return str;
 
-                for (int i=whiteSpaces [0] + 1; i<CharacterCount; i++)
-                    str += annotatedChars [i].Character;
+                    for (int i=whiteSpaces [0] + 1; i<CharacterCount; i++)
+                        str += annotatedChars [i].Character;
+                }
 
                 return str;
             }
@@ -91,26 +110,14 @@ namespace Main
         // ctors
         //
 
-        // during pass1 note the locations of characters we may want to modify on pass 2
-        private readonly List<int> digits       = new List<int> ();
-        private readonly List<int> decimals     = new List<int> ();
-        private readonly List<int> exponentials = new List<int> (); // E or e
-        private readonly List<int> operators    = new List<int> ();
-        private readonly List<int> whiteSpaces  = new List<int> ();
-
         internal AnnotatedString (string text)
         {
             try
             { 
-                //if (text [text.Length-1] == ';')
-                //{
-                //    SuppressOutput = true;
-                //    text = text.Remove (text.Length-1, 1);
-                //}
-
                 PassOne (text);
                 PassTwo ();
                 PassThree ();
+                PassFour ();
             }
 
             catch (Exception ex)
@@ -131,6 +138,7 @@ namespace Main
             if (firstAC.IsDecimal)     decimals.Add (0);
             if (firstAC.IsExponential) exponentials.Add (0);
             if (firstAC.IsOperator)    operators.Add (0);
+            if (firstAC.IsSemicolon)   semicolons.Add (0); // should this be a syntax error?
             if (firstAC.IsOpenParen)   AlphanumericOnly = false;
             if (firstAC.IsOpenBracket) AlphanumericOnly = false;
 
@@ -139,13 +147,14 @@ namespace Main
             for (int i=1; i<text.Length; i++)
             {
                 AnnotatedChar nextAC = new AnnotatedChar (annotatedChars [i-1], text [i]);
-                if (nextAC.IsNumber)      digits.Add (i);   
-                if (nextAC.IsDecimal)     decimals.Add (i); 
+                if (nextAC.IsNumber)      digits.Add       (i);   
+                if (nextAC.IsDecimal)     decimals.Add     (i); 
                 if (nextAC.IsExponential) exponentials.Add (i);
-                if (nextAC.IsOperator)    operators.Add (i);
-                if (nextAC.IsWhitespace)  whiteSpaces.Add (i);
+                if (nextAC.IsOperator)    operators.Add    (i);
+                if (nextAC.IsWhitespace)  whiteSpaces.Add  (i);
+                if (nextAC.IsSemicolon)   semicolons.Add   (i);
 
-              //  if (nextAC.IsEqualSign)   AlphanumericOnly = false;
+              //if (nextAC.IsEqualSign)   AlphanumericOnly = false;
                 if (nextAC.IsOpenParen)   AlphanumericOnly = false;
                 if (nextAC.IsOpenBracket) AlphanumericOnly = false;
 
@@ -310,7 +319,7 @@ namespace Main
 
         //*************************************************************************
 
-        // look for continuation, ending with ...
+        // look for continuation, i.e. line ending with ...
 
         private readonly string continuationString = "...";
        
@@ -328,7 +337,33 @@ namespace Main
             annotatedChars.RemoveRange (CharacterCount - L, L); // delete 3 chars of "..."
 
             if (annotatedChars [CharacterCount-1].IsWhitespace) 
-                annotatedChars.RemoveRange (CharacterCount-1, 1); // remove trailing space
+                annotatedChars.RemoveRange (CharacterCount-1, 1); // remove any trailing space
+        }
+
+        //*************************************************************************
+
+        private void PassFour () 
+        { 
+            foreach (int index in semicolons)
+            {
+                if (annotatedChars [index].NestingLevel == 0)
+                    level0Semis.Add (index);
+            }
+
+            if (level0Semis.Count == 0)
+            {
+                SuppressOutput = false;
+            }
+
+            else if (level0Semis.Count == 1)
+            {
+                int index = semicolons [0];
+                if (index == CharacterCount - 1)
+                    SuppressOutput = true;
+            }
+
+            else
+                IsCompound = true;
         }
 
         //*************************************************************************
@@ -526,7 +561,7 @@ namespace Main
                 if (index >= 0 && index < annotatedChars.Count)
                     return annotatedChars [index];
 
-                throw new IndexOutOfRangeException ("Index is out of range in AnnotatedString get.");
+                throw new IndexOutOfRangeException ("Index is out of range in AnnotatedString indexer get.");
             }
 
             set
@@ -535,7 +570,7 @@ namespace Main
                     annotatedChars [index] = value;
 
                 else
-                    throw new IndexOutOfRangeException ("Index is out of range in AnnotatedString set.");
+                    throw new IndexOutOfRangeException ("Index is out of range in AnnotatedString indexer set.");
             }
         }
 
@@ -557,57 +592,6 @@ namespace Main
                 endIndex--;
 
             return new AnnotatedString (annotatedChars, startIndex, endIndex - startIndex + 1);
-        }
-
-        //*******************************************************************
-        //
-        // SplitAtLevel0Semicolon - split one string into several. break at semicolons at nesting level == 0
-        //
-        // Split lines like:
-        // a = 1; b = 2; c = 3;
-        // into individual statements, while leaving lines like:
-        // a = [1 ; 2 ; 4];
-        // as a single statement
-
-        internal List<AnnotatedString> SplitAtLevel0Semicolon ()
-        {
-            try
-            { 
-                // indexes where semicolons at nesting level 0 found
-                List<int> indices = new List<int> ();
-
-                for (int i=0; i<annotatedChars.Count; i++)
-                    if (annotatedChars [i].Character == ';' && annotatedChars [i].NestingLevel == 0)
-                        indices.Add (i);
-
-                bool indicesEmpty = indices.Count == 0;
-                bool lastCharNotSemi = annotatedChars [annotatedChars.Count-1].Character != ';';
-
-                if (indicesEmpty || lastCharNotSemi)
-                    indices.Add (annotatedChars.Count - 1);
-
-                List<AnnotatedString> individual = new List<AnnotatedString> ();
-
-                int startIndex = 0;
-                int endIndex;
-
-                for (int i=0; i<indices.Count; i++)
-                {
-                    // skip any space between statements in a compound statement
-                    if (annotatedChars [startIndex].Character == ' ') startIndex++;
-
-                    endIndex = indices [i];
-                    individual.Add (new AnnotatedString (annotatedChars, startIndex, endIndex - startIndex + 1));
-                    startIndex = endIndex + 1;
-                }
-            
-                return individual;
-            }
-    
-            catch (Exception ex)
-            {
-                throw new Exception ("Exception in SplitAtLevel0Semicolon: " + ex.Message);
-            }
         }
 
         //****************************************************************************************
@@ -694,7 +678,7 @@ namespace Main
              //   str17 += ac.IsUnaryOp     ? "1" : ".";
                 //str18 += ac.IsExponent    ? "1" : ".";
                 //str19 += ac.IsColon       ? "1" : ".";
-                //str20 += ac.IsSemicolon   ? "1" : ".";
+                str20 += ac.IsSemicolon   ? "1" : ".";
                 //str21 += ac.IsComma       ? "1" : ".";
                 str22 += ac.IsOperator    ? "1" : ".";
                 str23 += ac.IsTwoCharOp   ? "1" : ".";
@@ -729,12 +713,17 @@ namespace Main
             if (str22.Contains ("1")) str += '\n' + str22;
             if (str23.Contains ("1")) str += '\n' + str23;
 
-            str += "\n" + "FirstWord: " + FirstWord;
-            if (ArgumentString.Length > 0) str += "\n" + "Args: " + ArgumentString;
+            str += "\n" + "AlphanumericOnly = " + AlphanumericOnly.ToString ();
 
-            if (Continues)        str += "\n" + "Continues = true";
-            if (AlphanumericOnly) str += "\n" + "AlphanumericOnly = true";
-            if (SuppressOutput)   str += "\n" + "SuppressOutput = true";
+            if (AlphanumericOnly)
+            { 
+                str += "\n" + "FirstWord: " + FirstWord;
+                str += "\n" + "FollowingWords: " + ArgumentString;
+            }
+
+            str += "\n" + "Continues      = " + Continues.ToString ();
+            str += "\n" + "SuppressOutput = " + SuppressOutput.ToString ();
+            str += "\n" + "IsCompound     = " + IsCompound.ToString ();
 
             return str;
         }

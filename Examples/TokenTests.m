@@ -1,10 +1,17 @@
 
 
-% TokenTests for utTokens
-%	 - single-statement lines
-
+% TokenTests.m, for utTokens
+	
+	% a = 8;
+	% b = 7
+	% a = 8; b = 9; c = 12;
+	a = 8; b = 9; c = 12
+	c = 2 * 3;
+	d = [1 ; 2 ; 3]
+	% e = 22 / 7
+	clear a b c
+	
 	% z = 3 >= -(4 + 3);
-	% a = 2 * 3;
 	% b = ~1;
 	% c = sin (3);
 	% c = ~c123 & 1;
@@ -14,6 +21,11 @@
 	% z = 3 + 4 * c123 (6);
 	% t1 = [1 2 3]' + (4 5 6)' + +[7:9]' + dd' + c123;
 	
+	% a = 7 + ...  % zzzz
+	% b = [ ...
+	% c = [12 ...
+	% d = [34 ; ...
+
 	% strings
 	% y = 'asdf';
 	% y = 'as\'df';
@@ -36,8 +48,8 @@
 	% z3 = 123.456;
 
 	% unary
-	x = -7;
-	y = -c123;
+	% x = -7;
+	% y = -c123;
 	% z = c -7;
 	% z = 5 -7;
 	% a = c * -7;
@@ -54,6 +66,11 @@
 	% +321 + 18
 	% ~321 + 18
 
+	% clear all
+	% figure
+	% figure;
+	% sin(a);
+	% [1: 3 : 22] ; % a comment
 	
 	% two-char operators
 	% z2 = a ~= b;
