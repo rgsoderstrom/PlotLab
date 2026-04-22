@@ -81,7 +81,7 @@
     <Compile Include="App.xaml.cs" />
     <Compile Include="CommandLineHistory.cs" />
     <Compile Include="EntryPoint.cs" />
-    <Compile Include="InputLineProcessor.cs" />
+    <Compile Include="InputLineProcessor_Legacy.cs" />
     <Compile Include="InternalFunctions.cs" />
     <Compile Include="ScriptPreprocessor.cs" />
     <Compile Include="ScriptProcessor.cs" />

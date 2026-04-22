@@ -10,16 +10,16 @@ using PLSystem;
 
 namespace Main
 {
-    public class InputLineProcessor
+    public class InputLineProcessor_Legacy
     {
         PrintFunction Print;
 
-        public InputLineProcessor (PrintFunction pr) //, Button res) //, UserConsole uc)
+        public InputLineProcessor_Legacy (PrintFunction pr) //, Button res) //, UserConsole uc)
         {
             Print = pr;
         }
 
-        public InputLineProcessor ()
+        public InputLineProcessor_Legacy ()
         {
             Print = null;
         }

@@ -69,7 +69,7 @@ namespace Main
 
                 PLVariable ans = new PLNull ();
                 bool fp = false;
-                InputLineProcessor ip = new InputLineProcessor (Print);
+                InputLineProcessor_Legacy ip = new InputLineProcessor_Legacy (Print);
                 ip.ProcessOneStatement (ref ans, "startup", ref fp); 
 
 
@@ -221,7 +221,7 @@ namespace Main
                 TextPane.CaretIndex = TextPane.Text.Length;
                 caretLowerLimit     = TextPane.CaretIndex;
 
-                InputLineProcessor ip = new InputLineProcessor (Print);
+                InputLineProcessor_Legacy ip = new InputLineProcessor_Legacy (Print);
 
                 //
                 // Look for bang (i.e. !) followed by a number and maybe the letter 'p'. Number is index of command

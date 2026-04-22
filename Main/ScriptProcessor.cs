@@ -207,7 +207,7 @@ namespace Main
                         for (int i = 1; i<words.Length; i++)
                             expression += words [i] + " ";
 
-                        InputLineProcessor ip = new InputLineProcessor ();
+                        InputLineProcessor_Legacy ip = new InputLineProcessor_Legacy ();
                         PLVariable ans = new PLInteger (-1);
                         ip.ProcessOneStatement (ref ans, expression, ref unused);
                         lineNumber = script.NextLineNumber (lineNumber);
