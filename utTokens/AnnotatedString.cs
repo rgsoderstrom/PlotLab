@@ -721,9 +721,9 @@ namespace Main
                 str += "\n" + "FollowingWords: " + ArgumentString;
             }
 
-            str += "\n" + "Continues      = " + Continues.ToString ();
-            str += "\n" + "SuppressOutput = " + SuppressOutput.ToString ();
-            str += "\n" + "IsCompound     = " + IsCompound.ToString ();
+            str += "\n" + "Continues        = " + Continues.ToString ();
+            str += "\n" + "SuppressOutput   = " + SuppressOutput.ToString ();
+            str += "\n" + "IsCompound       = " + IsCompound.ToString ();
 
             return str;
         }

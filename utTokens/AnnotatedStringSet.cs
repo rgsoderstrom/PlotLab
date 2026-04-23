@@ -1,6 +1,6 @@
 ﻿
 /*
-    AnnotatedString - list of AnnotatedCharacters
+    AnnotatedStringSet - list of AnnotatedStrings
 */
 
 using System;
@@ -26,18 +26,22 @@ namespace Main
         {
             AnnotatedString astr = new AnnotatedString (str);
 
+            // if input str is only a single expression, e.g. a = 123; annotate and we're done
             if (astr.IsCompound == false)
             {
                 annotatedStrings.Add (astr);
                 return;
             }
 
+            // if we get here str is a compound expression, e.g. a = 123; b = 456; c = 789;
+            // it will be split into a list of annotated strings
+            
             int startIndex = 0;
-            List<int> indices = astr.Level0Semis;
+            List<int> indices = astr.Level0Semis; // these are the breaks between expressions
 
             for (int i = 0; i<indices.Count; i++)
             {
-                int endIndex = indices [i];
+                int endIndex = indices [i]; // stop copying after this character
 
                 string partial = str.Substring (startIndex, endIndex - startIndex + 1);
                 string trimmed = partial.Trim (new char [] {' '});
@@ -46,7 +50,8 @@ namespace Main
                 startIndex = endIndex + 1;
             }
 
-            if (startIndex != str.Length - 1)
+            // one more outside of loop if input string does not end in semicolon
+            if (startIndex < str.Length - 1)
             {
                 string partial = str.Substring (startIndex, str.Length - startIndex);
                 string trimmed = partial.Trim (new char [] {' '});
@@ -61,8 +66,6 @@ namespace Main
         {
             throw new NotImplementedException ("ctor");
         }
-
-        //**************************************************************************
 
         // Add - add a string or an annotated string to existing list
 
