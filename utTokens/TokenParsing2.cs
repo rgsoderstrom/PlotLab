@@ -9,9 +9,9 @@ namespace Main
 {
     public partial class TokenParsing
     {
-        internal List<IToken> ParsingPassTwo (List<IToken> initial)
+        internal TokenSet ParsingPassTwo (TokenSet initial)
         {
-            List<IToken> edited = LookupAlphanumerics (initial);
+            TokenSet edited = LookupAlphanumerics (initial);
 
             edited = IdentifyParens (edited); // grouping, function args, sub matrix
 
@@ -35,7 +35,7 @@ namespace Main
 
         // label operators as binary or unary. in-place
 
-        List<IToken> IdentifyOperatorType (List<IToken> initial)
+        TokenSet IdentifyOperatorType (TokenSet initial)
         {
             //
             // find all operator tokens
@@ -46,7 +46,7 @@ namespace Main
 
             while (start < initial.Count)
             {
-                int index = initial.FindIndex (start, delegate (IToken tok) {return tok.Type == TokenType.Operator;});
+                int index = initial.FindIndex (start, TokenType.Operator);
 
                 if (index == -1)
                     break;
@@ -90,7 +90,7 @@ namespace Main
 
         // Assign a more specific type to an Alphanumeric
 
-        List<IToken> LookupAlphanumerics (List<IToken> initial)
+        TokenSet LookupAlphanumerics (TokenSet initial)
         {
             for (int i = 0; i<initial.Count; i++)
             {
@@ -122,9 +122,9 @@ namespace Main
         //    FunctionParens,  // Func1 (P, Q, R, S)
         //    SubmatrixParens, // ZMat (Rs, Cs); % (row select, col select)
 
-        List<IToken> IdentifyParens (List<IToken> tokens)
+        TokenSet IdentifyParens (TokenSet tokens)
         {
-            List<IToken> edited = new List<IToken> ();
+            TokenSet edited = new TokenSet ();
 
             for (int i = 0; i<tokens.Count; i++)
             {
@@ -174,7 +174,7 @@ namespace Main
 
         // for any Bracket tokens, identify top-level (i.e. same nesting level as opening bracket) separator
 
-        List<IToken> IdentifyBrackets (List<IToken> initial)
+        TokenSet IdentifyBrackets (TokenSet initial)
         {
             const char NoneFound = '?'; // no separators found
 
@@ -239,9 +239,7 @@ namespace Main
 
         // replace transpose operator by function call
 
-        private bool IsTransposeToken (IToken tok) {return tok.Type == TokenType.Transpose;}
-
-        private List<IToken> ReplaceTransposeOps (List<IToken> initial)
+        private TokenSet ReplaceTransposeOps (TokenSet initial)
         {
             List<int> transposeIndices = new List<int> ();
 
@@ -249,7 +247,7 @@ namespace Main
 
             while (start < initial.Count)
             {
-                int index = initial.FindIndex (start, IsTransposeToken);
+                int index = initial.FindIndex (start, TokenType.Transpose);
 
                 if (index == -1)
                     break;
@@ -262,7 +260,7 @@ namespace Main
             if (transposeIndices.Count == 0)
                 return initial;  
 
-            List<IToken> edited = new List<IToken> ();
+            TokenSet edited = new TokenSet ();
             int get = 0;
 
             foreach (int index in transposeIndices)
@@ -291,9 +289,9 @@ namespace Main
         //
         //
         //
-        List<IToken> BindUnaryOperators (List<IToken> initial)
+        TokenSet BindUnaryOperators (TokenSet initial)
         {
-            List<IToken> edited = new List<IToken> ();
+            TokenSet edited = new TokenSet ();
 
             List<int> operatorIndices = new List<int> ();
 
@@ -301,7 +299,7 @@ namespace Main
 
             while (start < initial.Count)
             {
-                int index = initial.FindIndex (start, delegate (IToken tok) {return tok.Type == TokenType.UnaryOperator;});
+                int index = initial.FindIndex (start, TokenType.UnaryOperator);
 
                 if (index == -1)
                     break;
@@ -364,9 +362,9 @@ namespace Main
 
         //*************************************************************************************************
 
-        private List<IToken> CombineTokensIntoPairs (List<IToken> initial)
+        private TokenSet CombineTokensIntoPairs (TokenSet initial)
         {
-            List<IToken> edited = new List<IToken> ();
+            TokenSet edited = new TokenSet ();
 
             for (int i=0; i<initial.Count-1; i++)
             {
@@ -407,7 +405,7 @@ namespace Main
 
         //*************************************************************************************************
 
-        private List<IToken> RenameTwoCharOperator (List<IToken> initial)
+        private TokenSet RenameTwoCharOperator (TokenSet initial)
         {
             for (int i=0; i<initial.Count; i++)
                 if (initial [i].Type == TokenType.TwoCharOperator)

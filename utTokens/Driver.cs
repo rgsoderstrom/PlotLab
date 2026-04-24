@@ -15,7 +15,7 @@ namespace utTokens
 {
     internal class Driver
     {
-     // static readonly string InputMFileName = @"..\..\..\TokenUtilsTests.m";
+     // static readonly string InputMFileName = @"..\..\..\Examples\TokenUtilsTests.m";
         static readonly string InputMFileName = @"..\..\..\Examples\TokenTests.m";
 
         static void Print (string str)
@@ -35,8 +35,8 @@ namespace utTokens
                     if (raw.Length > 0)
                     {
                         bool ps = false; // print separator
-                        ps |= AnnotatedStringTest (raw);
-                        //ps |= TokenParsingTest (raw);
+                        //ps |= AnnotatedStringTest (raw);
+                        ps |= TokenParsingTest (raw);
                         //ps |= TokenUtilsTest (raw);
                         
                         if (ps) Print ("===========================================");                    }
@@ -80,26 +80,31 @@ namespace utTokens
         //***********************************************************************
         //***********************************************************************
 
-        static private bool TokenParsingTest (string raw)
+        static private bool TokenParsingTest (string str)
         {
-            string text = InputLineProcessor.PreprocessInputLine (raw);
+            string text = InputLineProcessor.PreprocessInputLine (str);
 
             if (text.Length == 0)
                 return false;
 
-            AnnotatedString annotated = new AnnotatedString (text);
+            AnnotatedStringSet annSet = new AnnotatedStringSet (text);
 
-          //Print (annotated.ToString ());
-            Print (annotated.Plain.ToString ());
+            for (int i=0; i<annSet.Count; i++)
+            { 
+                AnnotatedString annotated = annSet [i];
+              //Print (annotated.ToString ());
+                Print (annotated.Plain.ToString ());
 
-            //
-            // pass each annotated string to token processor
-            //
-            TokenParsing parser = new TokenParsing ();
-            List<IToken> statementtokens = parser.StringToTokens (annotated);
+             // pass each annotated string to token processor
+                TokenParsing parser = new TokenParsing ();
+                TokenSet statementtokens = parser.StringToTokens (annotated);
 
-            foreach (IToken tok in statementtokens)
-                Print (tok.ToString ());
+                foreach (IToken tok in statementtokens)
+                    Print (tok.ToString ());
+
+                if (i + 1 < annSet.Count)
+                    Print ("");
+            }
 
             return true;
         }

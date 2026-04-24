@@ -359,7 +359,10 @@ namespace Main
             {
                 int index = semicolons [0];
                 if (index == CharacterCount - 1)
+                {
+                    annotatedChars.RemoveAt (index);
                     SuppressOutput = true;
+                }
             }
 
             else
