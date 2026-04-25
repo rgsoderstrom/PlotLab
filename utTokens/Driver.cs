@@ -35,8 +35,8 @@ namespace utTokens
                     if (raw.Length > 0)
                     {
                         bool ps = false; // print separator
-                        //ps |= AnnotatedStringTest (raw);
-                        ps |= TokenParsingTest (raw);
+                        ps |= AnnotatedStringTest (raw);
+                        //ps |= TokenParsingTest (raw);
                         //ps |= TokenUtilsTest (raw);
                         
                         if (ps) Print ("===========================================");                    }
@@ -87,22 +87,25 @@ namespace utTokens
             if (text.Length == 0)
                 return false;
 
+            Print ("");
+            Print ("File line: " + str);
+            Print ("After preprocess: " + text);
+            Print ("");
+
             AnnotatedStringSet annSet = new AnnotatedStringSet (text);
 
             for (int i=0; i<annSet.Count; i++)
             { 
                 AnnotatedString annotated = annSet [i];
-              //Print (annotated.ToString ());
                 Print (annotated.Plain.ToString ());
 
              // pass each annotated string to token processor
                 TokenParsing parser = new TokenParsing ();
                 TokenSet statementtokens = parser.StringToTokens (annotated);
 
-                foreach (IToken tok in statementtokens)
-                    Print (tok.ToString ());
+                Print (statementtokens.ToString ());
 
-                if (i + 1 < annSet.Count)
+                if (i + 1 < annSet.Count) // print separator if more to be printed
                     Print ("");
             }
 

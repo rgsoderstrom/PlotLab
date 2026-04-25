@@ -81,6 +81,25 @@ namespace Main
         {
             return new TokenSetEnum (tokens);
         }
+
+        //*******************************************************************
+        //
+        // ToString
+        //
+
+        public override string ToString ()
+        {
+            string str = "";
+
+            str += "SuppressPrinting = " + SuppressPrinting.ToString () + "\n";
+            str += "\n" + Count + " tokens" + "\n";
+
+            foreach (IToken tok in tokens)
+                str += tok.ToString () + "\n";
+
+            return str;
+        }
+
     }
 
     //**************************************************************************
