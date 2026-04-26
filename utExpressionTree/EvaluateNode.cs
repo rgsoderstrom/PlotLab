@@ -52,7 +52,7 @@ namespace Main
                 //    break;
 
 
-                default: throw new Exception ("Operator not found: " + Operator.ToString ());
+                default: throw new Exception ("ExpressionTree Evaluate can't find: " + Operator.ToString ());
                 //default: throw new Exception ("Evaluate: node type not supported: " + NodeType.ToString ());
             }
 

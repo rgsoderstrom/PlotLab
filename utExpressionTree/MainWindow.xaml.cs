@@ -48,23 +48,18 @@ namespace utExpressionTree
                 {
                     if (raw.Length > 0)
                     {
-                        string text = InputLineProcessor.RemovePromptAndComments (raw);
+                        string text = InputLineProcessor.PreprocessInputLine (raw);
 
                         if (text.Length == 0)
                             continue;
 
-                        Console.WriteLine (text);
-
-                        Counter++;
-
-                        text = InputLineProcessor.SqueezeConsecutiveSpaces (text);
                         AnnotatedString annotated = new AnnotatedString (text);
 
                         Console.WriteLine (annotated.ToString ());
 
                         //**********************************************************************
 
-                        if (false) // show token parsing
+                        if (true) // show token parsing
                         { 
                             // first pass
                             TokenParsing parsing = new TokenParsing ();
@@ -72,7 +67,7 @@ namespace utExpressionTree
                             TextBox tb = new TextBox ();
 
                             // first pass
-                            List<IToken> tokens = parsing.ParsingPassOne (annotated);
+                            TokenSet tokens = parsing.ParsingPassOne (annotated);
                             tb.Text += "First pass:\n";
                             foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
 
@@ -94,7 +89,7 @@ namespace utExpressionTree
 
                         ExpressionTree tree = new ExpressionTree (annotated);
 
-                        if (false) // show expression tree
+                        if (true) // show expression tree
                         { 
                             Window win2 = new Window ();
                             TreeView tv = new TreeView ();

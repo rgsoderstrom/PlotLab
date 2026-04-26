@@ -48,13 +48,13 @@ namespace Main
         public ExpressionTreeNode (AnnotatedString expr)
         {
             TokenParsing parsing = new TokenParsing ();
-            List<IToken> tokens = parsing.StringToTokens (expr);
+            TokenSet tokens = parsing.StringToTokens (expr);
 
             ConstructorCommon (tokens);
             Compact ();
         }
 
-        ExpressionTreeNode (List<IToken> tokens)
+        ExpressionTreeNode (TokenSet tokens)
         {
             ConstructorCommon (tokens);
             Compact ();
@@ -67,7 +67,7 @@ namespace Main
         //
         // Invoked by both constructors
         //
-        void ConstructorCommon (List<IToken> tokens)
+        void ConstructorCommon (TokenSet tokens)
         {
             if (NodeCounter++ > 1000)
             {

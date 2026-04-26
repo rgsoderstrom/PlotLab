@@ -11,7 +11,7 @@ namespace Main
     public class AnnotatedString
     {
         // private members
-        private List<AnnotatedChar> annotatedChars;
+        private List<AnnotatedChar> annotatedChars = new List<AnnotatedChar> ();
 
         //*************************************************************************
 
@@ -112,6 +112,9 @@ namespace Main
 
         internal AnnotatedString (string text)
         {
+            if (text.Length == 0)
+                throw new Exception ("Empty string passed to AnnotatedString ctor");
+
             try
             { 
                 PassOne (text);

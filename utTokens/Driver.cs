@@ -35,8 +35,8 @@ namespace utTokens
                     if (raw.Length > 0)
                     {
                         bool ps = false; // print separator
-                        ps |= AnnotatedStringTest (raw);
-                        //ps |= TokenParsingTest (raw);
+                        //ps |= AnnotatedStringTest (raw);
+                        ps |= TokenParsingTest (raw);
                         //ps |= TokenUtilsTest (raw);
                         
                         if (ps) Print ("===========================================");                    }
@@ -61,6 +61,8 @@ namespace utTokens
 
             if (text.Length == 0)
                 return false;
+
+            Print ("Cleaned file line: " + text);
 
             AnnotatedStringSet annotated = new AnnotatedStringSet (text);
 

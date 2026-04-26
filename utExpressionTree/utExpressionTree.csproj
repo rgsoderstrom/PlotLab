@@ -81,9 +81,6 @@
     <Compile Include="..\Main\InternalFunctions.cs">
       <Link>InternalFunctions.cs</Link>
     </Compile>
-    <Compile Include="..\utInputLine\InputLineProcessor.cs">
-      <Link>InputLineProcessor.cs</Link>
-    </Compile>
     <Compile Include="..\utInputLine\InputLineUtils.cs">
       <Link>InputLineUtils.cs</Link>
     </Compile>
@@ -93,6 +90,9 @@
     <Compile Include="..\utTokens\AnnotatedString.cs">
       <Link>AnnotatedString.cs</Link>
     </Compile>
+    <Compile Include="..\utTokens\AnnotatedStringSet.cs">
+      <Link>AnnotatedStringSet.cs</Link>
+    </Compile>
     <Compile Include="..\utTokens\Token.cs">
       <Link>Token.cs</Link>
     </Compile>
@@ -101,6 +101,9 @@
     </Compile>
     <Compile Include="..\utTokens\TokenParsing2.cs">
       <Link>TokenParsing2.cs</Link>
+    </Compile>
+    <Compile Include="..\utTokens\TokenSet.cs">
+      <Link>TokenSet.cs</Link>
     </Compile>
     <Compile Include="..\utTokens\TokenTypes.cs">
       <Link>TokenTypes.cs</Link>

@@ -15,7 +15,7 @@ namespace Main
         //*************************************************************************************************
         //*************************************************************************************************
 
-        internal void BuildNodeFrom_List (List<IToken> tokens)
+        internal void BuildNodeFrom_List (TokenSet tokens)
         {
 
             //Console.WriteLine ("BuildNodeFrom_List of tokens:");
@@ -69,8 +69,8 @@ namespace Main
 
             //Console.WriteLine ("Operator: " + Operator + " Type: " + NodeType);
 
-            List<IToken> left  = new List<IToken> ();
-            List<IToken> right = new List<IToken> ();
+            TokenSet left  = new TokenSet ();
+            TokenSet right = new TokenSet ();
 
             for (int i = 0; i<tokens.Count; i++)
             {
@@ -101,7 +101,7 @@ namespace Main
         //*************************************************************************************************
         //*************************************************************************************************
 
-        void BuildNodeFrom_GroupingParens (List<IToken> tokens)
+        void BuildNodeFrom_GroupingParens (TokenSet tokens)
         {
             //
             // remove leading and trailing parens
@@ -123,7 +123,7 @@ namespace Main
 
         // passed a single token of the form: [xxxxxx]
 
-        void BuildNodeFrom_Brackets (List<IToken> tokens)
+        void BuildNodeFrom_Brackets (TokenSet tokens)
         {
             TokenParsing parser = new TokenParsing ();
 
@@ -198,7 +198,7 @@ namespace Main
         //*************************************************************************************************
         //*************************************************************************************************
 
-        void BuildNodeFrom_Numeric (List<IToken> tokens)
+        void BuildNodeFrom_Numeric (TokenSet tokens)
         {
             bool valid = double.TryParse (tokens [0].AnnotatedText.Plain, out double scalar);
 
@@ -214,7 +214,7 @@ namespace Main
         //*************************************************************************************************
         //*************************************************************************************************
 
-        void BuildNodeFrom_VariableName (List<IToken> tokens)
+        void BuildNodeFrom_VariableName (TokenSet tokens)
         {
             Operator = tokens [0].AnnotatedText.Plain;
             NodeType = tokens [0].Type;
@@ -227,7 +227,7 @@ namespace Main
         //*************************************************************************************************
         //*************************************************************************************************
 
-        void BuildNodeFrom_String (List<IToken> tokens)
+        void BuildNodeFrom_String (TokenSet tokens)
         {
             NodeType = tokens [0].Type;
             Value = new PLString (tokens [0].AnnotatedText.Plain);
@@ -238,7 +238,7 @@ namespace Main
 
         // an operator with no operands
 
-        void BuildNodeFrom_Operator (List<IToken> tokens)
+        void BuildNodeFrom_Operator (TokenSet tokens)
         {
             Operator = tokens [0].AnnotatedText.Plain;
             NodeType = tokens [0].Type;
