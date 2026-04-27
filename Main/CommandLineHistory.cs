@@ -8,19 +8,18 @@ using System.Threading.Tasks;
 using Common;
 using PLFileSystem;
 
-namespace Main
+namespace PLMain
 {
     public static class CommandLineHistory
     {
-     //   readonly string prompt;
-        static List<string> history = new List<string> ();
-        static public List<string> History {get {return history;}}
+        private static readonly List<string> history = new List<string> ();
+        public  static List<string> History {get {return history;}}
 
-        static int NextFwd = 1;
-        static int NextBack = -1;
-        static int Newest {get {return history.Count - 1;}}
+        private static int NextFwd = 1;
+        private static int NextBack = -1;
+        private static int Newest {get {return history.Count - 1;}}
 
-        static string historyFileName = "CommandHistory.txt";
+        private static readonly string historyFileName = "CommandHistory.txt";
 
         public static void Open ()
         {
@@ -60,7 +59,7 @@ namespace Main
         private static readonly CommandHistoryWriteOptions writeOption = CommandHistoryWriteOptions.WriteUnique;
         private static readonly int maxLineCount = 100; // don't write more than this many lines
 
-        static public void Close (bool editOnClose)
+        public static void Close (bool editOnClose)
         {
             try
             {
@@ -115,7 +114,7 @@ namespace Main
             }
         }
 
-        static public void Clear ()
+        public static void Clear ()
         {
             history.Clear ();
         }
@@ -132,8 +131,11 @@ namespace Main
         {
             bool AddFlag = false;
 
-            if (history.Count == 0) AddFlag = true;
-            else if (string.Compare (history [history.Count - 1], str) != 0) AddFlag = true; // don't add same string twice in a row
+            if (history.Count == 0) 
+                AddFlag = true;
+
+            else if (string.Compare (history [history.Count - 1], str) != 0) 
+                AddFlag = true; // don't add same string twice in a row
 
             if (AddFlag)
             {
@@ -145,26 +147,35 @@ namespace Main
 
         //*****************************************************************
 
-        static bool IsValid (int index)
+        private static bool IsValid (int index)
         {
             return (index >= 0) && (index < history.Count);
         }
 
         //*****************************************************************
 
-        public static bool StepBack (ref string cmnd, string lookFor)
+        public static bool StepBack (ref string cmnd)
+        {
+            bool valid = IsValid (NextBack);
+
+            if (valid)
+            {
+                cmnd = history [NextBack];
+                NextBack--;
+                NextFwd--;
+            }
+
+            return valid;
+        }
+
+        //*****************************************************************
+
+        public static bool SearchBack (ref string cmnd, string lookFor)
         {
             try
             { 
-                while (IsValid (NextBack))
+                while (StepBack (ref cmnd))
                 {
-                    cmnd = history [NextBack];
-                    NextBack--;
-                    NextFwd--;
-
-                    if (lookFor == null || lookFor.Length == 0)
-                        return true;
-
                     if (cmnd.Length >= lookFor.Length)
                         if (lookFor == cmnd.Substring (0, lookFor.Length))
                             return true;
@@ -173,7 +184,7 @@ namespace Main
 
             catch (Exception)
             {
-                throw new Exception ("StepBack exception");
+                throw new Exception ("SearchBack exception");
             }
 
             return false;
@@ -181,19 +192,26 @@ namespace Main
 
         //*****************************************************************
 
-        public static bool StepForward (ref string cmnd, string lookFor)
+        public static bool StepForward (ref string cmnd)
+        {
+            bool valid = IsValid (NextFwd);
+
+            if (valid)
+            {
+                cmnd = history [NextFwd];
+                NextBack++;
+                NextFwd++;
+            }
+
+            return valid;
+        }
+
+        public static bool SearchForward (ref string cmnd, string lookFor)
         {
             try
             {
-                while (IsValid (NextFwd))
+                while (StepForward (ref cmnd))
                 {
-                    cmnd = history [NextFwd];
-                    NextBack++;
-                    NextFwd++;
-
-                    if (lookFor == null || lookFor.Length == 0)
-                        return true;
-
                     if (cmnd.Length >= lookFor.Length)
                         if (lookFor == cmnd.Substring (0, lookFor.Length))
                             return true;
@@ -205,7 +223,7 @@ namespace Main
 
             catch (Exception)
             {
-                throw new Exception ("StepForward exception");
+                throw new Exception ("SearchForward exception");
             }
 
             return false;
