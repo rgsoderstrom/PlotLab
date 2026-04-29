@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 //using PLKernel;
 
-namespace Main
+namespace PLMain
 {
     public static partial class Utils
     {

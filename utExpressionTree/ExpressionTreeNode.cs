@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using PLCommon;
 using PLLibrary;
 
-namespace Main
+namespace PLMain
 {
     internal partial class ExpressionTreeNode
     {

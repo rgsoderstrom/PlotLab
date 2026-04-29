@@ -11,7 +11,7 @@ using PLFileSystem;
 using PLWorkspace;
 //using ScriptPreprocess;
 
-namespace Main
+namespace PLMain
 {
     public class ScriptProcessor
     {

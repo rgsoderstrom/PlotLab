@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using PLCommon;
 using PLWorkspace;
 
-namespace Main
+namespace PLMain
 {
     public class ExpressionTree
     {

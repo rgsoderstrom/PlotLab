@@ -8,7 +8,7 @@ using Common;
 using PLCommon;
 using PLWorkspace;
 
-namespace Main
+namespace PLMain
 {
     internal partial class ExpressionTreeNode
     {

@@ -8,7 +8,7 @@ using PLFileSystem;
 using PLWorkspace;
 using PLSystem;
 
-namespace Main
+namespace PLMain
 {
     public class InputLineProcessor_Legacy
     {

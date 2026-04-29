@@ -12,7 +12,7 @@ using PLLibrary;
 using PLFileSystem;
 using PLSystem;
 
-namespace Main
+namespace PLMain
 {
     public partial class UserConsole : Window
     {

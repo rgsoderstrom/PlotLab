@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{2E4BCA7F-A6B9-4288-81AC-76EF1B1536CA}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Main</RootNamespace>
+    <RootNamespace>PLMain</RootNamespace>
     <AssemblyName>Main</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -68,6 +68,9 @@
     </Compile>
     <Compile Include="..\utTokens\TokenParsing2.cs">
       <Link>TokenParsing2.cs</Link>
+    </Compile>
+    <Compile Include="..\utTokens\TokenSet.cs">
+      <Link>TokenSet.cs</Link>
     </Compile>
     <Compile Include="..\utTokens\TokenTypes.cs">
       <Link>TokenTypes.cs</Link>

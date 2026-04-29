@@ -11,7 +11,7 @@ using PLFileSystem;
 using PLLibrary;
 using PLWorkspace;
 
-namespace Main
+namespace PLMain
 {
     public delegate void PrintFunction (string str);
 
@@ -37,8 +37,8 @@ namespace Main
         // returns parallel lists of line types and annotated strings
         //
         public void ClassifyInputLine (string str, 
-                                       ref List<LineType> statementTypes, 
-                                       ref List<AnnotatedString> individualStatements)
+                                       ref List<LineType>     statementTypes, 
+                                       ref AnnotatedStringSet individualStatements)
         {
             // remove prompt, comments and extra spaces
             string cleaned = PreprocessInputLine (str);
@@ -48,10 +48,9 @@ namespace Main
                 return;
 
             // annotate entire input line
-            AnnotatedString annotated = new AnnotatedString (cleaned);
+            individualStatements = new AnnotatedStringSet (cleaned);
 
-            // split a line containing several statements into separate lines
-            individualStatements = annotated.SplitAtLevel0Semicolon ();
+
 
             // initially mark each statement as Unknown
             for (int i=0; i<individualStatements.Count; i++)

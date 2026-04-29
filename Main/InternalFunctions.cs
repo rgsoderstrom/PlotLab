@@ -12,7 +12,7 @@ using PLCommon;
 // Internal Functions - not directly invoked by user
 //
 
-namespace Main
+namespace PLMain
 {
     static public class InternalFunctions
     {

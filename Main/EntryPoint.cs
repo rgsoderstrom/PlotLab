@@ -8,7 +8,7 @@ using System.Windows.Controls;
 using PLCommon;
 using PLWorkspace;
 
-namespace Main
+namespace PLMain
 {
     public class EntryPoint
     {
@@ -30,7 +30,7 @@ namespace Main
                     TextBox tb = new TextBox ();
 
                     // first pass
-                    List<IToken> tokens = parsing.ParsingPassOne (new AnnotatedString (expression));
+                    TokenSet tokens = parsing.ParsingPassOne (new AnnotatedString (expression));
                     tb.Text += "First pass:\n";
                     foreach (Token tok in tokens) tb.Text += tok.ToString () + "\n";
 
