@@ -2,60 +2,89 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using Common;
 using PLCommon;
 using PLFileSystem;
-
 using PLMain;
 
 namespace utCommandLineHistory
 {
-    internal class Program
+    internal partial class Program
     {
-        static void Print (string str)
-        {
-            Console.WriteLine (str);
-        }
-
         static void Main (string [] args)
         { 
-            string fromHistory = "";
+            string fromHistory;
 
             FileSystem.Open (Print);
             EventLog.Open (@"..\..\log.txt");
 
             CommandLineHistory.Open ();
+            //LoadInitialHistory ();
 
-            CommandLineHistory.Add ("Line 1");
-            CommandLineHistory.Add ("Line 2");
-            CommandLineHistory.Add ("Line 3");
-            CommandLineHistory.Add ("Another Line 3");
-            CommandLineHistory.Add ("Line 4");
-            CommandLineHistory.Add ("Line 5");
-            CommandLineHistory.Add ("Line 6");
+            PrintLine (CommandLineHistory.ToString ());
 
-            //while (CommandLineHistory.StepBack (ref fromHistory))
-            //    Print (fromHistory);
+            foreach (TestStep thisStep in TestSequence1)
+            {
+                fromHistory = null;
 
-            //if (CommandLineHistory.SearchBack (ref fromHistory, "Ano"))
-            //    Print ("Found: " + fromHistory);
-            //else
-            //    Print ("Not found");
-
-            if (CommandLineHistory.SearchBack (ref fromHistory, "Ano"))
-            { 
-                if (CommandLineHistory.StepForward (ref fromHistory))
+                switch (thisStep.cmnd)
                 {
-                    CommandLineHistory.StepForward (ref fromHistory);
-                    Print ("Found: " + fromHistory);
+                    case Command.Reset:
+                        CommandLineHistory.ResetIndices ();
+                        break; 
+                        
+                    case Command.Add:
+                        CommandLineHistory.Add (thisStep.arg);
+                        break; 
+                        
+                    case Command.Clear:
+                        CommandLineHistory.Clear ();
+                        break; 
+                        
+                    case Command.StepBackward:
+                        Print ("StepBackward:   ");
+                        CommandLineHistory.StepBackward (out fromHistory);
+                        break; 
+                        
+                    case Command.SearchBackward:
+                        Print ("SearchBackward: ");
+                        CommandLineHistory.SearchBackward (out fromHistory, thisStep.arg);
+                        break; 
+                                                
+                    case Command.StepFwd:
+                        Print ("StepForward:    ");
+                        CommandLineHistory.StepForward (out fromHistory);
+                        break; 
+                        
+                    case Command.SearchFwd:
+                        Print ("SearchForward:  ");
+                        CommandLineHistory.SearchForward (out fromHistory, thisStep.arg);
+                        break; 
+                        
+                    default:
+                        PrintLine ("Unexpected command: " + thisStep.cmnd);
+                        break;
                 }
-                else
-                    Print ("StepFwd not valid");
+
+                if (fromHistory != null)
+                    PrintLine (fromHistory);
             }
-            else
-                Print ("Not found");
+
+            CommandLineHistory.Close (false);
         }
+
+        static void PrintLine (string str)
+        {
+            Console.WriteLine (str);
+        }
+
+        static void Print (string str)
+        {
+            Console.Write (str);
+        }
+
     }
 }

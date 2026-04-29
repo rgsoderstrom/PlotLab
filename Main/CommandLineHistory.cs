@@ -1,9 +1,14 @@
-﻿using System;
+﻿
+/*
+    CommandLineHistory
+        - this version does not support "!" for command recall
+*/
+
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Common;
 using PLFileSystem;
@@ -12,12 +17,11 @@ namespace PLMain
 {
     public static class CommandLineHistory
     {
-        private static readonly List<string> history = new List<string> ();
-        public  static List<string> History {get {return history;}}
+        private static readonly List<string> History = new List<string> ();
 
         private static int NextFwd = 1;
         private static int NextBack = -1;
-        private static int Newest {get {return history.Count - 1;}}
+        private static int Newest {get {return History.Count - 1;}}
 
         private static readonly string historyFileName = "CommandHistory.txt";
 
@@ -32,7 +36,7 @@ namespace PLMain
                 {
                     if (raw.Length > 0)
                     {
-                        history.Add (raw);
+                        History.Add (raw);
                     }
                 }
 
@@ -55,8 +59,8 @@ namespace PLMain
 
         //*****************************************************************************************
 
-        enum CommandHistoryWriteOptions {WriteAll, WriteUnique, WriteLatestUnique};
-        private static readonly CommandHistoryWriteOptions writeOption = CommandHistoryWriteOptions.WriteUnique;
+        enum FileWriteOptions {WriteAll, WriteUnique, WriteLatestUnique};
+        private static readonly FileWriteOptions writeOption = FileWriteOptions.WriteUnique;
         private static readonly int maxLineCount = 100; // don't write more than this many lines
 
         public static void Close (bool editOnClose)
@@ -66,19 +70,19 @@ namespace PLMain
                 StreamWriter file = new StreamWriter (FileSystem.CommandHistoryFileDir + "\\" + historyFileName);
                 List<string> writeList;
 
-                if (writeOption == CommandHistoryWriteOptions.WriteAll)
+                if (writeOption == FileWriteOptions.WriteAll)
                 {
-                    writeList = history.ToList ();
+                    writeList = History.ToList ();
                 }
 
-                else if (writeOption == CommandHistoryWriteOptions.WriteUnique)
+                else if (writeOption == FileWriteOptions.WriteUnique)
                 {
-                    writeList = history.Distinct ().ToList ();
+                    writeList = History.Distinct ().ToList ();
                 }
 
                 else // write latest unique
                 { 
-                    List<string> hist = history.ToList ();
+                    List<string> hist = History.ToList ();
                     hist.Reverse ();
                     writeList = hist.Distinct ().ToList ();
                     writeList.Reverse ();
@@ -116,7 +120,9 @@ namespace PLMain
 
         public static void Clear ()
         {
-            history.Clear ();
+            History.Clear ();
+            NextBack = Newest;
+            NextFwd = NextBack + 2;
         }
 
         public static void ResetIndices ()
@@ -131,15 +137,15 @@ namespace PLMain
         {
             bool AddFlag = false;
 
-            if (history.Count == 0) 
+            if (History.Count == 0) 
                 AddFlag = true;
 
-            else if (string.Compare (history [history.Count - 1], str) != 0) 
+            else if (string.Compare (History [History.Count - 1], str) != 0) 
                 AddFlag = true; // don't add same string twice in a row
 
             if (AddFlag)
             {
-                history.Add (str);
+                History.Add (str);
                 NextBack = Newest;
                 NextFwd = NextBack + 2;
             }
@@ -149,35 +155,39 @@ namespace PLMain
 
         private static bool IsValid (int index)
         {
-            return (index >= 0) && (index < history.Count);
+            return (index >= 0) && (index < History.Count);
         }
 
         //*****************************************************************
+        //*****************************************************************
+        //*****************************************************************
 
-        public static bool StepBack (ref string cmnd)
+        public static bool StepBackward (out string nextBackCmnd)
         {
             bool valid = IsValid (NextBack);
 
             if (valid)
             {
-                cmnd = history [NextBack];
+                nextBackCmnd = History [NextBack];
                 NextBack--;
                 NextFwd--;
             }
+            else
+                nextBackCmnd = "";
 
             return valid;
         }
 
         //*****************************************************************
 
-        public static bool SearchBack (ref string cmnd, string lookFor)
+        public static bool SearchBackward (out string nextBackCmnd, string lookFor)
         {
             try
             { 
-                while (StepBack (ref cmnd))
+                while (StepBackward (out nextBackCmnd))
                 {
-                    if (cmnd.Length >= lookFor.Length)
-                        if (lookFor == cmnd.Substring (0, lookFor.Length))
+                    if (nextBackCmnd.Length >= lookFor.Length)
+                        if (lookFor == nextBackCmnd.Substring (0, lookFor.Length))
                             return true;
                 }
             }
@@ -191,29 +201,35 @@ namespace PLMain
         }
 
         //*****************************************************************
+        //*****************************************************************
+        //*****************************************************************
 
-        public static bool StepForward (ref string cmnd)
+        public static bool StepForward (out string nextFwdCmnd)
         {
             bool valid = IsValid (NextFwd);
 
             if (valid)
             {
-                cmnd = history [NextFwd];
+                nextFwdCmnd = History [NextFwd];
                 NextBack++;
                 NextFwd++;
             }
+            else
+                nextFwdCmnd = "";
 
             return valid;
         }
 
-        public static bool SearchForward (ref string cmnd, string lookFor)
+        //*****************************************************************
+
+        public static bool SearchForward (out string nextFwdCmnd, string lookFor)
         {
             try
             {
-                while (StepForward (ref cmnd))
+                while (StepForward (out nextFwdCmnd))
                 {
-                    if (cmnd.Length >= lookFor.Length)
-                        if (lookFor == cmnd.Substring (0, lookFor.Length))
+                    if (nextFwdCmnd.Length >= lookFor.Length)
+                        if (lookFor == nextFwdCmnd.Substring (0, lookFor.Length))
                             return true;
                 }
 
@@ -227,6 +243,18 @@ namespace PLMain
             }
 
             return false;
+        }
+
+        //*****************************************************************
+
+        public static new string ToString ()
+        {
+            string str = "";
+
+            for (int i=0; i<History.Count; i++)
+                str += i.ToString () + ":" + History [i] + "\n";
+
+            return str;
         }
     }
 }
