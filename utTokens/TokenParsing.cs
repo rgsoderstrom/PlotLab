@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 //using PLWorkspace;
 using PLLibrary;
 
-namespace Main
+namespace PLMain
 {
     public partial class TokenParsing
     {

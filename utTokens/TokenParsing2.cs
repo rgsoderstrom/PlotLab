@@ -5,7 +5,7 @@ using PLFileSystem;
 using PLWorkspace;
 using PLLibrary;
 
-namespace Main
+namespace PLMain
 {
     public partial class TokenParsing
     {

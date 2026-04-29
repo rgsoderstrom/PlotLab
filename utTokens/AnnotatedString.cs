@@ -6,7 +6,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Main
+namespace PLMain
 {
     public class AnnotatedString
     {
