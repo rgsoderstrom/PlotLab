@@ -15,18 +15,36 @@ namespace PLMain
 {
     public class AnnotatedStringSet
     {
-        private List<AnnotatedString> annotatedStrings = new List<AnnotatedString> ();
+        private readonly List<AnnotatedString> annotatedStrings = new List<AnnotatedString> ();
         public int Count {get {return annotatedStrings.Count;}}
 
         //**************************************************************************
 
         // ctors
 
+        public AnnotatedStringSet ()
+        {
+        }
+
+
         public AnnotatedStringSet (string str)
         {
+            Add (str);
+        }
+
+        //*************************************************************************
+
+        public void Clear ()
+        {
+            annotatedStrings.Clear ();
+        }
+
+        public void Add (string str)
+        { 
+            // start by converting entire input str to one AnnotatedString
             AnnotatedString astr = new AnnotatedString (str);
 
-            // if input str is only a single expression, e.g. a = 123; annotate and we're done
+            // if it's only a single expression, e.g. a = 123; add to collection and we're done
             if (astr.IsCompound == false)
             {
                 annotatedStrings.Add (astr);
@@ -58,25 +76,6 @@ namespace PLMain
 
                 annotatedStrings.Add (new AnnotatedString (trimmed));
             }
-        }
-
-        //**************************************************************************
-
-        public AnnotatedStringSet (AnnotatedString astr)
-        {
-            throw new NotImplementedException ("ctor");
-        }
-
-        // Add - add a string or an annotated string to existing list
-
-        public void Add (string str)
-        {
-            throw new NotImplementedException ("Add");
-        }
-
-        public void Add (AnnotatedString astr)
-        {
-            throw new NotImplementedException ("Add");
         }
 
         //*******************************************************************
