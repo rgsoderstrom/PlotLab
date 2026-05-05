@@ -36,8 +36,8 @@ namespace utTokens
                     {
                         bool ps = false; // print separator
                         //ps |= AnnotatedStringTest (raw);
-                        ps |= AnnotatedStringSetTest (raw);
-                        //ps |= TokenParsingTest (raw);
+                        //ps |= AnnotatedStringSetTest (raw);
+                        ps |= TokenParsingTest (raw);
                         //ps |= TokenUtilsTest (raw);
                         
                         if (ps) Print ("===========================================");                    }
@@ -98,7 +98,7 @@ namespace utTokens
 
         static AnnotatedStringSet annotatedSet = new AnnotatedStringSet ();
 
-        static private bool AnnotatedStringSetTest (string str)
+        static private bool AnnotatedStringSetTest (string str, bool verbose = true)
         {
             AnnotatedStringTest (str, false);
 
@@ -107,6 +107,10 @@ namespace utTokens
 
             annotatedSet.Add (annotated);
             annotated = null;
+
+            if (verbose == false)
+                return false;
+
 
             Print ("annotatedSet count = " + annotatedSet.Count);
 
@@ -124,8 +128,6 @@ namespace utTokens
                     Print ("------------------------");
             }
 
-         //   annotatedSet = null;
-
             return true;
         }
 
@@ -133,34 +135,28 @@ namespace utTokens
         //***********************************************************************
         //***********************************************************************
 
-        static private bool TokenParsingTest (string str)
+        static private bool TokenParsingTest (string str, bool verbose = true)
         {
-            string text = InputLineProcessor.PreprocessInputLine (str);
+            AnnotatedStringSetTest (str, false);
 
-            if (text.Length == 0)
+            if (annotatedSet.Count == 0)
                 return false;
 
-            Print ("");
-            Print ("File line: " + str);
-            Print ("After preprocess: " + text);
-            Print ("");
+            while (annotatedSet.Count > 0)
+            {
+                AnnotatedString annotated = annotatedSet.GetOldest;
 
-            //AnnotatedStringSet annSet = new AnnotatedStringSet (text);
+                Print (annotated.Plain.ToString ());
 
-            //for (int i=0; i<annSet.Count; i++)
-            //{ 
-            //    AnnotatedString annotated = annSet [i];
-            //    Print (annotated.Plain.ToString ());
+                // pass each annotated string to token processor
+                TokenParsing parser = new TokenParsing ();
+                TokenSet statementtokens = parser.StringToTokens (annotated);
 
-            // // pass each annotated string to token processor
-            //    TokenParsing parser = new TokenParsing ();
-            //    TokenSet statementtokens = parser.StringToTokens (annotated);
+                Print (statementtokens.ToString ());
 
-            //    Print (statementtokens.ToString ());
-
-            //    if (i + 1 < annSet.Count) // print separator if more to be printed
-            //        Print ("");
-            //}
+                if (annotatedSet.Count != 0) // print separator if more to be printed
+                    Print ("");
+            }
 
             return true;
         }
