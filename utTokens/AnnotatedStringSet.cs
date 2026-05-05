@@ -15,56 +15,49 @@ namespace PLMain
 {
     public class AnnotatedStringSet
     {
-        private readonly List<AnnotatedString> annotatedStrings = new List<AnnotatedString> ();
+        // queue of complete AnnotatedStrings,
+        private readonly Queue<AnnotatedString> annotatedStrings = new Queue<AnnotatedString> ();
+
+        // number of complete string ready for processing
         public int Count {get {return annotatedStrings.Count;}}
 
         //**************************************************************************
-
-        // ctors
 
         public AnnotatedStringSet ()
         {
         }
 
-
-        public AnnotatedStringSet (string str)
-        {
-            Add (str);
-        }
-
         //*************************************************************************
 
-        public void Clear ()
+        public AnnotatedString GetOldest {get {return annotatedStrings.Dequeue ();}}
+        public void            Clear () {annotatedStrings.Clear ();}
+
+        public void Add (AnnotatedString astr)
         {
-            annotatedStrings.Clear ();
-        }
-
-        public void Add (string str)
-        { 
-            // start by converting entire input str to one AnnotatedString
-            AnnotatedString astr = new AnnotatedString (str);
-
-            // if it's only a single expression, e.g. a = 123; add to collection and we're done
             if (astr.IsCompound == false)
             {
-                annotatedStrings.Add (astr);
+                annotatedStrings.Enqueue (astr);
                 return;
             }
 
-            // if we get here str is a compound expression, e.g. a = 123; b = 456; c = 789;
-            // it will be split into a list of annotated strings
-            
+
+
+            // If we get here str is a compound expression, e.g. a = 123; b = 456; c = 789;
+            // It will be split into a list of annotated strings
+
             int startIndex = 0;
-            List<int> indices = astr.Level0Semis; // these are the breaks between expressions
+            List<int> indices = astr.Level0Semis; // these are indices of the breaks between expressions
+
+            string str = astr.Plain;
 
             for (int i = 0; i<indices.Count; i++)
             {
                 int endIndex = indices [i]; // stop copying after this character
 
                 string partial = str.Substring (startIndex, endIndex - startIndex + 1);
-                string trimmed = partial.Trim (new char [] {' '});
+                string trimmed = partial.Trim (new char [] { ' ' });
 
-                annotatedStrings.Add (new AnnotatedString (trimmed));
+                annotatedStrings.Enqueue (new AnnotatedString (trimmed));
                 startIndex = endIndex + 1;
             }
 
@@ -72,35 +65,10 @@ namespace PLMain
             if (startIndex < str.Length - 1)
             {
                 string partial = str.Substring (startIndex, str.Length - startIndex);
-                string trimmed = partial.Trim (new char [] {' '});
+                string trimmed = partial.Trim (new char [] { ' ' });
 
-                annotatedStrings.Add (new AnnotatedString (trimmed));
+                annotatedStrings.Enqueue (new AnnotatedString (trimmed));
             }
         }
-
-        //*******************************************************************
-        //
-        // Indexer
-        //
-        public AnnotatedString this [int index]
-        {
-            get
-            {
-                if (index >= 0 && index < annotatedStrings.Count)
-                    return annotatedStrings [index];
-
-                throw new IndexOutOfRangeException ("Index is out of range in AnnotatedStringSet indexer get.");
-            }
-
-            set
-            {
-                if (index >= 0 && index < annotatedStrings.Count)
-                    annotatedStrings [index] = value;
-
-                else
-                    throw new IndexOutOfRangeException ("Index is out of range in AnnotatedStringSet indexer set.");
-            }
-        }
-
     }
 }

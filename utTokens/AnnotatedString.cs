@@ -6,12 +6,38 @@
 using System;
 using System.Collections.Generic;
 
+using static System.Net.Mime.MediaTypeNames;
+
 namespace PLMain
 {
     public class AnnotatedString
     {
         // private members
         private List<AnnotatedChar> annotatedChars = new List<AnnotatedChar> ();
+
+        //*************************************************************************
+        //
+        // ctors
+        //
+        internal AnnotatedString (string text)
+        {
+            if (text.Length == 0)
+                return;
+
+            try
+            {
+                PassOne (text);
+                PassTwo ();
+                PassThree ();
+            }
+
+            catch (Exception ex)
+            {
+                throw new Exception ("Error in AnnotatedString ctor:\n" + ex.Message);
+                //throw new Exception ("Error in AnnotatedString ctor:\n" + ex.StackTrace);
+            }
+
+        }
 
         //*************************************************************************
 
@@ -45,9 +71,6 @@ namespace PLMain
         public int CharacterCount {get {return annotatedChars.Count;}}
         public int FinalBracketLevel {get {return annotatedChars [CharacterCount-1].BracketLevel;}}
 
-        private bool continues = false; // set true if ends in "..."
-        public  bool Continues {get {return continues;} private set {continues = value;}}
-        
         private bool alphanumericOnly = true;
         public  bool AlphanumericOnly {get {return alphanumericOnly;} set {alphanumericOnly = value;}}
 
@@ -59,9 +82,10 @@ namespace PLMain
 
         //************************************************************************
 
-        // Used for input lines with alphanumerics only.
+        // Useful for input lines with alphanumerics only.
+        //  - e.g. clear a b c % returns "clear"
 
-        public string FirstWord
+        public string FirstWord 
         {
             get
             {
@@ -82,9 +106,10 @@ namespace PLMain
             }
         }
 
-        // Used for input lines with alphanumerics only.
-        // Gets args to pass to a command
-        //  - e.g. clear a b c
+        //************************************************************************
+
+        // Useful for input lines with alphanumerics only. Gets args to pass to a command
+        //  - e.g. clear a b c % returns "a b c"
 
         public string ArgumentString // all chars after the first word
         {
@@ -106,50 +131,14 @@ namespace PLMain
         }
 
         //*************************************************************************
-        //
-        // ctors
-        //
-
-        internal AnnotatedString (string text)
-        {
-            if (text.Length == 0)
-                throw new Exception ("Empty string passed to AnnotatedString ctor");
-
-            try
-            { 
-                PassOne (text);
-                PassTwo ();
-                PassThree ();
-                PassFour ();
-            }
-
-            catch (Exception ex)
-            {
-                throw new Exception ("Exception in AnnotatedString ctor: " + ex.StackTrace);// Message);
-            }
-        }
-
-        //*************************************************************************
 
         private void PassOne (string text)
         { 
-            if (text.Length == 0)
-                return;
-
-            AnnotatedChar firstAC = new AnnotatedChar (text [0]);
-            if (firstAC.IsNumber)      digits.Add (0);   
-            if (firstAC.IsDecimal)     decimals.Add (0);
-            if (firstAC.IsExponential) exponentials.Add (0);
-            if (firstAC.IsOperator)    operators.Add (0);
-            if (firstAC.IsSemicolon)   semicolons.Add (0); // should this be a syntax error?
-            if (firstAC.IsOpenParen)   AlphanumericOnly = false;
-            if (firstAC.IsOpenBracket) AlphanumericOnly = false;
-
-            annotatedChars = new List<AnnotatedChar> (text.Length) {firstAC};
-
-            for (int i=1; i<text.Length; i++)
+            for (int i=0; i<text.Length; i++)
             {
-                AnnotatedChar nextAC = new AnnotatedChar (annotatedChars [i-1], text [i]);
+                AnnotatedChar nextAC = i > 0 ? new AnnotatedChar (annotatedChars [i-1], text [i])
+                                             : new AnnotatedChar (text [i]);
+
                 if (nextAC.IsNumber)      digits.Add       (i);   
                 if (nextAC.IsDecimal)     decimals.Add     (i); 
                 if (nextAC.IsExponential) exponentials.Add (i);
@@ -322,30 +311,7 @@ namespace PLMain
 
         //*************************************************************************
 
-        // look for continuation, i.e. line ending with ...
-
-        private readonly string continuationString = "...";
-       
-        private void PassThree ()
-        {
-            Continues = false;
-
-            int index = CharacterCount - 1;
-            if (annotatedChars [index--].IsDecimal == false) return;
-            if (annotatedChars [index--].IsDecimal == false) return;
-            if (annotatedChars [index].IsDecimal   == false) return;
-
-            Continues = true;
-            int L = continuationString.Length;
-            annotatedChars.RemoveRange (CharacterCount - L, L); // delete 3 chars of "..."
-
-            if (annotatedChars [CharacterCount-1].IsWhitespace) 
-                annotatedChars.RemoveRange (CharacterCount-1, 1); // remove any trailing space
-        }
-
-        //*************************************************************************
-
-        private void PassFour () 
+        private void PassThree () 
         { 
             foreach (int index in semicolons)
             {
@@ -360,7 +326,7 @@ namespace PLMain
 
             else if (level0Semis.Count == 1)
             {
-                int index = semicolons [0];
+                int index = level0Semis [0];
                 if (index == CharacterCount - 1)
                 {
                     annotatedChars.RemoveAt (index);
@@ -374,13 +340,13 @@ namespace PLMain
 
         //*************************************************************************
 
-        internal AnnotatedString (char Character)
-        {
-            annotatedChars = new List<AnnotatedChar> (10)
-            {
-                new AnnotatedChar (Character)
-            };
-        }
+        //internal AnnotatedString (char Character)
+        //{
+        //    annotatedChars = new List<AnnotatedChar> (10)
+        //    {
+        //        new AnnotatedChar (Character)
+        //    };
+        //}
 
         //*******************************************************************
 
@@ -653,9 +619,10 @@ namespace PLMain
             string str18 = "Exponent:      ";
             string str19 = "Colon:         ";
             string str20 = "Semicolon:     ";
-            string str21 = "Comma:         ";
-            string str22 = "Operator:      ";
-            string str23 = "TwoCharOp:     ";
+         // string str21 = "Level0Semi:    ";
+            string str22 = "Comma:         ";
+            string str23 = "Operator:      ";
+            string str24 = "TwoCharOp:     ";
 
             foreach (AnnotatedChar ac in annotatedChars)
             {
@@ -686,8 +653,8 @@ namespace PLMain
                 //str19 += ac.IsColon       ? "1" : ".";
                 str20 += ac.IsSemicolon   ? "1" : ".";
                 //str21 += ac.IsComma       ? "1" : ".";
-                str22 += ac.IsOperator    ? "1" : ".";
-                str23 += ac.IsTwoCharOp   ? "1" : ".";
+                str23 += ac.IsOperator    ? "1" : ".";
+                str24 += ac.IsTwoCharOp   ? "1" : ".";
             }
 
             string str = str1;
@@ -715,9 +682,9 @@ namespace PLMain
             if (str18.Contains ("1")) str += '\n' + str18;
             if (str19.Contains ("1")) str += '\n' + str19;
             if (str20.Contains ("1")) str += '\n' + str20;
-            if (str21.Contains ("1")) str += '\n' + str21;
             if (str22.Contains ("1")) str += '\n' + str22;
             if (str23.Contains ("1")) str += '\n' + str23;
+            if (str24.Contains ("1")) str += '\n' + str24;
 
             str += "\n" + "AlphanumericOnly = " + AlphanumericOnly.ToString ();
 
@@ -727,7 +694,7 @@ namespace PLMain
                 str += "\n" + "FollowingWords: " + ArgumentString;
             }
 
-            str += "\n" + "Continues        = " + Continues.ToString ();
+         //   str += "\n" + "Continues        = " + Continues.ToString ();
             str += "\n" + "SuppressOutput   = " + SuppressOutput.ToString ();
             str += "\n" + "IsCompound       = " + IsCompound.ToString ();
 
