@@ -34,8 +34,6 @@ namespace utExpressionTree
 
         //**********************************************************************
 
-        private List<List<IToken>> TokensForFileLines = new List<List<IToken>> ();
-
         private void Window_Loaded (object sender, RoutedEventArgs e)
         {
             try
@@ -152,21 +150,10 @@ namespace utExpressionTree
             if (continues == true)
                 return annStringSet;
 
-
-
             annStringSet.Add (new AnnotatedString (cumulative));
             cumulative = "";
 
-
-
-
-
-
-
-
-
             return annStringSet;
         }
-
     }
 }
