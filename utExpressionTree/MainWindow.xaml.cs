@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 
-using Main;
+using PLMain;
 using PLWorkspace;
 using Common;
 using PLCommon;
@@ -32,6 +32,8 @@ namespace utExpressionTree
             IOFunctions.Print = Print;
         }
 
+        //**********************************************************************
+
         private List<List<IToken>> TokensForFileLines = new List<List<IToken>> ();
 
         private void Window_Loaded (object sender, RoutedEventArgs e)
@@ -48,68 +50,68 @@ namespace utExpressionTree
                 {
                     if (raw.Length > 0)
                     {
-                        string text = InputLineProcessor.PreprocessInputLine (raw);
+                        AnnotatedStringSet annotatedSet = BuildExpressions (raw);
 
-                        if (text.Length == 0)
-                            continue;
+                        while (annotatedSet.Count > 0)
+                        {
+                            AnnotatedString annotated = annotatedSet.GetOldest;
+                            Console.WriteLine (annotated.ToString ());
+                            Counter++;
 
-                        AnnotatedString annotated = new AnnotatedString (text);
+                            //**********************************************************************
 
-                        Console.WriteLine (annotated.ToString ());
+                            if (false) // show token parsing
+                            { 
+                                // first pass
+                                TokenParsing parsing = new TokenParsing ();
+                                Window win = new Window ();
+                                TextBox tb = new TextBox ();
 
-                        //**********************************************************************
+                                // first pass
+                                TokenSet tokens = parsing.ParsingPassOne (annotated);
+                                tb.Text += "First pass:\n";
+                                foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
 
-                        if (true) // show token parsing
-                        { 
-                            // first pass
-                            TokenParsing parsing = new TokenParsing ();
-                            Window win = new Window ();
-                            TextBox tb = new TextBox ();
+                                // second pass
+                                tokens = parsing.ParsingPassTwo (tokens);
+                                tb.Text += "\nSecond pass:\n";
+                                foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
 
-                            // first pass
-                            TokenSet tokens = parsing.ParsingPassOne (annotated);
-                            tb.Text += "First pass:\n";
-                            foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
+                                win.Content = tb;
+                                win.SizeToContent = SizeToContent.Height;
+                                win.Title = "Parsing " + Counter;
+                                win.Width = 400;
+                                win.Show ();
+                            }
 
-                            // second pass
-                            tokens = parsing.ParsingPassTwo (tokens);
-                            tb.Text += "\nSecond pass:\n";
-                            foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
+                            //**********************************************************************
 
-                            win.Content = tb;
-                            win.SizeToContent = SizeToContent.Height;
-                            win.Title = "Parsing " + Counter;
-                            win.Width = 400;
-                            win.Show ();
+                            ExpressionTreeNode.Print = Print;
+
+                            ExpressionTree tree = new ExpressionTree (annotated);
+
+                            if (false) // show expression tree
+                            { 
+                                Window win2 = new Window ();
+                                TreeView tv = new TreeView ();
+                                tv.Items.Add (tree.TreeView ());
+                                win2.Content = tv;
+                                win2.Title = "Tree " + Counter;
+                                win2.Width = 400;
+                                win2.Height = 300;
+                                win2.Show ();
+                            }
+
+                            //**********************************************************************
+
+                            PLVariable answer = tree.Evaluate ();
+
+                            //Console.WriteLine ("SupressPrinting = " + tree.SupressPrinting);
+                            if (answer is PLNull == false)  Console.WriteLine ("answer: " + answer.ToString ());
+                            else                            Console.WriteLine ("null answer");
+
+                            Console.WriteLine ("========================================");
                         }
-
-                        //**********************************************************************
-
-                        ExpressionTreeNode.Print      = Print;
-
-                        ExpressionTree tree = new ExpressionTree (annotated);
-
-                        if (true) // show expression tree
-                        { 
-                            Window win2 = new Window ();
-                            TreeView tv = new TreeView ();
-                            tv.Items.Add (tree.TreeView ());
-                            win2.Content = tv;
-                            win2.Title = "Tree " + Counter;
-                            win2.Width = 400;
-                            win2.Height = 300;
-                            win2.Show ();
-                        }
-
-                        //**********************************************************************
-
-                        PLVariable answer = tree.Evaluate ();
-
-                        //Console.WriteLine ("SupressPrinting = " + tree.SupressPrinting);
-                        if (answer is PLNull == false)  Console.WriteLine ("answer: " + answer.ToString ());
-                        else                            Console.WriteLine ("null answer");
-
-                        Console.WriteLine ("========================================");
                     }
                 }
 
@@ -122,5 +124,49 @@ namespace utExpressionTree
                 EventLog.WriteLine (ex.StackTrace);
             }
         }
+
+        //**********************************************************************
+
+        static private readonly string continuationString = "...";
+        static private string cumulative = "";
+
+        private readonly AnnotatedStringSet annStringSet = new AnnotatedStringSet ();
+
+        private AnnotatedStringSet BuildExpressions (string fileLine)
+        {
+            string cleanedInput = InputLineProcessor.PreprocessInputLine (fileLine);
+
+            if (cleanedInput.Length == 0)
+                return annStringSet;
+
+            bool continues = false;
+
+            if (cleanedInput.EndsWith (continuationString))
+            {
+                cleanedInput = cleanedInput.Remove (cleanedInput.Length - continuationString.Length);
+                continues = true;
+            }                
+
+            cumulative += cleanedInput;
+
+            if (continues == true)
+                return annStringSet;
+
+
+
+            annStringSet.Add (new AnnotatedString (cumulative));
+            cumulative = "";
+
+
+
+
+
+
+
+
+
+            return annStringSet;
+        }
+
     }
 }
