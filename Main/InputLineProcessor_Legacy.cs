@@ -94,7 +94,7 @@ namespace PLMain
             // and will eventually moved down to the RunCOmmand () functions
             //
             TokenParsing tp = new TokenParsing ();
-            List<IToken> tok = tp.ParsingPassOne (new AnnotatedString (text));
+            TokenSet tok = tp.ParsingPassOne (new AnnotatedString (text));
 
             if (tok.Count == 0)
                 return;

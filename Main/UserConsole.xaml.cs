@@ -23,10 +23,10 @@ namespace PLMain
 
         public UserConsole ()
         {
-          //  FileSystem.Open (Print);            
-          ////CheckDocumentDirectories ("PlotLabV1", StartupMessages);  //-------------------------- CHANGE TO V2
-          //  EventLog.Open (FileSystem.LogFileDirectory + "\\Log.txt", true); // false);
-          //  CommandLineHistory.Open ();
+            FileSystem.Open (Print);
+            //CheckDocumentDirectories ("PlotLabV1", StartupMessages);  //-------------------------- CHANGE TO V2
+            EventLog.Open (FileSystem.LogFileDir + "\\Log.txt", true); // false);
+            CommandLineHistory.Open ();
 
             InitializeComponent ();
             thisConsole = this;
@@ -227,37 +227,37 @@ namespace PLMain
                 // Look for bang (i.e. !) followed by a number and maybe the letter 'p'. Number is index of command
                 // to recall. It is executed unless followed by :p. If so it is just printed for editting
                 //
-                if (raw [0] == '!')
-                {
-                    try
-                    {
-                        string [] tokens = raw.Split (new char [] { '!', ':' }, StringSplitOptions.RemoveEmptyEntries);
-                        int index = Convert.ToInt16 (tokens [0]);
-                        string recalled = CommandLineHistory.History [index - 1];
-                        raw = recalled;
-                        Print (raw + "\n");
-                        CommandLineHistory.Add (raw);
-                        EventLog.WriteLine (raw);
+                //if (raw [0] == '!')
+                //{
+                //    try
+                //    {
+                //        string [] tokens = raw.Split (new char [] { '!', ':' }, StringSplitOptions.RemoveEmptyEntries);
+                //        int index = Convert.ToInt16 (tokens [0]);
+                //        string recalled = CommandLineHistory.History [index - 1];
+                //        raw = recalled;
+                //        Print (raw + "\n");
+                //        CommandLineHistory.Add (raw);
+                //        EventLog.WriteLine (raw);
 
-                        if (tokens.Length > 1)
-                        {
-                            if (tokens [1] [0] == 'p')
-                            {
-                                return;
-                            }
-                            else
-                            {
-                                throw new Exception ("Only history option supported is \'p\', for Print. e.g.: !12:p");
-                            }
-                        }
-                    }
+                //        if (tokens.Length > 1)
+                //        {
+                //            if (tokens [1] [0] == 'p')
+                //            {
+                //                return;
+                //            }
+                //            else
+                //            {
+                //                throw new Exception ("Only history option supported is \'p\', for Print. e.g.: !12:p");
+                //            }
+                //        }
+                //    }
 
-                    catch (Exception ex)
-                    {
-                        Print ("Exception: " + ex.Message);
-                        return;
-                    }
-                }
+                //    catch (Exception ex)
+                //    {
+                //        Print ("Exception: " + ex.Message);
+                //        return;
+                //    }
+                //}
 
 
 
@@ -512,7 +512,7 @@ namespace PLMain
 
                     string str = "";
 
-                    if (CommandLineHistory.StepBack (ref str, typedIn))
+                    if (CommandLineHistory.StepBackward (out str))//, typedIn))
                     {
                         int index = TextPane.GetLastVisibleLineIndex ();
                         int iChar = TextPane.GetCharacterIndexFromLineIndex (index);
@@ -538,7 +538,7 @@ namespace PLMain
 
                     string str = "";
 
-                    if (CommandLineHistory.StepForward (ref str, typedIn))
+                    if (CommandLineHistory.StepForward (out str))//, typedIn))
                         EditablePrint (str);
                 }
 
