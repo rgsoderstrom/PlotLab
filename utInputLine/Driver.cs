@@ -32,29 +32,25 @@ namespace utInputLine
                 StreamReader inputFile = new StreamReader (InputMFileName);
                 string inputString;
 
-                InputLineProcessor    inputLineProc        = new InputLineProcessor ();
-                List<LineType>        statementTypes       = new List<LineType> ();
-                List<AnnotatedString> individualStatements = new List<AnnotatedString> ();
+                InputLineProcessor inputLineProc = new InputLineProcessor ();
+                AnnotatedStringClassifier classifier = new AnnotatedStringClassifier ();
 
                 while ((inputString = inputFile.ReadLine ()) != null)
                 {
                     if (inputString.Length > 0)
                     { 
-                        statementTypes.Clear ();
-                        individualStatements.Clear ();
+                        AnnotatedStringSet annotatedSet = BuildExpressions (inputString);
 
-                        inputLineProc.ClassifyInputLine (inputString, ref statementTypes, ref individualStatements);
-
-                        for (int i=0; i<individualStatements.Count; i++)
+                        while (annotatedSet.Count > 0)
                         {
-                            Console.Write (statementTypes [i] + ":  ");
-                            Console.WriteLine ("\n" + individualStatements [i]);
-                            //Console.WriteLine (individualStatements [i].Plain);
-                            Console.WriteLine ("");
-                        }
+                            AnnotatedString annotated = annotatedSet.GetOldest;
+                            InputLineType lineType = classifier.Classify (annotated);
 
-                        if (individualStatements.Count > 0)
-                            Console.WriteLine ("==========================================");
+                            Console.WriteLine (annotated.Plain);
+                            Console.WriteLine ("  " + lineType.ToString ());
+                            Console.WriteLine ();
+
+                        }
                     }
                 }
 
@@ -67,5 +63,39 @@ namespace utInputLine
                 Print (ex.StackTrace);
             }
         }
+
+        //**********************************************************************
+
+        static private readonly string continuationString = "...";
+        static private string cumulative = "";
+
+        private static readonly AnnotatedStringSet annStringSet = new AnnotatedStringSet ();
+
+        private static AnnotatedStringSet BuildExpressions (string fileLine)
+        {
+            string cleanedInput = InputLineProcessor.PreprocessInputLine (fileLine);
+
+            if (cleanedInput.Length == 0)
+                return annStringSet;
+
+            bool continues = false;
+
+            if (cleanedInput.EndsWith (continuationString))
+            {
+                cleanedInput = cleanedInput.Remove (cleanedInput.Length - continuationString.Length);
+                continues = true;
+            }                
+
+            cumulative += cleanedInput;
+
+            if (continues == true)
+                return annStringSet;
+
+            annStringSet.Add (new AnnotatedString (cumulative));
+            cumulative = "";
+
+            return annStringSet;
+        }
+
     }
 }

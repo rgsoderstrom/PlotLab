@@ -12,19 +12,26 @@ namespace PLCommon
         Constant,
 
         WorkspaceCommand,
-        Function,
-
-        //  WorkspaceFunction,
-        ScriptFile,
-        FunctionFile,       // m-file function
-        //FunctionFile_Multi, // multiple output function file
         PlotCommand,
         SystemCommand,
-        //FlowCtrl,
+
+        Function,
+
+        ScriptFile,
+        FunctionFile, 
+
     };
 
-    //public enum Results  // DO I NEED THIS???
-    //{
-    //    NotFound, Handled, Failed
-    //}
+    public enum InputLineType
+    {
+        Unknown,
+        ExpressionTree, 
+        VariableName,
+        SystemCommand,
+        PlotCommand,
+        ScriptFile,
+        FunctionFile,
+        BlockStart,
+        BlockEnd,
+    }
 }

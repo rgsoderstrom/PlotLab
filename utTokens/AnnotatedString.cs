@@ -82,8 +82,14 @@ namespace PLMain
 
         //************************************************************************
 
-        // Useful for input lines with alphanumerics only.
-        //  - e.g. clear a b c % returns "clear"
+        // For input lines with alphanumerics only
+        //  - clear a b c % returns "clear"
+
+        // For block start
+        //  - for a = 1:9, % return "for"
+
+        // function declaration
+        //  - function [x, y, z] =   % returns "function"
 
         public string FirstWord 
         {
@@ -108,8 +114,10 @@ namespace PLMain
 
         //************************************************************************
 
-        // Useful for input lines with alphanumerics only. Gets args to pass to a command
-        //  - e.g. clear a b c % returns "a b c"
+        // Return everything after FirstWord
+        //  - clear a b c % returns "a b c"
+
+        //  - for a = 1:9, % returns a = 1:9,
 
         public string ArgumentString // all chars after the first word
         {

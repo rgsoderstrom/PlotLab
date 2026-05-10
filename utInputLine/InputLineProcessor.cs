@@ -32,67 +32,64 @@ namespace PLMain
         //**************************************************************************************
         //**************************************************************************************
 
-        // Passed a string entered by user or read from a .m file
         //
-        // returns parallel lists of line types and annotated strings
+        // Passed a raw string entered by user or read from a .m file
+        //  - may contain prompt, a comment and extra spaces
         //
-        public void ClassifyInputLine (string str, 
-                                       ref List<LineType>     statementTypes, 
-                                       ref AnnotatedStringSet individualStatements)
-        {
-            // remove prompt, comments and extra spaces
-            string cleaned = PreprocessInputLine (str);
 
-            // comment-only lines
-            if (cleaned.Length == 0)
-                return;
+        //public void ClassifyInputLine (string str, ref AnnotatedStringClassifier classifiedStatements)
+        //{
+        //    // remove prompt, comments and extra spaces
+        //    string cleaned = PreprocessInputLine (str);
 
-            // annotate entire input line
-            individualStatements = new AnnotatedStringSet (cleaned);
+        //    // comment-only lines
+        //    if (cleaned.Length == 0)
+        //        return;
 
+        //    // annotate entire input line
+        //    classifiedStatements = new ClassifiedStringSet (cleaned);
 
 
-            // initially mark each statement as Unknown
-            for (int i=0; i<individualStatements.Count; i++)
-                statementTypes.Add (LineType.Unknown);
 
-            for (int i=0; i<individualStatements.Count; i++)
-            {
-                AnnotatedString statement = individualStatements [i];
 
-                if (statement.AlphanumericOnly)
-                {
-                    string firstWord = statement.FirstWord;
-                    string arguments = statement.ArgumentString;
 
-                    if (arguments.Length == 0) // command only, no arguments
-                    {
-                        if      (FileSystem.WhatIs  (firstWord) == FileTypes.ScriptFile) statementTypes [i] = LineType.Script;
-                        else if (Workspace.Contains (firstWord))                         statementTypes [i] = LineType.VariableName;
-                   //     else if ()
-                    }
+        //    for (int i=0; i<classifiedStatements.Count; i++)
+        //    {
+        //        AnnotatedString statement = classifiedStatements [i];
 
-                    else
-                    {
+                //if (statement.AlphanumericOnly)
+                //{
+                //    string firstWord = statement.FirstWord;
+                //    string arguments = statement.ArgumentString;
 
-                    }
+                //    if (arguments.Length == 0) // command only, no arguments
+                //    {
+                //        if      (FileSystem.WhatIs  (firstWord) == FileTypes.ScriptFile) statementTypes [i] = InputLineType.Script;
+                //        else if (Workspace.Contains (firstWord))                         statementTypes [i] = InputLineType.VariableName;
+                //   //     else if ()
+                //    }
 
-                }
+                //    else
+                //    {
 
-                else
-                {
+                //    }
 
-                }
+                //}
+
+                //else
+                //{
+
+                //}
 
                 //if (AS.WordCount == 1)
                 //{
                 //    if (PLLibrary.LibraryManager.Contains )
                 //}
-            }
+        //    }
 
 
 
-        }
+        //}
 
         //public List<List<IToken>> ParseOneInputLine (string inputLine)
         //{

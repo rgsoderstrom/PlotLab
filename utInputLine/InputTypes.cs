@@ -36,18 +36,17 @@ namespace PLMain
         //    BE_End,
         //}
 
-        public enum LineType
-        {
-            Unknown,
-            ExpressionTree, 
-            VariableName,
-            ArrayInitStart,
-            ArrayInitEnd,
-            Command,
-            Script,
-            BlockStart,
-            BlockEnd,
-            Bang,
-        }
+        //public enum LineType
+        //{
+        //    Unknown,
+        //    ExpressionTree, 
+        //    VariableName,
+        //    ArrayInitStart,
+        //    ArrayInitEnd,
+        //    Command,
+        //    Script,
+        //    BlockStart,
+        //    BlockEnd,
+        //}
     }
 }

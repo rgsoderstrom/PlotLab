@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{D2ED8747-ECB5-4D55-8E21-333AE6AEA6E0}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Main</RootNamespace>
+    <RootNamespace>PLMain</RootNamespace>
     <AssemblyName>utInputLine</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -42,6 +42,9 @@
     </Reference>
     <Reference Include="PLLibrary">
       <HintPath>..\PLLibrary\bin\Debug\PLLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="PLSystem">
+      <HintPath>..\PLSystem\bin\Debug\PLSystem.dll</HintPath>
     </Reference>
     <Reference Include="PLWorkspace">
       <HintPath>..\PLWorkspace\bin\Debug\PLWorkspace.dll</HintPath>
@@ -86,6 +89,7 @@
     <Compile Include="..\utTokens\TokenUtils2.cs">
       <Link>TokenUtils2.cs</Link>
     </Compile>
+    <Compile Include="AnnotatedStringClassifier.cs" />
     <Compile Include="InputLineProcessor.cs" />
     <Compile Include="InputTypes.cs" />
     <Compile Include="InputLineUtils.cs" />
