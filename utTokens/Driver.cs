@@ -36,8 +36,8 @@ namespace utTokens
                     {
                         bool ps = false; // print separator
                         //ps |= AnnotatedStringTest (raw);
-                        //ps |= AnnotatedStringSetTest (raw);
-                        ps |= TokenParsingTest (raw);
+                        ps |= AnnotatedStringSetTest (raw);
+                        //ps |= TokenParsingTest (raw);
                         //ps |= TokenUtilsTest (raw);
                         
                         if (ps) Print ("===========================================");                    }

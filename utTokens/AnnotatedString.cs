@@ -82,7 +82,9 @@ namespace PLMain
 
         //************************************************************************
 
-        // For input lines with alphanumerics only
+        // Return first word of input string
+
+        // Commands
         //  - clear a b c % returns "clear"
 
         // For block start
@@ -115,8 +117,8 @@ namespace PLMain
         //************************************************************************
 
         // Return everything after FirstWord
-        //  - clear a b c % returns "a b c"
 
+        //  - clear a b c % returns "a b c"
         //  - for a = 1:9, % returns a = 1:9,
 
         public string ArgumentString // all chars after the first word
@@ -125,14 +127,11 @@ namespace PLMain
             {
                 string str = "";
 
-                if (AlphanumericOnly)
-                {
-                    if (whiteSpaces.Count == 0)
-                        return str;
+                if (whiteSpaces.Count == 0)
+                    return str;
 
-                    for (int i=whiteSpaces [0] + 1; i<CharacterCount; i++)
-                        str += annotatedChars [i].Character;
-                }
+                for (int i=whiteSpaces [0] + 1; i<CharacterCount; i++)
+                    str += annotatedChars [i].Character;
 
                 return str;
             }
@@ -695,14 +694,8 @@ namespace PLMain
             if (str24.Contains ("1")) str += '\n' + str24;
 
             str += "\n" + "AlphanumericOnly = " + AlphanumericOnly.ToString ();
-
-            if (AlphanumericOnly)
-            { 
-                str += "\n" + "FirstWord: " + FirstWord;
-                str += "\n" + "FollowingWords: " + ArgumentString;
-            }
-
-         //   str += "\n" + "Continues        = " + Continues.ToString ();
+            str += "\n" + "FirstWord:         " + FirstWord;
+            str += "\n" + "FollowingWords:    " + ArgumentString;
             str += "\n" + "SuppressOutput   = " + SuppressOutput.ToString ();
             str += "\n" + "IsCompound       = " + IsCompound.ToString ();
 
