@@ -15,8 +15,8 @@ namespace utTokens
 {
     internal class Driver
     {
-        static readonly string InputMFileName = @"..\..\..\Examples\TokenUtilsTests.m";
-       // static readonly string InputMFileName = @"..\..\..\Examples\TokenTests.m";
+        //static readonly string InputMFileName = @"..\..\..\Examples\TokenUtilsTests.m";
+        static readonly string InputMFileName = @"..\..\..\Examples\TokenTests.m";
 
         static void Print (string str)
         {
@@ -36,9 +36,9 @@ namespace utTokens
                     {
                         bool ps = false; // print separator
                         //ps |= AnnotatedStringTest (raw);
-                        //ps |= AnnotatedStringSetTest (raw);
+                        ps |= AnnotatedStringSetTest (raw);
                         //ps |= TokenParsingTest (raw);
-                        ps |= TokenUtilsTest (raw);
+                        //ps |= TokenUtilsTest (raw);
                         
                         if (ps) Print ("===========================================");                    }
                 }
@@ -95,10 +95,13 @@ namespace utTokens
         }
 
         //***********************************************************************
+        //***********************************************************************
+        //***********************************************************************
 
+        
         static AnnotatedStringSet annotatedSet = new AnnotatedStringSet ();
 
-        static private bool AnnotatedStringSetTest (string str, bool verbose = true)
+        private static bool AnnotatedStringSetTest (string str, bool verbose = true)
         {
             AnnotatedStringTest (str, false);
 
@@ -113,7 +116,6 @@ namespace utTokens
 
             if (verbose == false)
                 return false;
-
 
             Print ("annotatedSet count = " + annotatedSet.Count);
 
@@ -140,26 +142,26 @@ namespace utTokens
 
         static private bool TokenParsingTest (string str, bool verbose = true)
         {
-            AnnotatedStringSetTest (str, false);
+            //AnnotatedStringSetTest (str, false);
 
-            if (annotatedSet.Count == 0)
-                return false;
+            //if (annotatedSet.Count == 0)
+            //    return false;
 
-            while (annotatedSet.Count > 0)
-            {
-                AnnotatedString annotated = annotatedSet.GetOldest;
+            //while (annotatedSet.Count > 0)
+            //{
+            //    AnnotatedString annotated = annotatedSet.GetOldest;
 
-                Print (annotated.Plain.ToString ());
+            //    Print (annotated.Plain.ToString ());
 
-                // pass each annotated string to token processor
-                TokenParsing parser = new TokenParsing ();
-                TokenSet statementtokens = parser.StringToTokens (annotated);
+            //    // pass each annotated string to token processor
+            //    TokenParsing parser = new TokenParsing ();
+            //    TokenSet statementtokens = parser.StringToTokens (annotated);
 
-                Print (statementtokens.ToString ());
+            //    Print (statementtokens.ToString ());
 
-                if (annotatedSet.Count != 0) // print separator if more to be printed
-                    Print ("");
-            }
+            //    if (annotatedSet.Count != 0) // print separator if more to be printed
+            //        Print ("");
+            //}
 
             return true;
         }

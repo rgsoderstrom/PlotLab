@@ -3,13 +3,7 @@
     AnnotatedStringSet - list of AnnotatedStrings
 */
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using static System.Net.Mime.MediaTypeNames;
 
 namespace PLMain
 {
@@ -24,6 +18,8 @@ namespace PLMain
         public AnnotatedString GetOldest {get {return annotatedStrings.Dequeue ();}}
         public void            Clear () {annotatedStrings.Clear ();}
 
+        static private readonly string continuationString = "...";
+
         //**************************************************************************
 
         public AnnotatedStringSet ()
@@ -32,17 +28,14 @@ namespace PLMain
 
         //**********************************************************************
 
-        static private readonly string continuationString = "...";
-        static private string cumulative = "";
+        private string cumulative = "";
 
-        private static readonly AnnotatedStringSet annStringSet = new AnnotatedStringSet ();
-
-        public static AnnotatedStringSet Add (string fileLine)
+        public void Add (string fileLine)
         {
             string cleanedInput = InputLineProcessor.PreprocessInputLine (fileLine);
 
             if (cleanedInput.Length == 0)
-                return annStringSet;
+                return;
 
             bool continues = false;
 
@@ -55,12 +48,12 @@ namespace PLMain
             cumulative += cleanedInput;
 
             if (continues == true)
-                return annStringSet;
+                return;
 
-            annStringSet.Add (new AnnotatedString (cumulative));
+            Add (new AnnotatedString (cumulative));
             cumulative = "";
 
-            return annStringSet;
+            return;
         }
 
         //*************************************************************************
