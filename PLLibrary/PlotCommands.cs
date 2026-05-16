@@ -23,7 +23,7 @@ namespace FunctionLibrary
             return new Dictionary<string, PLFunction> ()
             {
               //{"title",  Title},
-              //{"figure", Figure},
+                {"figure", Figure},
               //{"clf",    ClearFigure},
                 {"close",  CloseFigure},
                 {"hold",   Hold},
