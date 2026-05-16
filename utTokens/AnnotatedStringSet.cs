@@ -21,16 +21,49 @@ namespace PLMain
         // number of complete string ready for processing
         public int Count {get {return annotatedStrings.Count;}}
 
+        public AnnotatedString GetOldest {get {return annotatedStrings.Dequeue ();}}
+        public void            Clear () {annotatedStrings.Clear ();}
+
         //**************************************************************************
 
         public AnnotatedStringSet ()
         {
         }
 
-        //*************************************************************************
+        //**********************************************************************
 
-        public AnnotatedString GetOldest {get {return annotatedStrings.Dequeue ();}}
-        public void            Clear () {annotatedStrings.Clear ();}
+        static private readonly string continuationString = "...";
+        static private string cumulative = "";
+
+        private static readonly AnnotatedStringSet annStringSet = new AnnotatedStringSet ();
+
+        public static AnnotatedStringSet Add (string fileLine)
+        {
+            string cleanedInput = InputLineProcessor.PreprocessInputLine (fileLine);
+
+            if (cleanedInput.Length == 0)
+                return annStringSet;
+
+            bool continues = false;
+
+            if (cleanedInput.EndsWith (continuationString))
+            {
+                cleanedInput = cleanedInput.Remove (cleanedInput.Length - continuationString.Length);
+                continues = true;
+            }                
+
+            cumulative += cleanedInput;
+
+            if (continues == true)
+                return annStringSet;
+
+            annStringSet.Add (new AnnotatedString (cumulative));
+            cumulative = "";
+
+            return annStringSet;
+        }
+
+        //*************************************************************************
 
         public void Add (AnnotatedString astr)
         {
@@ -40,9 +73,7 @@ namespace PLMain
                 return;
             }
 
-
-
-            // If we get here str is a compound expression, e.g. a = 123; b = 456; c = 789;
+            // If we get here astr is a compound expression, e.g. a = 123; b = 456; c = 789; all on one line.
             // It will be split into a list of annotated strings
 
             int startIndex = 0;

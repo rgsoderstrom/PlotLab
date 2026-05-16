@@ -21,9 +21,9 @@ namespace PLMain
 
         delegate bool CharacterTest (AnnotatedChar c);
 
-        private void BreakIntoSubstrings (AnnotatedString       src, 
-                                          List<AnnotatedString> substrings, 
-                                          CharacterTest         test)
+        private void BreakIntoSubstrings (AnnotatedString    src, 
+                                          AnnotatedStringSet substrings, 
+                                          CharacterTest      test)
         {
             List <int> copyEndpoints = new List<int> ();
             copyEndpoints.Add (0); // start first copy here
@@ -54,7 +54,7 @@ namespace PLMain
         //      - of the form (A, B, C)
         //
 
-        public List<AnnotatedString> SplitFunctionArgs (AnnotatedString str)
+        public AnnotatedStringSet SplitFunctionArgs (AnnotatedString str)
         {
             // Error checking - verify first character is an open paren and last is close paren
             int lastIndex = str.CharacterCount - 1;
@@ -62,7 +62,7 @@ namespace PLMain
             if (str [lastIndex].IsCloseParen == false) throw new Exception ("Function arg syntax error at close paren: " + str.Plain);
             
             // extract substrings
-            List<AnnotatedString> extractedArgs = new List<AnnotatedString> ();  
+            AnnotatedStringSet extractedArgs = new AnnotatedStringSet ();  
             BreakIntoSubstrings (str, extractedArgs, delegate (AnnotatedChar ac) {return ac.IsComma;});
 
             return extractedArgs;
@@ -85,34 +85,34 @@ namespace PLMain
             if (str [str.CharacterCount - 1].IsCloseBracket == false) throw new Exception ("Missing closing bracket: " + str.Plain);
         }
 
-        public List<AnnotatedString> SplitBracketArgs_Comma (AnnotatedString str)
+        public AnnotatedStringSet SplitBracketArgs_Comma (AnnotatedString str)
         {
             VerifyBrackets (str);
-            List<AnnotatedString> args = new List<AnnotatedString> ();
+            AnnotatedStringSet args = new AnnotatedStringSet ();
             BreakIntoSubstrings (str, args, delegate (AnnotatedChar ac) {return ac.IsComma;});
             return args;
         }
 
-        public List<AnnotatedString> SplitBracketArgs_Colon (AnnotatedString str)
+        public AnnotatedStringSet SplitBracketArgs_Colon (AnnotatedString str)
         {
             VerifyBrackets (str);
-            List<AnnotatedString> args = new List<AnnotatedString> ();
+            AnnotatedStringSet args = new AnnotatedStringSet ();
             BreakIntoSubstrings (str, args, delegate (AnnotatedChar ac) {return ac.IsColon;});
             return args;
         }
 
-        public List<AnnotatedString> SplitBracketArgs_Semi (AnnotatedString str)
+        public AnnotatedStringSet SplitBracketArgs_Semi (AnnotatedString str)
         {
             VerifyBrackets (str);
-            List<AnnotatedString> args = new List<AnnotatedString> ();
+            AnnotatedStringSet args = new AnnotatedStringSet ();
             BreakIntoSubstrings (str, args, delegate (AnnotatedChar ac) {return ac.IsSemicolon;});
             return args;
         }
 
-        public List<AnnotatedString> SplitBracketArgs_Space (AnnotatedString str)
+        public AnnotatedStringSet SplitBracketArgs_Space (AnnotatedString str)
         {
             VerifyBrackets (str);
-            List<AnnotatedString> args = new List<AnnotatedString> ();
+            AnnotatedStringSet args = new AnnotatedStringSet ();
             BreakIntoSubstrings (str, args, delegate (AnnotatedChar ac) {return ac.IsWhitespace;});
             return args;
         }
@@ -129,12 +129,12 @@ namespace PLMain
             if (str [str.CharacterCount - 1].IsCloseParen == false) throw new Exception ("Missing closing parenthesis: " + str.Plain);
         }
 
-        public List<AnnotatedString> SplitSubmatrixArgs (AnnotatedString str)
+        public AnnotatedStringSet SplitSubmatrixArgs (AnnotatedString str)
         {
             VerifyParenthesis (str);
 
             // split arguments string at any commas at same nesting level as first char
-            List<AnnotatedString> args = new List<AnnotatedString> ();
+            AnnotatedStringSet args = new AnnotatedStringSet ();
             BreakIntoSubstrings (str, args, delegate (AnnotatedChar ac) {return ac.IsComma;});
             return args;
         }

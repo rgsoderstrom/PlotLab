@@ -15,8 +15,8 @@ namespace utTokens
 {
     internal class Driver
     {
-     // static readonly string InputMFileName = @"..\..\..\Examples\TokenUtilsTests.m";
-        static readonly string InputMFileName = @"..\..\..\Examples\TokenTests.m";
+        static readonly string InputMFileName = @"..\..\..\Examples\TokenUtilsTests.m";
+       // static readonly string InputMFileName = @"..\..\..\Examples\TokenTests.m";
 
         static void Print (string str)
         {
@@ -36,9 +36,9 @@ namespace utTokens
                     {
                         bool ps = false; // print separator
                         //ps |= AnnotatedStringTest (raw);
-                        ps |= AnnotatedStringSetTest (raw);
+                        //ps |= AnnotatedStringSetTest (raw);
                         //ps |= TokenParsingTest (raw);
-                        //ps |= TokenUtilsTest (raw);
+                        ps |= TokenUtilsTest (raw);
                         
                         if (ps) Print ("===========================================");                    }
                 }
@@ -103,6 +103,9 @@ namespace utTokens
             AnnotatedStringTest (str, false);
 
             if (annotated == null)
+                return false;
+
+            if (annotated.IsEmpty)
                 return false;
 
             annotatedSet.Add (annotated);
@@ -181,10 +184,14 @@ namespace utTokens
 
             Print ("\nAfter split:");
 
-            List<AnnotatedString> fargs = parsing.SplitBracketArgs_Space (annotated);
+         // AnnotatedStringSet fargs = parsing.SplitBracketArgs_Space (annotated);
+            AnnotatedStringSet fargs = parsing.SplitBracketArgs_Semi (annotated);
 
-            foreach (AnnotatedString AS in fargs)
-                Print (AS.ToString () + "\n");
+            while (fargs.Count > 0)
+            {                 
+                AnnotatedString ann = fargs.GetOldest;
+                Print (ann.ToString () + "\n");
+            }
  
             return true;
         }

@@ -41,7 +41,8 @@
     <Reference Include="PLLibrary">
       <HintPath>..\PLLibrary\bin\Debug\PLLibrary.dll</HintPath>
     </Reference>
-    <Reference Include="PLWorkspace">
+    <Reference Include="PLWorkspace, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\PLWorkspace\bin\Debug\PLWorkspace.dll</HintPath>
     </Reference>
     <Reference Include="System" />

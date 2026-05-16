@@ -26,7 +26,12 @@ namespace PLMain
 
             try
             {
-                PassOne (text);
+                string text2 = Preprocess (text);
+
+                if (text2.Length == 0)
+                    return;
+
+                PassOne (text2);
                 PassTwo ();
                 PassThree ();
             }
@@ -46,7 +51,9 @@ namespace PLMain
         private readonly List<int> decimals     = new List<int> ();
         private readonly List<int> exponentials = new List<int> (); // E or e
         private readonly List<int> operators    = new List<int> ();
-        private readonly List<int> whiteSpaces  = new List<int> ();
+
+        private readonly List<int> whiteSpaces  = new List<int> (); // now: level 0 whitespaces
+
         private readonly List<int> semicolons   = new List<int> ();
         private readonly List<int> level0Semis  = new List<int> ();
 
@@ -69,6 +76,7 @@ namespace PLMain
         }
 
         public int CharacterCount {get {return annotatedChars.Count;}}
+        public bool IsEmpty {get {return CharacterCount == 0;}}
         public int FinalBracketLevel {get {return annotatedChars [CharacterCount-1].BracketLevel;}}
 
         private bool alphanumericOnly = true;
@@ -79,6 +87,8 @@ namespace PLMain
 
         private bool isCompound = false; // set true for stmts of the form: a = 7; b = 10; c = 12;
         public  bool IsCompound {get {return isCompound;} private set {isCompound = value;}}
+
+        public  bool SingleWord {get {return ArgumentString == "";}}
 
         //************************************************************************
 
@@ -139,6 +149,25 @@ namespace PLMain
 
         //*************************************************************************
 
+        // if line ends in semicolon, remove it and set SuppressOutput = true
+
+
+        // ALREADY DONE IN PASS3 BUT NEEDS TO BE DONE EARLIER
+
+
+        private string Preprocess (string text)
+        { 
+            if (text [text.Length - 1] == ';')
+            {
+                text = text.Remove (text.Length - 1, 1);
+                SuppressOutput = true;
+            }
+
+            return text;
+        }
+
+        //*************************************************************************
+
         private void PassOne (string text)
         { 
             for (int i=0; i<text.Length; i++)
@@ -149,8 +178,19 @@ namespace PLMain
                 if (nextAC.IsNumber)      digits.Add       (i);   
                 if (nextAC.IsDecimal)     decimals.Add     (i); 
                 if (nextAC.IsExponential) exponentials.Add (i);
-                if (nextAC.IsOperator)    operators.Add    (i);
-                if (nextAC.IsWhitespace)  whiteSpaces.Add  (i);
+
+
+
+                // don't count trailing semicolon as an operator
+                if (nextAC.IsSemicolon == false || i != text.Length - 1)
+                    if (nextAC.IsOperator)    
+                        operators.Add    (i);
+
+
+
+                if (nextAC.IsWhitespace && nextAC.NestingLevel == 0)  
+                    whiteSpaces.Add  (i);
+
                 if (nextAC.IsSemicolon)   semicolons.Add   (i);
 
               //if (nextAC.IsEqualSign)   AlphanumericOnly = false;
@@ -319,29 +359,14 @@ namespace PLMain
         //*************************************************************************
 
         private void PassThree () 
-        { 
+        {
             foreach (int index in semicolons)
             {
                 if (annotatedChars [index].NestingLevel == 0)
                     level0Semis.Add (index);
             }
 
-            if (level0Semis.Count == 0)
-            {
-                SuppressOutput = false;
-            }
-
-            else if (level0Semis.Count == 1)
-            {
-                int index = level0Semis [0];
-                if (index == CharacterCount - 1)
-                {
-                    annotatedChars.RemoveAt (index);
-                    SuppressOutput = true;
-                }
-            }
-
-            else
+            if (level0Semis.Count > 0)
                 IsCompound = true;
         }
 
@@ -615,7 +640,9 @@ namespace PLMain
             string str9b = "CloseQuote:    ";
 
             string str10 = "EqualSign:     ";
-            string str11 = "Whitespace:    ";
+
+            string str11 = "Level 0 Space  ";
+
             string str12 = "Alpha:         ";
             string str13 = "Number:        ";
             string str14 = "Decimal:       ";
@@ -648,7 +675,9 @@ namespace PLMain
                 str9b += ac.IsCloseQuote   ? "1" : ".";
 
                 str10 += ac.IsEqualSign   ? "1" : ".";
-                str11 += ac.IsWhitespace  ? "1" : ".";
+
+                str11 += ac.IsWhitespace && ac.NestingLevel == 0  ? "1" : ".";
+
                 str12 += ac.IsAlpha       ? "1" : ".";
                 str13 += ac.IsNumber      ? "1" : ".";
                 str14 += ac.IsDecimal     ? "1" : ".";
