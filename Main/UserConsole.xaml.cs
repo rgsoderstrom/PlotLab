@@ -25,8 +25,8 @@ namespace PLMain
         {
             FileSystem.Open (Print);
             //CheckDocumentDirectories ("PlotLabV1", StartupMessages);  //-------------------------- CHANGE TO V2
-            EventLog.Open (FileSystem.LogFileDir + "\\Log.txt", true); // false);
-            CommandLineHistory.Open ();
+            //EventLog.Open (FileSystem.LogFileDir + "\\Log.txt", true); // false);
+            //CommandLineHistory.Open ();
 
             InitializeComponent ();
             thisConsole = this;
@@ -68,9 +68,8 @@ namespace PLMain
                 TextPane.Focus ();
 
                 PLVariable ans = new PLNull ();
-                bool fp = false;
                 InputLineProcessor_Legacy ip = new InputLineProcessor_Legacy (Print);
-                ip.ProcessOneStatement (ref ans, "startup", ref fp); 
+                ip.ProcessOneStatement (ref ans, "startup"); 
 
 
                 SystemFunctions.UserConsoleRequests = SystemRequests;
@@ -272,8 +271,6 @@ namespace PLMain
                 {
                     if (inputLines [i].complete)
                     {
-                        bool forcePrint = false;
-
                         endIndex = i;
                         string expr = "";
 
@@ -281,14 +278,14 @@ namespace PLMain
                             expr += inputLines [j].text;
 
                         PLVariable ans = new PLNull ();
-                        ip.ProcessOneStatement (ref ans, expr, ref forcePrint);
+                        ip.ProcessOneStatement (ref ans, expr);
 
                         if (ans != null && ans is PLNull == false && ans is PLCanvasObject == false && ans is PLViewportObject == false)
                         {
                             ans.Name = "ans";
                             Workspace.Add (ans);
 
-                            if (forcePrint || inputLines [endIndex].printFlag)
+                            if (inputLines [endIndex].printFlag)
                             {
                                 Print (ans.ToString ());
                                 Print ("\n");
@@ -511,8 +508,12 @@ namespace PLMain
                     e.Handled = true;
 
                     string str = "";
+                    bool valid;
 
-                    if (CommandLineHistory.StepBackward (out str))//, typedIn))
+                    if (typedIn == "") valid = CommandLineHistory.StepBackward   (out str);
+                    else               valid = CommandLineHistory.SearchBackward (out str, typedIn);
+
+                    if (valid)
                     {
                         int index = TextPane.GetLastVisibleLineIndex ();
                         int iChar = TextPane.GetCharacterIndexFromLineIndex (index);
@@ -537,9 +538,15 @@ namespace PLMain
                     caretLowerLimit =     TextPane.Text.Length;
 
                     string str = "";
+                    bool valid;
 
-                    if (CommandLineHistory.StepForward (out str))//, typedIn))
+                    if (typedIn == "") valid = CommandLineHistory.StepForward   (out str);
+                    else               valid = CommandLineHistory.SearchForward (out str, typedIn);
+
+                    if (valid)
+                    {
                         EditablePrint (str);
+                    }
                 }
 
                 //
@@ -639,6 +646,10 @@ namespace PLMain
 
         private void ShowHistory_Click (object sender, RoutedEventArgs e)
         {
+            string str = CommandLineHistory.ToString ();
+            Print ("\n");
+            Print (str);
+
             //PLVariable hist = PLSystemFunctions.History (new PLNull ());
             //PLList lst = hist as PLList;
 
@@ -646,9 +657,9 @@ namespace PLMain
             //foreach (PLString str in lst)
             //    Print (str.ToString () + '\n');
 
-            //Print ('\n' + Utils.Prompt);
-            //ClearInputLine ();
-            //TextPane.Focus ();
+            Print ('\n' + Utils.Prompt);
+            ClearInputLine ();
+            TextPane.Focus ();
         }
 
         private void ClearHistory_Click (object sender, RoutedEventArgs e)

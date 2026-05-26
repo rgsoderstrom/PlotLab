@@ -60,7 +60,7 @@ namespace PLMain
         //*****************************************************************************************
 
         enum FileWriteOptions {WriteAll, WriteUnique, WriteLatestUnique};
-        private static readonly FileWriteOptions writeOption = FileWriteOptions.WriteUnique;
+        private static readonly FileWriteOptions writeOption = FileWriteOptions.WriteLatestUnique;
         private static readonly int maxLineCount = 100; // don't write more than this many lines
 
         public static void Close (bool editOnClose)
@@ -97,7 +97,7 @@ namespace PLMain
 
                 file.Close ();
 
-                // if requested edit history file after Plotlab exits
+                // if requested, edit history file after Plotlab exits
                 if (editOnClose)
                 {
                     try
@@ -252,7 +252,7 @@ namespace PLMain
             string str = "";
 
             for (int i=0; i<History.Count; i++)
-                str += i.ToString () + ":" + History [i] + "\n";
+                str += i.ToString () + ": " + History [i] + "\n";
 
             return str;
         }
