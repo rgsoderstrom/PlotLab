@@ -2,20 +2,60 @@
 
 % InputLine tests	
 
-	a
-	a = 8;
-	b = 9 * 7;
-	% a = 3; h=9; k= 22
-	%startup
-	% for  a= 1:9 ,
-	% while  b ==8,
-	% while  b >= 8,
+	%
+	% "for" loop
+	%
+	
+	% for a = 1:9
+		% b = a ^ 2; 
+		% disp (b);
+		% c = 23
 	% end
-	% x=3;
 
-	% h = 3 * 4 + 5; % with comment
+	% for b = 1:8, c = b ^ 2; disp (c); end % comment
+
+	% for a = 1:9,
+		% b = a ^ 2; disp (b);
+	% end
+
+	for a = 1:9
+		b = a ^ 2; 
+		
+		for z = 11 : 18,
+			x = z ^ 3;
+		end
+		
+		disp (b);
+	end
+
+
+
+
+	% a = 7 + ...  % zzzz
+	    % 8 + ...
+		% 9;
+		
+	% a
+	
+	% startup
+	
+	% path
+	
+	% figure
+	
+	
+	
+	
+
+
+	% h = 3 * 4 + 5; % comment
 	
 	% j=3; k=7; l=9;
+	
+	% p = j + k * l;
+	
+
+	
 	
 	% z = [1 2 3 ; ...
 	     % 4 5 6 ; ... % comment
@@ -23,12 +63,12 @@
 		 
 	% ppp ...
 	
- 	% x = 3.7 + ...  
-	    % % 4 * sin (45 * pi / 180);
-		
-	% ScriptName
-	
 	% FuncName (123);
 	
 	% clear all
+	
+	
+	
+	
+	
 	
