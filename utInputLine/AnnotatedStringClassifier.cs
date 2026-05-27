@@ -1,66 +1,65 @@
 ﻿
-/*
-    AnnotatedStringClassifier 
-        - classify a single AnnotatedString
-*/
+///*
+//    AnnotatedStringClassifier 
+//        - classify a single AnnotatedString
+//*/
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+//using PLCommon;
+//using PLSystem;
+//using PLFileSystem;
+//using PLLibrary;
+//using PLWorkspace;
 
-using PLCommon;
-using PLSystem;
-using PLFileSystem;
-using PLLibrary;
-using PLWorkspace;
+//namespace PLMain
+//{
+//    public class AnnotatedStringClassifier
+//    {
+//        public AnnotatedStringClassifier ()
+//        {
 
-namespace PLMain
-{
+//        }
 
-    public class AnnotatedStringClassifier
-    {
-        private bool inBlock = false;
-        public  bool InBlock {get {return inBlock;}}
+//        //***************************************************************************
+//        //
+//        // Classify () - return InputLineType for a single AnnotatedString
+//        //
+//        public InputLineType Classify (AnnotatedString annotatedString)
+//        {
+//            // anything we don't know what to do with will be passed to the expression tree
+//            InputLineType defaultType = InputLineType.ExpressionTree;
+            
+//            // for lines with alphanumeric only
+//            if (annotatedString.AlphanumericOnly)
+//            {
+//                // if it's a single word, check variables and scripts
+//                if (annotatedString.SingleWord)
+//                {
+//                    if (Workspace.WhatIs (annotatedString.FirstWord) == SymbolicNameTypes.Variable)
+//                        return InputLineType.VariableName;
+            
+//                    if (FileSystem.IsScriptFile (annotatedString.Plain))
+//                        return InputLineType.ScriptFile;
+//                }
+//            }
 
-        public AnnotatedStringClassifier ()
-        {
+//            // see if the first word is a system command
+//            if (SystemFunctions.WhatIs (annotatedString.FirstWord) == SymbolicNameTypes.SystemCommand)
+//                return InputLineType.SystemCommand;
 
-        }
+//            if (LibraryManager.WhatIs (annotatedString.FirstWord) == SymbolicNameTypes.PlotCommand)
+//                return InputLineType.PlotCommand;
 
-        public InputLineType Classify (AnnotatedString annotatedString)
-        {
-            if (annotatedString.AlphanumericOnly)
-            {
-                if (FileSystem.IsScriptFile (annotatedString.Plain))
-                    return InputLineType.ScriptFile;
-            }
+//            if (Workspace.WhatIs (annotatedString.FirstWord) == SymbolicNameTypes.WorkspaceCommand)
+//                return InputLineType.WorkspaceCommand;
 
-            if (SystemFunctions.WhatIs (annotatedString.FirstWord) == SymbolicNameTypes.SystemCommand)
-                return InputLineType.SystemCommand;
+//            //if (BlockManager.WhatIs (annotatedString.FirstWord) == SymbolicNameTypes.BlockStart)
+//            //    return InputLineType.BlockStart;
 
-            switch (LibraryManager.WhatIs (annotatedString.FirstWord))
-            {
-                case SymbolicNameTypes.SystemCommand:
-                    return InputLineType.SystemCommand;
+//            //if (BlockManager.WhatIs (annotatedString.FirstWord) == SymbolicNameTypes.BlockEnd)
+//            //    return InputLineType.BlockEnd;
 
-                case SymbolicNameTypes.Function:
-                    return InputLineType.ExpressionTree;
+//            return defaultType;
+//        }
 
-                case SymbolicNameTypes.FunctionFile:
-                    return InputLineType.FunctionFile;
-
-                default:
-                    break;
-            } 
-
-
-            if (annotatedString.AlphanumericOnly)
-                return InputLineType.Unknown;
-
-            return InputLineType.ExpressionTree;
-        }
-
-    }
-}
+//    }
+//}

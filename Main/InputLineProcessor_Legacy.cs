@@ -31,9 +31,8 @@ namespace PLMain
         /// </summary>
         /// <param name="results"></param>
         /// <param name="text">a single PlotLab statement</param>
-        /// <param name="forcePrint">Output, tells caller to print results even if statement end in semicolon</param>
         
-        public void ProcessOneStatement (ref PLVariable results, string text, ref bool forcePrint)
+        public void ProcessOneStatement (ref PLVariable results, string text)
         {
             text = text.Trim ();
 
@@ -55,13 +54,6 @@ namespace PLMain
             {
                 firstWord = text.Substring (0, i);
                 arguments = new PLString (text.Substring (i + 1));
-            }
-
-            // forcePrint overrides the usual convention of not printing results
-            // of statements that end with a semicolon
-            if (firstWord == "disp")                 // OTHER "FORCE PRINT" CASES?
-            {
-                forcePrint = true;
             }
 
 

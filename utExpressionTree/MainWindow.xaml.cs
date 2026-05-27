@@ -52,7 +52,7 @@ namespace utExpressionTree
 
                         while (annotatedSet.Count > 0)
                         {
-                            AnnotatedString annotated = annotatedSet.GetOldest;
+                            AnnotatedString annotated = annotatedSet.GetOldest ();
                             Console.WriteLine (annotated.ToString ());
                             Counter++;
 
@@ -84,7 +84,7 @@ namespace utExpressionTree
 
                             //**********************************************************************
 
-                            ExpressionTreeNode.Print = Print;
+                            //ExpressionTreeNode.Print = Print;
 
                             ExpressionTree tree = new ExpressionTree (annotated);
 

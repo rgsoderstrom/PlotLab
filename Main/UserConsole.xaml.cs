@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using System.IO;
 using System.Windows.Input;
 using System.Windows.Controls;
 
@@ -10,31 +9,17 @@ using PLCommon;
 using PLWorkspace;
 using PLLibrary;
 using PLFileSystem;
-using PLSystem;
 
 namespace PLMain
 {
     public partial class UserConsole : Window
     {
-        internal static UserConsole thisConsole = null;
-
-        // record any startup error messages generated until the window is ready to display them
-      //  List<string> StartupMessages = new List<string> ();
-
         public UserConsole ()
         {
             FileSystem.Open (Print);
-            //CheckDocumentDirectories ("PlotLabV1", StartupMessages);  //-------------------------- CHANGE TO V2
-            //EventLog.Open (FileSystem.LogFileDir + "\\Log.txt", true); // false);
-            //CommandLineHistory.Open ();
-
             InitializeComponent ();
-            thisConsole = this;
 
             TextPane.AddHandler (CommandManager.PreviewExecutedEvent, new RoutedEventHandler (CommandPreview), true);
-
-         //   foreach (string str in StartupMessages)
-          //      Print (str + "\n");
 
             // get initial state of check boxes
             EntryPoint.ShowParsingTokens = (bool) ShowParse_Checkbox.IsChecked;
@@ -43,12 +28,12 @@ namespace PLMain
 
 
 
-        private bool SystemRequests (string str)
-        {
+        //private bool SystemRequests (string str)
+        //{
 
-            Console.WriteLine ("SystemRequest: " + str);
-            return true;
-        }
+        //    Console.WriteLine ("SystemRequest: " + str);
+        //    return true;
+        //}
 
 
 
@@ -62,6 +47,7 @@ namespace PLMain
 
                 EventLog.Open (FileSystem.LogFileDir + "\\Log.txt", true); // false);
                 CommandLineHistory.Open ();
+                LibraryManager.Print = Print;
 
                 Print ("PlotLab, Ver. 2\n");
                 Workspace.Print = Print;
@@ -72,7 +58,7 @@ namespace PLMain
                 ip.ProcessOneStatement (ref ans, "startup"); 
 
 
-                SystemFunctions.UserConsoleRequests = SystemRequests;
+             //   SystemFunctions.UserConsoleRequests = SystemRequests;
 
 
 
@@ -98,7 +84,8 @@ namespace PLMain
         {
             CommandLineHistory.Close ((bool) EditHistory.IsChecked);
             EventLog.Close ();
-            Application.Current.Shutdown();            
+
+            Application.Current?.Shutdown ();
         }
 
         //*****************************************************************************************
@@ -629,17 +616,7 @@ namespace PLMain
         {
             TextPane.Clear (); 
             Print (Utils.Prompt);
-            ClearInputLine ();
             TextPane.Focus ();
-           // textPaneHasFocus = true;
-        }
-
-        //****************************************************************************************************
-
-        internal static void ClearInputLine ()
-        {
-            thisConsole.inputLines.Clear ();
-            thisConsole.nestingLevel = new Utils.NestingLevel ();
         }
 
         //****************************************************************************************************
@@ -647,18 +624,14 @@ namespace PLMain
         private void ShowHistory_Click (object sender, RoutedEventArgs e)
         {
             string str = CommandLineHistory.ToString ();
-            Print ("\n");
-            Print (str);
 
-            //PLVariable hist = PLSystemFunctions.History (new PLNull ());
-            //PLList lst = hist as PLList;
-
-            //Print ("\n");
-            //foreach (PLString str in lst)
-            //    Print (str.ToString () + '\n');
+            if (str.Length > 0)
+            {
+                Print ("\n");
+                Print (str);
+            }
 
             Print ('\n' + Utils.Prompt);
-            ClearInputLine ();
             TextPane.Focus ();
         }
 

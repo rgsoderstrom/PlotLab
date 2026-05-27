@@ -18,7 +18,7 @@ namespace PLSystem
     static public partial class SystemFunctions
     {
         public static Dictionary<string, PLFunction> SystemCommands = new Dictionary<string, PLFunction> ();
-        public static PLRequest UserConsoleRequests = null; // to user console
+        //public static PLRequest UserConsoleRequests = null; // to user console
 
         static SystemFunctions ()
         {
@@ -40,12 +40,12 @@ namespace PLSystem
                 {"cd",    Cd  },
                 {"ls",    Ls  },
                 {"pwd",   Pwd },
-                {"exit",  Exit},
+             // {"exit",  Exit},
                 {"edit",  Edit},
                 {"clc",   Clc },
                 {"path",  Path},
                 {"addpath", AddPath},
-                {"history", History},
+             // {"history", History},
                 {"help",    HelpWindow},
             };
         }
@@ -96,38 +96,29 @@ namespace PLSystem
         //*********************************************************************************************
         //*********************************************************************************************
 
-        public static PLVariable History (PLVariable args)
-        {
-            //bool A = (args is PLList);
-            //bool B = (args is PLInteger);
-            //bool C = (args is PLScalar);
-            //bool D = (args is PLRMatrix);
-            //bool E = (args is PLString);
+        //public static PLVariable History (PLVariable args)
+        //{
+        //    PLList hist = new PLList ();
+        //    int count = 1;
 
-            PLList hist = new PLList ();
-            int count = 1;
+        //    foreach (string s in CommandLineHistory.History)
+        //        hist.Add (new PLString (count++ + ": " + s));
 
-            if (UserConsoleRequests != null)
-                UserConsoleRequests ("history");
-
-            //foreach (string s in CommandLineHistory.History)
-            //    hist.Add (new PLString (count++ + ": " + s));
-
-            return hist;
-        }
+        //    return hist;
+        //}
 
         //*********************************************************************************************
         //*********************************************************************************************
         //*********************************************************************************************
 
-        public static PLVariable Exit (PLVariable _)
-        {
-            if (UserConsoleRequests != null)
-                UserConsoleRequests ("shutdown");
+        //public static PLVariable Exit (PLVariable _)
+        //{
+        //    if (UserConsoleRequests != null)
+        //        UserConsoleRequests ("shutdown");
 
-          //Application.Current.Shutdown();           
-            return new PLNull ();
-        }
+        //  //Application.Current.Shutdown();           
+        //    return new PLNull ();
+        //}
 
         //*********************************************************************************************
         //*********************************************************************************************
@@ -138,7 +129,7 @@ namespace PLSystem
         /// </summary>
         /// <param name="filename"></param>
         /// <returns></returns>
-        
+
         public static PLVariable Edit (PLVariable filename)
         {
             PLString pstr = filename as PLString;
@@ -361,8 +352,8 @@ namespace PLSystem
 
         public static PLVariable Clc (PLVariable _)
         {
-            if (UserConsoleRequests != null)
-                UserConsoleRequests ("clc");
+            //if (UserConsoleRequests != null)
+            //    UserConsoleRequests ("clc");
 
             //UserConsole.thisConsole.TextPane.Clear (); 
             //UserConsole.ClearInputLine ();

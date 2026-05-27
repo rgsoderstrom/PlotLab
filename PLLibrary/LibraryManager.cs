@@ -14,11 +14,13 @@ namespace PLLibrary
     {
         static readonly Dictionary<string, PLFunction>  SigProcFunctions = new Dictionary<string, PLFunction> ();
         static readonly Dictionary<string, PLFunction>  MathFunctions    = new Dictionary<string, PLFunction> ();
-        static readonly Dictionary<string, PLFunction>  IOFunctions      = new Dictionary<string, PLFunction> ();
+        static readonly Dictionary<string, PLFunction>  IOFunctionsDict      = new Dictionary<string, PLFunction> ();
         static readonly Dictionary<string, PLFunction>  PlotFunctions    = new Dictionary<string, PLFunction> ();
         static readonly Dictionary<string, PLFunction>  PlotCommands     = new Dictionary<string, PLFunction> ();
 
         static readonly List<string> ZeroArgFunctions = new List<string> (); // functions that can be invoked with no arguments
+
+        static public PrintFunction Print {set { IOFunctions.Print = value;} }
 
         static LibraryManager ()
         {
@@ -43,7 +45,7 @@ namespace PLLibrary
             // IO functions
             //
             Dictionary<string, PLFunction> ioFuncts = FunctionLibrary.IOFunctions.GetContents ();
-            foreach (string str in ioFuncts.Keys) IOFunctions.Add (str, ioFuncts [str]);
+            foreach (string str in ioFuncts.Keys) IOFunctionsDict.Add (str, ioFuncts [str]);
 
             FunctionLibrary.IOFunctions.GetZeroArgNames (ZeroArgFunctions);
 
@@ -86,7 +88,7 @@ namespace PLLibrary
             if      (PlotCommands.ContainsKey         (str)) {type = SymbolicNameTypes.PlotCommand;}
             else if (MathFunctions.ContainsKey        (str)) {type = SymbolicNameTypes.Function;}
             else if (SigProcFunctions.ContainsKey     (str)) {type = SymbolicNameTypes.Function;}
-            else if (IOFunctions.ContainsKey          (str)) {type = SymbolicNameTypes.Function;}
+            else if (IOFunctionsDict.ContainsKey          (str)) {type = SymbolicNameTypes.Function;}
             else if (PlotFunctions.ContainsKey        (str)) {type = SymbolicNameTypes.Function;}
             else if (MFileFunctionMgr.IsMFileFunction (str)) {type = SymbolicNameTypes.FunctionFile;}
 
@@ -101,7 +103,7 @@ namespace PLLibrary
             foreach (string cmd in PlotCommands.Keys)     {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
             foreach (string cmd in MathFunctions.Keys)    {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
             foreach (string cmd in SigProcFunctions.Keys) {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
-            foreach (string cmd in IOFunctions.Keys)      {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
+            foreach (string cmd in IOFunctionsDict.Keys)      {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
             foreach (string cmd in PlotFunctions.Keys)    {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
 
             //if (matches.Count > 0) matches.Add ("\n");
@@ -125,7 +127,7 @@ namespace PLLibrary
             if (MathFunctions.ContainsKey (name))
                 return true;
 
-            if (IOFunctions.ContainsKey (name))
+            if (IOFunctionsDict.ContainsKey (name))
                 return true;
 
             if (PlotFunctions.ContainsKey (name))
@@ -148,9 +150,9 @@ namespace PLLibrary
                 return func (args);
             }
 
-            if (IOFunctions.ContainsKey (name))
+            if (IOFunctionsDict.ContainsKey (name))
             {
-                PLFunction func = IOFunctions [name];
+                PLFunction func = IOFunctionsDict [name];
                 return func (args);
             }
 

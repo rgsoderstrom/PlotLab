@@ -1,31 +1,34 @@
 ﻿
 /*
-    InputLineProcessor.cs - unit test version
+    InputLineProcessor.cs -
 */
 
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Reflection;
 
+using PLCommon;
 using PLFileSystem;
 using PLLibrary;
 using PLWorkspace;
 
 namespace PLMain
 {
-    public delegate void PrintFunction (string str);
-
     public partial class InputLineProcessor
     {
-        static PrintFunction Print;
+        static private PrintFunction Print;
+
+        // queue of strings for processing
+        private readonly CleanStringQueue CleanedStrings;
+
+        private StringClassifier classifier = new StringClassifier (); 
 
         public InputLineProcessor (PrintFunction pr)
         {
             Print = pr;
-        }
-
-        public InputLineProcessor ()
-        {
+            Block.Print = pr;  
+            CleanedStrings = new CleanStringQueue ();
         }
 
         //**************************************************************************************
@@ -33,115 +36,64 @@ namespace PLMain
         //**************************************************************************************
 
         //
-        // Passed a raw string entered by user or read from a .m file
+        // Passed a "raw" string entered by user, pasted in or read from a .m file
         //  - may contain prompt, a comment and extra spaces
         //
 
-        //public void ClassifyInputLine (string str, ref AnnotatedStringClassifier classifiedStatements)
-        //{
-        //    // remove prompt, comments and extra spaces
-        //    string cleaned = PreprocessInputLine (str);
+        public void ProcessString (string rawString)
+        {
+            CleanedStrings.Add (rawString);
 
-        //    // comment-only lines
-        //    if (cleaned.Length == 0)
-        //        return;
+            while (CleanedStrings.Count > 0)
+            {
+                string cleaned = CleanedStrings.GetOldest;
 
-        //    // annotate entire input line
-        //    classifiedStatements = new ClassifiedStringSet (cleaned);
+                InputLineType lineType = classifier.Classify (cleaned);
+
+                if (BlockManager.BlockCollectionInProgress)
+                { 
+                    BlockManager.Add (cleaned, lineType);
+                }
+
+                else
+                { 
+                    switch (lineType)
+                    {
+                        case InputLineType.Unknown:
+                        case InputLineType.ExpressionTree:
+                        //    Print ("ExpressionTree: " + cleaned);
+                            break;
+
+                        case InputLineType.VariableName:
+                            break;
+
+                        case InputLineType.SystemCommand:
+                            break;
+
+                        case InputLineType.PlotCommand:
+                            break;
+
+                        case InputLineType.WorkspaceCommand:
+                            break;
+
+                        case InputLineType.ScriptFile:
+                      //      Print ("Script: " + cleaned);
+                            break;
+
+                        case InputLineType.BlockStart:
+                            BlockManager.StartNewBlock (cleaned);
+                            break;
+
+                        case InputLineType.BlockEnd:
+                            throw new Exception ("Error: \"end\" outside of block not allowed");
+
+                        default: throw new Exception ("Unsupported InputLineType: " + lineType);
+                    }
+                }
 
 
+            }
+        }
 
-
-
-        //    for (int i=0; i<classifiedStatements.Count; i++)
-        //    {
-        //        AnnotatedString statement = classifiedStatements [i];
-
-                //if (statement.AlphanumericOnly)
-                //{
-                //    string firstWord = statement.FirstWord;
-                //    string arguments = statement.ArgumentString;
-
-                //    if (arguments.Length == 0) // command only, no arguments
-                //    {
-                //        if      (FileSystem.WhatIs  (firstWord) == FileTypes.ScriptFile) statementTypes [i] = InputLineType.Script;
-                //        else if (Workspace.Contains (firstWord))                         statementTypes [i] = InputLineType.VariableName;
-                //   //     else if ()
-                //    }
-
-                //    else
-                //    {
-
-                //    }
-
-                //}
-
-                //else
-                //{
-
-                //}
-
-                //if (AS.WordCount == 1)
-                //{
-                //    if (PLLibrary.LibraryManager.Contains )
-                //}
-        //    }
-
-
-
-        //}
-
-        //public List<List<IToken>> ParseOneInputLine (string inputLine)
-        //{
-        //    // One List<Token> for each input statement. Since a line can contain
-        //    // more than one statement, we may need to return more than one list
-        //    List<List<IToken>> TokenLists = new List<List<IToken>> ();
-
-        //    try
-        //    { 
-        //        string text = RemovePromptAndComments (inputLine);
-
-        //        if (text.Length == 0)
-        //            return TokenLists;
-
-        //        text = SqueezeConsecutiveSpaces (text);
-        //        AnnotatedString annotated = new AnnotatedString (text);
-
-        //        // Split compound lines like:
-        //        // a = 1; b = 2; c = 3;
-        //        // into individual statements, while leaving lines like:
-        //        // a = [1 ; 2 ; 4];
-        //        // as a single statement
-        //        List<AnnotatedString> annotated2 = annotated.SplitAtLevel0Semicolon ();
-
-        //        //
-        //        // pass each annotated string to token processor
-        //        //
-        //        TokenParsing parser = new TokenParsing ();
-
-        //        foreach (AnnotatedString annotatedText in annotated2)
-        //        {
-        //            //Print ("----------------------------------------");
-
-        //            //Console.WriteLine (annotatedText);
-        //            //Console.WriteLine ();
-
-        //            List<IToken> statementTokens = parser.StringToTokens (annotatedText);
-        //            TokenLists.Add (statementTokens);
-
-        //            //Print (text);
-
-        //            //foreach (Token tok in statementTokens)
-        //            //    Print (tok.ToString ());
-        //        }
-        //    }
-
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine ("Exception in ParseOneInputLine: " + ex.Message);
-        //    }
-
-        //    return TokenLists;
-        //}
     }
 }

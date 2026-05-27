@@ -14,10 +14,6 @@ namespace PLMain
         public string                   Operator = "";
         public List<ExpressionTreeNode> Operands = new List<ExpressionTreeNode> ();
 
-        // available all nodes
-        public static PrintFunction Print;
-
-
         private PLVariable nodeValue = null;
         public bool ValueValid {get {return nodeValue != null;}}
 

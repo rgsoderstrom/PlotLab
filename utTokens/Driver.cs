@@ -35,8 +35,8 @@ namespace utTokens
                     if (raw.Length > 0)
                     {
                         bool ps = false; // print separator
-                        //ps |= AnnotatedStringTest (raw);
-                        ps |= AnnotatedStringSetTest (raw);
+                        ps |= AnnotatedStringTest (raw);
+                        //ps |= AnnotatedStringSetTest (raw);
                         //ps |= TokenParsingTest (raw);
                         //ps |= TokenUtilsTest (raw);
                         

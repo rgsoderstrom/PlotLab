@@ -32,26 +32,11 @@ namespace utInputLine
                 StreamReader inputFile = new StreamReader (InputMFileName);
                 string inputString;
 
-                InputLineProcessor inputLineProc = new InputLineProcessor ();
-                AnnotatedStringClassifier classifier = new AnnotatedStringClassifier ();
+                InputLineProcessor inputLineProcessor = new InputLineProcessor (Print);
 
                 while ((inputString = inputFile.ReadLine ()) != null)
                 {
-                    if (inputString.Length > 0)
-                    { 
-                        AnnotatedStringSet annotatedSet = BuildExpressions (inputString);
-
-                        while (annotatedSet.Count > 0)
-                        {
-                            AnnotatedString annotated = annotatedSet.GetOldest;
-                            InputLineType lineType = classifier.Classify (annotated);
-
-                            Console.WriteLine (annotated.Plain);
-                            Console.WriteLine ("  " + lineType.ToString ());
-                            Console.WriteLine ();
-
-                        }
-                    }
+                    inputLineProcessor.ProcessString (inputString);
                 }
 
                 inputFile.Close ();
@@ -62,39 +47,6 @@ namespace utInputLine
                 Print ("Exception: " + ex.Message);
                 Print (ex.StackTrace);
             }
-        }
-
-        //**********************************************************************
-
-        static private readonly string continuationString = "...";
-        static private string cumulative = "";
-
-        private static readonly AnnotatedStringSet annStringSet = new AnnotatedStringSet ();
-
-        private static AnnotatedStringSet BuildExpressions (string fileLine)
-        {
-            string cleanedInput = InputLineProcessor.PreprocessInputLine (fileLine);
-
-            if (cleanedInput.Length == 0)
-                return annStringSet;
-
-            bool continues = false;
-
-            if (cleanedInput.EndsWith (continuationString))
-            {
-                cleanedInput = cleanedInput.Remove (cleanedInput.Length - continuationString.Length);
-                continues = true;
-            }                
-
-            cumulative += cleanedInput;
-
-            if (continues == true)
-                return annStringSet;
-
-            annStringSet.Add (new AnnotatedString (cumulative));
-            cumulative = "";
-
-            return annStringSet;
         }
 
     }

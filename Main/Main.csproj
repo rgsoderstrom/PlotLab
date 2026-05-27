@@ -60,6 +60,9 @@
     <Compile Include="..\utTokens\AnnotatedString.cs">
       <Link>AnnotatedString.cs</Link>
     </Compile>
+    <Compile Include="..\utTokens\AnnotatedStringSet.cs">
+      <Link>AnnotatedStringSet.cs</Link>
+    </Compile>
     <Compile Include="..\utTokens\Token.cs">
       <Link>Token.cs</Link>
     </Compile>

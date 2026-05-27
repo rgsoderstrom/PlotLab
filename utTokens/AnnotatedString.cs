@@ -151,10 +151,6 @@ namespace PLMain
 
         // if line ends in semicolon, remove it and set SuppressOutput = true
 
-
-        // ALREADY DONE IN PASS3 BUT NEEDS TO BE DONE EARLIER
-
-
         private string Preprocess (string text)
         { 
             if (text [text.Length - 1] == ';')
@@ -688,7 +684,7 @@ namespace PLMain
                 //str18 += ac.IsExponent    ? "1" : ".";
                 //str19 += ac.IsColon       ? "1" : ".";
                 str20 += ac.IsSemicolon   ? "1" : ".";
-                //str21 += ac.IsComma       ? "1" : ".";
+                str22 += ac.IsComma       ? "1" : ".";
                 str23 += ac.IsOperator    ? "1" : ".";
                 str24 += ac.IsTwoCharOp   ? "1" : ".";
             }
@@ -722,6 +718,7 @@ namespace PLMain
             if (str23.Contains ("1")) str += '\n' + str23;
             if (str24.Contains ("1")) str += '\n' + str24;
 
+            str += "\n";
             str += "\n" + "AlphanumericOnly = " + AlphanumericOnly.ToString ();
             str += "\n" + "FirstWord:         " + FirstWord;
             str += "\n" + "FollowingWords:    " + ArgumentString;

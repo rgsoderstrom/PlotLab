@@ -15,10 +15,22 @@ namespace PLMain
         // number of complete string ready for processing
         public int Count {get {return annotatedStrings.Count;}}
 
-        public AnnotatedString GetOldest {get {return annotatedStrings.Dequeue ();}}
-        public void            Clear () {annotatedStrings.Clear ();}
 
-        static private readonly string continuationString = "...";
+
+     // public AnnotatedString GetOldest {get {return annotatedStrings.Dequeue ();}}
+        public AnnotatedString GetOldest () {return annotatedStrings.Dequeue ();}
+
+        public AnnotatedString PeekOldest {get {return annotatedStrings.Peek ();}}
+        public void Pop () {annotatedStrings.Dequeue ();}
+
+
+
+
+
+
+
+        public void Clear () {annotatedStrings.Clear ();}
+
 
         //**************************************************************************
 
@@ -26,35 +38,6 @@ namespace PLMain
         {
         }
 
-        //**********************************************************************
-
-        private string cumulative = "";
-
-        public void Add (string fileLine)
-        {
-            string cleanedInput = InputLineProcessor.PreprocessInputLine (fileLine);
-
-            if (cleanedInput.Length == 0)
-                return;
-
-            bool continues = false;
-
-            if (cleanedInput.EndsWith (continuationString))
-            {
-                cleanedInput = cleanedInput.Remove (cleanedInput.Length - continuationString.Length);
-                continues = true;
-            }                
-
-            cumulative += cleanedInput;
-
-            if (continues == true)
-                return;
-
-            Add (new AnnotatedString (cumulative));
-            cumulative = "";
-
-            return;
-        }
 
         //*************************************************************************
 

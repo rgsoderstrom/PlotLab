@@ -183,32 +183,32 @@ namespace FunctionLibrary
                 if (str.Data [str.Data.Length - 1] == '\'') str.Data = str.Data.Substring (0, str.Data.Length - 1);
                 if (str.Data [0] == '\'') str.Data = str.Data.Substring (1, str.Data.Length - 1);
 
-                Print?.Invoke (str.Text);
+                Print?.Invoke (str.Text + "\n");
             }
 
             else if (a is PLRMatrix mat)
             {
-                Print?.Invoke (mat.ToString ());
+                Print?.Invoke (mat.ToString () + "\n");
             }
 
             else if (a is PLDouble dbl)
             {
-                Print?.Invoke (dbl.ToString ());
+                Print?.Invoke (dbl.ToString () + "\n");
             }
 
             else if (a is PLList lst)
             {
-                Print?.Invoke ("list");
+                Print?.Invoke ("list" + "\n");
             }
 
             else if (a is PLInteger igr)
             {
-                Print?.Invoke (igr.ToString ());
+                Print?.Invoke (igr.ToString () + "\n");
             }
 
             else if (a is PLBool bl)
             {
-                Print?.Invoke (bl.ToString ());
+                Print?.Invoke (bl.ToString () + "\n");
             }
 
             else

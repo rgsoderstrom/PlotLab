@@ -16,7 +16,8 @@ namespace PLCommon
         SystemCommand,
 
         Function,
-
+        BlockStart, // for, while, if
+        BlockEnd,
         ScriptFile,
         FunctionFile, 
 
@@ -29,8 +30,8 @@ namespace PLCommon
         VariableName,
         SystemCommand,
         PlotCommand,
+        WorkspaceCommand,
         ScriptFile,
-        FunctionFile,
         BlockStart,
         BlockEnd,
     }

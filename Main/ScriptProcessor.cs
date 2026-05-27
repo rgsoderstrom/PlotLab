@@ -202,14 +202,13 @@ namespace PLMain
 
                     case "CLEAR":
                     {
-                        bool unused = false;
                         string expression = "clear ";
                         for (int i = 1; i<words.Length; i++)
                             expression += words [i] + " ";
 
                         InputLineProcessor_Legacy ip = new InputLineProcessor_Legacy ();
                         PLVariable ans = new PLInteger (-1);
-                        ip.ProcessOneStatement (ref ans, expression, ref unused);
+                        ip.ProcessOneStatement (ref ans, expression);
                         lineNumber = script.NextLineNumber (lineNumber);
                     }
                     break;
