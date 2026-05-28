@@ -114,7 +114,6 @@ namespace utExpressionTree
 
                             PLVariable answer = tree.Evaluate ();
 
-                            //Console.WriteLine ("SupressPrinting = " + tree.SupressPrinting);
                             if (answer is PLNull == false)  Console.WriteLine ("answer: " + answer.ToString ());
                             else                            Console.WriteLine ("null answer");
 
@@ -132,38 +131,5 @@ namespace utExpressionTree
                 EventLog.WriteLine (ex.StackTrace);
             }
         }
-
-        //**********************************************************************
-
-        //static private readonly string continuationString = "...";
-        //static private string cumulative = "";
-
-        //private readonly AnnotatedStringSet annStringSet = new AnnotatedStringSet ();
-
-        //private AnnotatedStringSet BuildExpressions (string fileLine)
-        //{
-        //    string cleanedInput = InputLineProcessor.PreprocessInputLine (fileLine);
-
-        //    if (cleanedInput.Length == 0)
-        //        return annStringSet;
-
-        //    bool continues = false;
-
-        //    if (cleanedInput.EndsWith (continuationString))
-        //    {
-        //        cleanedInput = cleanedInput.Remove (cleanedInput.Length - continuationString.Length);
-        //        continues = true;
-        //    }                
-
-        //    cumulative += cleanedInput;
-
-        //    if (continues == true)
-        //        return annStringSet;
-
-        //    annStringSet.Add (new AnnotatedString (cumulative));
-        //    cumulative = "";
-
-        //    return annStringSet;
-        //}
     }
 }
