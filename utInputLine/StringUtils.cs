@@ -10,7 +10,7 @@ namespace PLMain
     //
     // CleanStringQueue - 
     //
-    // Queue of input stringw (from console, a .m file or pasted) with:
+    // Queue of input strings (from console, a dot-m file or pasted) with:
     //  - any comment and extra spaces removed
     //  - prompt removed
     //  - continued lines concatenated

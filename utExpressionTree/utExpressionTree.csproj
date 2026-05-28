@@ -78,41 +78,41 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="..\Main\AnnotatedChar.cs">
+      <Link>AnnotatedChar.cs</Link>
+    </Compile>
+    <Compile Include="..\Main\AnnotatedString.cs">
+      <Link>AnnotatedString.cs</Link>
+    </Compile>
+    <Compile Include="..\Main\AnnotatedStringSet.cs">
+      <Link>AnnotatedStringSet.cs</Link>
+    </Compile>
     <Compile Include="..\Main\InternalFunctions.cs">
       <Link>InternalFunctions.cs</Link>
     </Compile>
-    <Compile Include="..\utInputLine\InputLineUtils.cs">
-      <Link>InputLineUtils.cs</Link>
-    </Compile>
-    <Compile Include="..\utTokens\AnnotatedChar.cs">
-      <Link>AnnotatedChar.cs</Link>
-    </Compile>
-    <Compile Include="..\utTokens\AnnotatedString.cs">
-      <Link>AnnotatedString.cs</Link>
-    </Compile>
-    <Compile Include="..\utTokens\AnnotatedStringSet.cs">
-      <Link>AnnotatedStringSet.cs</Link>
-    </Compile>
-    <Compile Include="..\utTokens\Token.cs">
+    <Compile Include="..\Main\Token.cs">
       <Link>Token.cs</Link>
     </Compile>
-    <Compile Include="..\utTokens\TokenParsing.cs">
+    <Compile Include="..\Main\TokenParsing.cs">
       <Link>TokenParsing.cs</Link>
     </Compile>
-    <Compile Include="..\utTokens\TokenParsing2.cs">
+    <Compile Include="..\Main\TokenParsing2.cs">
       <Link>TokenParsing2.cs</Link>
     </Compile>
-    <Compile Include="..\utTokens\TokenSet.cs">
+    <Compile Include="..\Main\TokenSet.cs">
       <Link>TokenSet.cs</Link>
     </Compile>
-    <Compile Include="..\utTokens\TokenTypes.cs">
+    <Compile Include="..\Main\TokenTypes.cs">
       <Link>TokenTypes.cs</Link>
     </Compile>
-    <Compile Include="..\utTokens\TokenUtils.cs">
+    <Compile Include="..\Main\TokenUtils.cs">
       <Link>TokenUtils.cs</Link>
     </Compile>
-    <Compile Include="..\utTokens\TokenUtils2.cs">
+    <Compile Include="..\Main\TokenUtils2.cs">
       <Link>TokenUtils2.cs</Link>
+    </Compile>
+    <Compile Include="..\utInputLine\InputLineUtils.cs">
+      <Link>InputLineUtils.cs</Link>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

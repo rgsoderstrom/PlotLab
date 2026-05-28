@@ -48,7 +48,17 @@ namespace utExpressionTree
                 {
                     if (raw.Length > 0)
                     {
-                        AnnotatedStringSet annotatedSet = BuildExpressions (raw);
+                        string trimmed = raw.Trim ();
+
+                        if (trimmed.Length == 0)
+                            continue;
+
+                        if (trimmed [0] == '%')
+                            continue;
+
+                        AnnotatedString astr = new AnnotatedString (trimmed);
+                        AnnotatedStringSet annotatedSet = new AnnotatedStringSet ();
+                        annotatedSet.Add (astr);
 
                         while (annotatedSet.Count > 0)
                         {
@@ -58,7 +68,7 @@ namespace utExpressionTree
 
                             //**********************************************************************
 
-                            if (false) // show token parsing
+                            if (true) // show token parsing
                             { 
                                 // first pass
                                 TokenParsing parsing = new TokenParsing ();
@@ -88,7 +98,7 @@ namespace utExpressionTree
 
                             ExpressionTree tree = new ExpressionTree (annotated);
 
-                            if (false) // show expression tree
+                            if (true) // show expression tree
                             { 
                                 Window win2 = new Window ();
                                 TreeView tv = new TreeView ();
@@ -125,35 +135,35 @@ namespace utExpressionTree
 
         //**********************************************************************
 
-        static private readonly string continuationString = "...";
-        static private string cumulative = "";
+        //static private readonly string continuationString = "...";
+        //static private string cumulative = "";
 
-        private readonly AnnotatedStringSet annStringSet = new AnnotatedStringSet ();
+        //private readonly AnnotatedStringSet annStringSet = new AnnotatedStringSet ();
 
-        private AnnotatedStringSet BuildExpressions (string fileLine)
-        {
-            string cleanedInput = InputLineProcessor.PreprocessInputLine (fileLine);
+        //private AnnotatedStringSet BuildExpressions (string fileLine)
+        //{
+        //    string cleanedInput = InputLineProcessor.PreprocessInputLine (fileLine);
 
-            if (cleanedInput.Length == 0)
-                return annStringSet;
+        //    if (cleanedInput.Length == 0)
+        //        return annStringSet;
 
-            bool continues = false;
+        //    bool continues = false;
 
-            if (cleanedInput.EndsWith (continuationString))
-            {
-                cleanedInput = cleanedInput.Remove (cleanedInput.Length - continuationString.Length);
-                continues = true;
-            }                
+        //    if (cleanedInput.EndsWith (continuationString))
+        //    {
+        //        cleanedInput = cleanedInput.Remove (cleanedInput.Length - continuationString.Length);
+        //        continues = true;
+        //    }                
 
-            cumulative += cleanedInput;
+        //    cumulative += cleanedInput;
 
-            if (continues == true)
-                return annStringSet;
+        //    if (continues == true)
+        //        return annStringSet;
 
-            annStringSet.Add (new AnnotatedString (cumulative));
-            cumulative = "";
+        //    annStringSet.Add (new AnnotatedString (cumulative));
+        //    cumulative = "";
 
-            return annStringSet;
-        }
+        //    return annStringSet;
+        //}
     }
 }
