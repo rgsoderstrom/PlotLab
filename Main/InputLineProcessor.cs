@@ -13,6 +13,10 @@ using PLFileSystem;
 using PLLibrary;
 using PLWorkspace;
 
+
+// all Block references commented out
+
+
 namespace PLMain
 {
     public partial class InputLineProcessor
@@ -27,7 +31,7 @@ namespace PLMain
         public InputLineProcessor (PrintFunction pr)
         {
             Print = pr;
-            Block.Print = pr;  
+            //Block.Print = pr;  
             CleanedStrings = new CleanStringQueue ();
         }
 
@@ -46,16 +50,18 @@ namespace PLMain
 
             while (CleanedStrings.Count > 0)
             {
-                string cleaned = CleanedStrings.GetOldest;
+                string       cleaned = CleanedStrings.GetOldest;
+                NestedString nested  = new NestedString (cleaned);
 
-                InputLineType lineType = classifier.Classify (cleaned);
+                InputLineType lineType = classifier.Classify (nested);
 
-                if (BlockManager.BlockCollectionInProgress)
-                { 
-                    BlockManager.Add (cleaned, lineType);
-                }
+                //if (BlockManager.BlockCollectionInProgress)
+                //{ 
+                //    BlockManager.Add (cleaned, lineType);
+                //}
 
-                else
+                //else
+                if (true)
                 { 
                     switch (lineType)
                     {
@@ -81,7 +87,7 @@ namespace PLMain
                             break;
 
                         case InputLineType.BlockStart:
-                            BlockManager.StartNewBlock (cleaned);
+                          //  BlockManager.StartNewBlock (cleaned);
                             break;
 
                         case InputLineType.BlockEnd:

@@ -175,38 +175,43 @@ namespace PLMain
 
         //**************************************************************************************
 
-        public static string FirstWord (string text)
-        {
-            int index = text.IndexOf (' ');
 
-            if (index == -1)
-                return text;
+        // MOVED TO NestedString
 
-            string results = text.Substring (0, index);
-            return results;
-        }
+        //public static string FirstWord (string text)
+        //{
+        //    int index = text.IndexOf (' ');
 
-        public static bool SingleWord (string text)
-        {
-            int index = text.IndexOf (' ');
-            return index == -1;
-        }
+        //    if (index == -1)
+        //        return text;
+
+        //    string results = text.Substring (0, index);
+        //    return results;
+        //}
+
+        //public static bool SingleWord (string text)
+        //{
+        //    int index = text.IndexOf (' ');
+        //    return index == -1;
+        //}
 
         //**************************************************************************************
 
-        public static bool AlphanumericOnly (string text)
-        {
-            if (char.IsLetter (text [0]) == false)
-                return false;
+        // MOVED TO NestedString
 
-            for (int i=1; i<text.Length; i++)
-            {
-                if (char.IsLetterOrDigit (text [i]) == false)
-                    return false;
-            }
+        //public static bool AlphanumericOnly (string text)
+        //{
+        //    if (char.IsLetter (text [0]) == false)
+        //        return false;
 
-            return true;
-        }
+        //    for (int i=1; i<text.Length; i++)
+        //    {
+        //        if (char.IsLetterOrDigit (text [i]) == false)
+        //            return false;
+        //    }
+
+        //    return true;
+        //}
 
     }
 }
