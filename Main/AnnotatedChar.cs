@@ -1,7 +1,6 @@
 ﻿
 /*
-    AnnotatedChar - an object containing one character and the depth it is
-                    nested by parens, square brackets and quotes
+    AnnotatedChar - 
 */
 
 using System;
@@ -9,14 +8,8 @@ using System.Collections.Generic;
 
 namespace PLMain
 {
-    public class AnnotatedChar
+    public class AnnotatedChar : NestedChar
     {
-        // private members
-        private readonly char  character;
-        private          sbyte quotelevel;  // can only be 0 or 1, no nested quotes allowed
-        private          sbyte bracketlevel;
-        private          sbyte parenlevel;
-
         private ContextType overrideType;
 
         //**************************************************************************
@@ -32,7 +25,7 @@ namespace PLMain
 
         //***************************************************************************
 
-        internal enum ContextType {None, IsNumber, IsTwoCharOperator, IsTranspose, IsLetter };
+        internal enum ContextType {None, IsNumber, IsTwoCharOperator, IsTranspose, IsLetter};
 
         internal ContextType OverrideType
         {
@@ -42,29 +35,10 @@ namespace PLMain
 
         //***************************************************************************
 
-        // public access properties
-        public char Character 
-        {
-            get
-            {
-                switch (character)
-                {
-                    case openquote: return quote;
-                    case closequote: return quote;
-                    default: return character;
-                }
-            }
-        }
-
-        public sbyte QuoteLevel      {get {return quotelevel;}   set {quotelevel = value;}} 
-        public sbyte BracketLevel    {get {return bracketlevel;} set {bracketlevel = value;}} 
-        public sbyte ParenLevel      {get {return parenlevel;}   set {parenlevel = value;}} 
-
         public bool IsDecimal     {get {return OverrideType == ContextType.None && character == '.';}}
 
         public bool IsNumber      {get {return OverrideType == ContextType.None ? Char.IsDigit (character) 
                                                                                 : OverrideType == ContextType.IsNumber;}}
-
 
         public bool IsAlpha       {get {return OverrideType == ContextType.None ? Char.IsLetter (character) || IsUnderscore
                                                                                 : OverrideType == ContextType.IsLetter;}}
@@ -72,7 +46,8 @@ namespace PLMain
         public bool IsUnderscore  {get {return OverrideType == ContextType.None && character == '_';}}
 
         public bool IsOperator    
-            {get 
+            {
+                get 
                 {
                     bool b1 = OverrideType == ContextType.None && Operators.Contains (character) && QuoteLevel == 0;
                     bool b2 = false;//OverrideType == ContextType.IsTranspose;
@@ -80,7 +55,6 @@ namespace PLMain
                 }
             }
 
-        public bool IsQuote       {get {return OverrideType == ContextType.None && character == '\'';}}
         public bool IsTilde       {get {return OverrideType == ContextType.None && character == '~';}}
 
         public bool IsEqualSign   {get {return OverrideType == ContextType.None && character == '=' && QuoteLevel == 0;}}
@@ -93,16 +67,6 @@ namespace PLMain
         // these only exist as overrides
         public bool IsTwoCharOp {get {return OverrideType == ContextType.IsTwoCharOperator;}}
         public bool IsTranspose {get {return OverrideType == ContextType.IsTranspose;}}
-
-        // these are never overriden
-        public bool IsOpenParen    {get {return character == '(';}}
-        public bool IsCloseParen   {get {return character == ')';}}
-        public bool IsOpenBracket  {get {return character == '[';}}
-        public bool IsCloseBracket {get {return character == ']';}}
-
-        public bool IsOpenQuote    {get {return character == openquote;}}
-        public bool IsCloseQuote   {get {return character == closequote;}}
-        public bool IsWhitespace   {get {return (character == ' ' || character == '\t');}}
 
         public bool IsExponent      {get {return character == '^';}}
         public bool IsColon         {get {return character == ':';}}
@@ -125,10 +89,17 @@ namespace PLMain
 
         public override string ToString ()
         {
+            string str = "";
+            str += Character;
+            return str;
+        }
+
+        public string ToDetailedString ()
+        {
             string str = "char: " + Character;
-                   str += "\t quotelevel: " + quotelevel;
-                   str += "\t bracketlevel: " + bracketlevel;
-                   str += "\t parenlevel: " + parenlevel;
+            str += "\t quotelevel: " + quotelevel;
+            str += "\t bracketlevel: " + bracketlevel;
+            str += "\t parenlevel: " + parenlevel;
             return str;
         }
 
@@ -136,82 +107,19 @@ namespace PLMain
         //
         // use this ctor for single char or the first character of a string
         //
-        public AnnotatedChar (char c)
+        public AnnotatedChar (char c) : base (c)
         {
-            character    = c;
-            bracketlevel = 0; // language requires all fields be initialized
-            parenlevel   = 0;
-            quotelevel   = 0;
             overrideType = ContextType.None;
-
-            quotelevel   = IsQuote       ? (sbyte) 1 : (sbyte) 0;
-            bracketlevel = IsOpenBracket ? (sbyte) 1 : (sbyte) 0;
-            parenlevel   = IsOpenParen   ? (sbyte) 1 : (sbyte) 0;
-
-            if (IsCloseParen) throw new Exception ("NestingLevel: paren nesting error");
-            if (IsCloseBracket) throw new Exception ("NestingLevel: bracket nesting error");
         }
 
         //**************************************************************************
         //
         // use this ctor for subsequent characters
         //
-        public AnnotatedChar (AnnotatedChar prev, char ch)
+        public AnnotatedChar (AnnotatedChar prev, char ch) : base (prev, ch)
         {
-            character = ch;
-
-            // start by setting each level equal to previous character, then adjust as necessary
-            parenlevel   = prev.parenlevel;
-            bracketlevel = prev.bracketlevel;
-            quotelevel   = prev.quotelevel;
             overrideType = ContextType.None;
-
-            //********************************************************
-
-            // check parenthesis level
-            if      (IsOpenParen)  parenlevel++;
-            if (prev.IsCloseParen) parenlevel--;
-
-            //********************************************************
-
-            // check bracket level
-            if      (IsOpenBracket)  bracketlevel++;
-            if (prev.IsCloseBracket) bracketlevel--;
-
-            //********************************************************
-
-            // check quote level. can only be 0 or 1
-            if (IsQuote)
-            {
-                if (quotelevel == 0)
-                {
-                    if (prev.IsWhitespace) {quotelevel = 1; character = openquote;}
-                    if (prev.IsOpenParen)  {quotelevel = 1; character = openquote;}
-                }
-                else // quotelevel == 1
-                {
-                    if (prev.character != esc) // ignore escaped quote inside of a string
-                        character = closequote;
-                }
-            }
-
-            if (prev.character == closequote) quotelevel--; 
-
-            //********************************************************
-
-            // check for errors
-            if (quotelevel < 0 || quotelevel > 1) throw new Exception ("nestinglevel: quote nesting error");
-            if (bracketlevel < 0)                 throw new Exception ("nestinglevel: bracket nesting error");
-            if (parenlevel   < 0)                 throw new Exception ("nestinglevel: paren nesting error");
         }
-
-        private const char esc   = '\\';        
-
-        static public char quote = '\'';        
-        private const char openquote     = (char) 145; // extended ASCII left single quote
-        private const char closequote    = (char) 146; //   "        "   right   "     "
-
-        public int NestingLevel {get {return quotelevel + bracketlevel + parenlevel;}}
 
         //*******************************************************************
         //

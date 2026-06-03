@@ -50,11 +50,16 @@
     <Compile Include="ExpressionTree.cs" />
     <Compile Include="ExpressionTreeNode.cs" />
     <Compile Include="ExpressionTreeNodeBuilders.cs" />
+    <Compile Include="InputLineProcessor.cs" />
     <Compile Include="InputLineProcessor_Legacy.cs" />
     <Compile Include="InternalFunctions.cs" />
+    <Compile Include="NestedChar.cs" />
+    <Compile Include="NestedString.cs" />
     <Compile Include="ScriptPreprocessor.cs" />
     <Compile Include="ScriptProcessor.cs" />
     <Compile Include="ScriptUtils.cs" />
+    <Compile Include="StringClassifier.cs" />
+    <Compile Include="StringUtils.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="TokenParsing.cs" />
     <Compile Include="TokenParsing2.cs" />

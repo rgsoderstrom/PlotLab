@@ -10,7 +10,7 @@ namespace PLMain
     public class AnnotatedStringSet
     {
         // queue of complete AnnotatedStrings,
-        private readonly Queue<AnnotatedString> annotatedStrings = new Queue<AnnotatedString> ();
+        private Queue<AnnotatedString> annotatedStrings = new Queue<AnnotatedString> ();
 
         // number of complete string ready for processing
         public int Count {get {return annotatedStrings.Count;}}
@@ -54,7 +54,7 @@ namespace PLMain
 
             // if input astr.SuppressOutput is true, restore trailing semicolon
             if (astr.SuppressOutput)
-                astr.Append (new AnnotatedChar (';'));
+                astr = AnnotatedString.Append (astr, ';');
 
 
             int startIndex = 0;
