@@ -224,7 +224,8 @@ namespace PLMain
             { 
                 if (status.currentChar.IsAlpha || status.currentChar.IsNumber)
                 {
-                    token.AnnotatedText.Append (status.currentChar);
+                    AnnotatedString astr = AnnotatedString.Append (token.AnnotatedText, status.currentChar.Character);
+                    token = new Token (token.Type, astr);
                     accepted = true;
                 }
                 else
@@ -257,7 +258,8 @@ namespace PLMain
             {
                 if (status.currentChar.IsOperator)
                 {
-                    token.AnnotatedText.Append (status.currentChar);
+                    AnnotatedString astr = AnnotatedString.Append (token.AnnotatedText, status.currentChar.Character);
+                    token = new Token (token.Type, astr);
                     accepted = true; 
                 }
 
@@ -288,7 +290,8 @@ namespace PLMain
             {
                 if (status.currentChar.IsTwoCharOp)
                 {
-                    token.AnnotatedText.Append (status.currentChar);
+                    AnnotatedString astr = AnnotatedString.Append (token.AnnotatedText, status.currentChar.Character);
+                    token = new Token (token.Type, astr);
                     accepted = true; 
                 }
 
@@ -345,7 +348,7 @@ namespace PLMain
 
         static bool NumberProcessing (TokenSet tokens, ref IToken current, ParsingStatus status)
         {
-           // Console.WriteLine ("Number, " + status.currentChar);
+         //   Console.WriteLine ("Number, " + status.currentChar);
 
             bool accepted = false;
 
@@ -359,7 +362,13 @@ namespace PLMain
             {
                 if (status.currentChar.IsNumber)// ||  status.currentChar.IsDecimal || status.currentChar.IsExponential)
                 {
-                    current.AnnotatedText.Append (status.currentChar);//.Character;
+
+                    AnnotatedString astr = AnnotatedString.Append (current.AnnotatedText, status.currentChar.Character);
+                    current = new Token (current.Type, astr);
+
+
+
+
                     accepted = true;
                 }
                 else
@@ -394,7 +403,8 @@ namespace PLMain
             { 
                 if (status.currentChar.QuoteLevel >= quoteNestingLevel)
                 {
-                    token.AnnotatedText.Append (status.currentChar);
+                    AnnotatedString astr = AnnotatedString.Append (token.AnnotatedText, status.currentChar.Character);
+                    token = new Token (token.Type, astr);
                     accepted = true;
                 }
                 else
@@ -445,7 +455,8 @@ namespace PLMain
             { 
                 if (status.currentChar.ParenLevel >= parenthesisNesting)
                 {
-                    token.AnnotatedText.Append (status.currentChar);
+                    AnnotatedString astr = AnnotatedString.Append (token.AnnotatedText, status.currentChar.Character);
+                    token = new Token (token.Type, astr);
                     accepted = true;
                 }
                 else
@@ -480,7 +491,8 @@ namespace PLMain
             { 
                 if (status.currentChar.BracketLevel >= bracketNesting)
                 {
-                    token.AnnotatedText.Append (status.currentChar);
+                    AnnotatedString astr = AnnotatedString.Append (token.AnnotatedText, status.currentChar.Character);
+                    token = new Token (token.Type, astr);
                     accepted = true;
                 }
                 else
