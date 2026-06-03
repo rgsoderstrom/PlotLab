@@ -20,14 +20,14 @@ namespace PLMain
     {
         // private storage
 	    private TokenType       type;
-	    private AnnotatedString annotatedText;
+	    private readonly AnnotatedString annotatedText;
 
         // public properties
         public TokenType Type {get {return type;} set {type = value;}}
         public AnnotatedString AnnotatedText {get {return annotatedText;}}
 
         // constructors
-        public Token (TokenType ty, AnnotatedChar   txt) {type = ty; annotatedText = new AnnotatedString (txt);}
+        public Token (TokenType ty, AnnotatedChar   txt) {type = ty; annotatedText = new AnnotatedString (txt.ToString ());}
         public Token (TokenType ty, AnnotatedString txt) {type = ty; annotatedText = txt;}
 
         // Remove first & last characters

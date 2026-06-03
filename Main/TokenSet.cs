@@ -91,12 +91,12 @@ namespace PLMain
         {
             string str = "";
 
-            str += "SuppressPrinting = " + SuppressPrinting.ToString () + "\n";
             str += "\n" + Count + " tokens" + "\n";
 
             foreach (IToken tok in tokens)
                 str += tok.ToString () + "\n";
 
+            str += "SuppressPrinting = " + SuppressPrinting.ToString () + "\n";
             return str;
         }
 
