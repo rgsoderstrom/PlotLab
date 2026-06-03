@@ -12,7 +12,7 @@
 		% c = 23
 	% end
 
-	% for b = 1:8, c = b ^ 2; disp (c); end % comment
+	
 
 	% for a = 1:9,
 		% b = a ^ 2; disp (b);
