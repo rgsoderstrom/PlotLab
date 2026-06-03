@@ -33,18 +33,24 @@ namespace utTokens
                 {
                     if (raw.Length > 0)
                     {
-                        string trimmed = raw.Trim ();
+                        string noTabs = raw.Replace ('\t', ' ');
+                        string trimmed = noTabs.Trim ();
 
                         if (trimmed.Length == 0 || trimmed [0] == '%')
                             continue;
 
-                        bool ps = false; // print separator
-                        //ps |= AnnotatedStringTest (trimmed);
-                        //ps |= AnnotatedStringSetTest (trimmed);
-                        //ps |= TokenParsingTest (trimmed);
-                        ps |= TokenUtilsTest (trimmed);
-                        
-                        if (ps) Print ("===========================================");                    }
+                        //AnnotatedStringTest (trimmed);
+                        //Print ("===========================================");                    
+
+                        //AnnotatedStringSetTest (trimmed);
+                        //Print ("===========================================");                    
+
+                        TokenParsingTest (trimmed);
+                        Print ("===========================================");                    
+
+                        //TokenUtilsTest (trimmed);
+                        //Print ("===========================================");                    
+                    }
                 }
 
                 inputFile.Close ();

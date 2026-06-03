@@ -59,16 +59,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Main\InputLineProcessor.cs">
+      <Link>InputLineProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\Main\NestedChar.cs">
+      <Link>NestedChar.cs</Link>
+    </Compile>
+    <Compile Include="..\Main\NestedString.cs">
+      <Link>NestedString.cs</Link>
+    </Compile>
+    <Compile Include="..\Main\StringClassifier.cs">
+      <Link>StringClassifier.cs</Link>
+    </Compile>
+    <Compile Include="..\Main\StringUtils.cs">
+      <Link>StringUtils.cs</Link>
+    </Compile>
     <Compile Include="Block.cs" />
     <Compile Include="BlockManager.cs" />
-    <Compile Include="InputLineProcessor.cs" />
     <Compile Include="InputLineUtils.cs" />
     <Compile Include="Interfaces\ICmndHistory.cs" />
     <Compile Include="Driver.cs" />
-    <Compile Include="NestedString.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringClassifier.cs" />
-    <Compile Include="StringUtils.cs" />
     <Compile Include="Stubs\CommandHistory.cs" />
   </ItemGroup>
   <ItemGroup>

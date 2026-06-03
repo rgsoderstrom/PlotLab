@@ -64,6 +64,9 @@
     <Compile Include="..\Main\AnnotatedStringSet.cs">
       <Link>AnnotatedStringSet.cs</Link>
     </Compile>
+    <Compile Include="..\Main\NestedString.cs">
+      <Link>NestedString.cs</Link>
+    </Compile>
     <Compile Include="..\Main\Token.cs">
       <Link>Token.cs</Link>
     </Compile>

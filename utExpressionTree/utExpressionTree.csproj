@@ -105,6 +105,9 @@
     <Compile Include="..\Main\InternalFunctions.cs">
       <Link>InternalFunctions.cs</Link>
     </Compile>
+    <Compile Include="..\Main\NestedString.cs">
+      <Link>NestedString.cs</Link>
+    </Compile>
     <Compile Include="..\Main\Token.cs">
       <Link>Token.cs</Link>
     </Compile>
