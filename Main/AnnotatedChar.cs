@@ -1,6 +1,6 @@
 ﻿
 /*
-    AnnotatedChar - 
+    AnnotatedChar - adds ContextType to NestedChar
 */
 
 using System;
@@ -68,10 +68,10 @@ namespace PLMain
         public bool IsTwoCharOp {get {return OverrideType == ContextType.IsTwoCharOperator;}}
         public bool IsTranspose {get {return OverrideType == ContextType.IsTranspose;}}
 
-        public bool IsExponent      {get {return character == '^';}}
-        public bool IsColon         {get {return character == ':';}}
-        public bool IsSemicolon     {get {return character == ';';}}
-        public bool IsComma         {get {return character == ',';}}
+    //    public bool IsExponent      {get {return character == '^';}}
+    //    public bool IsColon         {get {return character == ':';}}
+    ////    public bool IsSemicolon     {get {return character == ';';}}
+    //    public bool IsComma         {get {return character == ',';}}
 
         //**********************************************************************************
 

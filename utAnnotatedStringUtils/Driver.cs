@@ -15,8 +15,8 @@ namespace utAnnotatedStringUtils
             //AnnotatedString annotated = new AnnotatedString ("a\"bc\"de");
             //annotated = AnnotatedString.Append (annotated, "(22)");
 
-            //AnnotatedString annotated = new AnnotatedString ("clear a b c");
-            AnnotatedString annotated = new AnnotatedString ("Script12");
+            AnnotatedString annotated = new AnnotatedString ("clear a b c;");
+            //AnnotatedString annotated = new AnnotatedString ("Script12");
             //AnnotatedString annotated = new AnnotatedString ("figure (1)");
 
             Console.WriteLine ("Alpha only = " + annotated.AlphanumericOnly);

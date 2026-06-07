@@ -10,18 +10,32 @@ namespace PLMain
 {
     public class NestedString
     {
-        // protected members
-        protected readonly List<NestedChar> nestedChars = new List<NestedChar> ();
-        private   readonly List<string> level0Words = new List<string> ();
+        // private members
+        private readonly List<NestedChar> nestedChars = new List<NestedChar> ();
+
+
+        public int  CharacterCount {get {return nestedChars.Count;}}
+        public bool IsEmpty {get {return CharacterCount == 0;}}
 
         // white spaces outside of any brackets, parens or quotes
-        protected readonly List<int> Level0Spaces  = new List<int> (); 
+        //    - used to separate input text line into "words"
+        private readonly List<int> level0Spaces  = new List<int> (); 
+
+
+        private readonly List<int> level0Semis  = new List<int> ();
+        public List<int> Level0Semis {get {return level0Semis;}}
+
+        public bool IsCompound {get {return (level0Semis.Count > 0 && level0Semis [0] != CharacterCount - 1);}}
+
+        // 
+        private readonly List<string> level0Words = new List<string> ();
+        public  bool SingleWord {get {return level0Words.Count == 1;}}
+
 
         // public properties
-        private bool alphanumericOnly = true;
-        public  bool AlphanumericOnly {get {return alphanumericOnly;}} // set {alphanumericOnly = value;}}
+        private readonly bool alphanumericOnly = true;
+        public  bool AlphanumericOnly {get {return alphanumericOnly;}}
 
-        public  bool SingleWord {get {return level0Words.Count == 1;}}
 
         //*************************************************************************
         //
@@ -37,20 +51,24 @@ namespace PLMain
                 NestedChar nextNC = new NestedChar (text [0]);
                 nestedChars.Add (nextNC);
 
+
+
                 // an Alphanumeric must begin with a letter but subsequent characters may be letters or numbers
                 if (nextNC.IsLetter == false)
                     alphanumericOnly = false;
+
+
 
                 for (int i=1 ; i<text.Length; i++)
                 {
                     nextNC = new NestedChar (nestedChars [i-1], text [i]);
                     nestedChars.Add (nextNC);
 
-                    if (nextNC.IsWhitespace && nextNC.NestingLevel == 0)  
-                        Level0Spaces.Add  (i);
 
-                    if (nextNC.IsWhitespace == false && nextNC.IsAlphanumeric == false)
-                        alphanumericOnly = false;
+
+                    if (nextNC.IsWhitespace == true  && nextNC.NestingLevel   == 0)     level0Spaces.Add  (i);
+                    if (nextNC.IsSemicolon  == true  && nextNC.NestingLevel   == 0)     level0Semis.Add  (i);
+                    if (nextNC.IsWhitespace == false && nextNC.IsAlphanumeric == false) alphanumericOnly = false;
                 }
 
                 //
@@ -60,10 +78,10 @@ namespace PLMain
                 int stop = 0;
                 string plainCopy = Plain;
 
-                for (int i=0; i<Level0Spaces.Count; i++)
+                for (int i = 0; i<level0Spaces.Count; i++)
                 {
-                    stop = Level0Spaces [i];
-                    string nextWord =  plainCopy.Substring (start, stop - start);
+                    stop = level0Spaces [i];
+                    string nextWord = plainCopy.Substring (start, stop - start);
                     level0Words.Add (nextWord);
                     start = stop + 1;
                 }
@@ -93,8 +111,6 @@ namespace PLMain
                 return str;
             }
         }
-
-        public virtual int CharacterCount {get {return nestedChars.Count;}}
 
         //********************************************************************************
         //
@@ -146,7 +162,7 @@ namespace PLMain
         //
 
         // test for text line with something other than '.' after initial colon
-        protected bool NotAllDots (string str)
+        private bool NotAllDots (string str)
         {
             bool results = false;
 
@@ -178,6 +194,7 @@ namespace PLMain
             string str9  = "CloseBrkt:     ";
             string str10 = "Quote:         ";
             string str11 = "Level 0 Space  ";
+            string str12 = "Level 0 Semi   ";
 
             foreach (NestedChar ac in nestedChars)
             {
@@ -194,6 +211,7 @@ namespace PLMain
                 str10 += ac.IsQuote        ? "1" : ".";
 
                 str11 += ac.IsWhitespace   ? "1" : ".";
+                str12 += ac.IsSemicolon    ? "1" : ".";
             }
 
             string str = str1;
@@ -209,6 +227,23 @@ namespace PLMain
             if (str9.Contains ("1"))  str += '\n' + str9;
             if (str10.Contains ("1")) str += '\n' + str10;
             if (str11.Contains ("1")) str += '\n' + str11;
+            if (str12.Contains ("1")) str += '\n' + str12;
+
+            str += "\n" + "AlphanumericOnly = " + AlphanumericOnly.ToString ();
+            str += "\n" + "IsCompound       = " + IsCompound.ToString ();
+
+            if (AlphanumericOnly)
+            { 
+                str += "\n" + "FirstWord        = " + FirstWord;
+
+                List<string> args = Arguments;
+
+                if (args.Count > 0)
+                { 
+                    str += "\n" + "Arguments        = ";
+                    foreach (string argstr in args) str += argstr + ", ";
+                }
+            }
 
             return str;
         }

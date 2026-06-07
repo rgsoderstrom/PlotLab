@@ -8,31 +8,56 @@ using System.Collections.Generic;
 
 namespace PLMain
 {
-    public class AnnotatedString : NestedString
+    public class AnnotatedString
     {
         // private members
         private readonly List<AnnotatedChar> annotatedChars = new List<AnnotatedChar> ();
+
+        // public access properties
+        public int  CharacterCount {get {return annotatedChars.Count;}}
+        public bool IsEmpty {get {return CharacterCount == 0;}}
+
+        public string Plain // plain text without annotation
+        {
+            get
+            {
+                string str = "";
+
+                for (int i = 0; i<annotatedChars.Count; i++)
+                    str += annotatedChars [i].Character;
+
+                return str;
+            }
+        }
+
+        public bool SuppressOutput {get; protected set;} = false;
 
         //*************************************************************************
         //
         // ctors
         //
 
-        internal AnnotatedString (string text) : base (text)
+        internal AnnotatedString (string text)
         {
             if (text.Length == 0)
                 return;
 
             try
             {
-                string text2 = Preprocess (text);
+                string noTabs = text.Replace ('\t', ' ');
+                string trimmed = noTabs.Trim ();
 
-                if (text2.Length == 0)
+                if (trimmed.Length == 0 || trimmed [0] == '%')
                     return;
 
-                PassOne (text2);
+                if (trimmed [trimmed.Length - 1] == ';')
+                {
+                    SuppressOutput = true;
+                    trimmed = trimmed.Remove (trimmed.Length - 1, 1);
+                }
+
+                PassOne (trimmed);
                 PassTwo ();
-                PassThree ();
             }
 
             catch (Exception ex)
@@ -49,42 +74,6 @@ namespace PLMain
         private readonly List<int> exponentials = new List<int> (); // E or e
         private readonly List<int> operators    = new List<int> ();
 
-        private readonly List<int> whiteSpaces  = new List<int> (); // now: level 0 whitespaces
-
-        private readonly List<int> semicolons   = new List<int> ();
-        private readonly List<int> level0Semis  = new List<int> ();
-
-        public List<int> Level0Semis {get {return level0Semis;}}
-
-        //*************************************************************************
-
-        //public int CharacterCount {get {return annotatedChars.Count;}}
-        public bool IsEmpty {get {return CharacterCount == 0;}}
-        public int FinalBracketLevel {get {return annotatedChars [CharacterCount-1].BracketLevel;}}
-
-        private bool suppressOutput = false; // set true if last char is semicolon
-        public  bool SuppressOutput {get {return suppressOutput;} set {suppressOutput = value;}}
-
-        private bool isCompound = false; // set true for stmts of the form: a = 7; b = 10; c = 12;
-        public  bool IsCompound {get {return isCompound;} private set {isCompound = value;}}
-
-        public override int CharacterCount {get {return annotatedChars.Count;}}
-
-        //************************************************************************
-
-        // if line ends in semicolon, remove it and set SuppressOutput = true
-
-        private string Preprocess (string text)
-        { 
-            if (text [text.Length - 1] == ';')
-            {
-                text = text.Remove (text.Length - 1, 1);
-                SuppressOutput = true;
-            }
-
-            return text;
-        }
-
         //*************************************************************************
 
         private void PassOne (string text)
@@ -97,13 +86,8 @@ namespace PLMain
                 if (nextAC.IsNumber)      digits.Add       (i);   
                 if (nextAC.IsDecimal)     decimals.Add     (i); 
                 if (nextAC.IsExponential) exponentials.Add (i);
+                if (nextAC.IsOperator)    operators.Add (i);
 
-                // don't count trailing semicolon as an operator
-                if (nextAC.IsSemicolon == false || i != text.Length - 1)
-                    if (nextAC.IsOperator)    
-                        operators.Add    (i);
-
-                if (nextAC.IsSemicolon)   semicolons.Add   (i);
                 annotatedChars.Add (nextAC);
             }
         }
@@ -263,20 +247,6 @@ namespace PLMain
 
         //*************************************************************************
 
-        private void PassThree () 
-        {
-            foreach (int index in semicolons)
-            {
-                if (annotatedChars [index].NestingLevel == 0)
-                    level0Semis.Add (index);
-            }
-
-            if (level0Semis.Count > 0)
-                IsCompound = true;
-        }
-
-        //*************************************************************************
-
 
         // Copy constructor
 
@@ -357,9 +327,12 @@ namespace PLMain
         // Add outer parenthesis
         //
 
-        internal AnnotatedString AddOuterParens ()
+        internal static AnnotatedString AddOuterParens (AnnotatedString astr)
         {
-            throw new NotImplementedException ("Not implemented");
+            string str = astr.Plain;
+            str = "(" + str + ")";
+            return new AnnotatedString (str);
+
           //  List<AnnotatedChar> newChars = new List<AnnotatedChar> (CharacterCount + 2);
 
           //  foreach (AnnotatedChar ac in annotatedChars)
@@ -456,9 +429,37 @@ namespace PLMain
         //  - typically parens or square brackets
         //  - also removes spaces on either end
         //
-        public AnnotatedString RemoveWrapper ()
+     // public static AnnotatedString RemoveWrapper (AnnotatedString src)
+        public static NestedString RemoveWrapper (NestedString src)
         {
-            throw new NotImplementedException ("Not implemented");
+            string initial = src.Plain;
+            bool SyntaxError = false;
+
+            switch (initial [0])
+            {
+                case '[':
+                    if (initial [initial.Length - 1] != ']')
+                        SyntaxError = true;
+                    break;
+
+                case '(':
+                    if (initial [initial.Length - 1] != ')')
+                        SyntaxError = true;
+                    break;
+
+                default:
+                    SyntaxError = true;
+                    break;
+            }
+
+            if (SyntaxError)
+                throw new Exception ("Syntax error in RemoveWrapper: " + initial);
+
+            string final = initial.Remove (0, 1);
+            final = final.Remove (final.Length - 1, 1);
+
+            return new AnnotatedString (final.Trim ());
+
             //int startIndex = 1;
             //int endIndex = annotatedChars.Count - 2;
 
@@ -475,10 +476,36 @@ namespace PLMain
         //
         // ToString ()
         //
+        // test for text line with something other than '.' after initial colon
+        private bool NotAllDots (string str)
+        {
+            bool results = false;
+
+            int i = str.IndexOf (':') + 1;
+
+            while (i<str.Length)
+            {
+                if (str [i] != ' ' && str [i] != '.')
+                {
+                    results = true;
+                    break;
+                }
+
+                i++;
+            }
+            return results;
+        }
+
 
         public override string ToString () 
         {
-            string str = base.ToString ();
+            string str0 = "Character:     ";
+
+            string strA  = "ParenLevel:    ";
+            string strB  = "BktLevel:      ";
+            string strC  = "QuoteLevel:    ";
+            string strD  = "NestingLevel:  ";
+
 
             string str1 = "OpenQuote:     ";
             string str2 = "CloseQuote:    ";
@@ -491,17 +518,25 @@ namespace PLMain
             string str7 = "Transpose:     ";
 
             string str8 = "Minus:         ";
-         // string str17 = "Unary Op :    ";
-         // string str9 = "Exponent:      ";
+            string str9 = "Unary Op :    ";
+            string str10 = "Exponent:      ";
          // string str10 = "Colon:         ";
-            string str11 = "Semicolon:     ";
+         // string str11 = "Semicolon:     ";
          // string str21 = "Level0Semi:    ";
-            string str12 = "Comma:         ";
+       //     string str12 = "Comma:         ";
             string str13 = "Operator:      ";
             string str14 = "TwoCharOp:     ";
 
             foreach (AnnotatedChar ac in annotatedChars)
             {
+                str0 += ac.Character;
+
+                strA += ac.ParenLevel   == 0 ? "." : ac.ParenLevel.ToString ();
+                strB += ac.BracketLevel == 0 ? "." : ac.BracketLevel.ToString ();
+                strC += ac.QuoteLevel   == 0 ? "." : ac.QuoteLevel.ToString ();
+                strD += ac.NestingLevel == 0 ? "." : ac.NestingLevel.ToString ();
+
+
                 str1 += ac.IsOpenQuote    ? "1" : ".";
                 str2 += ac.IsCloseQuote   ? "1" : ".";
                 str3 += ac.IsEqualSign   ? "1" : ".";
@@ -509,31 +544,22 @@ namespace PLMain
                 str5 += ac.IsNumber      ? "1" : ".";
                 str6 += ac.IsDecimal     ? "1" : ".";
                 str7 += ac.IsTranspose   ? "1" : ".";
-
                 str8 += ac.IsMinus       ? "1" : ".";
-                str11 += ac.IsSemicolon   ? "1" : ".";
-                str12 += ac.IsComma       ? "1" : ".";
+              //  str9 += ac.IsUn
+
+           //     str11 += ac.IsSemicolon   ? "1" : ".";
+             //   str12 += ac.IsComma       ? "1" : ".";
                 str13 += ac.IsOperator    ? "1" : ".";
                 str14 += ac.IsTwoCharOp   ? "1" : ".";
+
             }
 
-            // if trailing ; was removed, pad strings with extra dot to make
-            // them same length as NestedString prints
-            if (suppressOutput)
-            {
-                str1  += ".";
-                str2  += ".";
-                str3  += ".";
-                str4  += ".";
-                str5  += ".";
-                str6  += ".";
-                str7  += ".";
-                str8  += ".";
-                str11 += ".";
-                str12 += ".";
-                str13 += ".";
-                str14 += ".";
-            }
+            string str = str0;
+
+            if (NotAllDots (strA)) str += '\n' + strA;
+            if (NotAllDots (strB)) str += '\n' + strB;
+            if (NotAllDots (strC)) str += '\n' + strC;
+            if (NotAllDots (strD)) str += '\n' + strD;
 
             if (str1.Contains ("1")) str += '\n' + str1;
             if (str2.Contains ("1")) str += '\n' + str2;
@@ -547,14 +573,10 @@ namespace PLMain
             if (str8.Contains ("1")) str += '\n' + str8;
             //if (str9.Contains ("1")) str += '\n' + str9;
             //if (str10.Contains ("1")) str += '\n' + str10;
-            if (str11.Contains ("1")) str += '\n' + str11;
-            if (str12.Contains ("1")) str += '\n' + str12;
+            //if (str11.Contains ("1")) str += '\n' + str11;
+          //  if (str12.Contains ("1")) str += '\n' + str12;
             if (str13.Contains ("1")) str += '\n' + str13;
             if (str14.Contains ("1")) str += '\n' + str14;
-
-            str += "\n";
-            str += "\n" + "SuppressOutput   = " + SuppressOutput.ToString ();
-            str += "\n" + "IsCompound       = " + IsCompound.ToString ();
 
             return str;
         }

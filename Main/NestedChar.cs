@@ -33,12 +33,18 @@ namespace PLMain
         public bool IsOpenBracket  {get {return character == '[';}}
         public bool IsCloseBracket {get {return character == ']';}}
         public bool IsQuote        {get {return character == '\'';}}
+        public bool IsOpenQuote    {get {return character == openquote;}}
+        public bool IsCloseQuote   {get {return character == closequote;}}
 
-        public bool IsLetter       {get {return Char.IsLetter (character);}}
+
+        // Whitespace and Semi at nesting level 0 
+        public bool IsWhitespace   {get {return character == ' ' && NestingLevel == 0;}}
+        public bool IsSemicolon    {get {return character == ';' && NestingLevel == 0;}}
+
+        public bool IsLetter {get {return Char.IsLetter (character);}}
         public bool IsAlphanumeric {get {return Char.IsLetterOrDigit (character);}}
 
-        // Whitespace is actually a whitespace at nesting level 0 
-        public bool IsWhitespace   {get {return (character == ' ' && NestingLevel == 0);}}
+
 
         public int  NestingLevel   {get {return bracketlevel + parenlevel + quotelevel;}}
 
@@ -47,8 +53,6 @@ namespace PLMain
         private const char openquote  = (char) 145; // extended ASCII left single quote
         private const char closequote = (char) 146; //   "        "   right   "     "
 
-        public bool IsOpenQuote    {get {return character == openquote;}}
-        public bool IsCloseQuote   {get {return character == closequote;}}
 
         //**************************************************************************
         //

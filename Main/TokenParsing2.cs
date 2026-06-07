@@ -183,6 +183,10 @@ namespace PLMain
                 if (initial [i].Type == TokenType.Brackets)
                 {
                     AnnotatedString tokenText = initial [i].AnnotatedText;
+                    AnnotatedString inside = AnnotatedString.RemoveWrapper (tokenText);
+
+
+
                     char separatorFound = NoneFound;
 
                     int initalNesting = tokenText [0].NestingLevel;
@@ -271,7 +275,7 @@ namespace PLMain
                 edited.Add (new Token (TokenType.FunctionName, new AnnotatedString ("transpose"))); // NESTING LEVELS NEEDED?
 
                 // add parens unless outer level is already parens                
-                if (initial [get].Type != TokenType.GroupingParens) edited.Add (new Token (TokenType.FunctionParens, initial [get].AnnotatedText.AddOuterParens ()));
+                if (initial [get].Type != TokenType.GroupingParens) edited.Add (new Token (TokenType.FunctionParens, AnnotatedString.AddOuterParens (initial [get].AnnotatedText)));
                 else                                                edited.Add (new Token (TokenType.FunctionParens, initial [get].AnnotatedText));
 
                 get += 2;
@@ -341,7 +345,7 @@ namespace PLMain
 
                         // add parens unless outer level is already parens                
                         Token t4 = initial [get].Type != TokenType.GroupingParens ? 
-                                   new Token (TokenType.FunctionParens, initial [get + 1].AnnotatedText.AddOuterParens ()) :
+                                   new Token (TokenType.FunctionParens, AnnotatedString.AddOuterParens (initial [get + 1].AnnotatedText)) :
                                    new Token (TokenType.FunctionParens, initial [get + 1].AnnotatedText);
 
                         TokenPair funcPair = new TokenPair (TokenPairType.Function, t3, t4);

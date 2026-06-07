@@ -2,33 +2,43 @@
 
 % TokenTests.m, for utTokens
 
-	% AnnotatedString - test cases should be clean single statements
-
-	% d = [1 ; 2 ; 3]
+	% NestedString
+	% clear a b c
+	% for a = 1:10,
+	% while (b > 2)
+	% startup
+	% figure
+	
+	% AnnotatedString - 
+	% d = [1 ; (2 * 7) ; 3]'
+	% x >= 3;
+	% a = b123 + 1;
+	% d = [1 ; 2 ; 3];
 	% e = 22 / 7
+	% e = 22 / 7;
  	% z = 3 + 4 * sin (45) * 5;
 	% a = b' + c' + d' + e';
 	% d = 'zxcv';
 	% z = 'aa\'b';
 	% a = sprintf ('%d', qwe);
 		
-	% AnnotatedStringSet - 
-	% a = 4; b = a ^ 2; c = b ^ 2; d = c / 3
-	% a = 4; b = a ^ 2; c = b ^ 2; d = c / 3;
+	% NestedStringSet - 
+	% a = 4; b = a ^ 2 
+	% a = 4; b = a ^ 2; c = b ^ 2; d = c / 3; clear a b c
 	
 	
 	% TokenParsing
+	% z = 987 * 23;
 	% z = -987
-	% x = -a;
 	% c = ~c123 & 1;
 	% d = -3 * -sin (4);
-	t1 = [1 2 3]' + (4 5 6)' + [7:9]' + dd' + c123;
-	b6 = (1, 2, 3, 4)';
-	a4 = [1, sqrt (2), -3]'
-	zz = 'asd' + 'fg';
+	% t1 = [1 2 3]' + (4 : 6)' + [7:9]' + dd' + c123;
+	% b6 = (1, 2, 3, 4)';
+	% a4 = [1, sqrt (2), -3]'
+	% zz = 'asd' + 'fg';
 
 	% TokenUtils
-	% [2 ; sin (z) ; 6^2]
+	[2 ; sin (z) ; 6^2]
 	% [Abc, 456, 789]
  	% [1,2,3]
 	% [11, 12 , 13]
