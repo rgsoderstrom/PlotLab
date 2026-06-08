@@ -2,7 +2,7 @@
 
 % TokenTests.m, for utTokens
 
-	% NestedString
+	% AnnotatedString - alphanumeric only
 	% clear a b c
 	% for a = 1:10,
 	% while (b > 2)
@@ -10,8 +10,8 @@
 	% figure
 	
 	% AnnotatedString - 
-	% d = [1 ; (2 * 7) ; 3]'
-	% x >= 3;
+	d = [1 ; (2 * 7) ; 3]'
+	x >= 3;
 	% a = b123 + 1;
 	% d = [1 ; 2 ; 3];
 	% e = 22 / 7
@@ -22,7 +22,7 @@
 	% z = 'aa\'b';
 	% a = sprintf ('%d', qwe);
 		
-	% NestedStringSet - 
+	% AnnotatedStringSet - 
 	% a = 4; b = a ^ 2 
 	% a = 4; b = a ^ 2; c = b ^ 2; d = c / 3; clear a b c
 	
@@ -38,7 +38,7 @@
 	% zz = 'asd' + 'fg';
 
 	% TokenUtils
-	[2 ; sin (z) ; 6^2]
+	% [2 ; sin (z) ; 6^2]
 	% [Abc, 456, 789]
  	% [1,2,3]
 	% [11, 12 , 13]

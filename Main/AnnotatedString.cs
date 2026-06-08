@@ -17,6 +17,76 @@ namespace PLMain
         public int  CharacterCount {get {return annotatedChars.Count;}}
         public bool IsEmpty {get {return CharacterCount == 0;}}
 
+
+        // private members
+        // white spaces outside of any brackets, parens or quotes
+        //    - used to separate input text line into "words"
+        private readonly List<int> level0Spaces  = new List<int> (); 
+
+
+        private readonly List<int> level0Semis  = new List<int> ();
+        public List<int> Level0Semis {get {return level0Semis;}}
+
+        public bool IsCompound {get {return (level0Semis.Count > 0 && level0Semis [0] != CharacterCount - 1);}}
+
+        // 
+        private readonly List<string> level0Words = new List<string> ();
+        public  bool SingleWord {get {return level0Words.Count == 1;}}
+
+
+        // public properties
+        private bool alphanumericOnly = true;
+        public  bool AlphanumericOnly {get {return alphanumericOnly;}}
+
+
+
+        //********************************************************************************
+        //
+        // Return first word of input string
+        //
+        //      Commands
+        //          - clear a b c % returns "clear"
+        //
+        //      For block start
+        //          - for a = 1:9, % return "for"
+        //
+        //      function declaration
+        //          - function [x, y, z] =   % returns "function"
+        public string FirstWord
+        {
+            get
+            {
+                if (level0Words.Count < 2)
+                    return Plain;
+
+                return level0Words [0];
+            }
+        }
+
+        //************************************************************************
+        //
+        // Return everything after FirstWord
+        //
+        //      - clear a b c % returns "a b c" (no quotes)
+        //      - for a = 1:9, % returns a = 1:9,
+
+        public List<string> Arguments // all words after the first word
+        {
+            get
+            {
+                List<string> args = new List<string> ();
+
+                for (int i = 1; i<level0Words.Count; i++)
+                    args.Add (level0Words [i]);
+
+                return args;
+            }
+        }
+
+
+
+
+
         public string Plain // plain text without annotation
         {
             get
@@ -41,7 +111,6 @@ namespace PLMain
         {
             if (text.Length == 0)
                 return;
-
             try
             {
                 string noTabs = text.Replace ('\t', ' ');
@@ -58,6 +127,7 @@ namespace PLMain
 
                 PassOne (trimmed);
                 PassTwo ();
+                Pass3 ();
             }
 
             catch (Exception ex)
@@ -78,17 +148,26 @@ namespace PLMain
 
         private void PassOne (string text)
         { 
-            for (int i=0; i<text.Length; i++)
+            AnnotatedChar firstAC = new AnnotatedChar (text [0]);
+            annotatedChars.Add (firstAC);
+
+            // an all alphanumeric string must begin with a letter but subsequent characters may be letters or numbers
+            if (firstAC.IsLetter == false)
+                alphanumericOnly = false;
+
+            for (int i=1; i<text.Length; i++)
             {
-                AnnotatedChar nextAC = i > 0 ? new AnnotatedChar (annotatedChars [i-1], text [i])
-                                             : new AnnotatedChar (text [i]);
+                AnnotatedChar nextAC = new AnnotatedChar (annotatedChars [i-1], text [i]);
+                annotatedChars.Add (nextAC);
 
                 if (nextAC.IsNumber)      digits.Add       (i);   
                 if (nextAC.IsDecimal)     decimals.Add     (i); 
                 if (nextAC.IsExponential) exponentials.Add (i);
                 if (nextAC.IsOperator)    operators.Add (i);
 
-                annotatedChars.Add (nextAC);
+                if (nextAC.IsWhitespace == true  && nextAC.NestingLevel   == 0)     level0Spaces.Add  (i);
+                if (nextAC.IsSemicolon  == true  && nextAC.NestingLevel   == 0)     level0Semis.Add  (i);
+                if (nextAC.IsWhitespace == false && nextAC.IsAlphanumeric == false) alphanumericOnly = false;
             }
         }
 
@@ -243,6 +322,27 @@ namespace PLMain
                         annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsTranspose;
                 }
             }
+        }
+
+        //*************************************************************************
+
+        private void Pass3 ()
+        {
+            // break into "words", character substrings separated by level 0 whitespaces
+            int start = 0;
+            int stop = 0;
+            string plainCopy = Plain;
+
+            for (int i = 0; i<level0Spaces.Count; i++)
+            {
+                stop = level0Spaces [i];
+                string nextWord = plainCopy.Substring (start, stop - start);
+                level0Words.Add (nextWord);
+                start = stop + 1;
+            }
+
+            if (stop < plainCopy.Length)
+                level0Words.Add (plainCopy.Substring (start, Plain.Length - start));
         }
 
         //*************************************************************************
@@ -429,8 +529,7 @@ namespace PLMain
         //  - typically parens or square brackets
         //  - also removes spaces on either end
         //
-     // public static AnnotatedString RemoveWrapper (AnnotatedString src)
-        public static NestedString RemoveWrapper (NestedString src)
+        public static AnnotatedString RemoveWrapper (AnnotatedString src)
         {
             string initial = src.Plain;
             bool SyntaxError = false;
@@ -459,23 +558,13 @@ namespace PLMain
             final = final.Remove (final.Length - 1, 1);
 
             return new AnnotatedString (final.Trim ());
-
-            //int startIndex = 1;
-            //int endIndex = annotatedChars.Count - 2;
-
-            //while (annotatedChars [startIndex].IsWhitespace && startIndex < endIndex)
-            //    startIndex++;
-
-            //while (annotatedChars [endIndex].IsWhitespace && endIndex > startIndex)
-            //    endIndex--;
-
-            //return new AnnotatedString (annotatedChars, startIndex, endIndex - startIndex + 1);
         }
 
         //****************************************************************************************
         //
         // ToString ()
         //
+
         // test for text line with something other than '.' after initial colon
         private bool NotAllDots (string str)
         {
@@ -506,6 +595,13 @@ namespace PLMain
             string strC  = "QuoteLevel:    ";
             string strD  = "NestingLevel:  ";
 
+            string str6  = "OpenParen:     ";
+            //string str7  = "CloseParen:    ";
+            string str8  = "OpenBrkt:      ";  
+            string str9  = "CloseBrkt:     ";
+            string str10 = "Quote:         ";
+            string str11 = "Level 0 Space  ";
+            string str12 = "Level 0 Semi   ";
 
             string str1 = "OpenQuote:     ";
             string str2 = "CloseQuote:    ";
@@ -514,12 +610,12 @@ namespace PLMain
 
             string str4 = "Alpha:         ";
             string str5 = "Number:        ";
-            string str6 = "Decimal:       ";
+            //string str6 = "Decimal:       ";
             string str7 = "Transpose:     ";
 
-            string str8 = "Minus:         ";
-            string str9 = "Unary Op :    ";
-            string str10 = "Exponent:      ";
+            //string str8 = "Minus:         ";
+            //string str9 = "Unary Op :    ";
+            //string str10 = "Exponent:      ";
          // string str10 = "Colon:         ";
          // string str11 = "Semicolon:     ";
          // string str21 = "Level0Semi:    ";
@@ -577,6 +673,23 @@ namespace PLMain
           //  if (str12.Contains ("1")) str += '\n' + str12;
             if (str13.Contains ("1")) str += '\n' + str13;
             if (str14.Contains ("1")) str += '\n' + str14;
+
+            str += "\n" + "FirstWord:         " + FirstWord;
+
+            str += "\n" + "AlphanumericOnly:  " + AlphanumericOnly.ToString ();            
+            
+            if (AlphanumericOnly)
+            { 
+                List<string> args = Arguments;
+
+                if (args.Count > 0)
+                { 
+                    str += "\n" + "Arguments: ";
+                    foreach (string argstr in args) str += argstr + ", ";
+                }
+            }
+
+            str += "\n" + "SuppressOutput: " + SuppressOutput;
 
             return str;
         }

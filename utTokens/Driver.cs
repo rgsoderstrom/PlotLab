@@ -39,17 +39,14 @@ namespace utTokens
                         if (trimmed.Length == 0 || trimmed [0] == '%')
                             continue;
 
-                        //NestedStringTest (trimmed);
+                        AnnotatedStringTest (trimmed);
+                        Print ("===========================================");
+
+                        //AnnotatedStringSetTest (trimmed);
+                        //Print ("===========================================");
+
+                        //TokenParsingTest (trimmed);
                         //Print ("===========================================");                    
-
-                        //AnnotatedStringTest (trimmed);
-                        //Print ("===========================================");
-
-                        //NestedStringSetTest (trimmed);
-                        //Print ("===========================================");
-
-                        TokenParsingTest (trimmed);
-                        Print ("===========================================");                    
 
                         //TokenUtilsTest (trimmed);
                         //Print ("===========================================");                    
@@ -70,12 +67,13 @@ namespace utTokens
         //***********************************************************************
         //***********************************************************************
 
-        static private bool NestedStringTest (string inputString)
+        static private bool AnnotatedStringTest (string inputString)
         {
             if (inputString.Length == 0)
                 return false;
 
-            NestedString nested = new NestedString (inputString);    
+            AnnotatedString nested = new AnnotatedString (inputString);    
+            Print (inputString);
             Print (nested.ToString ());
 
             return true;
@@ -85,24 +83,9 @@ namespace utTokens
         //***********************************************************************
         //***********************************************************************
 
-        static private bool AnnotatedStringTest (string inputString)
+        private static bool AnnotatedStringSetTest (string str)
         {
-            if (inputString.Length == 0)
-                return false;
-
-            AnnotatedString annotated = new AnnotatedString (inputString);    
-            Print (annotated.ToString ());
-
-            return true;
-        }
-
-        //***********************************************************************
-        //***********************************************************************
-        //***********************************************************************
-
-        private static bool NestedStringSetTest (string str)
-        {
-            NestedString nested = new NestedString (str);
+            AnnotatedString nested = new AnnotatedString (str);
 
             if (nested == null)
                 return false;
@@ -110,14 +93,14 @@ namespace utTokens
             if (nested.IsEmpty)
                 return false;
 
-            NestedStringSet nestedSet = new NestedStringSet ();
+            AnnotatedStringSet nestedSet = new AnnotatedStringSet ();
             nestedSet.Add (nested);
 
             Print ("count = " + nestedSet.Count);
 
             while (nestedSet.Count > 0)
             {
-                NestedString next = nestedSet.GetOldest ();
+                AnnotatedString next = nestedSet.GetOldest ();
 
                 if (next == null)
                     break;
@@ -164,7 +147,7 @@ namespace utTokens
 
         static private bool TokenUtilsTest (string str)
         {
-            NestedString nested = new NestedString (str);
+            AnnotatedString nested = new AnnotatedString (str);
             TokenParsing parsing = new TokenParsing ();
 
             Print ("Before split:");
@@ -173,12 +156,12 @@ namespace utTokens
             Print ("\nAfter split:");
 
             // AnnotatedStringSet fargs = parsing.SplitBracketArgs_Space (annotated);
-            NestedStringSet fargs = parsing.SplitBracketArgs_Semi (nested);
+            AnnotatedStringSet fargs = parsing.SplitBracketArgs_Semi (nested);
             //   AnnotatedStringSet fargs = parsing.SplitBracketArgs_Comma (annotated);
 
             while (fargs.IsEmpty == false)
             {
-                NestedString nstr = fargs.GetOldest ();
+                AnnotatedString nstr = fargs.GetOldest ();
                 Print (nstr.ToString () + "\n");
             }
 

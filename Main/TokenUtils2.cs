@@ -19,10 +19,10 @@ namespace PLMain
         //   2. some passed-in CharacterTest is true
         //
 
-        delegate bool CharacterTest (NestedChar c);
+        delegate bool CharacterTest (AnnotatedChar c);
 
-        private void BreakIntoSubstrings (NestedString    src, 
-                                          NestedStringSet substrings, 
+        private void BreakIntoSubstrings (AnnotatedString    src, 
+                                          AnnotatedStringSet substrings, 
                                           CharacterTest   test)
         {
             throw new NotImplementedException ();
@@ -34,7 +34,7 @@ namespace PLMain
 
             //// look for commas at same nesting level
             //for (int i=1; i<lastIndex; i++)
-            //    if (test (src [i]) && NestedChar.SameNesting (src [0], src [i]))
+            //    if (test (src [i]) && AnnotatedChar.SameNesting (src [0], src [i]))
             //        copyEndpoints.Add (i);
 
             //copyEndpoints.Add (lastIndex); // end last copy here
@@ -45,7 +45,7 @@ namespace PLMain
             //    int start = copyEndpoints [i] + 1;
             //    int end   = copyEndpoints [i+1] - 1;
             //    int count = end - start + 1;
-            //    NestedString arg = src.TrimmedSubstring (start, count);
+            //    AnnotatedString arg = src.TrimmedSubstring (start, count);
             //    substrings.Add (arg);
             //}
         }
@@ -56,7 +56,7 @@ namespace PLMain
         //      - of the form (A, B, C)
         //
 
-        public NestedStringSet SplitFunctionArgs (NestedString str)
+        public AnnotatedStringSet SplitFunctionArgs (AnnotatedString str)
         {
             throw new NotImplementedException ();
 
@@ -66,8 +66,8 @@ namespace PLMain
             //if (str [lastIndex].IsCloseParen == false) throw new Exception ("Function arg syntax error at close paren: " + str.Plain);
             
             //// extract substrings
-            //NestedStringSet extractedArgs = new NestedStringSet ();  
-            //BreakIntoSubstrings (str, extractedArgs, delegate (NestedChar ac) {return ac.IsComma;});
+            //AnnotatedStringSet extractedArgs = new AnnotatedStringSet ();  
+            //BreakIntoSubstrings (str, extractedArgs, delegate (AnnotatedChar ac) {return ac.IsComma;});
 
             //return extractedArgs;
         }
@@ -83,49 +83,49 @@ namespace PLMain
         // c = [1 : 3 : 20]
         // v = [2 ; 4 ; 6]
 
-        private void VerifyBrackets (NestedString str)
+        private void VerifyBrackets (AnnotatedString str)
         {
             throw new NotImplementedException ();
             //if (str [0].IsOpenBracket == false)              throw new Exception ("Missing opening bracket: " + str.Plain);
             //if (str [str.CharacterCount - 1].IsCloseBracket == false) throw new Exception ("Missing closing bracket: " + str.Plain);
         }
 
-        public NestedStringSet SplitBracketArgs_Comma (NestedString str)
+        public AnnotatedStringSet SplitBracketArgs_Comma (AnnotatedString str)
         {
             throw new NotImplementedException ();
             //VerifyBrackets (str);
-            //NestedStringSet args = new NestedStringSet ();
-            //BreakIntoSubstrings (str, args, delegate (NestedChar ac) {return ac.IsComma;});
+            //AnnotatedStringSet args = new AnnotatedStringSet ();
+            //BreakIntoSubstrings (str, args, delegate (AnnotatedChar ac) {return ac.IsComma;});
             //return args;
         }
 
-        public NestedStringSet SplitBracketArgs_Colon (NestedString str)
+        public AnnotatedStringSet SplitBracketArgs_Colon (AnnotatedString str)
         {
             throw new NotImplementedException ();
             //VerifyBrackets (str);
-            //NestedStringSet args = new NestedStringSet ();
-            //BreakIntoSubstrings (str, args, delegate (NestedChar ac) {return ac.IsColon;});
+            //AnnotatedStringSet args = new AnnotatedStringSet ();
+            //BreakIntoSubstrings (str, args, delegate (AnnotatedChar ac) {return ac.IsColon;});
             //return args;
         }
 
-        public NestedStringSet SplitBracketArgs_Semi (NestedString str)
+        public AnnotatedStringSet SplitBracketArgs_Semi (AnnotatedString str)
         {
-            NestedString allArgs = AnnotatedString.RemoveWrapper (str);
-            NestedStringSet splitArgs = new NestedStringSet ();
+            AnnotatedString allArgs = AnnotatedString.RemoveWrapper (str);
+            AnnotatedStringSet splitArgs = new AnnotatedStringSet ();
             splitArgs.Add (allArgs);
             return splitArgs;
             
             //VerifyBrackets (str);
-            //NestedStringSet args = new NestedStringSet ();
-            //BreakIntoSubstrings (str, args, delegate (NestedChar ac) {return ac.IsSemicolon;});
+            //AnnotatedStringSet args = new AnnotatedStringSet ();
+            //BreakIntoSubstrings (str, args, delegate (AnnotatedChar ac) {return ac.IsSemicolon;});
             //return args;
         }
 
-        public NestedStringSet SplitBracketArgs_Space (NestedString str)
+        public AnnotatedStringSet SplitBracketArgs_Space (AnnotatedString str)
         {
             VerifyBrackets (str);
-            NestedStringSet args = new NestedStringSet ();
-            BreakIntoSubstrings (str, args, delegate (NestedChar ac) {return ac.IsWhitespace;});
+            AnnotatedStringSet args = new AnnotatedStringSet ();
+            BreakIntoSubstrings (str, args, delegate (AnnotatedChar ac) {return ac.IsWhitespace;});
             return args;
         }
 
@@ -135,21 +135,21 @@ namespace PLMain
         //  - eg: (2:4, 6:7) => "2:4", "6:7"
         //  
 
-        private void VerifyParenthesis (NestedString str)
+        private void VerifyParenthesis (AnnotatedString str)
         {
             throw new NotImplementedException ();
             //if (str [0].IsOpenParen == false)              throw new Exception ("Missing opening parenthesis: " + str.Plain);
             //if (str [str.CharacterCount - 1].IsCloseParen == false) throw new Exception ("Missing closing parenthesis: " + str.Plain);
         }
 
-        public NestedStringSet SplitSubmatrixArgs (NestedString str)
+        public AnnotatedStringSet SplitSubmatrixArgs (AnnotatedString str)
         {
             throw new NotImplementedException ();
             //VerifyParenthesis (str);
 
             //// split arguments string at any commas at same nesting level as first char
-            //NestedStringSet args = new NestedStringSet ();
-            //BreakIntoSubstrings (str, args, delegate (NestedChar ac) {return ac.IsComma;});
+            //AnnotatedStringSet args = new AnnotatedStringSet ();
+            //BreakIntoSubstrings (str, args, delegate (AnnotatedChar ac) {return ac.IsComma;});
             //return args;
         }
     }
