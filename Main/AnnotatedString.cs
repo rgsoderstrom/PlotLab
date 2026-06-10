@@ -119,15 +119,40 @@ namespace PLMain
                 if (trimmed.Length == 0 || trimmed [0] == '%')
                     return;
 
-                if (trimmed [trimmed.Length - 1] == ';')
-                {
-                    SuppressOutput = true;
-                    trimmed = trimmed.Remove (trimmed.Length - 1, 1);
-                }
+
+                // causes problem when appending ;
+                //   d = [1 ;
+
+                //if (trimmed [trimmed.Length - 1] == ';')
+                //{
+                //    SuppressOutput = true;
+                //    trimmed = trimmed.Remove (trimmed.Length - 1, 1);
+                //}
+
+
 
                 PassOne (trimmed);
                 PassTwo ();
                 Pass3 ();
+
+
+
+
+                //bool t1 = annotatedChars [CharacterCount - 1].IsSemicolon;
+                //bool t2 = annotatedChars [0].NestingLevel == annotatedChars [CharacterCount - 1].NestingLevel;
+
+                //if (t1 && t2)
+                //{
+                //    SuppressOutput = true;
+                //    annotatedChars.RemoveAt (CharacterCount - 1);
+
+                //    if (Level0Semis [Level0Semis.Count - 1] >= CharacterCount)
+                //        Level0Semis.RemoveAt (Level0Semis.Count - 1);
+                //}
+
+
+
+
             }
 
             catch (Exception ex)
@@ -383,23 +408,42 @@ namespace PLMain
         // Append
         //
 
+
+
+
+        //internal static AnnotatedString Append (AnnotatedString orig, char ch)
+        //{
+        //    AnnotatedChar wasLast = orig [orig.CharacterCount-1];
+        //    orig.annotatedChars.Add (new AnnotatedChar (wasLast, ch));
+
+
+
+        //}
+
         internal static AnnotatedString Append (AnnotatedString orig, char ch)
         {
-            string str = orig.Plain;
-            str += ch;
-            return new AnnotatedString (str);
+            throw new NotImplementedException ("Append ch");
+            //string str = orig.Plain;
+            //str += ch;
+            //return new AnnotatedString (str);
         }
 
-        internal static AnnotatedString Append (AnnotatedString orig, string added)
-        {
-            string str = orig.Plain;
-            str += added;
-            return new AnnotatedString (str);
-        }
+
+
+
+
+
+
+        //internal static AnnotatedString Append (AnnotatedString orig, string added)
+        //{
+        //    string str = orig.Plain;
+        //    str += added;
+        //    return new AnnotatedString (str);
+        //}
 
         internal void Append (AnnotatedString astr)
         {
-            throw new NotImplementedException ("Not implemented");
+            throw new NotImplementedException ("Append astr");
             //for (int i = 0; i<astr.CharacterCount; i++)
             //    annotatedChars.Add (astr [i]);
         }
@@ -467,9 +511,12 @@ namespace PLMain
         // Add outer square brackets
         //
 
-        internal AnnotatedString AddOuterBrackets ()
+        internal static AnnotatedString AddOuterBrackets (AnnotatedString src)
         {
-            throw new NotImplementedException ("Not implemented");
+            string final = "[" + src.Plain + "]";
+            return new AnnotatedString (final);
+
+
             //List<AnnotatedChar> newChars = new List<AnnotatedChar> (CharacterCount + 2);
 
             //foreach (AnnotatedChar ac in annotatedChars)
@@ -598,10 +645,10 @@ namespace PLMain
             string str6  = "OpenParen:     ";
             //string str7  = "CloseParen:    ";
             string str8  = "OpenBrkt:      ";  
-            string str9  = "CloseBrkt:     ";
-            string str10 = "Quote:         ";
-            string str11 = "Level 0 Space  ";
-            string str12 = "Level 0 Semi   ";
+        //    string str9  = "CloseBrkt:     ";
+         //   string str10 = "Quote:         ";
+        //    string str11 = "Level 0 Space  ";
+        //    string str12 = "Level 0 Semi   ";
 
             string str1 = "OpenQuote:     ";
             string str2 = "CloseQuote:    ";
@@ -641,7 +688,6 @@ namespace PLMain
                 str6 += ac.IsDecimal     ? "1" : ".";
                 str7 += ac.IsTranspose   ? "1" : ".";
                 str8 += ac.IsMinus       ? "1" : ".";
-              //  str9 += ac.IsUn
 
            //     str11 += ac.IsSemicolon   ? "1" : ".";
              //   str12 += ac.IsComma       ? "1" : ".";
@@ -674,20 +720,12 @@ namespace PLMain
             if (str13.Contains ("1")) str += '\n' + str13;
             if (str14.Contains ("1")) str += '\n' + str14;
 
-            str += "\n" + "FirstWord:         " + FirstWord;
-
             str += "\n" + "AlphanumericOnly:  " + AlphanumericOnly.ToString ();            
-            
-            if (AlphanumericOnly)
-            { 
-                List<string> args = Arguments;
 
-                if (args.Count > 0)
-                { 
-                    str += "\n" + "Arguments: ";
-                    foreach (string argstr in args) str += argstr + ", ";
-                }
-            }
+            str += "\n" + "Nesting level 0 words:";
+
+            foreach (string oneWord in level0Words) 
+                str += "\n   " + oneWord;
 
             str += "\n" + "SuppressOutput: " + SuppressOutput;
 

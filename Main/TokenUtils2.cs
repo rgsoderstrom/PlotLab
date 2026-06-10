@@ -25,29 +25,28 @@ namespace PLMain
                                           AnnotatedStringSet substrings, 
                                           CharacterTest   test)
         {
-            throw new NotImplementedException ();
+            //            throw new NotImplementedException ("BreakIntoSubstrings");
 
-            //List <int> copyEndpoints = new List<int> ();
-            //copyEndpoints.Add (0); // start first copy here
+            List<int> copyEndpoints = new List<int> () {0};
 
-            //int lastIndex = src.CharacterCount - 1;
+            int lastIndex = src.CharacterCount - 1;
 
-            //// look for commas at same nesting level
-            //for (int i=1; i<lastIndex; i++)
-            //    if (test (src [i]) && AnnotatedChar.SameNesting (src [0], src [i]))
-            //        copyEndpoints.Add (i);
+            // look for commas at same nesting level
+            for (int i = 1; i<lastIndex; i++)
+                if (test (src [i]) && AnnotatedChar.SameNesting (src [0], src [i]))
+                    copyEndpoints.Add (i);
 
-            //copyEndpoints.Add (lastIndex); // end last copy here
+            copyEndpoints.Add (lastIndex); // end last copy here
 
-            //// do the copying
-            //for (int i=0; i<copyEndpoints.Count-1; i++)
-            //{
-            //    int start = copyEndpoints [i] + 1;
-            //    int end   = copyEndpoints [i+1] - 1;
-            //    int count = end - start + 1;
-            //    AnnotatedString arg = src.TrimmedSubstring (start, count);
-            //    substrings.Add (arg);
-            //}
+            // do the copying
+            for (int i = 0; i<copyEndpoints.Count-1; i++)
+            {
+                int start = copyEndpoints [i] + 1;
+                int end = copyEndpoints [i+1] - 1;
+                int count = end - start + 1;
+                AnnotatedString arg = src.TrimmedSubstring (start, count);
+                substrings.Add (arg);
+            }
         }
 
         //**************************************************************************************************
@@ -58,18 +57,18 @@ namespace PLMain
 
         public AnnotatedStringSet SplitFunctionArgs (AnnotatedString str)
         {
-            throw new NotImplementedException ();
+            //throw new NotImplementedException ("SplitFunctionArgs");
 
-            //// Error checking - verify first character is an open paren and last is close paren
-            //int lastIndex = str.CharacterCount - 1;
-            //if (str [0].IsOpenParen          == false) throw new Exception ("Function arg syntax error at open paren: " + str.Plain);
-            //if (str [lastIndex].IsCloseParen == false) throw new Exception ("Function arg syntax error at close paren: " + str.Plain);
-            
-            //// extract substrings
-            //AnnotatedStringSet extractedArgs = new AnnotatedStringSet ();  
-            //BreakIntoSubstrings (str, extractedArgs, delegate (AnnotatedChar ac) {return ac.IsComma;});
+            // Error checking - verify first character is an open paren and last is close paren
+            int lastIndex = str.CharacterCount - 1;
+            if (str [0].IsOpenParen          == false) throw new Exception ("Function arg syntax error at open paren: " + str.Plain);
+            if (str [lastIndex].IsCloseParen == false) throw new Exception ("Function arg syntax error at close paren: " + str.Plain);
 
-            //return extractedArgs;
+            // extract substrings
+            AnnotatedStringSet extractedArgs = new AnnotatedStringSet ();
+            BreakIntoSubstrings (str, extractedArgs, delegate (AnnotatedChar ac) { return ac.IsComma; });
+
+            return extractedArgs;
         }
 
         //***********************************************************************************************************
@@ -85,14 +84,15 @@ namespace PLMain
 
         private void VerifyBrackets (AnnotatedString str)
         {
-            throw new NotImplementedException ();
-            //if (str [0].IsOpenBracket == false)              throw new Exception ("Missing opening bracket: " + str.Plain);
-            //if (str [str.CharacterCount - 1].IsCloseBracket == false) throw new Exception ("Missing closing bracket: " + str.Plain);
+            bool t1 = str [0].IsOpenBracket == false;
+            bool t2 = str [str.CharacterCount - 1].IsCloseBracket == false;
+
+            if (t1 || t2) throw new Exception ("Missing bracket: " + str.Plain);
         }
 
         public AnnotatedStringSet SplitBracketArgs_Comma (AnnotatedString str)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException ("SplitBracketArgs_Comma");
             //VerifyBrackets (str);
             //AnnotatedStringSet args = new AnnotatedStringSet ();
             //BreakIntoSubstrings (str, args, delegate (AnnotatedChar ac) {return ac.IsComma;});
@@ -101,7 +101,7 @@ namespace PLMain
 
         public AnnotatedStringSet SplitBracketArgs_Colon (AnnotatedString str)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException ("SplitBracketArgs_Colon");
             //VerifyBrackets (str);
             //AnnotatedStringSet args = new AnnotatedStringSet ();
             //BreakIntoSubstrings (str, args, delegate (AnnotatedChar ac) {return ac.IsColon;});
@@ -111,8 +111,7 @@ namespace PLMain
         public AnnotatedStringSet SplitBracketArgs_Semi (AnnotatedString str)
         {
             AnnotatedString allArgs = AnnotatedString.RemoveWrapper (str);
-            AnnotatedStringSet splitArgs = new AnnotatedStringSet ();
-            splitArgs.Add (allArgs);
+            AnnotatedStringSet splitArgs = new AnnotatedStringSet (allArgs);
             return splitArgs;
             
             //VerifyBrackets (str);
@@ -123,9 +122,10 @@ namespace PLMain
 
         public AnnotatedStringSet SplitBracketArgs_Space (AnnotatedString str)
         {
-            VerifyBrackets (str);
+            //throw new NotImplementedException ("SplitBracketArgs_Space");
+            //VerifyBrackets (str);
             AnnotatedStringSet args = new AnnotatedStringSet ();
-            BreakIntoSubstrings (str, args, delegate (AnnotatedChar ac) {return ac.IsWhitespace;});
+            BreakIntoSubstrings (str, args, delegate (AnnotatedChar ac) {return ac.IsWhitespace2;});
             return args;
         }
 

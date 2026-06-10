@@ -109,7 +109,7 @@ namespace PLMain
             
             //tokens [0].StripOuter ();
             AnnotatedString as1 = tokens [0].AnnotatedText;
-            AnnotatedString as2 = as1.RemoveWrapper ();
+            AnnotatedString as2 = AnnotatedString.RemoveWrapper (as1);
 
             //
             // parse what's left
@@ -151,6 +151,8 @@ namespace PLMain
                 }
                 break;
 
+
+
                 case TokenType.BracketsSemi:
                 {
                     Operator = "ColVectorElements";
@@ -158,16 +160,28 @@ namespace PLMain
 
                     while (args.Count > 0)
                     {
-                        AnnotatedString editted = EnsureRowVector (args.GetOldest ());
-                        Operands.Add (new ExpressionTreeNode (editted));
+                        //AnnotatedString edited = EnsureRowVector (args.GetOldest ());
+                        AnnotatedString edited = args.GetOldest ();
+                        
+                        string pl = edited.Plain;
+                        if (pl [pl.Length-1] == ';')
+                            pl = pl.Remove (pl.Length-1);
+                        edited = new AnnotatedString (pl);
+
+                        Operands.Add (new ExpressionTreeNode (edited));
                     }
                 }
                 break;
+
+
+
+
 
                 case TokenType.Brackets:
                 case TokenType.BracketsSpace:
                 {
                     Operator = "RowVectorElements";
+                    string tmp = tokens [0].AnnotatedText.Plain;
                     AnnotatedStringSet args = parser.SplitBracketArgs_Space (tokens [0].AnnotatedText);
 
                     while (args.Count > 0)
@@ -189,17 +203,17 @@ namespace PLMain
 
         // Add outer brackets if original string doesn't have tham
 
-        AnnotatedString EnsureRowVector (AnnotatedString orig)
-        {
-            AnnotatedString edited = orig.TrimmedSubstring (0, orig.CharacterCount);
+        //AnnotatedString EnsureRowVector (AnnotatedString orig)
+        //{
+        //    AnnotatedString edited = orig.TrimmedSubstring (0, orig.CharacterCount);
 
-            if (edited [0].IsOpenBracket == false)
-            {
-                edited.AddOuterBrackets ();
-            }
+        //    if (edited [0].IsOpenBracket == false)
+        //    {
+        //        edited = AnnotatedString.AddOuterBrackets (edited);
+        //    }
 
-            return edited;
-        }
+        //    return edited;
+        //}
 
         //*************************************************************************************************
         //*************************************************************************************************

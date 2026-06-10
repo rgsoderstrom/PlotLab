@@ -30,13 +30,6 @@ namespace PLMain
         public Token (TokenType ty, AnnotatedChar   txt) {type = ty; annotatedText = new AnnotatedString (txt.ToString ());}
         public Token (TokenType ty, AnnotatedString txt) {type = ty; annotatedText = txt;}
 
-        // Remove first & last characters
-        //public void StripOuter ()
-        //{
-        //    annotatedText = new AnnotatedString (annotatedText, 0, 1);
-
-        //}
-
         // ToString
         public override string ToString () {return string.Format ("Token type: {0}, Token Text: {1}", type, annotatedText.Plain);}
     }

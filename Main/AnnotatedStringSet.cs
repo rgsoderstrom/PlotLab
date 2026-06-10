@@ -13,7 +13,7 @@ namespace PLMain
         private Queue<AnnotatedString> annotatedStrings = new Queue<AnnotatedString> ();
 
         // number of complete string ready for processing
-        public int  Count   { get { return annotatedStrings.Count; } }
+        public int  Count   {get { return annotatedStrings.Count;}}
         public bool IsEmpty {get {return Count == 0;}}
 
 
@@ -26,6 +26,11 @@ namespace PLMain
 
 
         //**************************************************************************
+
+        public AnnotatedStringSet (AnnotatedString astr)
+        {
+            Add (astr);
+        }
 
         public AnnotatedStringSet ()
         {
@@ -47,8 +52,8 @@ namespace PLMain
 
 
             // if input astr.SuppressOutput is true, restore trailing semicolon
-            if (astr.SuppressOutput)
-                astr = AnnotatedString.Append (astr, ';');
+            //if (astr.SuppressOutput)
+            //    astr = AnnotatedString.Append (astr, ';');
 
 
             int startIndex = 0;
@@ -68,7 +73,7 @@ namespace PLMain
             }
 
             // one more outside of loop if input string does not end in semicolon
-            if (startIndex < str.Length - 1)
+            if (startIndex < str.Length)// - 1)
             {
                 string partial = str.Substring (startIndex, str.Length - startIndex);
                 string trimmed = partial.Trim (new char [] { ' ' });

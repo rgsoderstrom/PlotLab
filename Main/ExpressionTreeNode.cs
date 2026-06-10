@@ -151,6 +151,12 @@ namespace PLMain
                 }
             }
 
+            catch (NotImplementedException ex)
+            {
+                throw new Exception ("Not implemented: " + ex.Message);
+                //throw new Exception (string.Format ("ExpressionNode ctor exception: {0}", ex.Message));
+            }
+
             catch (Exception ex)
             {
                 throw new Exception (string.Format ("{0}", ex.Message));

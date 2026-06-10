@@ -42,6 +42,10 @@ namespace PLMain
         public bool IsWhitespace   {get {return character == ' ' && NestingLevel == 0;}}
         public bool IsSemicolon    {get {return character == ';' && NestingLevel == 0;}}
 
+        public bool IsWhitespace2   {get {return character == ' ';}}
+
+
+
         public bool IsLetter {get {return Char.IsLetter (character);}}
         public bool IsAlphanumeric {get {return Char.IsLetterOrDigit (character);}}
 
@@ -111,10 +115,10 @@ namespace PLMain
         public bool IsTwoCharOp {get {return OverrideType == ContextType.IsTwoCharOperator;}}
         public bool IsTranspose {get {return OverrideType == ContextType.IsTranspose;}}
 
-    //    public bool IsExponent      {get {return character == '^';}}
+       public bool IsExponent      {get {return character == '^';}}
     //    public bool IsColon         {get {return character == ':';}}
     ////    public bool IsSemicolon     {get {return character == ';';}}
-    //    public bool IsComma         {get {return character == ',';}}
+        public bool IsComma         {get {return character == ',';}}
 
         //**********************************************************************************
 

@@ -57,8 +57,7 @@ namespace utExpressionTree
                             continue;
 
                         AnnotatedString astr = new AnnotatedString (trimmed);
-                        AnnotatedStringSet annotatedSet = new AnnotatedStringSet ();
-                        annotatedSet.Add (astr);
+                        AnnotatedStringSet annotatedSet = new AnnotatedStringSet (astr);
 
                         while (annotatedSet.Count > 0)
                         {
@@ -125,6 +124,13 @@ namespace utExpressionTree
                 inputFile.Close ();
             }
             
+            catch (NotImplementedException ex)
+            {
+                Console.WriteLine ("Not implemented: " + ex.Message);
+                //Console.WriteLine ("Not implemented: " + ex.StackTrace);
+                EventLog.WriteLine (ex.Message);
+            }
+
             catch (Exception ex)
             {
                 Console.WriteLine ("Exception in Window_Loaded: " + ex.Message);
