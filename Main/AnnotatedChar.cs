@@ -4,6 +4,15 @@
                  nested by parens, square brackets and quotes
 */
 
+
+
+/*
+
+        Just starting re-write of AnnotatedChar & String to make them work better with Token Parsing
+
+*/
+
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,12 +22,19 @@ namespace PLMain
     public class AnnotatedChar
     {
         // members
-        protected  char  character;
-        protected  sbyte bracketlevel;
-        protected  sbyte parenlevel;
-        protected  sbyte quotelevel;  // can only be 0 or 1, no nested quotes allowed
+        internal  char  character;
 
-        private ContextType overrideType;
+
+        //**************************************************************************
+
+        // 
+
+        public enum ACType {Unknown, Whitespace, InParens, InBrackets, InQuotes,//Whitespace2, 
+                             Alphanumeric, Decimal, Number, Operator,} //Letter, 
+
+        internal ACType thisCharType = ACType.Unknown;
+
+
 
         //**************************************************************************
 
@@ -26,9 +42,9 @@ namespace PLMain
         public char Character {get {if (IsOpenQuote || IsCloseQuote) return quote;
                                     else return character;}} 
 
-        public sbyte BracketLevel    {get {return bracketlevel;} set {bracketlevel = value;}} 
-        public sbyte ParenLevel      {get {return parenlevel;}   set {parenlevel = value;}} 
-        public sbyte QuoteLevel      {get {return quotelevel;}   set {quotelevel = value;}} 
+        //public sbyte BracketLevel    {get {return bracketlevel;} set {bracketlevel = value;}} 
+        //public sbyte ParenLevel      {get {return parenlevel;}   set {parenlevel = value;}} 
+        //public sbyte QuoteLevel      {get {return quotelevel;}   set {quotelevel = value;}} 
 
         public bool IsOpenParen    {get {return character == '(';}}
         public bool IsCloseParen   {get {return character == ')';}}
@@ -39,10 +55,10 @@ namespace PLMain
         public bool IsCloseQuote   {get {return character == closequote;}}
 
         // Whitespace and Semi at nesting level 0 
-        public bool IsWhitespace   {get {return character == ' ' && NestingLevel == 0;}}
-        public bool IsSemicolon    {get {return character == ';' && NestingLevel == 0;}}
+        //public bool IsWhitespace0   {get {return character == ' ' && NestingLevel == 0;}}
+        //public bool IsSemicolon0    {get {return character == ';' && NestingLevel == 0;}}
 
-        public bool IsWhitespace2   {get {return character == ' ';}}
+        public bool IsWhitespace   {get {return character == ' ';}}
 
 
 
@@ -51,7 +67,7 @@ namespace PLMain
 
 
 
-        public int  NestingLevel   {get {return bracketlevel + parenlevel + quotelevel;}}
+        //public int  NestingLevel   {get {return bracketlevel + parenlevel + quotelevel;}}
 
         private const char esc        = '\\';        
         private const char quote      = '\'';        
@@ -62,63 +78,43 @@ namespace PLMain
         //**************************************************************************
 
         // Test for 2 AnnotatedChars having all same nesting levels
-        public static bool SameNesting (AnnotatedChar c1, AnnotatedChar c2)
-        {
-            return c1.quotelevel   == c2.quotelevel
-                && c1.bracketlevel == c2.bracketlevel
-                && c1.parenlevel   == c2.parenlevel
-                && c1.overrideType == c2.overrideType;
-        }
+        //public static bool SameNesting (AnnotatedChar c1, AnnotatedChar c2)
+        //{
+        //    return c1.quotelevel   == c2.quotelevel
+        //        && c1.bracketlevel == c2.bracketlevel
+        //        && c1.parenlevel   == c2.parenlevel;
+        //    //    && c1.overrideType == c2.overrideType;
+        //}
 
         //***************************************************************************
 
-        internal enum ContextType {None, IsNumber, IsTwoCharOperator, IsTranspose, IsLetter};
+        public bool IsDecimal     {get {return character == '.';}}
 
-        internal ContextType OverrideType
-        {
-            set {overrideType = value;}
-            get {return overrideType;}
-        }
+        public bool IsNumber      {get {return Char.IsDigit (character);}}
 
-        //***************************************************************************
+        public bool IsAlpha       {get {return Char.IsLetter (character) || IsUnderscore;}}
 
-        public bool IsDecimal     {get {return OverrideType == ContextType.None && character == '.';}}
+        public bool IsUnderscore  {get {return character == '_';}}
 
-        public bool IsNumber      {get {return OverrideType == ContextType.None ? Char.IsDigit (character) 
-                                                                                : OverrideType == ContextType.IsNumber;}}
+        public bool IsOperator    {get {return Operators.Contains (character); } }// && QuoteLevel == 0;}}
 
-        public bool IsAlpha       {get {return OverrideType == ContextType.None ? Char.IsLetter (character) || IsUnderscore
-                                                                                : OverrideType == ContextType.IsLetter;}}
+     //   public bool IsTilde       {get {return character == '~';}}
 
-        public bool IsUnderscore  {get {return OverrideType == ContextType.None && character == '_';}}
+      //  public bool IsEqualSign   {get {return OverrideType == ContextType.None && character == '=' && QuoteLevel == 0;}}
 
-        public bool IsOperator    
-            {
-                get 
-                {
-                    bool b1 = OverrideType == ContextType.None && Operators.Contains (character) && QuoteLevel == 0;
-                    bool b2 = false;//OverrideType == ContextType.IsTranspose;
-                    return b1 || b2;
-                }
-            }
+    //    public bool IsExponential {get {return OverrideType == ContextType.None && char.ToUpper (character) == 'E';}}
 
-        public bool IsTilde       {get {return OverrideType == ContextType.None && character == '~';}}
-
-        public bool IsEqualSign   {get {return OverrideType == ContextType.None && character == '=' && QuoteLevel == 0;}}
-
-        public bool IsExponential {get {return OverrideType == ContextType.None && char.ToUpper (character) == 'E';}}
-
-        public bool IsMinus       {get {return OverrideType == ContextType.None && (character == '-');}}
-        public bool IsPlusMinus   {get {return OverrideType == ContextType.None && (character == '+' || character == '-');}}
+    //    public bool IsMinus       {get {return OverrideType == ContextType.None && (character == '-');}}
+    //    public bool IsPlusMinus   {get {return OverrideType == ContextType.None && (character == '+' || character == '-');}}
 
         // these only exist as overrides
-        public bool IsTwoCharOp {get {return OverrideType == ContextType.IsTwoCharOperator;}}
-        public bool IsTranspose {get {return OverrideType == ContextType.IsTranspose;}}
+    //    public bool IsTwoCharOp {get {return OverrideType == ContextType.IsTwoCharOperator;}}
+     //   public bool IsTranspose {get {return OverrideType == ContextType.IsTranspose;}}
 
-       public bool IsExponent      {get {return character == '^';}}
+     //  public bool IsExponent      {get {return character == '^';}}
     //    public bool IsColon         {get {return character == ':';}}
     ////    public bool IsSemicolon     {get {return character == ';';}}
-        public bool IsComma         {get {return character == ',';}}
+     //   public bool IsComma         {get {return character == ',';}}
 
         //**********************************************************************************
 
@@ -141,34 +137,26 @@ namespace PLMain
             return str;
         }
 
-        public string ToDetailedString ()
-        {
-            string str = "char: " + Character;
-            str += "\t quotelevel: " + quotelevel;
-            str += "\t bracketlevel: " + bracketlevel;
-            str += "\t parenlevel: " + parenlevel;
-            return str;
-        }
 
         //**************************************************************************
         //
-        // use this ctor for single char or the first character of a string
+        // use this ctor for the first character of a string
         //
         public AnnotatedChar (char c)
         {
             character    = c;
-            bracketlevel = 0;
-            parenlevel   = 0;
-            quotelevel   = 0;
 
-            overrideType = ContextType.None;
+            if      (IsOpenBracket) thisCharType = ACType.InBrackets;
+            else if (IsOpenParen)   thisCharType = ACType.InParens;
 
-            bracketlevel = IsOpenBracket ? (sbyte) 1 : (sbyte) 0;
-            parenlevel   = IsOpenParen   ? (sbyte) 1 : (sbyte) 0;
-            quotelevel   = IsQuote       ? (sbyte) 1 : (sbyte) 0;
+            else if (IsQuote)       {thisCharType = ACType.InQuotes; character = openquote;}
 
-            if (IsCloseParen) throw new Exception ("NestingLevel: paren nesting error");
-            if (IsCloseBracket) throw new Exception ("NestingLevel: bracket nesting error");
+            else if (IsWhitespace)  thisCharType = ACType.Whitespace;
+            else if (IsLetter)      thisCharType = ACType.Alphanumeric;
+            else if (IsNumber)      thisCharType = ACType.Number;
+            else if (IsDecimal)     thisCharType = ACType.Number;
+            else if (IsOperator)    thisCharType = ACType.Operator;
+
         }
 
         //**************************************************************************
@@ -178,50 +166,55 @@ namespace PLMain
         public AnnotatedChar (AnnotatedChar prev, char ch)
         {
             character = ch;
-
-            // start by setting each level equal to previous character, then adjust as necessary
-            parenlevel   = prev.parenlevel;
-            bracketlevel = prev.bracketlevel;
-            quotelevel   = prev.quotelevel;
-
-            //********************************************************
-
-            // check parenthesis level
-            if      (IsOpenParen)  parenlevel++;
-            if (prev.IsCloseParen) parenlevel--;
-
-            //********************************************************
-
-            // check bracket level
-            if      (IsOpenBracket)  bracketlevel++;
-            if (prev.IsCloseBracket) bracketlevel--;
-
-            //********************************************************
-
-            // check quote level. can only be 0 or 1
-            if (IsQuote)
+            ACType previousCharType = prev.thisCharType; // a copy with a name that makes more sense
+                                                         // in this context
+            switch (previousCharType)
             {
-                if (quotelevel == 0)
-                {
-                    if (prev.IsWhitespace) {quotelevel = 1; character = openquote;}
-                    if (prev.IsOpenParen)  {quotelevel = 1; character = openquote;}
-                }
-                else // quotelevel == 1
-                {
-                    if (prev.character != esc) // ignore escaped quote inside of a string
-                        character = closequote;
-                }
+                case ACType.Unknown: 
+                    break;
+
+                case ACType.InBrackets:
+                    if (prev.IsCloseBracket) thisCharType = ACType.Unknown;
+                    else                     thisCharType = ACType.InBrackets;
+                    break;
+
+                case ACType.InParens:
+                    if (prev.IsCloseParen) thisCharType = ACType.Unknown;
+                    else                   thisCharType = ACType.InParens;
+                    break;
+
+                //case ACType.InQuotes:
+                //    if (prev.IsQuote) thisCharType = ACType.Unknown;
+                //    else                     thisCharType = ACType.InBrackets;
+                //    break;
+
+                case ACType.Alphanumeric:
+                    if (IsNumber) thisCharType = ACType.Alphanumeric;
+                    break;
+
+                case ACType.Number:
+                    if (IsDecimal) thisCharType = ACType.Number;
+                    break;
+
+                    //case Whitespace: InParens, InBrackets, InQuotes,//Whitespace2, 
+                      //      Alphanumeric, Decimal, Number, Operator,} //Letter, 
+
             }
 
-            if (prev.character == closequote) quotelevel--;
+            if (thisCharType == ACType.Unknown)
+            {
+                if      (IsOpenBracket) thisCharType = ACType.InBrackets;
+                else if (IsOpenParen)   thisCharType = ACType.InParens;
 
-            //********************************************************
+                else if (IsQuote)       {thisCharType = ACType.InQuotes; character = openquote;}
 
-            // check for errors
-            if (bracketlevel < 0) throw new Exception ("nestinglevel: bracket nesting error");
-            if (parenlevel   < 0) throw new Exception ("nestinglevel: paren nesting error");
+                else if (IsWhitespace)  thisCharType = ACType.Whitespace;
+                else if (IsLetter)      thisCharType = ACType.Alphanumeric;
+                else if (IsNumber)      thisCharType = ACType.Number;
+                else if (IsDecimal)     thisCharType = ACType.Number;
+                else if (IsOperator)    thisCharType = ACType.Operator;
+            }
 
-            overrideType = ContextType.None;
         }
 
         //*******************************************************************

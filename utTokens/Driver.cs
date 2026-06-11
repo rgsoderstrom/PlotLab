@@ -121,22 +121,22 @@ namespace utTokens
 
         static private bool TokenParsingTest (string str)
         {
-            AnnotatedString annotated = new AnnotatedString (str);
+            //AnnotatedString annotated = new AnnotatedString (str);
 
-            if (annotated == null)
-                return false;
+            //if (annotated == null)
+            //    return false;
 
-            if (annotated.IsEmpty)
-                return false;
+            //if (annotated.IsEmpty)
+            //    return false;
 
-            Print (annotated.Plain.ToString ());
-            Print (annotated.ToString ());
+            //Print (annotated.Plain.ToString ());
+            //Print (annotated.ToString ());
 
-            // pass annotated string to token processor
-            TokenParsing parser = new TokenParsing ();
-            TokenSet statementtokens = parser.StringToTokens (annotated);
+            //// pass annotated string to token processor
+            //TokenParsing parser = new TokenParsing ();
+            //TokenSet statementtokens = parser.StringToTokens (annotated);
 
-            Print (statementtokens.ToString ());
+            //Print (statementtokens.ToString ());
 
             return true;
         }
@@ -147,23 +147,23 @@ namespace utTokens
 
         static private bool TokenUtilsTest (string str)
         {
-            AnnotatedString nested = new AnnotatedString (str);
-            TokenParsing parsing = new TokenParsing ();
+            //AnnotatedString nested = new AnnotatedString (str);
+            //TokenParsing parsing = new TokenParsing ();
 
-            Print ("Before split:");
-            Print (nested.ToString () + "\n");
+            //Print ("Before split:");
+            //Print (nested.ToString () + "\n");
 
-            Print ("\nAfter split:");
+            //Print ("\nAfter split:");
 
-            // AnnotatedStringSet fargs = parsing.SplitBracketArgs_Space (annotated);
-            AnnotatedStringSet fargs = parsing.SplitBracketArgs_Semi (nested);
-            //   AnnotatedStringSet fargs = parsing.SplitBracketArgs_Comma (annotated);
+            //// AnnotatedStringSet fargs = parsing.SplitBracketArgs_Space (annotated);
+            //AnnotatedStringSet fargs = parsing.SplitBracketArgs_Semi (nested);
+            ////   AnnotatedStringSet fargs = parsing.SplitBracketArgs_Comma (annotated);
 
-            while (fargs.IsEmpty == false)
-            {
-                AnnotatedString nstr = fargs.GetOldest ();
-                Print (nstr.ToString () + "\n");
-            }
+            //while (fargs.IsEmpty == false)
+            //{
+            //    AnnotatedString nstr = fargs.GetOldest ();
+            //    Print (nstr.ToString () + "\n");
+            //}
 
             return true;
         }

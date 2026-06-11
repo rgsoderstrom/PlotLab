@@ -10,8 +10,9 @@
 	% figure
 	
 	% AnnotatedString - 
-	p = [1 ; 2 ; 3 ; 4 ; (sqrt (5 * 3)) ; 6 ; 7]
-	d=[1 ; (2 * 7) ; 3]'
+	% p = [1 ; 2 ; 3 ; 4 ; (sqrt (5 * 3)) ; 6 ; 7]
+	% p=[1 ; 2 ; 3 ; 4 ; (sqrt (5 * 3)) ; 6 ; 7]
+	% d = [1 ; (2 * 7) ; 3]'
 	% x >= 3;
 	% a = b123 + 1;
 	% d = sin (22 / 7);
@@ -21,7 +22,8 @@
 	% a = b' + c' + d' + e';
 	% d = 'zxcv';
 	% z = 'aa\'b';
-	% a = sprintf ('%d', qwe);
+	ab12 = 123.456
+	abc123 = sprintf ('%d', [1 ; 2 ; 3]);
 		
 	% AnnotatedStringSet - 
 	% a = 4; b = a ^ 2 

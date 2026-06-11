@@ -164,10 +164,10 @@ namespace PLMain
         //*************************************************************************
 
         // during pass1 note the locations of characters we may want to modify during subsequent processing
-        private readonly List<int> digits       = new List<int> ();
-        private readonly List<int> decimals     = new List<int> ();
-        private readonly List<int> exponentials = new List<int> (); // E or e
-        private readonly List<int> operators    = new List<int> ();
+        //private readonly List<int> digits       = new List<int> ();
+        //private readonly List<int> decimals     = new List<int> ();
+        //private readonly List<int> exponentials = new List<int> (); // E or e
+        //private readonly List<int> operators    = new List<int> ();
 
         //*************************************************************************
 
@@ -185,14 +185,14 @@ namespace PLMain
                 AnnotatedChar nextAC = new AnnotatedChar (annotatedChars [i-1], text [i]);
                 annotatedChars.Add (nextAC);
 
-                if (nextAC.IsNumber)      digits.Add       (i);   
-                if (nextAC.IsDecimal)     decimals.Add     (i); 
-                if (nextAC.IsExponential) exponentials.Add (i);
-                if (nextAC.IsOperator)    operators.Add (i);
+                //if (nextAC.IsNumber)      digits.Add       (i);   
+                //if (nextAC.IsDecimal)     decimals.Add     (i); 
+                //if (nextAC.IsExponential) exponentials.Add (i);
+                //if (nextAC.IsOperator)    operators.Add (i);
 
-                if (nextAC.IsWhitespace == true  && nextAC.NestingLevel   == 0)     level0Spaces.Add  (i);
-                if (nextAC.IsSemicolon  == true  && nextAC.NestingLevel   == 0)     level0Semis.Add  (i);
-                if (nextAC.IsWhitespace == false && nextAC.IsAlphanumeric == false) alphanumericOnly = false;
+                //if (nextAC.IsWhitespace0 == true  && nextAC.NestingLevel   == 0)     level0Spaces.Add  (i);
+                //if (nextAC.IsSemicolon0  == true  && nextAC.NestingLevel   == 0)     level0Semis.Add  (i);
+                //if (nextAC.IsWhitespace0 == false && nextAC.IsAlphanumeric == false) alphanumericOnly = false;
             }
         }
 
@@ -200,153 +200,153 @@ namespace PLMain
 
         private void PassTwo ()
         {
-            // look for digits that are part of a variable name, e.g. A12;
-            // change their type to Letter
-            foreach (int i in digits)
-            {
-                int before = i - 1;
+            //// look for digits that are part of a variable name, e.g. A12;
+            //// change their type to Letter
+            //foreach (int i in digits)
+            //{
+            //    int before = i - 1;
 
-                if (before >= 0)
-                    if (annotatedChars [before].IsAlpha && annotatedChars [before].IsExponential == false)
-                        annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsLetter;
-            }
+            //    if (before >= 0)
+            //        if (annotatedChars [before].IsAlpha && annotatedChars [before].IsExponential == false)
+            //            annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsLetter;
+            //}
 
-            //*********************************************************************
+            ////*********************************************************************
 
-            // combine decimal point with number (e.g. .123 or 123.456)
-            // change its type to Number
-            foreach (int i in decimals)
-            {
-                int before = i - 1;
+            //// combine decimal point with number (e.g. .123 or 123.456)
+            //// change its type to Number
+            //foreach (int i in decimals)
+            //{
+            //    int before = i - 1;
 
-                if (before >= 0)
-                {
-                    if (annotatedChars [before].IsNumber)
-                    {
-                        annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsNumber;
-                    }
-                }
+            //    if (before >= 0)
+            //    {
+            //        if (annotatedChars [before].IsNumber)
+            //        {
+            //            annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsNumber;
+            //        }
+            //    }
 
-                int after = i + 1;
+            //    int after = i + 1;
 
-                if (after < CharacterCount)
-                {
-                    if (annotatedChars [after].IsNumber)
-                    {
-                        annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsNumber;
-                    }
-                }
-            }
+            //    if (after < CharacterCount)
+            //    {
+            //        if (annotatedChars [after].IsNumber)
+            //        {
+            //            annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsNumber;
+            //        }
+            //    }
+            //}
 
-            //*********************************************************************
+            ////*********************************************************************
 
-            // mark leading +/- with number (e.g. -123.456) as numeric
+            //// mark leading +/- with number (e.g. -123.456) as numeric
 
-            foreach (int i in operators)
-            {
-                if (annotatedChars [i].IsPlusMinus)
-                { 
-                    bool beforeTest = false; // set true if char before the +/- indicates
-                                             // the +/- is a unary op
+            //foreach (int i in operators)
+            //{
+            //    if (annotatedChars [i].IsPlusMinus)
+            //    { 
+            //        bool beforeTest = false; // set true if char before the +/- indicates
+            //                                 // the +/- is a unary op
 
-                    if (i == 0)
-                        beforeTest = true;
+            //        if (i == 0)
+            //            beforeTest = true;
 
-                    else
-                        for (int before = i - 1; before >= 0; before--)
-                        {
-                            if (annotatedChars [before].IsEqualSign) {beforeTest = true; break;}
-                            if (annotatedChars [before].IsOperator) {beforeTest = true; break;}
-                            if (annotatedChars [before].IsAlpha) {break;}
-                            if (annotatedChars [before].IsNumber) {break;}
-                        }
+            //        else
+            //            for (int before = i - 1; before >= 0; before--)
+            //            {
+            //                if (annotatedChars [before].IsEqualSign) {beforeTest = true; break;}
+            //                if (annotatedChars [before].IsOperator) {beforeTest = true; break;}
+            //                if (annotatedChars [before].IsAlpha) {break;}
+            //                if (annotatedChars [before].IsNumber) {break;}
+            //            }
 
-                    if (beforeTest == true)
-                    { 
-                        int after = i + 1;
+            //        if (beforeTest == true)
+            //        { 
+            //            int after = i + 1;
 
-                        if (after < CharacterCount)
-                        {
-                            if (annotatedChars [after].IsNumber)
-                            {
-                                annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsNumber;
-                            }
-                        }
-                    }
-                }
-            }
+            //            if (after < CharacterCount)
+            //            {
+            //                if (annotatedChars [after].IsNumber)
+            //                {
+            //                    annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsNumber;
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
 
-            //*********************************************************************
+            ////*********************************************************************
 
-            // look for exponentials. Mark the "E" as a number
-            foreach (int i in exponentials)
-            {
-                int before = i - 1;
-                int after = i + 1;
+            //// look for exponentials. Mark the "E" as a number
+            //foreach (int i in exponentials)
+            //{
+            //    int before = i - 1;
+            //    int after = i + 1;
 
-                if (before >= 0 && after < CharacterCount)
-                {
-                    if (annotatedChars [before].IsNumber && (annotatedChars [after].IsNumber || annotatedChars [after].IsPlusMinus))
-                    {
-                        annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsNumber;
+            //    if (before >= 0 && after < CharacterCount)
+            //    {
+            //        if (annotatedChars [before].IsNumber && (annotatedChars [after].IsNumber || annotatedChars [after].IsPlusMinus))
+            //        {
+            //            annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsNumber;
 
-                        if (annotatedChars [after].IsPlusMinus)
-                        {
-                            annotatedChars [after].OverrideType = AnnotatedChar.ContextType.IsNumber;
-                        }
-                    }
-                }
-            }
+            //            if (annotatedChars [after].IsPlusMinus)
+            //            {
+            //                annotatedChars [after].OverrideType = AnnotatedChar.ContextType.IsNumber;
+            //            }
+            //        }
+            //    }
+            //}
 
-            //*********************************************************************
+            ////*********************************************************************
 
-            // look for:
-            //   two char operators, e.g. A >= B
-            //   transpose, A'
-            foreach (int i in operators)
-            {
-                int before = i - 1;
-                int after = i + 1;
+            //// look for:
+            ////   two char operators, e.g. A >= B
+            ////   transpose, A'
+            //foreach (int i in operators)
+            //{
+            //    int before = i - 1;
+            //    int after = i + 1;
 
-                if (before >= 0 && after < annotatedChars.Count)
-                {
-                    // two-char operators
-                    bool t1 = annotatedChars [i].IsOperator;// || annotatedChars [i].IsEqualSign;
-                    bool t2 = annotatedChars [after].IsOperator;// || annotatedChars [after].IsEqualSign;
-                    bool t3 = annotatedChars [before].IsDecimal;
+            //    if (before >= 0 && after < annotatedChars.Count)
+            //    {
+            //        // two-char operators
+            //        bool t1 = annotatedChars [i].IsOperator;// || annotatedChars [i].IsEqualSign;
+            //        bool t2 = annotatedChars [after].IsOperator;// || annotatedChars [after].IsEqualSign;
+            //        bool t3 = annotatedChars [before].IsDecimal;
 
-                    if (t1 && t2) // e.g. ">="
-                    {
-                        string str = annotatedChars [i].Character.ToString ();
-                        str += annotatedChars [after].Character;
+            //        if (t1 && t2) // e.g. ">="
+            //        {
+            //            string str = annotatedChars [i].Character.ToString ();
+            //            str += annotatedChars [after].Character;
 
-                        if (AnnotatedChar.IsTwoCharOpStr (str))
-                        {
-                            annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsTwoCharOperator;
-                            annotatedChars [after].OverrideType = AnnotatedChar.ContextType.IsTwoCharOperator;
-                        }
-                    }
+            //            if (AnnotatedChar.IsTwoCharOpStr (str))
+            //            {
+            //                annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsTwoCharOperator;
+            //                annotatedChars [after].OverrideType = AnnotatedChar.ContextType.IsTwoCharOperator;
+            //            }
+            //        }
             
-                    else if (t1 && t3) // e.g. ".*"
-                    {
-                        string str = annotatedChars [before].Character.ToString ();
-                        str += annotatedChars [i].Character;
+            //        else if (t1 && t3) // e.g. ".*"
+            //        {
+            //            string str = annotatedChars [before].Character.ToString ();
+            //            str += annotatedChars [i].Character;
 
-                        if (AnnotatedChar.IsTwoCharOpStr (str))
-                        {
-                            annotatedChars [before].OverrideType = AnnotatedChar.ContextType.IsTwoCharOperator;
-                            annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsTwoCharOperator;
-                        }
-                    }
-                }
+            //            if (AnnotatedChar.IsTwoCharOpStr (str))
+            //            {
+            //                annotatedChars [before].OverrideType = AnnotatedChar.ContextType.IsTwoCharOperator;
+            //                annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsTwoCharOperator;
+            //            }
+            //        }
+            //    }
 
-                // transpose
-                if (before >= 0)
-                {
-                    if (annotatedChars [i].IsQuote && annotatedChars [before].CanPreceedTranspose)
-                        annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsTranspose;
-                }
-            }
+            //    // transpose
+            //    if (before >= 0)
+            //    {
+            //        if (annotatedChars [i].IsQuote && annotatedChars [before].CanPreceedTranspose)
+            //            annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsTranspose;
+            //    }
+            //}
         }
 
         //*************************************************************************
@@ -637,14 +637,14 @@ namespace PLMain
         {
             string str0 = "Character:     ";
 
-            string strA  = "ParenLevel:    ";
-            string strB  = "BktLevel:      ";
+            string strA  = "In Parens:     ";
+            string strB  = "In Brackets:   ";
             string strC  = "QuoteLevel:    ";
             string strD  = "NestingLevel:  ";
 
-            string str6  = "OpenParen:     ";
+            //string str6  = "OpenParen:     ";
             //string str7  = "CloseParen:    ";
-            string str8  = "OpenBrkt:      ";  
+            //string str8  = "OpenBrkt:      ";  
         //    string str9  = "CloseBrkt:     ";
          //   string str10 = "Quote:         ";
         //    string str11 = "Level 0 Space  ";
@@ -655,7 +655,7 @@ namespace PLMain
 
             string str3 = "EqualSign:     ";
 
-            string str4 = "Alpha:         ";
+            string str4 = "Alphanumeric:  ";
             string str5 = "Number:        ";
             //string str6 = "Decimal:       ";
             string str7 = "Transpose:     ";
@@ -674,25 +674,27 @@ namespace PLMain
             {
                 str0 += ac.Character;
 
-                strA += ac.ParenLevel   == 0 ? "." : ac.ParenLevel.ToString ();
-                strB += ac.BracketLevel == 0 ? "." : ac.BracketLevel.ToString ();
-                strC += ac.QuoteLevel   == 0 ? "." : ac.QuoteLevel.ToString ();
-                strD += ac.NestingLevel == 0 ? "." : ac.NestingLevel.ToString ();
+                //strA += ac.ParenLevel   == 0 ? "." : ac.ParenLevel.ToString ();
+                //strB += ac.BracketLevel == 0 ? "." : ac.BracketLevel.ToString ();
+                //strC += ac.QuoteLevel   == 0 ? "." : ac.QuoteLevel.ToString ();
+                //strD += ac.NestingLevel == 0 ? "." : ac.NestingLevel.ToString ();
 
-
+                strA += ac.thisCharType == AnnotatedChar.ACType.InParens ? "1" : ".";
+                strB += ac.thisCharType == AnnotatedChar.ACType.InBrackets ? "1" : ".";
+                    
                 str1 += ac.IsOpenQuote    ? "1" : ".";
                 str2 += ac.IsCloseQuote   ? "1" : ".";
-                str3 += ac.IsEqualSign   ? "1" : ".";
-                str4 += ac.IsAlpha       ? "1" : ".";
-                str5 += ac.IsNumber      ? "1" : ".";
-                str6 += ac.IsDecimal     ? "1" : ".";
-                str7 += ac.IsTranspose   ? "1" : ".";
-                str8 += ac.IsMinus       ? "1" : ".";
+                //str3 += ac.IsEqualSign   ? "1" : ".";
+                str4 += ac.thisCharType == AnnotatedChar.ACType.Alphanumeric ? "1" : ".";
+                str5 += ac.thisCharType == AnnotatedChar.ACType.Number ? "1" : ".";
+                //str6 += ac.IsDecimal     ? "1" : ".";
+                //str7 += ac.IsTranspose   ? "1" : ".";
+                //str8 += ac.IsMinus       ? "1" : ".";
 
            //     str11 += ac.IsSemicolon   ? "1" : ".";
              //   str12 += ac.IsComma       ? "1" : ".";
                 str13 += ac.IsOperator    ? "1" : ".";
-                str14 += ac.IsTwoCharOp   ? "1" : ".";
+                //str14 += ac.IsTwoCharOp   ? "1" : ".";
 
             }
 
@@ -710,9 +712,9 @@ namespace PLMain
             //if (str11.Contains ("1")) str += '\n' + str11;
             if (str4.Contains ("1")) str += '\n' + str4;
             if (str5.Contains ("1")) str += '\n' + str5;
-            if (str6.Contains ("1")) str += '\n' + str6;
+            //if (str6.Contains ("1")) str += '\n' + str6;
             if (str7.Contains ("1")) str += '\n' + str7;
-            if (str8.Contains ("1")) str += '\n' + str8;
+            //if (str8.Contains ("1")) str += '\n' + str8;
             //if (str9.Contains ("1")) str += '\n' + str9;
             //if (str10.Contains ("1")) str += '\n' + str10;
             //if (str11.Contains ("1")) str += '\n' + str11;
@@ -720,14 +722,14 @@ namespace PLMain
             if (str13.Contains ("1")) str += '\n' + str13;
             if (str14.Contains ("1")) str += '\n' + str14;
 
-            str += "\n" + "AlphanumericOnly:  " + AlphanumericOnly.ToString ();            
+            //str += "\n" + "AlphanumericOnly:  " + AlphanumericOnly.ToString ();            
 
-            str += "\n" + "Nesting level 0 words:";
+            //str += "\n" + "Nesting level 0 words:";
 
-            foreach (string oneWord in level0Words) 
-                str += "\n   " + oneWord;
+            //foreach (string oneWord in level0Words) 
+            //    str += "\n   " + oneWord;
 
-            str += "\n" + "SuppressOutput: " + SuppressOutput;
+            //str += "\n" + "SuppressOutput: " + SuppressOutput;
 
             return str;
         }
