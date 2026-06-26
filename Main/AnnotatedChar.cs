@@ -4,15 +4,6 @@
                  nested by parens, square brackets and quotes
 */
 
-
-
-/*
-
-        Just starting re-write of AnnotatedChar & String to make them work better with Token Parsing
-
-*/
-
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,43 +14,55 @@ namespace PLMain
     {
         // members
         internal  char  character;
-
+        internal  sbyte bracketlevel;
+        internal  sbyte parenlevel;
 
         //**************************************************************************
 
         // 
 
-        public enum ACType {Unknown, Whitespace, InParens, InBrackets, InQuotes,//Whitespace2, 
-                             Alphanumeric, Decimal, Number, Operator,} //Letter, 
+        public enum ACType {Unknown, Whitespace,
+                            Semicolon, Colon,
+                            Letter, Number, DecimalPoint, 
+                            OpenBracket, CloseBracket,
+                            OpenParen, CloseParen,
+                            Quote,    
+                            Operator, Escape, 
+                            
+                            //Alphanumeric, 
+                            //OpenQuote, CloseQuote, EscapedQuote, 
+                            //TwoCharOperator,
+                } 
 
         internal ACType thisCharType = ACType.Unknown;
 
-
-
         //**************************************************************************
 
-        // public access properties
-        public char Character {get {if (IsOpenQuote || IsCloseQuote) return quote;
-                                    else return character;}} 
+        // access properties
+        public char Character {get {return character;}}
 
-        //public sbyte BracketLevel    {get {return bracketlevel;} set {bracketlevel = value;}} 
-        //public sbyte ParenLevel      {get {return parenlevel;}   set {parenlevel = value;}} 
-        //public sbyte QuoteLevel      {get {return quotelevel;}   set {quotelevel = value;}} 
+        public sbyte BracketLevel {get {return bracketlevel;} set {bracketlevel = value;}}
+        public sbyte ParenLevel   {get {return parenlevel;}   set {parenlevel = value;}}
+     //   public sbyte QuoteLevel   {get {return quotelevel;}   set {quotelevel = value;}}
+        public int   NestingLevel {get {return bracketlevel + parenlevel /*+ quotelevel*/;}}
 
         public bool IsOpenParen    {get {return character == '(';}}
         public bool IsCloseParen   {get {return character == ')';}}
         public bool IsOpenBracket  {get {return character == '[';}}
         public bool IsCloseBracket {get {return character == ']';}}
-        public bool IsQuote        {get {return character == '\'';}}
-        public bool IsOpenQuote    {get {return character == openquote;}}
-        public bool IsCloseQuote   {get {return character == closequote;}}
+        public bool IsQuote        {get {return character == quote;}}
+        public bool IsEscape       {get {return character == esc;}}
+
+       // public bool IsOpenQuote    {get {return thisCharType == ACType.OpenQuote;}}
+      //  public bool IsCloseQuote   {get {return thisCharType == ACType.CloseQuote;}}
 
         // Whitespace and Semi at nesting level 0 
-        //public bool IsWhitespace0   {get {return character == ' ' && NestingLevel == 0;}}
-        //public bool IsSemicolon0    {get {return character == ';' && NestingLevel == 0;}}
+        //public bool IsLevel0Whitespace { get { return IsWhitespace && NestingLevel == 0; } }
+        //public bool IsLevel0Semicolon  { get { return IsSemicolon && NestingLevel == 0; } }
 
-        public bool IsWhitespace   {get {return character == ' ';}}
-
+        public bool IsWhitespace {get {return character == ' ';}}
+        public bool IsSemicolon  {get {return character == ';';}}
+        public bool IsColon      {get {return character == ':';}}
 
 
         public bool IsLetter {get {return Char.IsLetter (character);}}
@@ -67,12 +70,9 @@ namespace PLMain
 
 
 
-        //public int  NestingLevel   {get {return bracketlevel + parenlevel + quotelevel;}}
 
         private const char esc        = '\\';        
         private const char quote      = '\'';        
-        private const char openquote  = (char) 145; // extended ASCII left single quote
-        private const char closequote = (char) 146; //   "        "   right   "     "
 
         
         //**************************************************************************
@@ -96,16 +96,16 @@ namespace PLMain
 
         public bool IsUnderscore  {get {return character == '_';}}
 
-        public bool IsOperator    {get {return Operators.Contains (character); } }// && QuoteLevel == 0;}}
+        public bool IsOperator    {get {return Operators.Contains (character);}}
 
      //   public bool IsTilde       {get {return character == '~';}}
 
       //  public bool IsEqualSign   {get {return OverrideType == ContextType.None && character == '=' && QuoteLevel == 0;}}
 
-    //    public bool IsExponential {get {return OverrideType == ContextType.None && char.ToUpper (character) == 'E';}}
+        public bool IsExponential {get {return char.ToUpper (character) == 'E';}}
 
-    //    public bool IsMinus       {get {return OverrideType == ContextType.None && (character == '-');}}
-    //    public bool IsPlusMinus   {get {return OverrideType == ContextType.None && (character == '+' || character == '-');}}
+        public bool IsMinus       {get {return character == '-';}}
+        public bool IsPlusMinus   {get {return character == '+' || character == '-';}}
 
         // these only exist as overrides
     //    public bool IsTwoCharOp {get {return OverrideType == ContextType.IsTwoCharOperator;}}
@@ -119,8 +119,7 @@ namespace PLMain
         //**********************************************************************************
 
         // all charcters in any operator: oneChar, twoChar, unary, transpose
-     // static List<char> Operators = new List<char> () {';', ':', '\'', '.', '^', '*', '/', '+', '-', '&', '|', '>', '<', '~'};
-        static List<char> Operators = new List<char> () {';', ':', '\'',      '^', '*', '/', '+', '-', '&', '|', '>', '<', '~', '='};
+        static List<char> Operators = new List<char> () {';', ':', '\'', '.', '^', '*', '/', '+', '-', '&', '|', '>', '<', '~', '='};
 
         static public bool IsTwoCharOpStr (string s) {return twoCharBinaryOperators.Contains (s);}
         static List<string> twoCharBinaryOperators = new List<string> () {".*", "./", ".^", "&&", "||", "~=", "==", ">=", "<="};
@@ -145,18 +144,32 @@ namespace PLMain
         public AnnotatedChar (char c)
         {
             character    = c;
+            AssignInitialType ();
 
-            if      (IsOpenBracket) thisCharType = ACType.InBrackets;
-            else if (IsOpenParen)   thisCharType = ACType.InParens;
+            bracketlevel = IsOpenBracket ? (sbyte) 1 : (sbyte) 0;
+            parenlevel   = IsOpenParen   ? (sbyte) 1 : (sbyte) 0;
+        }
 
-            else if (IsQuote)       {thisCharType = ACType.InQuotes; character = openquote;}
+        private void AssignInitialType ()
+        { 
+            if      (IsWhitespace)  thisCharType = ACType.Whitespace;
+            else if (IsSemicolon)   thisCharType = ACType.Semicolon;
+            else if (IsColon)       thisCharType = ACType.Colon;
 
-            else if (IsWhitespace)  thisCharType = ACType.Whitespace;
-            else if (IsLetter)      thisCharType = ACType.Alphanumeric;
+            else if (IsLetter)      thisCharType = ACType.Letter;
+            else if (IsDecimal)     thisCharType = ACType.DecimalPoint;
             else if (IsNumber)      thisCharType = ACType.Number;
-            else if (IsDecimal)     thisCharType = ACType.Number;
-            else if (IsOperator)    thisCharType = ACType.Operator;
 
+            else if (IsOpenBracket)  thisCharType = ACType.OpenBracket;
+            else if (IsCloseBracket) thisCharType = ACType.CloseBracket;
+            else if (IsOpenParen)    thisCharType = ACType.OpenParen;
+            else if (IsCloseParen)   thisCharType = ACType.CloseParen;
+
+            else if (IsEscape)       thisCharType = ACType.Escape;
+            else if (IsQuote)        thisCharType = ACType.Quote;
+            else if (IsOperator)     thisCharType = ACType.Operator;
+
+            else throw new Exception ("AssignInitialType failed for character " + character);
         }
 
         //**************************************************************************
@@ -166,27 +179,36 @@ namespace PLMain
         public AnnotatedChar (AnnotatedChar prev, char ch)
         {
             character = ch;
-            ACType previousCharType = prev.thisCharType; // a copy with a name that makes more sense
+            AssignInitialType ();
+
+            // start by setting each level equal to previous character, then adjust as necessary
+            parenlevel   = prev.parenlevel;
+            bracketlevel = prev.bracketlevel;
+
+            //********************************************************
+
+            // check parenthesis level
+            if      (IsOpenParen)  parenlevel++;
+            if (prev.IsCloseParen) parenlevel--;
+
+            //********************************************************
+
+            // check bracket level
+            if      (IsOpenBracket)  bracketlevel++;
+            if (prev.IsCloseBracket) bracketlevel--;
+
+            //********************************************************
+
+
+
+            /*************
+            ACType previousCharType = prev.thisCharType; // a copy, with a name that makes more sense
                                                          // in this context
             switch (previousCharType)
             {
                 case ACType.Unknown: 
                     break;
 
-                case ACType.InBrackets:
-                    if (prev.IsCloseBracket) thisCharType = ACType.Unknown;
-                    else                     thisCharType = ACType.InBrackets;
-                    break;
-
-                case ACType.InParens:
-                    if (prev.IsCloseParen) thisCharType = ACType.Unknown;
-                    else                   thisCharType = ACType.InParens;
-                    break;
-
-                //case ACType.InQuotes:
-                //    if (prev.IsQuote) thisCharType = ACType.Unknown;
-                //    else                     thisCharType = ACType.InBrackets;
-                //    break;
 
                 case ACType.Alphanumeric:
                     if (IsNumber) thisCharType = ACType.Alphanumeric;
@@ -213,7 +235,15 @@ namespace PLMain
                 else if (IsNumber)      thisCharType = ACType.Number;
                 else if (IsDecimal)     thisCharType = ACType.Number;
                 else if (IsOperator)    thisCharType = ACType.Operator;
-            }
+            } **********/
+
+
+
+            //********************************************************
+
+            // check for errors
+            if (bracketlevel < 0) throw new Exception ("nestinglevel: bracket nesting error");
+            if (parenlevel   < 0) throw new Exception ("nestinglevel: paren nesting error");
 
         }
 
