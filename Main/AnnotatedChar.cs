@@ -23,15 +23,17 @@ namespace PLMain
 
         public enum ACType {Unknown, Whitespace,
                             Semicolon, Colon,
-                            Letter, Number, DecimalPoint, 
+                            /*Letter,*/ Number, DecimalPoint, 
                             OpenBracket, CloseBracket,
                             OpenParen, CloseParen,
                             Quote,    
-                            Operator, Escape, 
+                            Operator, Escape, Percent,
                             
-                            //Alphanumeric, 
-                            //OpenQuote, CloseQuote, EscapedQuote, 
-                            //TwoCharOperator,
+                            //Separator,          // comma, colon, semicolon
+                            Alphanumeric, 
+                            String, OpenQuote, CloseQuote, EscapedQuote, 
+                            Transpose,
+                            TwoCharOperator,
                 } 
 
         internal ACType thisCharType = ACType.Unknown;
@@ -43,8 +45,7 @@ namespace PLMain
 
         public sbyte BracketLevel {get {return bracketlevel;} set {bracketlevel = value;}}
         public sbyte ParenLevel   {get {return parenlevel;}   set {parenlevel = value;}}
-     //   public sbyte QuoteLevel   {get {return quotelevel;}   set {quotelevel = value;}}
-        public int   NestingLevel {get {return bracketlevel + parenlevel /*+ quotelevel*/;}}
+        public int   NestingLevel {get {return bracketlevel + parenlevel;}}
 
         public bool IsOpenParen    {get {return character == '(';}}
         public bool IsCloseParen   {get {return character == ')';}}
@@ -52,6 +53,7 @@ namespace PLMain
         public bool IsCloseBracket {get {return character == ']';}}
         public bool IsQuote        {get {return character == quote;}}
         public bool IsEscape       {get {return character == esc;}}
+        public bool IsPercent      {get {return character == '%';}}
 
        // public bool IsOpenQuote    {get {return thisCharType == ACType.OpenQuote;}}
       //  public bool IsCloseQuote   {get {return thisCharType == ACType.CloseQuote;}}
@@ -72,19 +74,16 @@ namespace PLMain
 
 
         private const char esc        = '\\';        
-        private const char quote      = '\'';        
+        private const char quote      = '\'';
 
-        
+
         //**************************************************************************
 
         // Test for 2 AnnotatedChars having all same nesting levels
-        //public static bool SameNesting (AnnotatedChar c1, AnnotatedChar c2)
-        //{
-        //    return c1.quotelevel   == c2.quotelevel
-        //        && c1.bracketlevel == c2.bracketlevel
-        //        && c1.parenlevel   == c2.parenlevel;
-        //    //    && c1.overrideType == c2.overrideType;
-        //}
+        public static bool SameNesting (AnnotatedChar c1, AnnotatedChar c2)
+        {
+            return c1.bracketlevel == c2.bracketlevel && c1.parenlevel == c2.parenlevel;
+        }
 
         //***************************************************************************
 
@@ -100,7 +99,7 @@ namespace PLMain
 
      //   public bool IsTilde       {get {return character == '~';}}
 
-      //  public bool IsEqualSign   {get {return OverrideType == ContextType.None && character == '=' && QuoteLevel == 0;}}
+        public bool IsEqualSign   {get {return character == '=';}}
 
         public bool IsExponential {get {return char.ToUpper (character) == 'E';}}
 
@@ -119,13 +118,17 @@ namespace PLMain
         //**********************************************************************************
 
         // all charcters in any operator: oneChar, twoChar, unary, transpose
-        static List<char> Operators = new List<char> () {';', ':', '\'', '.', '^', '*', '/', '+', '-', '&', '|', '>', '<', '~', '='};
+      //static List<char> Operators = new List<char> () {',', ';', ':', '\'', '.', '^', '*', '/', '+', '-', '&', '|', '>', '<', '~', '='};
+        static List<char> Operators = new List<char> () {',', ';', ':',       '.', '^', '*', '/', '+', '-', '&', '|', '>', '<', '~', '='};
 
-        static public bool IsTwoCharOpStr (string s) {return twoCharBinaryOperators.Contains (s);}
-        static List<string> twoCharBinaryOperators = new List<string> () {".*", "./", ".^", "&&", "||", "~=", "==", ">=", "<="};
+        //static public bool IsTwoCharOpStr (string s) {return twoCharBinaryOperators.Contains (s);}
+        //static readonly List<string> twoCharBinaryOperators = new List<string> () {".*", "./", ".^", "&&", "||", "~=", "==", ">=", "<="};
 
-        public bool CanPreceedTranspose {get {return PreceedTranspose.Contains (character) || IsAlpha;}}
-        private static readonly List<char> PreceedTranspose = new List<char> () {']', ')'};
+        //public bool CanPreceedTranspose {get {return PreceedTranspose.Contains (character) || IsAlpha;}}
+        //private static readonly List<char> PreceedTranspose = new List<char> () {']', ')'};
+
+        public bool CanPreceedString { get { return PreceedString.Contains (character) || thisCharType == ACType.Operator; } }
+        private static readonly List<char> PreceedString = new List<char> () {' ', '(', '[' };
 
         //**********************************************************************************
 
@@ -156,7 +159,7 @@ namespace PLMain
             else if (IsSemicolon)   thisCharType = ACType.Semicolon;
             else if (IsColon)       thisCharType = ACType.Colon;
 
-            else if (IsLetter)      thisCharType = ACType.Letter;
+            else if (IsLetter)      thisCharType = ACType.Alphanumeric; // .Letter;
             else if (IsDecimal)     thisCharType = ACType.DecimalPoint;
             else if (IsNumber)      thisCharType = ACType.Number;
 
@@ -168,6 +171,7 @@ namespace PLMain
             else if (IsEscape)       thisCharType = ACType.Escape;
             else if (IsQuote)        thisCharType = ACType.Quote;
             else if (IsOperator)     thisCharType = ACType.Operator;
+            else if (IsPercent)      thisCharType = ACType.Percent;
 
             else throw new Exception ("AssignInitialType failed for character " + character);
         }
@@ -199,52 +203,9 @@ namespace PLMain
 
             //********************************************************
 
-
-
-            /*************
-            ACType previousCharType = prev.thisCharType; // a copy, with a name that makes more sense
-                                                         // in this context
-            switch (previousCharType)
-            {
-                case ACType.Unknown: 
-                    break;
-
-
-                case ACType.Alphanumeric:
-                    if (IsNumber) thisCharType = ACType.Alphanumeric;
-                    break;
-
-                case ACType.Number:
-                    if (IsDecimal) thisCharType = ACType.Number;
-                    break;
-
-                    //case Whitespace: InParens, InBrackets, InQuotes,//Whitespace2, 
-                      //      Alphanumeric, Decimal, Number, Operator,} //Letter, 
-
-            }
-
-            if (thisCharType == ACType.Unknown)
-            {
-                if      (IsOpenBracket) thisCharType = ACType.InBrackets;
-                else if (IsOpenParen)   thisCharType = ACType.InParens;
-
-                else if (IsQuote)       {thisCharType = ACType.InQuotes; character = openquote;}
-
-                else if (IsWhitespace)  thisCharType = ACType.Whitespace;
-                else if (IsLetter)      thisCharType = ACType.Alphanumeric;
-                else if (IsNumber)      thisCharType = ACType.Number;
-                else if (IsDecimal)     thisCharType = ACType.Number;
-                else if (IsOperator)    thisCharType = ACType.Operator;
-            } **********/
-
-
-
-            //********************************************************
-
             // check for errors
             if (bracketlevel < 0) throw new Exception ("nestinglevel: bracket nesting error");
             if (parenlevel   < 0) throw new Exception ("nestinglevel: paren nesting error");
-
         }
 
         //*******************************************************************

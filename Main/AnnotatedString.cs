@@ -119,9 +119,8 @@ namespace PLMain
                 if (trimmed.Length == 0 || trimmed [0] == '%')
                     return;
 
-
                 PassOne (trimmed);
-               //PassTwo ();
+                PassTwo ();
                 //PassThree ();
 
 
@@ -146,7 +145,7 @@ namespace PLMain
 
             catch (Exception ex)
             {
-                throw new Exception ("Error in AnnotatedString ctor:\n" + ex.Message);
+                throw new Exception ("Error in AnnotatedString ctor: " + ex.Message);
             }
         }
 
@@ -166,26 +165,22 @@ namespace PLMain
             AnnotatedChar firstAC = new AnnotatedChar (text [0]);
             annotatedChars.Add (firstAC);
 
-
-            if (firstAC.IsNumber)      digits.Add       (0);   
-            if (firstAC.IsQuote)       quotes.Add       (0);
-            if (firstAC.IsDecimal)     decimals.Add     (0);
-
-
-
             for (int i=1; i<text.Length; i++)
             {
                 AnnotatedChar nextAC = new AnnotatedChar (annotatedChars [i-1], text [i]);
                 annotatedChars.Add (nextAC);
+            }
 
-                if (nextAC.IsNumber)      digits.Add       (i);   
-                if (nextAC.IsQuote)       quotes.Add       (i);
-                if (nextAC.IsDecimal)     decimals.Add     (i);
-                if (nextAC.IsExponential) exponentials.Add (i);
-                if (nextAC.IsOperator)    operators.Add    (i);
+            for (int i=0; i<text.Length; i++)
+            { 
+                if (annotatedChars [i].IsNumber)      digits.Add       (i);   
+                if (annotatedChars [i].IsQuote)       quotes.Add       (i);
+                if (annotatedChars [i].IsDecimal)     decimals.Add     (i);
+                if (annotatedChars [i].IsExponential) exponentials.Add (i);
+                if (annotatedChars [i].IsOperator)    operators.Add    (i);
 
-                if (nextAC.IsWhitespace == true  && nextAC.NestingLevel   == 0)     level0Spaces.Add  (i);
-                if (nextAC.IsSemicolon  == true  && nextAC.NestingLevel   == 0)     level0Semis.Add  (i);
+                if (annotatedChars [i].IsWhitespace == true  && annotatedChars [i].NestingLevel == 0) level0Spaces.Add (i);
+                if (annotatedChars [i].IsSemicolon  == true  && annotatedChars [i].NestingLevel == 0) level0Semis.Add  (i);
             }
         }
 
@@ -193,21 +188,106 @@ namespace PLMain
 
         private void PassTwo ()
         {
+            // in each section keep a record of any characters whose type is changed. Use
+            // this to remove them from lists they should no longer be on
+            List<int> changedType = new List<int> ();
+
+            //***********************************************************************************
+
+            // identify the types of any quotes, Open, Close, etc.
+            if (quotes.Count > 0)
+            { 
+                bool inString = false;
+                List<int> openQuotes = new List<int> ();
+                List<int> closeQuotes = new List<int> ();
+
+                foreach (int i in quotes)
+                {
+                    if (i > 0)
+                    {
+                        int before = i - 1;
+
+                        if (annotatedChars [before].thisCharType == AnnotatedChar.ACType.Escape)
+                            annotatedChars [i].thisCharType = AnnotatedChar.ACType.EscapedQuote;
+
+                        else if (inString == false && annotatedChars [before].CanPreceedString == false)
+                            annotatedChars [i].thisCharType = AnnotatedChar.ACType.Transpose;
+
+                        else if (inString == false)
+                        { 
+                            annotatedChars [i].thisCharType = AnnotatedChar.ACType.OpenQuote;
+                            openQuotes.Add (i);
+                            inString = true;
+                        }
+
+                        else 
+                        { 
+                            annotatedChars [i].thisCharType = AnnotatedChar.ACType.CloseQuote;
+                            closeQuotes.Add (i);
+                            inString = false;
+                        }
+                    }
+                }
+
+                // Mark chars between OpenQuotes and CloseQuotes as part of a string and remove their
+                // indices from the lists, e.g. digits, operators, etc.
+                if (openQuotes.Count != closeQuotes.Count)
+                    throw new Exception ("Mismatched quote: " + Plain);
+
+                changedType.Clear ();
+
+                for (int i=0; i<openQuotes.Count; i++)
+                {
+                    int first = openQuotes [i];
+                    int last  = closeQuotes [i];
+
+                    for (int j=first; j<=last; j++)
+                        changedType.Add (j);
+                }
+
+                // for any characters now marked as String, remove their index from other index lists
+                foreach (int i in changedType)
+                {
+                    annotatedChars [i].thisCharType = AnnotatedChar.ACType.String;
+                    digits.Remove (i);
+                    quotes.Remove (i);
+                    decimals.Remove (i);
+                    exponentials.Remove (i);
+                    operators.Remove (i);
+                    level0Spaces.Remove (i);
+                    level0Semis.Remove (i);
+                }
+            }
+
+            //*********************************************************************
+
             // look for digits that are part of a variable name, e.g. A12;
             // change their type to Letter
-            //foreach (int i in digits)
-            //{
-            //    int before = i - 1;
+            changedType.Clear ();
 
-            //    if (before >= 0)
-            //        if (annotatedChars [before].thisCharType == AnnotatedChar.ACType.Alphanumeric && annotatedChars [before].IsExponential == false)
-            //            annotatedChars [i].thisCharType = AnnotatedChar.ACType.Alphanumeric;
-            //}
+            foreach (int i in digits)
+            {
+                int before = i - 1;
+
+                if (before >= 0)
+                { 
+                    if (annotatedChars [before].thisCharType == AnnotatedChar.ACType.Alphanumeric && annotatedChars [before].IsExponential == false)
+                    { 
+                        annotatedChars [i].thisCharType = AnnotatedChar.ACType.Alphanumeric;
+                        changedType.Add (i); 
+                    }
+                }
+            }
+
+            foreach (int i in changedType)
+                digits.Remove (i);
 
             //*********************************************************************
 
             // combine decimal point with number (e.g. .123 or 123.456)
             // change its type to Number
+            changedType.Clear ();
+
             foreach (int i in decimals)
             {
                 int before = i - 1;
@@ -218,6 +298,7 @@ namespace PLMain
                     if (annotatedChars [before].thisCharType == AnnotatedChar.ACType.Number)
                     {
                         annotatedChars [i].thisCharType = AnnotatedChar.ACType.Number;
+                        changedType.Add (i);
                     }
                 }
 
@@ -226,51 +307,62 @@ namespace PLMain
                     if (annotatedChars [after].thisCharType == AnnotatedChar.ACType.Number)
                     {
                         annotatedChars [i].thisCharType = AnnotatedChar.ACType.Number;
+                        changedType.Add (i);
                     }
                 }
             }
 
+            foreach (int i in changedType)
+                decimals.Remove (i);
+
             ////*********************************************************************
 
-            //// mark leading +/- with number (e.g. -123.456) as numeric
+            // mark leading +/- with number (e.g. -123.456) as numeric
+            changedType.Clear ();
 
-            //foreach (int i in operators)
-            //{
-            //    if (annotatedChars [i].IsPlusMinus)
-            //    { 
-            //        bool beforeTest = false; // set true if char before the +/- indicates
-            //                                 // the +/- is a unary op
+            foreach (int i in operators)
+            {
+                if (annotatedChars [i].IsPlusMinus)
+                {
+                    bool beforeTest = false; // set true if char before the +/- indicates
+                                             // the +/- is a unary op
+                    if (i == 0)
+                        beforeTest = true;
 
-            //        if (i == 0)
-            //            beforeTest = true;
+                    else
+                        for (int before = i - 1; before >= 0; before--)
+                        {
+                            if (annotatedChars [before].IsEqualSign) { beforeTest = true; break; }
+                            if (annotatedChars [before].IsOperator) { beforeTest = true; break; }
+                            if (annotatedChars [before].IsExponential) { beforeTest = true; break; }
+                            if (annotatedChars [before].IsAlpha) { break; }
+                            if (annotatedChars [before].IsNumber) { break; }
+                        }
 
-            //        else
-            //            for (int before = i - 1; before >= 0; before--)
-            //            {
-            //                if (annotatedChars [before].IsEqualSign) {beforeTest = true; break;}
-            //                if (annotatedChars [before].IsOperator) {beforeTest = true; break;}
-            //                if (annotatedChars [before].IsAlpha) {break;}
-            //                if (annotatedChars [before].IsNumber) {break;}
-            //            }
+                    if (beforeTest == true)
+                    {
+                        int after = i + 1;
 
-            //        if (beforeTest == true)
-            //        { 
-            //            int after = i + 1;
+                        if (after < CharacterCount)
+                        {
+                            if (annotatedChars [after].IsNumber)
+                            {
+                                annotatedChars [i].thisCharType = AnnotatedChar.ACType.Number;
+                                changedType.Add (i);
+                            }
+                        }
+                    }
+                }
+            }
 
-            //            if (after < CharacterCount)
-            //            {
-            //                if (annotatedChars [after].IsNumber)
-            //                {
-            //                    annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsNumber;
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
+            foreach (int i in changedType)
+                operators.Remove (i);
 
             ////*********************************************************************
 
             // look for exponentials. Mark the "E" as a number
+            changedType.Clear ();
+
             foreach (int i in exponentials)
             {
                 int before = i - 1;
@@ -285,64 +377,58 @@ namespace PLMain
                         if (annotatedChars [after].IsPlusMinus)
                         {
                             annotatedChars [after].thisCharType = AnnotatedChar.ACType.Number;
+                            changedType.Add (i);
                         }
                     }
                 }
             }
 
-            ////*********************************************************************
+            foreach (int i in changedType)
+                exponentials.Remove (i);
 
-            // look for:
-            //   two char operators, e.g. A >= B
-            //   transpose, A'
-            //foreach (int i in operators)
-            //{
-            //    int before = i - 1;
-            //    int after = i + 1;
+            //*********************************************************************
 
-            //    if (before >= 0 && after < annotatedChars.Count)
-            //    {
-            //        // two-char operators
-            //        bool t1 = annotatedChars [i].IsOperator;// || annotatedChars [i].IsEqualSign;
-            //        bool t2 = annotatedChars [after].IsOperator;// || annotatedChars [after].IsEqualSign;
-            //        bool t3 = annotatedChars [before].IsDecimal;
+            // Two-char operators:
+            //    Z = x .* C;
+            //    A >= B
 
-            //        if (t1 && t2) // e.g. ">="
-            //        {
-            //            string str = annotatedChars [i].Character.ToString ();
-            //            str += annotatedChars [after].Character;
+            changedType.Clear ();
 
-            //            if (AnnotatedChar.IsTwoCharOpStr (str))
-            //            {
-            //                annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsTwoCharOperator;
-            //                annotatedChars [after].OverrideType = AnnotatedChar.ContextType.IsTwoCharOperator;
-            //            }
-            //        }
-
-            //        else if (t1 && t3) // e.g. ".*"
-            //        {
-            //            string str = annotatedChars [before].Character.ToString ();
-            //            str += annotatedChars [i].Character;
-
-            //            if (AnnotatedChar.IsTwoCharOpStr (str))
-            //            {
-            //                annotatedChars [before].OverrideType = AnnotatedChar.ContextType.IsTwoCharOperator;
-            //                annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsTwoCharOperator;
-            //            }
-            //        }
-            //    }
-
-
-                // Quotes to transpose, OpenQuote, CloseQuote, EscapedQuote
-
-                //    // transpose
-                //    if (before >= 0)
-                //    {
-                //        if (annotatedChars [i].IsQuote && annotatedChars [before].CanPreceedTranspose)
-                //            annotatedChars [i].OverrideType = AnnotatedChar.ContextType.IsTranspose;
-                //    }
-                //}
+            // look for decimal followed by operator
+            foreach (int i in decimals)
+            {
+                if (operators.Contains (i + 1))
+                {
+                    annotatedChars [i].thisCharType = AnnotatedChar.ACType.TwoCharOperator;
+                    annotatedChars [i+1].thisCharType = AnnotatedChar.ACType.TwoCharOperator;
+                    changedType.Add (i);
+                    changedType.Add (i+1);
+                }
             }
+
+            foreach (int i in changedType)
+            {
+                decimals.Remove (i);
+                operators.Remove (i);
+            }
+
+            // look for 2 consecutive operators
+            changedType.Clear ();
+
+            foreach (int i in operators)
+            {
+                if (operators.Contains (i+1))
+                {
+                    annotatedChars [i].thisCharType = AnnotatedChar.ACType.TwoCharOperator;
+                    annotatedChars [i+1].thisCharType = AnnotatedChar.ACType.TwoCharOperator;
+                    changedType.Add (i);
+                    changedType.Add (i+1);
+                }
+            }
+
+            foreach (int i in changedType)
+                operators.Remove (i);
+        }
 
         //*************************************************************************
 
@@ -642,19 +728,19 @@ namespace PLMain
             string str9  = "Quote:         ";
             string str10 = "OpenQuote:     ";
             string str11 = "CloseQuote:    ";
+            string str21 = "EscapedQuote:  ";
             string str12 = "Number:        ";
-            string str13 = "Letter:        ";
+            string str13 = "Alphanumeric:  ";
             string str14 = "Operator:      ";
             string str15 = "Decimal:       ";
             string str16 = "Semicolon:     ";
             string str17 = "Colon:         ";
             string str18 = "Escape:        ";
+            string str19 = "Percent:       ";
             //string str10 = "Exponent:      ";
-         // string str10 = "Colon:         ";
-         // string str11 = "Semicolon:     ";
-
-
-        //    string str14 = "TwoCharOp:     ";
+            string str20 = "Transpose:     ";
+            string str22 = "StringChar:    ";
+            string str23 = "TwoCharOp:     ";
 
         //    string str11 = "Level 0 Space  ";
         //    string str12 = "Level 0 Semi   ";
@@ -662,9 +748,7 @@ namespace PLMain
 
 //            string str3 = "EqualSign:     ";
 
-        //    string str7 = "Transpose:     ";
 
-            //string str8 = "Minus:         ";
             //string str9 = "Unary Op :    ";
          // string str21 = "Level0Semi:    ";
        //     string str12 = "Comma:         ";
@@ -683,14 +767,22 @@ namespace PLMain
                 str8 += ac.thisCharType == AnnotatedChar.ACType.CloseBracket ? "1" : ".";
                 str9 += ac.thisCharType == AnnotatedChar.ACType.Quote        ? "1" : ".";
 
+                str10 += ac.thisCharType == AnnotatedChar.ACType.OpenQuote    ? "1" : ".";
+                str11 += ac.thisCharType == AnnotatedChar.ACType.CloseQuote   ? "1" : ".";
+                str21 += ac.thisCharType == AnnotatedChar.ACType.EscapedQuote ? "1" : ".";
 
                 str12 += ac.thisCharType == AnnotatedChar.ACType.Number       ? "1" : ".";
-                str13 += ac.thisCharType == AnnotatedChar.ACType.Letter       ? "1" : ".";
+                str13 += ac.thisCharType == AnnotatedChar.ACType.Alphanumeric ? "1" : ".";
                 str14 += ac.thisCharType == AnnotatedChar.ACType.Operator     ? "1" : ".";
                 str15 += ac.thisCharType == AnnotatedChar.ACType.DecimalPoint ? "1" : ".";
                 str16 += ac.thisCharType == AnnotatedChar.ACType.Semicolon    ? "1" : ".";
                 str17 += ac.thisCharType == AnnotatedChar.ACType.Colon        ? "1" : ".";
                 str18 += ac.thisCharType == AnnotatedChar.ACType.Escape       ? "1" : ".";
+                str19 += ac.thisCharType == AnnotatedChar.ACType.Percent      ? "1" : ".";
+                str20 += ac.thisCharType == AnnotatedChar.ACType.Transpose    ? "1" : ".";
+                str22 += ac.thisCharType == AnnotatedChar.ACType.String       ? "1" : ".";
+                
+                str23 += ac.thisCharType == AnnotatedChar.ACType.TwoCharOperator ? "1" : ".";
 
 //                str1 += ac.thisCharType == AnnotatedChar.ACType.OpenQuote    ? "1" : ".";
   //              str2 += ac.thisCharType == AnnotatedChar.ACType.CloseQuote   ? "1" : ".";
@@ -717,6 +809,7 @@ namespace PLMain
             if (str9.Contains ("1")) str += '\n' + str9;
             if (str10.Contains ("1")) str += '\n' + str10;
             if (str11.Contains ("1")) str += '\n' + str11;
+            if (str21.Contains ("1")) str += '\n' + str21;
             if (str12.Contains ("1")) str += '\n' + str12;
             if (str13.Contains ("1")) str += '\n' + str13;
             if (str14.Contains ("1")) str += '\n' + str14;
@@ -724,6 +817,10 @@ namespace PLMain
             if (str16.Contains ("1")) str += '\n' + str16;
             if (str17.Contains ("1")) str += '\n' + str17;
             if (str18.Contains ("1")) str += '\n' + str18;
+            if (str19.Contains ("1")) str += '\n' + str19;
+            if (str20.Contains ("1")) str += '\n' + str20;
+            if (str22.Contains ("1")) str += '\n' + str22;
+            if (str23.Contains ("1")) str += '\n' + str23;
 
             //str += "\n" + "AlphanumericOnly:  " + AlphanumericOnly.ToString ();            
 
@@ -733,6 +830,15 @@ namespace PLMain
             //    str += "\n   " + oneWord;
 
             //str += "\n" + "SuppressOutput: " + SuppressOutput;
+
+            if (digits.Count > 0) {str += "\nDigits: "; foreach (int i in digits) str += i + ", ";}
+
+            if (quotes.Count > 0)       {str += "\nQuotes      : "; foreach (int i in quotes) str += i + ", ";}
+            if (decimals.Count > 0)     {str += "\nDecimals    : "; foreach (int i in decimals) str += i + ", ";}
+            if (exponentials.Count > 0) {str += "\nExponentials: "; foreach (int i in exponentials) str += i + ", ";}
+            if (operators.Count > 0)    {str += "\nOperators   : "; foreach (int i in operators) str += i + ", ";}
+            if (level0Spaces.Count > 0) {str += "\nlevel0Spaces: "; foreach (int i in level0Spaces) str += i + ", ";}
+            if (level0Semis.Count > 0)  {str += "\nlevel0Semis : "; foreach (int i in level0Semis) str += i + ", ";}
 
             return str;
         }
