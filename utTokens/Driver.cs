@@ -22,6 +22,8 @@ namespace utTokens
             Console.WriteLine (str);
         }
 
+        //***********************************************************************
+
         static void Main (string [] args)
         {
             try
@@ -59,7 +61,7 @@ namespace utTokens
             catch (Exception ex)
             {
                 Print ("Exception: " + ex.Message);
-                Print (ex.StackTrace);
+              //Print (ex.StackTrace);
             }
         }
 

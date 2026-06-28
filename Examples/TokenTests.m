@@ -10,21 +10,35 @@
 	% figure
 	
 	% AnnotatedString - 
-	% p = [1 ; 2 ; 3 ; 4 ; (sqrt (5 * 3)) ; 6 ; 7]
+	% p = [1 ; (sqrt (5 * 3)) ; 7]
 	% p=[1 ; 2 ; 3 ; 4 ; (sqrt (5 * 3)) ; 6 ; 7]
 	% d = [1 ; (2 * 7) ; 3]'
-	% x >= 3;
+	x >= 3;
+	y = z .* x
+	% z = A' + [1:2:20]'
+	
 	% a = b123 + 1;
-	% d = sin (22 / 7);
+	% d = sin (2.2 / 7);
 	% e = 22 / 7
 	% e = 22 / 7;
- 	% z = 3 + 4 * sin (45) * 5;
-	% a = b' + c' + d' + e';
-	% d = 'zxcv';
-	% z = 'aa\'b';
-	ab12 = 123.456
-	abc123 = sprintf ('%d', [1 ; 2 ; 3]);
-		
+ 	z = 3 + 4 * sin (P') * 5;
+	% % a = b' + c' + d' + e';
+	
+	% d22 = 'zx+3v';
+	% e = 'aaa' + 'bbb' + 'ccc' + 8;
+	% z = 'a.a\'b';
+	% a = b4';
+	
+	% ab12 = -123.456e-7;
+	% p = 1:3:30;
+	% q = [1 ; a ; 3];
+	% b6 = (1, 2, 3, 4)';
+	% abc123 = sprintf ('%d', [1 ; 2 ; 3]);
+	% -12
+	% ab = sprintf ('%f', sin (c));
+	% c  = sprintf ('aa \'bbb\' cc');
+	
+	% AnnotatedStringSet - 
 	% AnnotatedStringSet - 
 	% a = 4; b = a ^ 2 
 	% a = 4; b = a ^ 2; c = b ^ 2; d = c / 3; clear a b c

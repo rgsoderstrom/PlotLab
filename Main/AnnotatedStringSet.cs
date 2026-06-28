@@ -3,6 +3,7 @@
     AnnotatedStringSet - list of AnnotatedStrings
 */
 
+using System;
 using System.Collections.Generic;
 
 namespace PLMain
@@ -41,45 +42,47 @@ namespace PLMain
 
         public void Add (AnnotatedString astr)
         {
-            if (astr.IsCompound == false)
-            {
-                annotatedStrings.Enqueue (astr);
-                return;
-            }
+            throw new NotImplementedException ("Not implemented");
 
-            // If we get here astr is a compound expression, e.g.a = 123; b = 456; c = 789; all on one line.
-            // It will be split into a list of annotated strings
+            //if (astr.IsCompound == false)
+            //{
+            //    annotatedStrings.Enqueue (astr);
+            //    return;
+            //}
 
-
-            // if input astr.SuppressOutput is true, restore trailing semicolon
-            //if (astr.SuppressOutput)
-            //    astr = AnnotatedString.Append (astr, ';');
+            //// If we get here astr is a compound expression, e.g.a = 123; b = 456; c = 789; all on one line.
+            //// It will be split into a list of annotated strings
 
 
-            int startIndex = 0;
-            List<int> indices = astr.Level0Semis; // these are indices of the breaks between expressions
+            //// if input astr.SuppressOutput is true, restore trailing semicolon
+            ////if (astr.SuppressOutput)
+            ////    astr = AnnotatedString.Append (astr, ';');
 
-            string str = astr.Plain;
 
-            for (int i = 0; i<indices.Count; i++)
-            {
-                int endIndex = indices [i]; // stop copying after this character
+            //int startIndex = 0;
+            //List<int> indices = astr.Level0Semis; // these are indices of the breaks between expressions
 
-                string partial = str.Substring (startIndex, endIndex - startIndex + 1);
-                string trimmed = partial.Trim (new char [] { ' ' });
+            //string str = astr.Plain;
 
-                annotatedStrings.Enqueue (new AnnotatedString (trimmed));
-                startIndex = endIndex + 1;
-            }
+            //for (int i = 0; i<indices.Count; i++)
+            //{
+            //    int endIndex = indices [i]; // stop copying after this character
 
-            // one more outside of loop if input string does not end in semicolon
-            if (startIndex < str.Length)// - 1)
-            {
-                string partial = str.Substring (startIndex, str.Length - startIndex);
-                string trimmed = partial.Trim (new char [] { ' ' });
+            //    string partial = str.Substring (startIndex, endIndex - startIndex + 1);
+            //    string trimmed = partial.Trim (new char [] { ' ' });
 
-                annotatedStrings.Enqueue (new AnnotatedString (trimmed));
-            }
+            //    annotatedStrings.Enqueue (new AnnotatedString (trimmed));
+            //    startIndex = endIndex + 1;
+            //}
+
+            //// one more outside of loop if input string does not end in semicolon
+            //if (startIndex < str.Length)// - 1)
+            //{
+            //    string partial = str.Substring (startIndex, str.Length - startIndex);
+            //    string trimmed = partial.Trim (new char [] { ' ' });
+
+            //    annotatedStrings.Enqueue (new AnnotatedString (trimmed));
+            //}
         }
     }
 }
