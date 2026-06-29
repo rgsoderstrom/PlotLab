@@ -30,19 +30,19 @@ namespace PLMain
         // Requires at least 1 level 0 semi and it can't be the last character
         public bool IsCompound {get {return (level0Semis.Count > 0 && level0Semis [0] != CharacterCount - 1);}}
 
-        //private readonly List<string> level0Words = new List<string> ();
-        //public  bool SingleWord {get {return level0Words.Count == 1;}}
+        private readonly List<string> level0Words = new List<string> ();
+        public bool SingleWord {get {return level0Words.Count == 1;}}
 
 
         // public properties
-   //     private bool alphanumericOnly = true;
-   //     public  bool AlphanumericOnly {get {return alphanumericOnly;}}
+        private bool alphanumericOnly = true;
+        public bool AlphanumericOnly {get {return alphanumericOnly;} protected set {alphanumericOnly = value;}}
 
 
 
         //********************************************************************************
         //
-        // Return first word of input string
+        // Return first word of string
         //
         //      Commands
         //          - clear a b c % returns "clear"
@@ -52,16 +52,16 @@ namespace PLMain
         //
         //      function declaration
         //          - function [x, y, z] =   % returns "function"
-        //public string FirstWord
-        //{
-        //    get
-        //    {
-        //        if (level0Words.Count < 2)
-        //            return Plain;
+        public string FirstWord
+        {
+            get
+            {
+                if (level0Words.Count < 2)
+                    return Plain;
 
-        //        return level0Words [0];
-        //    }
-        //}
+                return level0Words [0];
+            }
+        }
 
         //************************************************************************
         //
@@ -70,18 +70,18 @@ namespace PLMain
         //      - clear a b c % returns "a b c" (no quotes)
         //      - for a = 1:9, % returns a = 1:9,
 
-        //public List<string> Arguments // all words after the first word
-        //{
-        //    get
-        //    {
-        //        List<string> args = new List<string> ();
+        public List<string> Arguments // all words after the first word
+        {
+            get
+            {
+                List<string> args = new List<string> ();
 
-        //        for (int i = 1; i<level0Words.Count; i++)
-        //            args.Add (level0Words [i]);
+                for (int i = 1; i<level0Words.Count; i++)
+                    args.Add (level0Words [i]);
 
-        //        return args;
-        //    }
-        //}
+                return args;
+            }
+        }
 
 
 
@@ -121,7 +121,7 @@ namespace PLMain
 
                 PassOne (trimmed);
                 PassTwo ();
-                //PassThree ();
+                PassThree ();
 
 
 
@@ -182,6 +182,8 @@ namespace PLMain
                 if (annotatedChars [i].IsWhitespace == true  && annotatedChars [i].NestingLevel == 0) level0Spaces.Add (i);
                 if (annotatedChars [i].IsSemicolon  == true  && annotatedChars [i].NestingLevel == 0) level0Semis.Add  (i);
             }
+
+            if (operators.Count > 0) AlphanumericOnly = false;
         }
 
         //*************************************************************************
@@ -263,7 +265,8 @@ namespace PLMain
 
             // look for digits that are part of a variable name, e.g. A12;
             // change their type to Letter
-            changedType.Clear ();
+            
+            //changedType.Clear ();
 
             foreach (int i in digits)
             {
@@ -279,8 +282,9 @@ namespace PLMain
                 }
             }
 
-            foreach (int i in changedType)
-                digits.Remove (i);
+            digits.Clear ();
+            //foreach (int i in changedType)
+            //    digits.Remove (i);
 
             //*********************************************************************
 
@@ -315,7 +319,7 @@ namespace PLMain
             foreach (int i in changedType)
                 decimals.Remove (i);
 
-            ////*********************************************************************
+            //*********************************************************************
 
             // mark leading +/- with number (e.g. -123.456) as numeric
             changedType.Clear ();
@@ -358,10 +362,10 @@ namespace PLMain
             foreach (int i in changedType)
                 operators.Remove (i);
 
-            ////*********************************************************************
+            //*********************************************************************
 
             // look for exponentials. Mark the "E" as a number
-            changedType.Clear ();
+            //changedType.Clear ();
 
             foreach (int i in exponentials)
             {
@@ -383,8 +387,9 @@ namespace PLMain
                 }
             }
 
-            foreach (int i in changedType)
-                exponentials.Remove (i);
+            exponentials.Clear (); // any left are just letter E with no special meaning
+            //foreach (int i in changedType)
+            //    exponentials.Remove (i);
 
             //*********************************************************************
 
@@ -434,21 +439,21 @@ namespace PLMain
 
         private void PassThree ()
         {
-            //// break into "words", character substrings separated by level 0 whitespaces
-            //int start = 0;
-            //int stop = 0;
-            //string plainCopy = Plain;
+            // break into "words", character substrings separated by level 0 whitespaces
+            int start = 0;
+            int stop = 0;
+            string plainCopy = Plain;
 
-            //for (int i = 0; i<level0Spaces.Count; i++)
-            //{
-            //    stop = level0Spaces [i];
-            //    string nextWord = plainCopy.Substring (start, stop - start);
-            //    level0Words.Add (nextWord);
-            //    start = stop + 1;
-            //}
+            for (int i = 0; i<level0Spaces.Count; i++)
+            {
+                stop = level0Spaces [i];
+                string nextWord = plainCopy.Substring (start, stop - start);
+                level0Words.Add (nextWord);
+                start = stop + 1;
+            }
 
-            //if (stop < plainCopy.Length)
-            //    level0Words.Add (plainCopy.Substring (start, Plain.Length - start));
+            if (stop < plainCopy.Length)
+                level0Words.Add (plainCopy.Substring (start, Plain.Length - start));
         }
 
         //*************************************************************************
@@ -691,7 +696,7 @@ namespace PLMain
         // ToString ()
         //
 
-        // Helper NotAllDOts - test for text line with something other than '.' after initial colon
+        // Helper NotAllDots - test for text line with something other than '.' after initial colon
 
         private bool NotAllDots (string str)
         {
@@ -824,24 +829,24 @@ namespace PLMain
 
             str += "\n" + "IsCompound: " + IsCompound.ToString ();
 
-            //str += "\n" + "AlphanumericOnly:  " + AlphanumericOnly.ToString ();            
+            str += "\n" + "AlphanumericOnly:  " + AlphanumericOnly.ToString ();            
 
-            //str += "\n" + "Nesting level 0 words:";
+            str += "\n" + "Nesting level 0 words:";
 
-            //foreach (string oneWord in level0Words) 
-            //    str += "\n   " + oneWord;
+            foreach (string oneWord in level0Words)
+                str += "\n   " + oneWord;
 
             //str += "\n" + "SuppressOutput: " + SuppressOutput;
 
 
             if (digits.Count > 0) {str += "\nDigits: "; foreach (int i in digits) str += i + ", ";}
 
-            if (quotes.Count > 0)              {str += "\nQuotes      : "; foreach (int i in quotes) str += i + ", ";}
-            if (decimals.Count > 0)         {str += "\nDecimals    : "; foreach (int i in decimals) str += i + ", ";}
-            if (exponentials.Count > 0)  {str += "\nExponentials: "; foreach (int i in exponentials) str += i + ", ";}
-            if (operators.Count > 0)        {str += "\nOperators   : "; foreach (int i in operators) str += i + ", ";}
+            if (quotes.Count > 0)       {str += "\nQuotes      : "; foreach (int i in quotes) str += i + ", ";}
+            if (decimals.Count > 0)     {str += "\nDecimals    : "; foreach (int i in decimals) str += i + ", ";}
+            if (exponentials.Count > 0) {str += "\nExponentials: "; foreach (int i in exponentials) str += i + ", ";}
+            if (operators.Count > 0)    {str += "\nOperators   : "; foreach (int i in operators) str += i + ", ";}
             if (level0Spaces.Count > 0) {str += "\nlevel0Spaces: "; foreach (int i in level0Spaces) str += i + ", ";}
-            if (level0Semis.Count > 0)    {str += "\nlevel0Semis : "; foreach (int i in level0Semis) str += i + ", ";}
+            if (level0Semis.Count > 0)  {str += "\nlevel0Semis : "; foreach (int i in level0Semis) str += i + ", ";}
 
             return str;
         }
