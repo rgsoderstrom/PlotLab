@@ -47,13 +47,13 @@ namespace PLMain
         public sbyte ParenLevel   {get {return parenlevel;}   set {parenlevel = value;}}
         public int   NestingLevel {get {return bracketlevel + parenlevel;}}
 
-        public bool IsOpenParen    {get {return character == '(';}}
-        public bool IsCloseParen   {get {return character == ')';}}
+        public bool IsOpenParen      {get {return character == '(';}}
+        public bool IsCloseParen     {get {return character == ')';}}
         public bool IsOpenBracket  {get {return character == '[';}}
         public bool IsCloseBracket {get {return character == ']';}}
-        public bool IsQuote        {get {return character == quote;}}
-        public bool IsEscape       {get {return character == esc;}}
-        public bool IsPercent      {get {return character == '%';}}
+        public bool IsQuote                {get {return character == quote;}}
+        public bool IsEscape             {get {return character == esc;}}
+        public bool IsPercent            {get {return character == '%';}}
 
        // public bool IsOpenQuote    {get {return thisCharType == ACType.OpenQuote;}}
       //  public bool IsCloseQuote   {get {return thisCharType == ACType.CloseQuote;}}
@@ -63,8 +63,8 @@ namespace PLMain
         //public bool IsLevel0Semicolon  { get { return IsSemicolon && NestingLevel == 0; } }
 
         public bool IsWhitespace {get {return character == ' ';}}
-        public bool IsSemicolon  {get {return character == ';';}}
-        public bool IsColon      {get {return character == ':';}}
+        public bool IsSemicolon   {get {return character == ';';}}
+        public bool IsColon            {get {return character == ':';}}
 
 
         public bool IsLetter {get {return Char.IsLetter (character);}}

@@ -416,10 +416,10 @@ namespace PLMain
             changedType.Clear ();
 
             foreach (int i in operators)
-            {
+            {   
                 if (operators.Contains (i+1))
                 {
-                    annotatedChars [i].thisCharType = AnnotatedChar.ACType.TwoCharOperator;
+                    annotatedChars [i].thisCharType     = AnnotatedChar.ACType.TwoCharOperator;
                     annotatedChars [i+1].thisCharType = AnnotatedChar.ACType.TwoCharOperator;
                     changedType.Add (i);
                     changedType.Add (i+1);
@@ -822,6 +822,8 @@ namespace PLMain
             if (str22.Contains ("1")) str += '\n' + str22;
             if (str23.Contains ("1")) str += '\n' + str23;
 
+            str += "\n" + "IsCompound: " + IsCompound.ToString ();
+
             //str += "\n" + "AlphanumericOnly:  " + AlphanumericOnly.ToString ();            
 
             //str += "\n" + "Nesting level 0 words:";
@@ -831,14 +833,15 @@ namespace PLMain
 
             //str += "\n" + "SuppressOutput: " + SuppressOutput;
 
+
             if (digits.Count > 0) {str += "\nDigits: "; foreach (int i in digits) str += i + ", ";}
 
-            if (quotes.Count > 0)       {str += "\nQuotes      : "; foreach (int i in quotes) str += i + ", ";}
-            if (decimals.Count > 0)     {str += "\nDecimals    : "; foreach (int i in decimals) str += i + ", ";}
-            if (exponentials.Count > 0) {str += "\nExponentials: "; foreach (int i in exponentials) str += i + ", ";}
-            if (operators.Count > 0)    {str += "\nOperators   : "; foreach (int i in operators) str += i + ", ";}
+            if (quotes.Count > 0)              {str += "\nQuotes      : "; foreach (int i in quotes) str += i + ", ";}
+            if (decimals.Count > 0)         {str += "\nDecimals    : "; foreach (int i in decimals) str += i + ", ";}
+            if (exponentials.Count > 0)  {str += "\nExponentials: "; foreach (int i in exponentials) str += i + ", ";}
+            if (operators.Count > 0)        {str += "\nOperators   : "; foreach (int i in operators) str += i + ", ";}
             if (level0Spaces.Count > 0) {str += "\nlevel0Spaces: "; foreach (int i in level0Spaces) str += i + ", ";}
-            if (level0Semis.Count > 0)  {str += "\nlevel0Semis : "; foreach (int i in level0Semis) str += i + ", ";}
+            if (level0Semis.Count > 0)    {str += "\nlevel0Semis : "; foreach (int i in level0Semis) str += i + ", ";}
 
             return str;
         }
