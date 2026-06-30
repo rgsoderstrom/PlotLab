@@ -41,14 +41,14 @@ namespace utTokens
                         if (trimmed.Length == 0 || trimmed [0] == '%')
                             continue;
 
-                        AnnotatedStringTest (trimmed);
-                        Print ("===========================================");
+                        //AnnotatedStringTest (trimmed);
+                        //Print ("===========================================");
 
                         //AnnotatedStringSetTest (trimmed);
                         //Print ("===========================================");
 
-                        //TokenParsingTest (trimmed);
-                        //Print ("===========================================");                    
+                        TokenParsingTest (trimmed);
+                        Print ("===========================================");                    
 
                         //TokenUtilsTest (trimmed);
                         //Print ("===========================================");                    
@@ -102,7 +102,9 @@ namespace utTokens
 
             while (nestedSet.Count > 0)
             {
-                AnnotatedString next = nestedSet.GetOldest ();
+              AnnotatedString next = nestedSet.GetOldest ();
+             //   AnnotatedString next = nestedSet.PeekOldest ();
+             //   nestedSet.Pop ();
 
                 if (next == null)
                     break;
@@ -123,22 +125,22 @@ namespace utTokens
 
         static private bool TokenParsingTest (string str)
         {
-            //AnnotatedString annotated = new AnnotatedString (str);
+            AnnotatedString annotated = new AnnotatedString (str);
 
-            //if (annotated == null)
-            //    return false;
+            if (annotated == null)
+                return false;
 
-            //if (annotated.IsEmpty)
-            //    return false;
+            if (annotated.IsEmpty)
+                return false;
 
-            //Print (annotated.Plain.ToString ());
-            //Print (annotated.ToString ());
+            Print (annotated.Plain.ToString ());
+            Print (annotated.ToString ());
 
-            //// pass annotated string to token processor
-            //TokenParsing parser = new TokenParsing ();
-            //TokenSet statementtokens = parser.StringToTokens (annotated);
+            // pass annotated string to token processor
+            TokenParsing parser = new TokenParsing ();
+            TokenSet statementtokens = parser.StringToTokens (annotated);
 
-            //Print (statementtokens.ToString ());
+            Print (statementtokens.ToString ());
 
             return true;
         }

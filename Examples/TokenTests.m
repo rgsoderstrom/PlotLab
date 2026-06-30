@@ -13,7 +13,7 @@
 	% p = [1 ; (sqrt (5 * 3)) ; 7]
 	% p=[1 ; 2 ; 3 ; 4 ; (sqrt (5 * 3)) ; 6 ; 7]
 	% d = [1 ; (2 * 7) ; 3]'
-	x >= 3;	y = z .* x;
+	% x >= 3;	y = z .* x;
 	% z = A' + [1:2:20]'
 	
 	% a = b123 + 1;
@@ -35,18 +35,17 @@
 	% abc123 = sprintf ('%d', [1 ; 2 ; 3]);
 	% -12
 	% ab = sprintf ('%f', sin (c));
-	% c  = sprintf ('aa \'bbb\' cc');
+	% c = sprintf ('aa \'bbb\' cc');
 	
 	% AnnotatedStringSet - 
-	% AnnotatedStringSet - 
-	% a = 4; b = a ^ 2 
+	% a = 4; b = a ^ 2; 
 	% a = 4; b = a ^ 2; c = b ^ 2; d = c / 3; clear a b c
 	
 	
 	% TokenParsing
 	% p = [1 ; 2 ; 3 ; 4 ; 5 ; 6 ; 7];
 	% z = 987 * 23;
-	% z = -987
+	z = -987
 	% c = ~c123 & 1;
 	% d = -3 * -sin (4);
 	% t1 = [1 2 3]' + (4 : 6)' + [7:9]' + dd' + c123;

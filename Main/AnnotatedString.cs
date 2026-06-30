@@ -497,22 +497,20 @@ namespace PLMain
 
 
 
-        //internal static AnnotatedString Append (AnnotatedString orig, char ch)
-        //{
-        //    AnnotatedChar wasLast = orig [orig.CharacterCount-1];
-        //    orig.annotatedChars.Add (new AnnotatedChar (wasLast, ch));
-
-
-
-        //}
-
         internal static AnnotatedString Append (AnnotatedString orig, char ch)
         {
-            throw new NotImplementedException ("Append ch");
-            //string str = orig.Plain;
-            //str += ch;
-            //return new AnnotatedString (str);
+            return new AnnotatedString (orig.Plain + ch);
+            //AnnotatedChar wasLast = orig [orig.CharacterCount-1];
+            //orig.annotatedChars.Add (new AnnotatedChar (wasLast, ch));
         }
+
+        //internal static AnnotatedString Append (AnnotatedString orig, char ch)
+        //{
+        //    throw new NotImplementedException ("Append ch");
+        //    //string str = orig.Plain;
+        //    //str += ch;
+        //    //return new AnnotatedString (str);
+        //}
 
 
 
@@ -527,30 +525,30 @@ namespace PLMain
         //    return new AnnotatedString (str);
         //}
 
-        internal void Append (AnnotatedString astr)
-        {
-            throw new NotImplementedException ("Append astr");
-            //for (int i = 0; i<astr.CharacterCount; i++)
-            //    annotatedChars.Add (astr [i]);
-        }
+        //internal void Append (AnnotatedString astr)
+        //{
+        //    throw new NotImplementedException ("Append astr");
+        //    //for (int i = 0; i<astr.CharacterCount; i++)
+        //    //    annotatedChars.Add (astr [i]);
+        //}
 
         //*******************************************************************
         //
         // Return substring with leading and trailing spaces removed
         //
-        public AnnotatedString TrimmedSubstring (int start, int count)
-        {
-            string sub = Plain.Substring (start, count);
-            string trimmed = sub.Trim ();
-            return new AnnotatedString (trimmed);
-        }
+        //public AnnotatedString TrimmedSubstring (int start, int count)
+        //{
+        //    string sub = Plain.Substring (start, count);
+        //    string trimmed = sub.Trim ();
+        //    return new AnnotatedString (trimmed);
+        //}
 
-        // no trimming
-        public AnnotatedString Substring (int start, int count)
-        {
-            string sub = Plain.Substring (start, count);
-            return new AnnotatedString (sub);
-        }
+        //// no trimming
+        //public AnnotatedString Substring (int start, int count)
+        //{
+        //    string sub = Plain.Substring (start, count);
+        //    return new AnnotatedString (sub);
+        //}
 
         //*******************************************************************
         //
@@ -563,32 +561,32 @@ namespace PLMain
             str = "(" + str + ")";
             return new AnnotatedString (str);
 
-          //  List<AnnotatedChar> newChars = new List<AnnotatedChar> (CharacterCount + 2);
+            //  List<AnnotatedChar> newChars = new List<AnnotatedChar> (CharacterCount + 2);
 
-          //  foreach (AnnotatedChar ac in annotatedChars)
-          //  {
-          //      AnnotatedChar newChar = ac;
-          //      newChar.ParenLevel++;
-          //      newChars.Add (newChar); 
-          //  }
+            //  foreach (AnnotatedChar ac in annotatedChars)
+            //  {
+            //      AnnotatedChar newChar = ac;
+            //      newChar.ParenLevel++;
+            //      newChars.Add (newChar); 
+            //  }
 
-          //  // new initial character
-          //  AnnotatedChar c1 = new AnnotatedChar ('(');
+            //  // new initial character
+            //  AnnotatedChar c1 = new AnnotatedChar ('(');
 
-          //  // if the previous first char raised a nesting level, we need to undo that for new first char
-          //  c1.ParenLevel   = (sbyte) (annotatedChars [0].IsOpenParen   ? annotatedChars [0].ParenLevel - 1   : annotatedChars [0].ParenLevel);
-          //  c1.BracketLevel = (sbyte) (annotatedChars [0].IsOpenBracket ? annotatedChars [0].BracketLevel - 1 : annotatedChars [0].BracketLevel);
+            //  // if the previous first char raised a nesting level, we need to undo that for new first char
+            //  c1.ParenLevel   = (sbyte) (annotatedChars [0].IsOpenParen   ? annotatedChars [0].ParenLevel - 1   : annotatedChars [0].ParenLevel);
+            //  c1.BracketLevel = (sbyte) (annotatedChars [0].IsOpenBracket ? annotatedChars [0].BracketLevel - 1 : annotatedChars [0].BracketLevel);
 
-          //  newChars.Insert (0, c1);
+            //  newChars.Insert (0, c1);
 
-          //  // new final close paren
-          //  AnnotatedChar c2 = new AnnotatedChar (annotatedChars [annotatedChars.Count - 1], ')');
-          //  newChars.Add (c2);
+            //  // new final close paren
+            //  AnnotatedChar c2 = new AnnotatedChar (annotatedChars [annotatedChars.Count - 1], ')');
+            //  newChars.Add (c2);
 
-          ////  return new AnnotatedString (newChars);
+            ////  return new AnnotatedString (newChars);
 
-          //  annotatedChars = newChars;
-          //  return this;
+            //  annotatedChars = newChars;
+            //  return this;
         }
 
         //*******************************************************************
@@ -596,39 +594,39 @@ namespace PLMain
         // Add outer square brackets
         //
 
-        internal static AnnotatedString AddOuterBrackets (AnnotatedString src)
-        {
-            string final = "[" + src.Plain + "]";
-            return new AnnotatedString (final);
+        //internal static AnnotatedString AddOuterBrackets (AnnotatedString src)
+        //{
+        //    string final = "[" + src.Plain + "]";
+        //    return new AnnotatedString (final);
 
 
-            //List<AnnotatedChar> newChars = new List<AnnotatedChar> (CharacterCount + 2);
+        //    //List<AnnotatedChar> newChars = new List<AnnotatedChar> (CharacterCount + 2);
 
-            //foreach (AnnotatedChar ac in annotatedChars)
-            //{
-            //    AnnotatedChar newChar = ac;
-            //    newChar.BracketLevel++;
-            //    newChars.Add (newChar); 
-            //}
+        //    //foreach (AnnotatedChar ac in annotatedChars)
+        //    //{
+        //    //    AnnotatedChar newChar = ac;
+        //    //    newChar.BracketLevel++;
+        //    //    newChars.Add (newChar); 
+        //    //}
 
-            //// new initial character
-            //AnnotatedChar c1 = new AnnotatedChar ('[');
+        //    //// new initial character
+        //    //AnnotatedChar c1 = new AnnotatedChar ('[');
 
-            //// if the previous first char raised a nesting level, we need to undo that for new first char
-            //c1.ParenLevel   = (sbyte) (annotatedChars [0].IsOpenParen   ? annotatedChars [0].ParenLevel - 1   : annotatedChars [0].ParenLevel);
-            //c1.BracketLevel = (sbyte) (annotatedChars [0].IsOpenBracket ? annotatedChars [0].BracketLevel - 1 : annotatedChars [0].BracketLevel);
+        //    //// if the previous first char raised a nesting level, we need to undo that for new first char
+        //    //c1.ParenLevel   = (sbyte) (annotatedChars [0].IsOpenParen   ? annotatedChars [0].ParenLevel - 1   : annotatedChars [0].ParenLevel);
+        //    //c1.BracketLevel = (sbyte) (annotatedChars [0].IsOpenBracket ? annotatedChars [0].BracketLevel - 1 : annotatedChars [0].BracketLevel);
 
-            //newChars.Insert (0, c1);
+        //    //newChars.Insert (0, c1);
 
-            // new final close paren
-          //  AnnotatedChar c2 = new AnnotatedChar (annotatedChars [annotatedChars.Count - 1], ']');
-          //  newChars.Add (c2);
+        //    // new final close paren
+        //  //  AnnotatedChar c2 = new AnnotatedChar (annotatedChars [annotatedChars.Count - 1], ']');
+        //  //  newChars.Add (c2);
 
-          ////  return new AnnotatedString (newChars);
+        //  ////  return new AnnotatedString (newChars);
 
-          //  annotatedChars = newChars;
-          //  return this;
-        }
+        //  //  annotatedChars = newChars;
+        //  //  return this;
+        //}
 
         //*******************************************************************
         //

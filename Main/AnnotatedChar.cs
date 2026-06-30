@@ -47,24 +47,24 @@ namespace PLMain
         public sbyte ParenLevel   {get {return parenlevel;}   set {parenlevel = value;}}
         public int   NestingLevel {get {return bracketlevel + parenlevel;}}
 
-        public bool IsOpenParen      {get {return character == '(';}}
-        public bool IsCloseParen     {get {return character == ')';}}
+        public bool IsOpenParen    {get {return character == '(';}}
+        public bool IsCloseParen   {get {return character == ')';}}
         public bool IsOpenBracket  {get {return character == '[';}}
         public bool IsCloseBracket {get {return character == ']';}}
-        public bool IsQuote                {get {return character == quote;}}
-        public bool IsEscape             {get {return character == esc;}}
-        public bool IsPercent            {get {return character == '%';}}
+        public bool IsQuote        {get {return character == quote;}}
+        public bool IsEscape       {get {return character == esc;}}
+        public bool IsPercent      {get {return character == '%';}}
 
        // public bool IsOpenQuote    {get {return thisCharType == ACType.OpenQuote;}}
       //  public bool IsCloseQuote   {get {return thisCharType == ACType.CloseQuote;}}
 
         // Whitespace and Semi at nesting level 0 
-        //public bool IsLevel0Whitespace { get { return IsWhitespace && NestingLevel == 0; } }
-        //public bool IsLevel0Semicolon  { get { return IsSemicolon && NestingLevel == 0; } }
+        public bool IsLevel0Whitespace {get {return IsWhitespace && NestingLevel == 0;}}
+        public bool IsLevel0Semicolon  {get {return IsSemicolon && NestingLevel == 0;}}
 
         public bool IsWhitespace {get {return character == ' ';}}
-        public bool IsSemicolon   {get {return character == ';';}}
-        public bool IsColon            {get {return character == ':';}}
+        public bool IsSemicolon  {get {return character == ';';}}
+        public bool IsColon      {get {return character == ':';}}
 
 
         public bool IsLetter {get {return Char.IsLetter (character);}}
@@ -106,19 +106,19 @@ namespace PLMain
         public bool IsMinus       {get {return character == '-';}}
         public bool IsPlusMinus   {get {return character == '+' || character == '-';}}
 
-        // these only exist as overrides
-    //    public bool IsTwoCharOp {get {return OverrideType == ContextType.IsTwoCharOperator;}}
-     //   public bool IsTranspose {get {return OverrideType == ContextType.IsTranspose;}}
+        public bool IsTwoCharOp   {get {return thisCharType == ACType.TwoCharOperator;}}
+        public bool IsTranspose   {get {return thisCharType == ACType.Transpose;}}
+        public bool IsInString    {get {return thisCharType == ACType.String;}}
 
-     //  public bool IsExponent      {get {return character == '^';}}
-    //    public bool IsColon         {get {return character == ':';}}
-    ////    public bool IsSemicolon     {get {return character == ';';}}
-     //   public bool IsComma         {get {return character == ',';}}
+        //  public bool IsExponent      {get {return character == '^';}}
+        //    public bool IsColon         {get {return character == ':';}}
+        ////    public bool IsSemicolon     {get {return character == ';';}}
+        //   public bool IsComma         {get {return character == ',';}}
 
         //**********************************************************************************
 
         // all charcters in any operator: oneChar, twoChar, unary, transpose
-      //static List<char> Operators = new List<char> () {',', ';', ':', '\'', '.', '^', '*', '/', '+', '-', '&', '|', '>', '<', '~', '='};
+        //static List<char> Operators = new List<char> () {',', ';', ':', '\'', '.', '^', '*', '/', '+', '-', '&', '|', '>', '<', '~', '='};
         static List<char> Operators = new List<char> () {',', ';', ':',       '.', '^', '*', '/', '+', '-', '&', '|', '>', '<', '~', '='};
 
         //static public bool IsTwoCharOpStr (string s) {return twoCharBinaryOperators.Contains (s);}
