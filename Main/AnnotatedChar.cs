@@ -36,7 +36,7 @@ namespace PLMain
                             TwoCharOperator,
                 } 
 
-        internal ACType thisCharType = ACType.Unknown;
+        public ACType thisCharType = ACType.Unknown;
 
         //**************************************************************************
 
@@ -47,28 +47,28 @@ namespace PLMain
         public sbyte ParenLevel   {get {return parenlevel;}   set {parenlevel = value;}}
         public int   NestingLevel {get {return bracketlevel + parenlevel;}}
 
-        public bool IsOpenParen    {get {return character == '(';}}
-        public bool IsCloseParen   {get {return character == ')';}}
-        public bool IsOpenBracket  {get {return character == '[';}}
-        public bool IsCloseBracket {get {return character == ']';}}
-        public bool IsQuote        {get {return character == quote;}}
-        public bool IsEscape       {get {return character == esc;}}
-        public bool IsPercent      {get {return character == '%';}}
+        private bool IsOpenParen_    {get {return character == '(';}}
+        private bool IsCloseParen_   {get {return character == ')';}}
+        private bool IsOpenBracket_  {get {return character == '[';}}
+        private bool IsCloseBracket_ {get {return character == ']';}}
+        private bool IsQuote_        {get {return character == quote;}}
+        private bool IsEscape_       {get {return character == esc;}}
+        private bool IsPercent_      {get {return character == '%';}}
 
        // public bool IsOpenQuote    {get {return thisCharType == ACType.OpenQuote;}}
       //  public bool IsCloseQuote   {get {return thisCharType == ACType.CloseQuote;}}
 
         // Whitespace and Semi at nesting level 0 
-        public bool IsLevel0Whitespace {get {return IsWhitespace && NestingLevel == 0;}}
-        public bool IsLevel0Semicolon  {get {return IsSemicolon && NestingLevel == 0;}}
+        public bool IsLevel0Whitespace {get {return thisCharType == ACType.Whitespace && NestingLevel == 0;}}
+        public bool IsLevel0Semicolon  {get {return thisCharType == ACType.Semicolon && NestingLevel == 0;}}
 
-        public bool IsWhitespace {get {return character == ' ';}}
-        public bool IsSemicolon  {get {return character == ';';}}
-        public bool IsColon      {get {return character == ':';}}
+        private bool IsWhitespace_ {get {return character == ' ';}}
+        private bool IsSemicolon_  {get {return character == ';';}}
+        private bool IsColon_      {get {return character == ':';}}
 
 
-        public bool IsLetter {get {return Char.IsLetter (character);}}
-        public bool IsAlphanumeric {get {return Char.IsLetterOrDigit (character);}}
+        private bool IsLetter_ {get {return Char.IsLetter (character);}}
+        private bool IsAlphanumeric_ {get {return Char.IsLetterOrDigit (character);}}
 
 
 
@@ -87,24 +87,28 @@ namespace PLMain
 
         //***************************************************************************
 
-        public bool IsDecimal     {get {return character == '.';}}
+        public bool IsAlphanumeric {get {return thisCharType == ACType.Alphanumeric;}}
+        public bool IsDecimal      {get {return thisCharType == ACType.DecimalPoint;}}
+        public bool IsNumber       {get {return thisCharType == ACType.Number;}}
+        public bool IsQuote        {get {return thisCharType == ACType.Quote;}}
+        public bool IsOperator     {get {return thisCharType == ACType.Operator;}}
+        public bool IsWhitespace   {get {return thisCharType == ACType.Whitespace;}}
+        public bool IsSemicolon    {get {return thisCharType == ACType.Semicolon;}}
+        public bool IsEqualSign    {get {return thisCharType == ACType.Operator && IsEqualSign_;}}  //
 
-        public bool IsNumber      {get {return Char.IsDigit (character);}}
+        public bool IsExponential {get {return IsExponential_;}}
+        public bool IsPlusMinus   {get {return IsPlusMinus_;}}
 
-        public bool IsAlpha       {get {return Char.IsLetter (character) || IsUnderscore;}}
-
-        public bool IsUnderscore  {get {return character == '_';}}
-
-        public bool IsOperator    {get {return Operators.Contains (character);}}
-
-     //   public bool IsTilde       {get {return character == '~';}}
-
-        public bool IsEqualSign   {get {return character == '=';}}
-
-        public bool IsExponential {get {return char.ToUpper (character) == 'E';}}
-
-        public bool IsMinus       {get {return character == '-';}}
-        public bool IsPlusMinus   {get {return character == '+' || character == '-';}}
+        private bool IsDecimal_     {get {return character == '.';}}
+        private bool IsNumber_      {get {return Char.IsDigit (character);}}
+  //    private bool IsAlpha_       {get {return Char.IsLetter (character) || IsUnderscore_;}}
+        private bool IsUnderscore_  {get {return character == '_';}}
+        private bool IsOperator_    {get {return Operators.Contains (character);}}
+     // private bool IsTilde_       {get {return character == '~';}}
+        private bool IsEqualSign_   {get {return character == '=';}}
+        private bool IsExponential_ {get {return char.ToUpper (character) == 'E';}}
+        private bool IsMinus_       {get {return character == '-';}}
+        private bool IsPlusMinus_   {get {return character == '+' || character == '-';}}
 
         public bool IsTwoCharOp   {get {return thisCharType == ACType.TwoCharOperator;}}
         public bool IsTranspose   {get {return thisCharType == ACType.Transpose;}}
@@ -149,29 +153,30 @@ namespace PLMain
             character    = c;
             AssignInitialType ();
 
-            bracketlevel = IsOpenBracket ? (sbyte) 1 : (sbyte) 0;
-            parenlevel   = IsOpenParen   ? (sbyte) 1 : (sbyte) 0;
+            bracketlevel = IsOpenBracket_ ? (sbyte) 1 : (sbyte) 0;
+            parenlevel   = IsOpenParen_   ? (sbyte) 1 : (sbyte) 0;
         }
 
         private void AssignInitialType ()
         { 
-            if      (IsWhitespace)  thisCharType = ACType.Whitespace;
-            else if (IsSemicolon)   thisCharType = ACType.Semicolon;
-            else if (IsColon)       thisCharType = ACType.Colon;
+            if      (IsWhitespace_)  thisCharType = ACType.Whitespace;
+            else if (IsSemicolon_)   thisCharType = ACType.Semicolon;
+            else if (IsColon_)       thisCharType = ACType.Colon;
 
-            else if (IsLetter)      thisCharType = ACType.Alphanumeric; // .Letter;
-            else if (IsDecimal)     thisCharType = ACType.DecimalPoint;
-            else if (IsNumber)      thisCharType = ACType.Number;
+            else if (IsLetter_)      thisCharType = ACType.Alphanumeric;
+            else if (IsUnderscore_)  thisCharType = ACType.Alphanumeric;
+            else if (IsDecimal_)     thisCharType = ACType.DecimalPoint;
+            else if (IsNumber_)      thisCharType = ACType.Number;
 
-            else if (IsOpenBracket)  thisCharType = ACType.OpenBracket;
-            else if (IsCloseBracket) thisCharType = ACType.CloseBracket;
-            else if (IsOpenParen)    thisCharType = ACType.OpenParen;
-            else if (IsCloseParen)   thisCharType = ACType.CloseParen;
+            else if (IsOpenBracket_)  thisCharType = ACType.OpenBracket;
+            else if (IsCloseBracket_) thisCharType = ACType.CloseBracket;
+            else if (IsOpenParen_)    thisCharType = ACType.OpenParen;
+            else if (IsCloseParen_)   thisCharType = ACType.CloseParen;
 
-            else if (IsEscape)       thisCharType = ACType.Escape;
-            else if (IsQuote)        thisCharType = ACType.Quote;
-            else if (IsOperator)     thisCharType = ACType.Operator;
-            else if (IsPercent)      thisCharType = ACType.Percent;
+            else if (IsEscape_)       thisCharType = ACType.Escape;
+            else if (IsQuote_)        thisCharType = ACType.Quote;
+            else if (IsOperator_)     thisCharType = ACType.Operator;
+            else if (IsPercent_)      thisCharType = ACType.Percent;
 
             else throw new Exception ("AssignInitialType failed for character " + character);
         }
@@ -192,14 +197,14 @@ namespace PLMain
             //********************************************************
 
             // check parenthesis level
-            if      (IsOpenParen)  parenlevel++;
-            if (prev.IsCloseParen) parenlevel--;
+            if      (IsOpenParen_)  parenlevel++;
+            if (prev.IsCloseParen_) parenlevel--;
 
             //********************************************************
 
             // check bracket level
-            if      (IsOpenBracket)  bracketlevel++;
-            if (prev.IsCloseBracket) bracketlevel--;
+            if      (IsOpenBracket_)  bracketlevel++;
+            if (prev.IsCloseBracket_) bracketlevel--;
 
             //********************************************************
 

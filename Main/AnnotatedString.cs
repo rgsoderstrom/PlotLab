@@ -339,7 +339,7 @@ namespace PLMain
                             if (annotatedChars [before].IsEqualSign) { beforeTest = true; break; }
                             if (annotatedChars [before].IsOperator) { beforeTest = true; break; }
                             if (annotatedChars [before].IsExponential) { beforeTest = true; break; }
-                            if (annotatedChars [before].IsAlpha) { break; }
+                            if (annotatedChars [before].IsAlphanumeric) { break; }
                             if (annotatedChars [before].IsNumber) { break; }
                         }
 
