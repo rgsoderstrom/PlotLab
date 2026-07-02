@@ -96,6 +96,9 @@ namespace PLMain
         public bool IsSemicolon    {get {return thisCharType == ACType.Semicolon;}}
         public bool IsEqualSign    {get {return thisCharType == ACType.Operator && IsEqualSign_;}}  //
 
+        public bool IsOpenParen    {get {return thisCharType == ACType.OpenParen;}}
+        public bool IsOpenBracket  {get {return thisCharType == ACType.OpenBracket;}}
+
         public bool IsExponential {get {return IsExponential_;}}
         public bool IsPlusMinus   {get {return IsPlusMinus_;}}
 

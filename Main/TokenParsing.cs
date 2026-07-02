@@ -40,8 +40,8 @@ namespace PLMain
         public TokenSet StringToTokens (AnnotatedString expression)
         {
             TokenSet tokens = ParsingPassOne (expression);
-         //   tokens = ParsingPassTwo (tokens);
-            tokens.SuppressPrinting = false; // ====================== expression.SuppressOutput;
+            tokens = ParsingPassTwo (tokens);
+            tokens.SuppressPrinting = tokens [tokens.Count - 1].Type == TokenType.SupressPrinting;
 
             return tokens;
         }
@@ -95,6 +95,10 @@ namespace PLMain
 
                 switch (status.state)
                 {
+                    case ParsingState.Between:
+                        getNextChar = BetweenProcessing (status);
+                        break;
+
                     case ParsingState.Leaving:
                         ExitProcessing (tokens, ref CurrentToken, status);
                         break;
@@ -103,12 +107,8 @@ namespace PLMain
                         getNextChar = EqualSignProcessing (tokens, ref CurrentToken, status);
                         break;
 
-                    //case ParsingState.SupressOutput:
-                    //    getNextChar = SupressOutputProcessing (tokens, ref CurrentToken, status);
-                    //    break;
-
-                    case ParsingState.Between:
-                        getNextChar = BetweenProcessing (status);
+                    case ParsingState.SupressOutput:
+                        getNextChar = SupressOutputProcessing (tokens, ref CurrentToken, status);
                         break;
 
                     case ParsingState.InString:
@@ -169,7 +169,7 @@ namespace PLMain
 
             if (status.currentChar.IsLevel0Whitespace) accepted = true;
 
-            //   else if (status.currentChar.IsSupress)     status.state = ParsingState.SupressOutput;
+            else if (status.currentChar.IsLevel0Semicolon) status.state = ParsingState.SupressOutput;
 
             else if (status.currentChar.IsEqualSign) status.state = ParsingState.EqualSign;
 
@@ -179,7 +179,7 @@ namespace PLMain
 
             else if (status.currentChar.IsOperator) status.state = ParsingState.InOperator;
 
-            else if (status.currentChar.IsAlpha) status.state = ParsingState.InAlpha;
+            else if (status.currentChar.IsAlphanumeric) status.state = ParsingState.InAlpha;
 
             else if (status.currentChar.IsNumber) status.state = ParsingState.InNumber;
 
@@ -222,7 +222,7 @@ namespace PLMain
             }
             else
             {
-                if (status.currentChar.IsAlpha || status.currentChar.IsNumber)
+                if (status.currentChar.IsAlphanumeric || status.currentChar.IsNumber)
                 {
                     AnnotatedString astr = AnnotatedString.Append (token.AnnotatedText, status.currentChar.Character);
                     token = new Token (token.Type, astr);
@@ -320,17 +320,17 @@ namespace PLMain
             return true;
         }
 
-        //static bool SupressOutputProcessing (TokenSet tokens, ref IToken token, ParsingStatus status)
-        //{
-        //  //  Console.WriteLine ("SupressOutputProcessing, " + status.currentChar);
+        static bool SupressOutputProcessing (TokenSet tokens, ref IToken token, ParsingStatus status)
+        {
+            //  Console.WriteLine ("SupressOutputProcessing, " + status.currentChar);
 
-        //    token = new Token (TokenType.SupressPrinting, status.currentChar);
-        //    tokens.Add (token);
-        //    token = null;
-        //    status.state = ParsingState.Between;//.Leaving;
+            token = new Token (TokenType.SupressPrinting, status.currentChar);
+            tokens.Add (token);
+            token = null;
+            status.state = ParsingState.Between;//.Leaving;
 
-        //    return true;
-        //}
+            return true;
+        }
 
         static bool EqualSignProcessing (TokenSet tokens, ref IToken token, ParsingStatus status)
         {
