@@ -15,6 +15,7 @@ namespace PLMain
 
         // public access properties
         public int  CharacterCount {get {return annotatedChars.Count;}}
+        public int  Length         {get {return CharacterCount;}}
         public bool IsEmpty {get {return CharacterCount == 0;}}
 
 
@@ -181,9 +182,9 @@ namespace PLMain
 
                 if (annotatedChars [i].IsWhitespace == true  && annotatedChars [i].NestingLevel == 0) level0Spaces.Add (i);
                 if (annotatedChars [i].IsSemicolon  == true  && annotatedChars [i].NestingLevel == 0) level0Semis.Add  (i);
-            }
 
-            if (operators.Count > 0) AlphanumericOnly = false;
+                if (annotatedChars [i].IsAlphanumeric == false) AlphanumericOnly = false;
+            }
         }
 
         //*************************************************************************
@@ -536,12 +537,12 @@ namespace PLMain
         //
         // Return substring with leading and trailing spaces removed
         //
-        //public AnnotatedString TrimmedSubstring (int start, int count)
-        //{
-        //    string sub = Plain.Substring (start, count);
-        //    string trimmed = sub.Trim ();
-        //    return new AnnotatedString (trimmed);
-        //}
+        public AnnotatedString TrimmedSubstring (int start, int count)
+        {
+            string sub = Plain.Substring (start, count);
+            string trimmed = sub.Trim ();
+            return new AnnotatedString (trimmed);
+        }
 
         //// no trimming
         //public AnnotatedString Substring (int start, int count)

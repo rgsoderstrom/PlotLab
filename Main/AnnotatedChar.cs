@@ -94,6 +94,7 @@ namespace PLMain
         public bool IsOperator     {get {return thisCharType == ACType.Operator;}}
         public bool IsWhitespace   {get {return thisCharType == ACType.Whitespace;}}
         public bool IsSemicolon    {get {return thisCharType == ACType.Semicolon;}}
+        public bool IsColon        {get {return thisCharType == ACType.Colon;}}
         public bool IsEqualSign    {get {return thisCharType == ACType.Operator && IsEqualSign_;}}  //
 
         public bool IsOpenParen    {get {return thisCharType == ACType.OpenParen;}}
@@ -120,7 +121,7 @@ namespace PLMain
         //  public bool IsExponent      {get {return character == '^';}}
         //    public bool IsColon         {get {return character == ':';}}
         ////    public bool IsSemicolon     {get {return character == ';';}}
-        //   public bool IsComma         {get {return character == ',';}}
+        public bool IsComma         {get {return character == ',';}}
 
         //**********************************************************************************
 
