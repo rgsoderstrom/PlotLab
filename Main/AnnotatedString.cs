@@ -13,6 +13,8 @@ namespace PLMain
         // private members
         private readonly List<AnnotatedChar> annotatedChars = new List<AnnotatedChar> ();
 
+
+
         // public access properties
         public int  CharacterCount {get {return annotatedChars.Count;}}
         public int  Length         {get {return CharacterCount;}}
@@ -57,6 +59,9 @@ namespace PLMain
         {
             get
             {
+                if (level0Words.Count == 0)
+                    BreakIntoWords ();
+
                 if (level0Words.Count < 2)
                     return Plain;
 
@@ -75,6 +80,9 @@ namespace PLMain
         {
             get
             {
+                if (level0Words.Count == 0)
+                    BreakIntoWords ();
+
                 List<string> args = new List<string> ();
 
                 for (int i = 1; i<level0Words.Count; i++)
@@ -84,11 +92,11 @@ namespace PLMain
             }
         }
 
-
-
-
-
-        public string Plain // plain text without annotation
+        //*************************************************************************
+        //
+        // Return plain text without annotation
+        //
+        public string Plain 
         {
             get
             {
@@ -100,8 +108,6 @@ namespace PLMain
                 return str;
             }
         }
-
-        //public bool SuppressOutput {get; protected set;} = false;
 
         //*************************************************************************
         //
@@ -120,34 +126,36 @@ namespace PLMain
                 if (trimmed.Length == 0 || trimmed [0] == '%')
                     return;
 
-                PassOne (trimmed);
-                PassTwo ();
-                PassThree ();
-
-
-
-
-                //bool t1 = annotatedChars [CharacterCount - 1].IsSemicolon;
-                //bool t2 = annotatedChars [0].NestingLevel == annotatedChars [CharacterCount - 1].NestingLevel;
-
-                //if (t1 && t2)
-                //{
-                //    SuppressOutput = true;
-                //    annotatedChars.RemoveAt (CharacterCount - 1);
-
-                //    if (Level0Semis [Level0Semis.Count - 1] >= CharacterCount)
-                //        Level0Semis.RemoveAt (Level0Semis.Count - 1);
-                //}
-
-
-
-
+                AssignInitialTypes (trimmed);
+                AdjustTypes ();
             }
 
             catch (Exception ex)
             {
-                throw new Exception ("Error in AnnotatedString ctor: " + ex.Message);
+                throw new Exception ("Error in AnnotatedString ctor for: " + text + "\n" + ex.Message);
             }
+        }
+
+        internal AnnotatedString (AnnotatedChar ac)
+        {
+            Append (ac);
+        }
+
+        internal void Append (AnnotatedChar ac)
+        {
+            annotatedChars.Add (ac);
+
+            if (ac.IsWhitespace == true  && ac.NestingLevel == 0) level0Spaces.Add (annotatedChars.Count - 1);
+            if (ac.IsSemicolon  == true  && ac.NestingLevel == 0) level0Semis.Add  (annotatedChars.Count - 1);
+
+            if (ac.IsAlphanumeric == false) AlphanumericOnly = false;
+        }
+
+        internal void Append (char ch)
+        {
+            AnnotatedChar ac = CharacterCount == 0 ? new AnnotatedChar (ch)
+                                                   : new AnnotatedChar (annotatedChars [CharacterCount - 1], ch);
+            Append (ac);
         }
 
         //*************************************************************************
@@ -161,7 +169,7 @@ namespace PLMain
 
         //*************************************************************************
 
-        private void PassOne (string text)
+        private void AssignInitialTypes (string text)
         { 
             AnnotatedChar firstAC = new AnnotatedChar (text [0]);
             annotatedChars.Add (firstAC);
@@ -189,7 +197,9 @@ namespace PLMain
 
         //*************************************************************************
 
-        private void PassTwo ()
+        // AdjustTypes - possible change a character's type based on context 
+
+        private void AdjustTypes ()
         {
             // in each section keep a record of any characters whose type is changed. Use
             // this to remove them from lists they should no longer be on
@@ -278,7 +288,7 @@ namespace PLMain
                     if (annotatedChars [before].thisCharType == AnnotatedChar.ACType.Alphanumeric && annotatedChars [before].IsExponential == false)
                     { 
                         annotatedChars [i].thisCharType = AnnotatedChar.ACType.Alphanumeric;
-                        changedType.Add (i); 
+                      //  changedType.Add (i); 
                     }
                 }
             }
@@ -382,7 +392,7 @@ namespace PLMain
                         if (annotatedChars [after].IsPlusMinus)
                         {
                             annotatedChars [after].thisCharType = AnnotatedChar.ACType.Number;
-                            changedType.Add (i);
+                          //  changedType.Add (i);
                         }
                     }
                 }
@@ -425,7 +435,7 @@ namespace PLMain
             {   
                 if (operators.Contains (i+1))
                 {
-                    annotatedChars [i].thisCharType     = AnnotatedChar.ACType.TwoCharOperator;
+                    annotatedChars [i].thisCharType   = AnnotatedChar.ACType.TwoCharOperator;
                     annotatedChars [i+1].thisCharType = AnnotatedChar.ACType.TwoCharOperator;
                     changedType.Add (i);
                     changedType.Add (i+1);
@@ -438,8 +448,10 @@ namespace PLMain
 
         //*************************************************************************
 
-        private void PassThree ()
+        private void BreakIntoWords ()
         {
+            level0Words.Clear ();
+
             // break into "words", character substrings separated by level 0 whitespaces
             int start = 0;
             int stop = 0;
@@ -457,82 +469,6 @@ namespace PLMain
                 level0Words.Add (plainCopy.Substring (start, Plain.Length - start));
         }
 
-        //*************************************************************************
-
-
-        // Copy constructor
-
-        ////private AnnotatedString (AnnotatedString source)
-        ////{
-        ////    annotatedChars = new List<AnnotatedChar> (source.CharacterCount);
-
-        ////    try
-        ////    {
-        ////        for (int i = 0; i<source.CharacterCount; i++)
-        ////            annotatedChars.Add (source [i]);
-        ////    }
-
-        ////    catch (Exception ex)
-        ////    {
-        ////        throw new Exception ("Exception in AnnotatedStringCtor: " + ex.Message);
-        ////        //Console.WriteLine ("Exception: " + ex.Message);
-        ////    }
-        ////}
-
-        //*******************************************************************
-        //
-        // Operator overloading
-        //
-        public static AnnotatedString operator + (AnnotatedString left, AnnotatedString right)
-        {
-            string sum = left.Plain + right.Plain;
-            AnnotatedString asum = new AnnotatedString (sum);
-            return asum;
-        }
-
-        //*******************************************************************
-        //
-        // Append
-        //
-
-
-
-
-        internal static AnnotatedString Append (AnnotatedString orig, char ch)
-        {
-            return new AnnotatedString (orig.Plain + ch);
-            //AnnotatedChar wasLast = orig [orig.CharacterCount-1];
-            //orig.annotatedChars.Add (new AnnotatedChar (wasLast, ch));
-        }
-
-        //internal static AnnotatedString Append (AnnotatedString orig, char ch)
-        //{
-        //    throw new NotImplementedException ("Append ch");
-        //    //string str = orig.Plain;
-        //    //str += ch;
-        //    //return new AnnotatedString (str);
-        //}
-
-
-
-
-
-
-
-        //internal static AnnotatedString Append (AnnotatedString orig, string added)
-        //{
-        //    string str = orig.Plain;
-        //    str += added;
-        //    return new AnnotatedString (str);
-        //}
-
-        //internal void Append (AnnotatedString astr)
-        //{
-        //    throw new NotImplementedException ("Append astr");
-        //    //for (int i = 0; i<astr.CharacterCount; i++)
-        //    //    annotatedChars.Add (astr [i]);
-        //}
-
         //*******************************************************************
         //
         // Return substring with leading and trailing spaces removed
@@ -543,13 +479,6 @@ namespace PLMain
             string trimmed = sub.Trim ();
             return new AnnotatedString (trimmed);
         }
-
-        //// no trimming
-        //public AnnotatedString Substring (int start, int count)
-        //{
-        //    string sub = Plain.Substring (start, count);
-        //    return new AnnotatedString (sub);
-        //}
 
         //*******************************************************************
         //
@@ -695,7 +624,7 @@ namespace PLMain
         // ToString ()
         //
 
-        // Helper NotAllDots - test for text line with something other than '.' after initial colon
+        // Helper method NotAllDots - test for text line with something other than '.' after initial colon
 
         private bool NotAllDots (string str)
         {
@@ -745,17 +674,7 @@ namespace PLMain
             string str20 = "Transpose:     ";
             string str22 = "StringChar:    ";
             string str23 = "TwoCharOp:     ";
-
-        //    string str11 = "Level 0 Space  ";
-        //    string str12 = "Level 0 Semi   ";
-
-
-//            string str3 = "EqualSign:     ";
-
-
-            //string str9 = "Unary Op :    ";
-         // string str21 = "Level0Semi:    ";
-       //     string str12 = "Comma:         ";
+            string str24 = "Comma:         ";
 
             foreach (AnnotatedChar ac in annotatedChars)
             {
@@ -787,16 +706,7 @@ namespace PLMain
                 str22 += ac.thisCharType == AnnotatedChar.ACType.String       ? "1" : ".";
                 
                 str23 += ac.thisCharType == AnnotatedChar.ACType.TwoCharOperator ? "1" : ".";
-
-//                str1 += ac.thisCharType == AnnotatedChar.ACType.OpenQuote    ? "1" : ".";
-  //              str2 += ac.thisCharType == AnnotatedChar.ACType.CloseQuote   ? "1" : ".";
-                //str3 += ac.IsEqualSign   ? "1" : ".";
-      //          str7 += ac.IsTranspose   ? "1" : ".";
-        //        str8 += ac.IsMinus       ? "1" : ".";
-
-             //   str12 += ac.IsComma       ? "1" : ".";
-                //str14 += ac.IsTwoCharOp   ? "1" : ".";
-
+                str24 += ac.thisCharType == AnnotatedChar.ACType.Comma           ? "1" : ".";
             }
 
             string str = str0;
@@ -825,21 +735,18 @@ namespace PLMain
             if (str20.Contains ("1")) str += '\n' + str20;
             if (str22.Contains ("1")) str += '\n' + str22;
             if (str23.Contains ("1")) str += '\n' + str23;
+            if (str24.Contains ("1")) str += '\n' + str24;
 
             str += "\n" + "IsCompound: " + IsCompound.ToString ();
-
             str += "\n" + "AlphanumericOnly:  " + AlphanumericOnly.ToString ();            
-
             str += "\n" + "Nesting level 0 words:";
+
+            BreakIntoWords ();
 
             foreach (string oneWord in level0Words)
                 str += "\n   " + oneWord;
 
-            //str += "\n" + "SuppressOutput: " + SuppressOutput;
-
-
-            if (digits.Count > 0) {str += "\nDigits: "; foreach (int i in digits) str += i + ", ";}
-
+            if (digits.Count > 0)       {str += "\nDigits      : "; foreach (int i in digits) str += i + ", ";}
             if (quotes.Count > 0)       {str += "\nQuotes      : "; foreach (int i in quotes) str += i + ", ";}
             if (decimals.Count > 0)     {str += "\nDecimals    : "; foreach (int i in decimals) str += i + ", ";}
             if (exponentials.Count > 0) {str += "\nExponentials: "; foreach (int i in exponentials) str += i + ", ";}
