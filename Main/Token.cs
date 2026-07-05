@@ -27,8 +27,17 @@ namespace PLMain
         public AnnotatedString AnnotatedText {get {return annotatedText;}}
 
         // constructors
-        public Token (TokenType ty, AnnotatedChar   txt) {type = ty; annotatedText = new AnnotatedString (txt.ToString ());}
-        public Token (TokenType ty, AnnotatedString txt) {type = ty; annotatedText = txt;}
+        public Token (TokenType ty, AnnotatedChar txt) 
+        {
+            type = ty; 
+            annotatedText = new AnnotatedString (txt.ToString ());
+        }
+
+        public Token (TokenType ty, AnnotatedString txt) 
+        {
+            type = ty; 
+            annotatedText = txt;
+        }
 
         // ToString
         public override string ToString () {return string.Format ("Token type: {0}, Token Text: {1}", type, annotatedText.Plain);}

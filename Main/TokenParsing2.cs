@@ -332,7 +332,8 @@ namespace PLMain
                 {
                     case '+':
                     case '-':
-                        Token t1 = new Token (TokenType.Numeric, initial [get].AnnotatedText + new AnnotatedString ("1"));
+                        initial [get].AnnotatedText.Append ('1');
+                        Token t1 = new Token (TokenType.Numeric, initial [get].AnnotatedText);
                         edited.Add (t1);
                         Token t2 = new Token (TokenType.BinaryOperator, new AnnotatedString ("*"));
                         edited.Add (t2);
@@ -341,7 +342,7 @@ namespace PLMain
                         break;
 
                     case '~': // "not" function
-                        Token t3 = new Token (TokenType.FunctionName, new AnnotatedString ("not")); // NESTING LEVELS NEEDED?
+                        Token t3 = new Token (TokenType.FunctionName, new AnnotatedString ("not"));
 
                         // add parens unless outer level is already parens                
                         Token t4 = initial [get].Type != TokenType.GroupingParens ?
@@ -419,14 +420,3 @@ namespace PLMain
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-

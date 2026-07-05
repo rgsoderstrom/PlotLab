@@ -224,8 +224,7 @@ namespace PLMain
             {
                 if (status.currentChar.IsAlphanumeric || status.currentChar.IsNumber)
                 {
-                    AnnotatedString astr = AnnotatedString.Append (token.AnnotatedText, status.currentChar.Character);
-                    token = new Token (token.Type, astr);
+                    token.AnnotatedText.Append (status.currentChar);
                     accepted = true;
                 }
                 else
@@ -258,8 +257,7 @@ namespace PLMain
             {
                 if (status.currentChar.IsOperator)
                 {
-                    AnnotatedString astr = AnnotatedString.Append (token.AnnotatedText, status.currentChar.Character);
-                    token = new Token (token.Type, astr);
+                    token.AnnotatedText.Append (status.currentChar);
                     accepted = true;
                 }
 
@@ -290,8 +288,7 @@ namespace PLMain
             {
                 if (status.currentChar.IsTwoCharOp)
                 {
-                    AnnotatedString astr = AnnotatedString.Append (token.AnnotatedText, status.currentChar.Character);
-                    token = new Token (token.Type, astr);
+                    token.AnnotatedText.Append (status.currentChar);
                     accepted = true;
                 }
 
@@ -360,15 +357,9 @@ namespace PLMain
             }
             else
             {
-                if (status.currentChar.IsNumber)// ||  status.currentChar.IsDecimal || status.currentChar.IsExponential)
+                if (status.currentChar.IsNumber)
                 {
-
-                    AnnotatedString astr = AnnotatedString.Append (current.AnnotatedText, status.currentChar.Character);
-                    current = new Token (current.Type, astr);
-
-
-
-
+                    current.AnnotatedText.Append (status.currentChar);
                     accepted = true;
                 }
                 else
@@ -400,8 +391,7 @@ namespace PLMain
             {
                 if (status.currentChar.IsInString)
                 {
-                    AnnotatedString astr = AnnotatedString.Append (token.AnnotatedText, status.currentChar.Character);
-                    token = new Token (token.Type, astr);
+                    token.AnnotatedText.Append (status.currentChar);
                     accepted = true;
                 }
                 else
@@ -414,22 +404,6 @@ namespace PLMain
 
             return accepted;
         }
-
-        //*************************************************************************************************
-
-        //static TokenType LookupNameType (string name, Workspace workspace)
-        //{
-        //    SymbolicNameTypes ty = workspace.WhatIs (name);
-
-        //    if (ty == SymbolicNameTypes.Unknown) ty = PLLibrary.LibraryManager.WhatIs (name);
-
-
-        //    if      (ty == SymbolicNameTypes.Function)     return TokenType.FunctionName;
-        //    else if (ty == SymbolicNameTypes.Variable)     return TokenType.VariableName;
-        //    else if (ty == SymbolicNameTypes.FunctionFile) return TokenType.FunctionFile;
-        //    else                                           return TokenType.Undefined; 
-        //}
-
 
         //*************************************************************************************************
 
@@ -452,8 +426,7 @@ namespace PLMain
             {
                 if (status.currentChar.ParenLevel >= parenthesisNesting)
                 {
-                    AnnotatedString astr = AnnotatedString.Append (token.AnnotatedText, status.currentChar.Character);
-                    token = new Token (token.Type, astr);
+                    token.AnnotatedText.Append (status.currentChar);
                     accepted = true;
                 }
                 else
@@ -473,7 +446,7 @@ namespace PLMain
 
         static bool BracketProcessing (TokenSet tokens, ref IToken token, ParsingStatus status)
         {
-            //   Console.WriteLine ("Bracket, " + status.currentChar);
+            // Console.WriteLine ("Bracket, " + status.currentChar);
 
             bool accepted = false;
 
@@ -488,8 +461,7 @@ namespace PLMain
             {
                 if (status.currentChar.BracketLevel >= bracketNesting)
                 {
-                    AnnotatedString astr = AnnotatedString.Append (token.AnnotatedText, status.currentChar.Character);
-                    token = new Token (token.Type, astr);
+                    token.AnnotatedText.Append (status.currentChar);
                     accepted = true;
                 }
                 else
