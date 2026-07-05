@@ -44,6 +44,9 @@ namespace utTokens
                         //AnnotatedStringTest (trimmed);
                         //Print ("===========================================");
 
+                        //AnnotatedStringAppendTest (trimmed);
+                        //Print ("===========================================");
+
                         //AnnotatedStringSetTest (trimmed);
                         //Print ("===========================================");
 
@@ -90,6 +93,31 @@ namespace utTokens
         //***********************************************************************
         //***********************************************************************
 
+        static private bool AnnotatedStringAppendTest (string inputString)
+        {
+            if (inputString.Length == 0)
+                return false;
+
+            AnnotatedString allAtOnce = new AnnotatedString (inputString);    
+            Print (inputString);
+            Print (allAtOnce.ToString ());
+
+            Print ("------------");
+
+            AnnotatedString charAtATime = new AnnotatedString (allAtOnce [0]);
+
+            for (int i=1; i<allAtOnce.Length; i++)
+                charAtATime.Append (allAtOnce [i]);
+
+            Print (charAtATime.ToString ());
+
+            return true;
+        }
+
+        //***********************************************************************
+        //***********************************************************************
+        //***********************************************************************
+
         private static bool AnnotatedStringSetTest (string str)
         {
             AnnotatedString nested = new AnnotatedString (str);
@@ -108,8 +136,6 @@ namespace utTokens
             while (nestedSet.Count > 0)
             {
               AnnotatedString next = nestedSet.GetOldest ();
-             //   AnnotatedString next = nestedSet.PeekOldest ();
-             //   nestedSet.Pop ();
 
                 if (next == null)
                     break;
@@ -163,9 +189,9 @@ namespace utTokens
             Print (annot.ToString () + "\n");
 
             //AnnotatedStringSet args = parsing.SplitBracketArgs_Colon (annot);
-            //AnnotatedStringSet args = parsing.SplitBracketArgs_Space (annot);
+            AnnotatedStringSet args = parsing.SplitBracketArgs_Space (annot);
             //AnnotatedStringSet args = parsing.SplitBracketArgs_Semi (annot);
-            AnnotatedStringSet args = parsing.SplitBracketArgs_Comma (annot);
+            //AnnotatedStringSet args = parsing.SplitBracketArgs_Comma (annot);
 
             Print ("\n" + args.Count + " args after split:");
 
