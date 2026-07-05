@@ -22,7 +22,7 @@ namespace PLMain
         // 
 
         public enum ACType {Unknown, Whitespace,
-                            Semicolon, Colon,
+                            Semicolon, Colon, Comma,
                             /*Letter,*/ Number, DecimalPoint, 
                             OpenBracket, CloseBracket,
                             OpenParen, CloseParen,
@@ -34,7 +34,7 @@ namespace PLMain
                             String, OpenQuote, CloseQuote, EscapedQuote, 
                             Transpose,
                             TwoCharOperator,
-                } 
+        } 
 
         public ACType thisCharType = ACType.Unknown;
 
@@ -95,6 +95,7 @@ namespace PLMain
         public bool IsWhitespace   {get {return thisCharType == ACType.Whitespace;}}
         public bool IsSemicolon    {get {return thisCharType == ACType.Semicolon;}}
         public bool IsColon        {get {return thisCharType == ACType.Colon;}}
+        public bool IsComma        {get {return thisCharType == ACType.Comma;}}
         public bool IsEqualSign    {get {return thisCharType == ACType.Operator && IsEqualSign_;}}  //
 
         public bool IsOpenParen    {get {return thisCharType == ACType.OpenParen;}}
@@ -113,6 +114,7 @@ namespace PLMain
         private bool IsExponential_ {get {return char.ToUpper (character) == 'E';}}
         private bool IsMinus_       {get {return character == '-';}}
         private bool IsPlusMinus_   {get {return character == '+' || character == '-';}}
+        private bool IsComma_       {get {return character == ',';}}
 
         public bool IsTwoCharOp   {get {return thisCharType == ACType.TwoCharOperator;}}
         public bool IsTranspose   {get {return thisCharType == ACType.Transpose;}}
@@ -121,13 +123,13 @@ namespace PLMain
         //  public bool IsExponent      {get {return character == '^';}}
         //    public bool IsColon         {get {return character == ':';}}
         ////    public bool IsSemicolon     {get {return character == ';';}}
-        public bool IsComma         {get {return character == ',';}}
 
         //**********************************************************************************
 
         // all charcters in any operator: oneChar, twoChar, unary, transpose
         //static List<char> Operators = new List<char> () {',', ';', ':', '\'', '.', '^', '*', '/', '+', '-', '&', '|', '>', '<', '~', '='};
-        static List<char> Operators = new List<char> () {',', ';', ':',       '.', '^', '*', '/', '+', '-', '&', '|', '>', '<', '~', '='};
+        //static List<char> Operators = new List<char> () {',', ';', ':',       '.', '^', '*', '/', '+', '-', '&', '|', '>', '<', '~', '='};
+        static List<char>   Operators = new List<char> () {                          '^', '*', '/', '+', '-', '&', '|', '>', '<', '~', '='};
 
         //static public bool IsTwoCharOpStr (string s) {return twoCharBinaryOperators.Contains (s);}
         //static readonly List<string> twoCharBinaryOperators = new List<string> () {".*", "./", ".^", "&&", "||", "~=", "==", ">=", "<="};
@@ -164,22 +166,23 @@ namespace PLMain
         private void AssignInitialType ()
         { 
             if      (IsWhitespace_)  thisCharType = ACType.Whitespace;
-            else if (IsSemicolon_)   thisCharType = ACType.Semicolon;
-            else if (IsColon_)       thisCharType = ACType.Colon;
-
             else if (IsLetter_)      thisCharType = ACType.Alphanumeric;
-            else if (IsUnderscore_)  thisCharType = ACType.Alphanumeric;
             else if (IsDecimal_)     thisCharType = ACType.DecimalPoint;
             else if (IsNumber_)      thisCharType = ACType.Number;
+            else if (IsUnderscore_)  thisCharType = ACType.Alphanumeric;
+
+            else if (IsSemicolon_)   thisCharType = ACType.Semicolon;
+            else if (IsColon_)       thisCharType = ACType.Colon;
+            else if (IsComma_)       thisCharType = ACType.Comma;
 
             else if (IsOpenBracket_)  thisCharType = ACType.OpenBracket;
             else if (IsCloseBracket_) thisCharType = ACType.CloseBracket;
             else if (IsOpenParen_)    thisCharType = ACType.OpenParen;
             else if (IsCloseParen_)   thisCharType = ACType.CloseParen;
+            else if (IsOperator_)     thisCharType = ACType.Operator;
 
             else if (IsEscape_)       thisCharType = ACType.Escape;
             else if (IsQuote_)        thisCharType = ACType.Quote;
-            else if (IsOperator_)     thisCharType = ACType.Operator;
             else if (IsPercent_)      thisCharType = ACType.Percent;
 
             else throw new Exception ("AssignInitialType failed for character " + character);
