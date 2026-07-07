@@ -61,46 +61,44 @@ namespace PLMain
             return substrings;
         }
 
-        //        //**************************************************************************************************
-        //        //
-        //        // SplitFunctionArgs
-        //        //      - of the form (A, B, C)
-        //        //
+        //**************************************************************************************************
+        //
+        // SplitFunctionArgs
+        //      - of the form (A, B, C)
+        //
 
-        //        public AnnotatedStringSet SplitFunctionArgs (AnnotatedString str)
-        //        {
-        //            //throw new NotImplementedException ("SplitFunctionArgs");
+        public AnnotatedStringSet SplitFunctionArgs (AnnotatedString str)
+        {
+            //throw new NotImplementedException ("SplitFunctionArgs");
 
-        //            // Error checking - verify first character is an open paren and last is close paren
-        //            int lastIndex = str.CharacterCount - 1;
-        //            if (str [0].IsOpenParen          == false) throw new Exception ("Function arg syntax error at open paren: " + str.Plain);
-        //            if (str [lastIndex].IsCloseParen == false) throw new Exception ("Function arg syntax error at close paren: " + str.Plain);
+            // Error checking - verify first character is an open paren and last is close paren
+            //int lastIndex = str.CharacterCount - 1;
+            //if (str [0].IsOpenParen          == false) throw new Exception ("Function arg syntax error at open paren: " + str.Plain);
+            //if (str [lastIndex].IsCloseParen == false) throw new Exception ("Function arg syntax error at close paren: " + str.Plain);
 
-        //            // extract substrings
-        //            AnnotatedStringSet extractedArgs = new AnnotatedStringSet ();
-        //            BreakIntoSubstrings (str, extractedArgs, delegate (AnnotatedChar ac) { return ac.IsComma; });
+            // extract substrings
+            AnnotatedStringSet args = BreakIntoSubstrings (str, delegate (AnnotatedChar ac) {return ac.IsComma;});
+            return args;
+        }
 
-        //            return extractedArgs;
-        //        }
+        //***********************************************************************************************************
+        //
+        // SplitBracketArgs
+        //  - break one string [(A + B) : (C + D)] into two
+        //
 
-        //        //***********************************************************************************************************
-        //        //
-        //        // SplitBracketArgs
-        //        //  - break one string [(A + B) : (C + D)] into two
-        //        //
+        // z = [1,2,3]
+        // x = [4 5 6]
+        // c = [1 : 3 : 20]
+        // v = [2 ; 4 ; 6]
 
-        //        // z = [1,2,3]
-        //        // x = [4 5 6]
-        //        // c = [1 : 3 : 20]
-        //        // v = [2 ; 4 ; 6]
+        //private void VerifyBrackets (AnnotatedString str)
+        //{
+        //    bool t1 = str [0].IsOpenBracket == false;
+        //    bool t2 = str [str.CharacterCount - 1].IsCloseBracket == false;
 
-        //        private void VerifyBrackets (AnnotatedString str)
-        //        {
-        //            bool t1 = str [0].IsOpenBracket == false;
-        //            bool t2 = str [str.CharacterCount - 1].IsCloseBracket == false;
-
-        //            if (t1 || t2) throw new Exception ("Missing bracket: " + str.Plain);
-        //        }
+        //    if (t1 || t2) throw new Exception ("Missing bracket: " + str.Plain);
+        //}
 
         public AnnotatedStringSet SplitBracketArgs_Comma (AnnotatedString str)
         {
@@ -130,28 +128,17 @@ namespace PLMain
             return args;
         }
 
-        //        //********************************************************************************
-        //        //
-        //        // SplitSubmatrixArgs - break one string into two
-        //        //  - eg: (2:4, 6:7) => "2:4", "6:7"
-        //        //  
+        //********************************************************************************
+        //
+        // SplitSubmatrixArgs - break one string into two
+        //  - eg: (2:4, 6:7) => "2:4", "6:7"
+        //  
 
-        //        private void VerifyParenthesis (AnnotatedString str)
-        //        {
-        //            throw new NotImplementedException ();
-        //            //if (str [0].IsOpenParen == false)              throw new Exception ("Missing opening parenthesis: " + str.Plain);
-        //            //if (str [str.CharacterCount - 1].IsCloseParen == false) throw new Exception ("Missing closing parenthesis: " + str.Plain);
-        //        }
-
-        //        public AnnotatedStringSet SplitSubmatrixArgs (AnnotatedString str)
-        //        {
-        //            throw new NotImplementedException ();
-        //            //VerifyParenthesis (str);
-
-        //            //// split arguments string at any commas at same nesting level as first char
-        //            //AnnotatedStringSet args = new AnnotatedStringSet ();
-        //            //BreakIntoSubstrings (str, args, delegate (AnnotatedChar ac) {return ac.IsComma;});
-        //            //return args;
-        //        }
+        public AnnotatedStringSet SplitSubmatrixArgs (AnnotatedString str)
+        {
+            // split arguments string at any commas at same nesting level as first char
+            AnnotatedStringSet args = BreakIntoSubstrings (str, delegate (AnnotatedChar ac) {return ac.IsComma;});
+            return args;
+        }
     }
 }

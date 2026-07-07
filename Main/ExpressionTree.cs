@@ -14,13 +14,15 @@ namespace PLMain
     {
         readonly ExpressionTreeNode root;
 
-        private bool suppressPrinting = false;
-        public  bool SuppressPrinting {get {return suppressPrinting;} private set {suppressPrinting = value;}}
+        private bool supressPrinting = false;
+        public  bool SupressPrinting {get {return supressPrinting;} private set {supressPrinting = value;}}
 
         public ExpressionTree (AnnotatedString expression)
         {
+            expression.CheckForTrailingSemi ();
+            SupressPrinting = expression.SupressPrinting;
+
             ExpressionTreeNode.NodeCounter = 0;
-            SuppressPrinting = expression.SuppressOutput;
             root = new ExpressionTreeNode (expression);
             Compact ();
         }

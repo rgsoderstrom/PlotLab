@@ -23,7 +23,7 @@ namespace PLMain
             InOperator,
             InTwoCharOperator,
             InTranspose,
-            SupressOutput,
+            //SupressOutput,
             EqualSign,
             Leaving,
             Error
@@ -39,9 +39,10 @@ namespace PLMain
 
         public TokenSet StringToTokens (AnnotatedString expression)
         {
+            expression.CheckForTrailingSemi ();
+
             TokenSet tokens = ParsingPassOne (expression);
             tokens = ParsingPassTwo (tokens);
-            tokens.SuppressPrinting = tokens [tokens.Count - 1].Type == TokenType.SupressPrinting;
 
             return tokens;
         }
@@ -107,9 +108,9 @@ namespace PLMain
                         getNextChar = EqualSignProcessing (tokens, ref CurrentToken, status);
                         break;
 
-                    case ParsingState.SupressOutput:
-                        getNextChar = SupressOutputProcessing (tokens, ref CurrentToken, status);
-                        break;
+                    //case ParsingState.SupressOutput:
+                    //    getNextChar = SupressOutputProcessing (tokens, ref CurrentToken, status);
+                    //    break;
 
                     case ParsingState.InString:
                         getNextChar = StringProcessing (tokens, ref CurrentToken, status);
@@ -169,7 +170,7 @@ namespace PLMain
 
             if (status.currentChar.IsLevel0Whitespace) accepted = true;
 
-            else if (status.currentChar.IsLevel0Semicolon) status.state = ParsingState.SupressOutput;
+            //else if (status.currentChar.IsLevel0Semicolon) status.state = ParsingState.SupressOutput;
 
             else if (status.currentChar.IsEqualSign) status.state = ParsingState.EqualSign;
 
@@ -317,17 +318,17 @@ namespace PLMain
             return true;
         }
 
-        static bool SupressOutputProcessing (TokenSet tokens, ref IToken token, ParsingStatus status)
-        {
-            //  Console.WriteLine ("SupressOutputProcessing, " + status.currentChar);
+        //static bool SupressOutputProcessing (TokenSet tokens, ref IToken token, ParsingStatus status)
+        //{
+        //    //  Console.WriteLine ("SupressOutputProcessing, " + status.currentChar);
 
-            token = new Token (TokenType.SupressPrinting, status.currentChar);
-            tokens.Add (token);
-            token = null;
-            status.state = ParsingState.Between;//.Leaving;
+        //    token = new Token (TokenType.SupressPrinting, status.currentChar);
+        //    tokens.Add (token);
+        //    token = null;
+        //    status.state = ParsingState.Between;//.Leaving;
 
-            return true;
-        }
+        //    return true;
+        //}
 
         static bool EqualSignProcessing (TokenSet tokens, ref IToken token, ParsingStatus status)
         {

@@ -41,7 +41,24 @@ namespace PLMain
         private bool alphanumericOnly = true;
         public bool AlphanumericOnly {get {return alphanumericOnly;} protected set {alphanumericOnly = value;}}
 
+        private bool supressPrinting = false;
+        public bool SupressPrinting {get {return supressPrinting;} protected set {supressPrinting = value;}}
 
+        //********************************************************************************
+        //
+        // CheckForTrailingSemi () - remove and mark string waith SupressPrinting true
+        //
+        internal void CheckForTrailingSemi ()
+        {
+            int index = CharacterCount - 1;
+
+            if (annotatedChars [index].IsLevel0Semicolon)
+            {
+                annotatedChars.RemoveAt (index);
+                Level0Semis.Remove (index);
+                SupressPrinting = true;
+            }
+        }
 
         //********************************************************************************
         //
@@ -737,8 +754,9 @@ namespace PLMain
             if (str23.Contains ("1")) str += '\n' + str23;
             if (str24.Contains ("1")) str += '\n' + str24;
 
-            str += "\n" + "IsCompound: " + IsCompound.ToString ();
-            str += "\n" + "AlphanumericOnly:  " + AlphanumericOnly.ToString ();            
+            str += "\n" + "SupressPrinting:  " + SupressPrinting.ToString ();
+            str += "\n" + "IsCompound:       " + IsCompound.ToString ();
+            str += "\n" + "AlphanumericOnly: " + AlphanumericOnly.ToString ();            
             str += "\n" + "Nesting level 0 words:";
 
             BreakIntoWords ();

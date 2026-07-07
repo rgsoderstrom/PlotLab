@@ -44,7 +44,7 @@ namespace PLMain
         BracketsComma,  // [1, 2, 3]
         BracketsSpace,  // [1 2 3]
 
-        SupressPrinting,
+      //SupressPrinting,
         Pair, // for class TokenPair
         None, // used when stepping through list of tokens. Token before the first or after the last is assigned type "None"
     };

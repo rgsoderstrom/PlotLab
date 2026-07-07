@@ -18,8 +18,8 @@ namespace PLMain
         private List<IToken> tokens = new List<IToken> ();
         public int Count {get {return tokens.Count;}}
 
-        private bool suppessPrinting = false;
-        public  bool SuppressPrinting {get {return suppessPrinting;} set {suppessPrinting = value;}}
+     //   private bool suppessPrinting = false;
+     //   public  bool SuppressPrinting {get {return suppessPrinting;} set {suppessPrinting = value;}}
 
         //**************************************************************************
 
@@ -96,7 +96,7 @@ namespace PLMain
             foreach (IToken tok in tokens)
                 str += tok.ToString () + "\n";
 
-            str += "SuppressPrinting = " + SuppressPrinting.ToString () + "\n";
+            //str += "SuppressPrinting = " + SuppressPrinting.ToString () + "\n";
             return str;
         }
 

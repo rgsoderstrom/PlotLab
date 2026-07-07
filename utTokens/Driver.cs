@@ -50,11 +50,11 @@ namespace utTokens
                         //AnnotatedStringSetTest (trimmed);
                         //Print ("===========================================");
 
-                        //TokenParsingTest (trimmed);
-                        //Print ("===========================================");                    
-
-                        TokenUtilsTest (trimmed);
+                        TokenParsingTest (trimmed);
                         Print ("===========================================");
+
+                        //TokenUtilsTest (trimmed);
+                        //Print ("===========================================");
                     }
                 }
 
@@ -82,9 +82,10 @@ namespace utTokens
             if (inputString.Length == 0)
                 return false;
 
-            AnnotatedString nested = new AnnotatedString (inputString);    
+            AnnotatedString astr = new AnnotatedString (inputString);   
+            astr.CheckForTrailingSemi ();
             Print (inputString);
-            Print (nested.ToString ());
+            Print (astr.ToString ());
 
             return true;
         }
@@ -164,13 +165,12 @@ namespace utTokens
             if (annotated.IsEmpty)
                 return false;
 
-            Print (annotated.Plain.ToString ());
-            Print (annotated.ToString ());
-
             // pass annotated string to token processor
             TokenParsing parser = new TokenParsing ();
             TokenSet statementtokens = parser.StringToTokens (annotated);
 
+            Print (str);
+            Print (annotated.ToString ());
             Print (statementtokens.ToString ());
 
             return true;

@@ -120,7 +120,7 @@ namespace PLMain
         public bool IsTranspose   {get {return thisCharType == ACType.Transpose;}}
         public bool IsInString    {get {return thisCharType == ACType.String;}}
 
-        //  public bool IsExponent      {get {return character == '^';}}
+        public bool IsExponent    {get {return character == '^' && thisCharType == ACType.Operator;}}
         //    public bool IsColon         {get {return character == ':';}}
         ////    public bool IsSemicolon     {get {return character == ';';}}
 
