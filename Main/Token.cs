@@ -27,10 +27,10 @@ namespace PLMain
         public AnnotatedString AnnotatedText {get {return annotatedText;}}
 
         // constructors
-        public Token (TokenType ty, AnnotatedChar txt) 
+        public Token (TokenType ty, AnnotatedChar ch) 
         {
             type = ty; 
-            annotatedText = new AnnotatedString (txt.ToString ());
+            annotatedText = new AnnotatedString (ch);
         }
 
         public Token (TokenType ty, AnnotatedString txt) 
