@@ -233,7 +233,14 @@ namespace PLMain
 
                 foreach (int i in quotes)
                 {
-                    if (i > 0)
+                    if (i == 0)
+                    {
+                        annotatedChars [i].thisCharType = AnnotatedChar.ACType.OpenQuote;
+                        openQuotes.Add (i);
+                        inString = true;
+                    }
+
+                    else if (i > 0)
                     {
                         int before = i - 1;
 
