@@ -240,6 +240,7 @@ namespace PLCommon
         public override string ToString (string cfmt)
         {
             throw new Exception ("PLMatrix.ToString (cfmt) not implemented");
+
             //int a = 8, b = 5; // defaults
             //string str = "";
 
@@ -967,7 +968,8 @@ namespace PLCommon
 
         public override string ToString (string cfmt)
         {
-            throw new Exception ("PLDouble.ToString (cfmt) not implemented");
+            return Data.ToString ();
+            //throw new Exception ("PLDouble.ToString (cfmt) not implemented");
 
             //int a = 8, b = 5; // defaults
 

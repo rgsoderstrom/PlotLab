@@ -61,6 +61,7 @@ namespace utExpressionTree
 
                         while (annotatedSet.Count > 0)
                         {
+                            Console.WriteLine (trimmed);
                             AnnotatedString annotated = annotatedSet.GetOldest ();
                             annotated.CheckForTrailingSemi ();
                             Console.WriteLine (annotated.ToString ());

@@ -157,6 +157,8 @@ namespace utTokens
 
         static private bool TokenParsingTest (string str)
         {
+            Print (str);
+
             AnnotatedString annotated = new AnnotatedString (str);
 
             if (annotated == null)
@@ -169,7 +171,6 @@ namespace utTokens
             TokenParsing parser = new TokenParsing ();
             TokenSet statementtokens = parser.StringToTokens (annotated);
 
-            Print (str);
             Print (annotated.ToString ());
             Print (statementtokens.ToString ());
 

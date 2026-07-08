@@ -266,10 +266,21 @@ namespace PLMain
                     }
                 }
 
+
+
+
                 // Mark chars between OpenQuotes and CloseQuotes as part of a string and remove their
                 // indices from the lists, e.g. digits, operators, etc.
-                if (openQuotes.Count != closeQuotes.Count)
-                    throw new Exception ("Mismatched quote: " + Plain);
+                //if (openQuotes.Count != closeQuotes.Count)
+                //    throw new Exception ("Mismatched quote: " + Plain);
+
+                //if (openQuotes.Count != closeQuotes.Count)
+                //    return;
+
+
+
+
+
 
                 changedType.Clear ();
 
