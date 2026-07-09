@@ -1295,8 +1295,21 @@ namespace PLCommon
         //public override int Size {get {return Data.Length;}}
 
 
-        public PLString Add (string op2)   {Data += op2; return this;}
-        public PLString Add (PLString op2) {Data += op2.Data; return this;}
+        public PLString Add (string op2)
+        {
+            Data += op2;
+            return this;
+        }
+
+        public PLString Add (PLString op2) 
+        {
+            string s1 = Data;
+            s1 = s1.Remove (s1.Length-1, 1);
+            string s2 = op2.Data;
+            s2 = s2.Remove (0, 1);
+            Data = s1 + s2;
+            return this;
+        }
 
         public override string ToString (string _)
         {
