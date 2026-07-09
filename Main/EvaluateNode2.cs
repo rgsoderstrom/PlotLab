@@ -427,28 +427,12 @@ namespace PLMain
         //*******************************************************************************************
         //*******************************************************************************************
 
-        // LIMITATION: assumes result is same type as first operand
-
         private void Operator_Plus ()
         {
-            //if (AllOperandsSameSize (out int rows, out int cols, workspace))
-            //{
-            //    if (Operands [0].Value is PLString) Value = new PLString ("");
-            //    else if (rows == 1 && cols == 1) Value = new PLDouble (0);
+            Value = Operands [0].Evaluate ();
 
-            //    else if (Operands [0].Value is PLRMatrix) Value = new PLRMatrix (rows, cols);
-            //    else if (Operands [0].Value is PLCMatrix) Value = new PLCMatrix (rows, cols);
-
-            //    else
-            //        throw new Exception ("Operator_Plus error");
-
-            Value = new PLDouble (0);
-
-                foreach (ExpressionTreeNode op in Operands)
-                    Value += op.Value;
-            //}
-            //else
-            //    throw new Exception ("Matrix size error in \"+\"");
+            for (int i=1; i<Operands.Count; i++)
+                Value += Operands [i].Value;
         }
 
         //*******************************************************************************************
@@ -456,18 +440,10 @@ namespace PLMain
 
         private void Operator_Minus ()
         {
-            //if (AllOperandsSameSize (out int rows, out int cols, workspace))
-            //{
-            //    if (rows == 1 && cols == 1) Value = new PLDouble (0);
-            //    else                        Value = new PLRMatrix (rows, cols);
-
                 Value = Operands [0].Value;
                             
                 for (int i=1; i<Operands.Count; i++)
                         Value -= Operands [i].Value;
-            //}
-            //else
-            //    throw new Exception ("Matrix size error in \"-\"");
         }
 
         //*******************************************************************************************
