@@ -183,103 +183,111 @@ namespace PLMain
 
          PLVariable Evaluate_Operator (string Operator)
         {
-            switch (Operator)
-            {
-                case "=":
-                    Operator_Equal ();
-                    break;
+            try
+            { 
+                switch (Operator)
+                {
+                    case "=":
+                        Operator_Equal ();
+                        break;
 
-                case "&":
-                case "&&":
-                    Operator_Logical_And ();
-                    break;
+                    case "&":
+                    case "&&":
+                        Operator_Logical_And ();
+                        break;
 
-                //case "Not":
-                //    Operator_Logical_Not ();
-                //    break;
+                    //case "Not":
+                    //    Operator_Logical_Not ();
+                    //    break;
 
-                case "|":
-                case "||":
-                    Operator_Logical_Or ();
-                    break;
+                    case "|":
+                    case "||":
+                        Operator_Logical_Or ();
+                        break;
 
-                case "==":
-                    Operator_EqualityTest ();
-                    break;
+                    case "==":
+                        Operator_EqualityTest ();
+                        break;
 
-                case "~=":
-                    Operator_Inequality ();
-                    break;
+                    case "~=":
+                        Operator_Inequality ();
+                        break;
 
-                case ">":
-                    Operator_GreaterTest ();
-                    break;
+                    case ">":
+                        Operator_GreaterTest ();
+                        break;
 
-                case ">=":
-                    Operator_GreaterOrEqualTest ();
-                    break;
+                    case ">=":
+                        Operator_GreaterOrEqualTest ();
+                        break;
 
-                case "<":
-                    Operator_LessTest ();
-                    break;
+                    case "<":
+                        Operator_LessTest ();
+                        break;
 
-                case "<=":
-                    Operator_LessOrEqualTest ();
-                    break;
+                    case "<=":
+                        Operator_LessOrEqualTest ();
+                        break;
 
-                case "+":
-                    Operator_Plus ();
-                    break;
+                    case "+":
+                        Operator_Plus ();
+                        break;
 
-                case "-":
-                    Operator_Minus ();
-                    break;
+                    case "-":
+                        Operator_Minus ();
+                        break;
 
-                case "/":
-                    Operator_Divide ();
-                    break;
+                    case "/":
+                        Operator_Divide ();
+                        break;
 
-                case "./":
-                    Operator_DotDivide ();
-                    break;
+                    case "./":
+                        Operator_DotDivide ();
+                        break;
 
-                case "*":
-                    Operator_Multiply ();
-                    break;
+                    case "*":
+                        Operator_Multiply ();
+                        break;
 
-                case ".*":
-                    Operator_DotMultiply ();
-                    break;
+                    case ".*":
+                        Operator_DotMultiply ();
+                        break;
 
-                case "^":
-                    Operator_Exponent ();
-                    break;
+                    case "^":
+                        Operator_Exponent ();
+                        break;
 
-                case ".^":
-                    Operator_DotExponent ();
-                    break;
+                    case ".^":
+                        Operator_DotExponent ();
+                        break;
 
-                case "RowVectorElements":
-                case "Comma":
-                case ",":
-                    Operator_RowVectorElements ();
-                    break;
+                    case "RowVectorElements":
+                    case "Comma":
+                    case ",":
+                        Operator_RowVectorElements ();
+                        break;
 
-                case "RowVectorIterator":
-                case ":":
-                    Operator_RowVectorIterator ();
-                    break;
+                    case "RowVectorIterator":
+                    case ":":
+                        Operator_RowVectorIterator ();
+                        break;
 
-                case "ColVectorElements":
-                case ";":
-                    Operator_ColVectorElements ();
-                    break;
+                    case "ColVectorElements":
+                    case ";":
+                        Operator_ColVectorElements ();
+                        break;
 
-                default:
-                    throw new Exception ("Evaluate: Unsupported operator " + Operator + ", " + NodeType);
+                    default:
+                        throw new Exception ("Evaluate: Unsupported operator " + Operator + ", " + NodeType);
+                }
+
+                return Value;
             }
 
-            return Value;
+            catch (Exception ex)
+            {
+                throw new Exception ("Error " + ex.Message + " evaluating " + Operator);
+            }
         }
 
         //*****************************************************************************************************
