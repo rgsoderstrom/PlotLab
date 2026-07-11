@@ -774,13 +774,15 @@ namespace PLMain
 
             str += "\n" + "SupressPrinting:  " + SupressPrinting.ToString ();
             str += "\n" + "IsCompound:       " + IsCompound.ToString ();
-            str += "\n" + "AlphanumericOnly: " + AlphanumericOnly.ToString ();            
-            str += "\n" + "Nesting level 0 words:";
-
-            BreakIntoWords ();
-
-            foreach (string oneWord in level0Words)
-                str += "\n   " + oneWord;
+            str += "\n" + "AlphanumericOnly: " + AlphanumericOnly.ToString ();    
+            
+            if (AlphanumericOnly)
+            { 
+                str += "\n" + "Nesting level 0 words:";
+                BreakIntoWords ();
+                foreach (string oneWord in level0Words)
+                    str += "\n   " + oneWord;
+            }
 
             if (digits.Count > 0)       {str += "\nDigits      : "; foreach (int i in digits) str += i + ", ";}
             if (quotes.Count > 0)       {str += "\nQuotes      : "; foreach (int i in quotes) str += i + ", ";}
