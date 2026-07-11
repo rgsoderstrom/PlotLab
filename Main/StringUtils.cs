@@ -29,15 +29,18 @@ namespace PLMain
 
         //**********************************************************************
 
+        // Add - returns false if nothing added
+        //        - typically if a blank line or a comment-only line was passed in
+
         private string cumulative = "";
         static private readonly string continuationString = "...";
 
-        public void Add (string fileLine)
+        public bool Add (string fileLine)
         {
             string cleanedInput = StringUtils.PreprocessInputLine (fileLine);
 
             if (cleanedInput.Length == 0)
-                return;
+                return false;
 
             bool continues = false;
 
@@ -50,10 +53,11 @@ namespace PLMain
             cumulative += cleanedInput;
 
             if (continues == true)
-                return;
+                return true;
 
             cleanedStrings.Enqueue (cumulative);
             cumulative = "";
+            return true;
         }
     }
 

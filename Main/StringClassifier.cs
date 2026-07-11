@@ -32,27 +32,27 @@ namespace PLMain
         //
         // Classify () - return InputLineType for a single string
         //
-        public InputLineType Classify (NestedString nstr)
+        public InputLineType Classify (AnnotatedString astr)
         {
             // anything we don't know what to do with will be passed to the expression tree
             InputLineType defaultType = InputLineType.ExpressionTree;
 
             // for lines with alphanumeric only
-            if (nstr.AlphanumericOnly)
+            if (astr.AlphanumericOnly)
             {
                 // if it's a single word, check variables and scripts
-                if (nstr.SingleWord)
+                if (astr.SingleWord)
                 {
-                    if (Workspace.WhatIs (nstr.Plain) == SymbolicNameTypes.Variable)
+                    if (Workspace.WhatIs (astr.Plain) == SymbolicNameTypes.Variable)
                         return InputLineType.VariableName;
 
-                    if (FileSystem.IsScriptFile (nstr.Plain))
+                    if (FileSystem.IsScriptFile (astr.Plain))
                         return InputLineType.ScriptFile;
                 }
             }
 
             // alphanumeric only but more than one word
-            string FirstWord = nstr.FirstWord;
+            string FirstWord = astr.FirstWord;
 
             // see if the first word is a system command
             if (SystemFunctions.WhatIs (FirstWord) == SymbolicNameTypes.SystemCommand)

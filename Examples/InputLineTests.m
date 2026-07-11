@@ -1,10 +1,31 @@
 
 
 % InputLine tests	
+	% b = 7 + ...  % zzzz
+	    % 8 + ...
+		% 9;	
 
+	% c = [1 ; ...
+	     % 2 ; ...
+		 % 3];
+		 
+	% d = [10, ...
+	     % 20, ...
+		 % 30];
+		 
+	a	
+	startup	
+	path	
+	figure
+	
+	% j=3; k = 7; l=  9;
+	
+	
+	
 	%
-	% "for" loop
+	% loops
 	%
+
 	
 	% for a = 1:9
 		% b = a ^ 2; 
@@ -13,44 +34,24 @@
 	% end
 
 	
-
 	% for a = 1:9,
 		% b = a ^ 2; disp (b);
 	% end
 
-	for a = 1:9
-		b = a ^ 2; 
+
+	% for a = 1:9
+		% b = a ^ 2; 
 		
-		for z = 11 : 18,
-			x = z ^ 3;
-		end
+		% for z = 11 : 18,
+			% x = z ^ 3;
+		% end
 		
-		disp (b);
-	end
+		% disp (b);
+	% end
 
 
 
 
-	% a = 7 + ...  % zzzz
-	    % 8 + ...
-		% 9;
-		
-	% a
-	
-	% startup
-	
-	% path
-	
-	% figure
-	
-	
-	
-	
-
-
-	% h = 3 * 4 + 5; % comment
-	
-	% j=3; k=7; l=9;
 	
 	% p = j + k * l;
 	

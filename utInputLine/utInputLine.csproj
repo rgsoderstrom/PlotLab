@@ -34,7 +34,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PLCommon">
+    <Reference Include="PLCommon, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\PLCommon\bin\Debug\PLCommon.dll</HintPath>
     </Reference>
     <Reference Include="PLFileSystem">
@@ -59,14 +60,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Main\AnnotatedChar.cs">
+      <Link>AnnotatedChar.cs</Link>
+    </Compile>
+    <Compile Include="..\Main\AnnotatedString.cs">
+      <Link>AnnotatedString.cs</Link>
+    </Compile>
+    <Compile Include="..\Main\AnnotatedStringSet.cs">
+      <Link>AnnotatedStringSet.cs</Link>
+    </Compile>
     <Compile Include="..\Main\InputLineProcessor.cs">
       <Link>InputLineProcessor.cs</Link>
-    </Compile>
-    <Compile Include="..\Main\NestedChar.cs">
-      <Link>NestedChar.cs</Link>
-    </Compile>
-    <Compile Include="..\Main\NestedString.cs">
-      <Link>NestedString.cs</Link>
     </Compile>
     <Compile Include="..\Main\StringClassifier.cs">
       <Link>StringClassifier.cs</Link>

@@ -25,6 +25,7 @@ namespace PLMain
 
         // queue of strings for processing
         private readonly CleanStringQueue CleanedStrings;
+        private readonly AnnotatedStringSet AnnotatedStrings;
 
         private StringClassifier classifier = new StringClassifier (); 
 
@@ -33,6 +34,7 @@ namespace PLMain
             Print = pr;
             //Block.Print = pr;  
             CleanedStrings = new CleanStringQueue ();
+            AnnotatedStrings = new AnnotatedStringSet ();
         }
 
         //**************************************************************************************
@@ -46,14 +48,35 @@ namespace PLMain
 
         public void ProcessString (string rawString)
         {
-            CleanedStrings.Add (rawString);
+            bool somethingAdded = CleanedStrings.Add (rawString);
+
+            if (somethingAdded == false) // a blank line or a comment line
+                return;
+
+            Console.WriteLine ("=====================");
 
             while (CleanedStrings.Count > 0)
             {
-                string       cleaned = CleanedStrings.GetOldest;
-                NestedString nested  = new NestedString (cleaned);
+                AnnotatedString astr2 = null;
+                string          cleaned = CleanedStrings.GetOldest;
+                AnnotatedString astr  = new AnnotatedString (cleaned);
+                AnnotatedStrings.Add (astr);
 
-                InputLineType lineType = classifier.Classify (nested);
+                while (AnnotatedStrings.Count > 0)
+                {
+                    astr2 = AnnotatedStrings.GetOldest ();
+                    astr2.CheckForTrailingSemi ();
+
+                    Console.WriteLine ("\n" + astr2);                    
+                }
+
+                if (astr2 == null)
+                    return;
+
+                InputLineType lineType = classifier.Classify (astr2);
+
+                Console.WriteLine ("line type = " + lineType);
+
 
                 //if (BlockManager.BlockCollectionInProgress)
                 //{ 
