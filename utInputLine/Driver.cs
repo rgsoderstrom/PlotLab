@@ -15,7 +15,7 @@ namespace utInputLine
 {
     class Driver
     {
-        static readonly string InputMFileName = @"D:\From_C_Visual Studio 2022\Visual Studio 2022\Projects\PlotLab\Examples\InputLineTests.m";
+        static readonly string InputMFileName = @"..\..\..\Examples\InputLineTests.m";
 
         static void Print (string str)
         {
