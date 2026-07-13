@@ -14,7 +14,7 @@ namespace PLMain
     //  - any comment and extra spaces removed
     //  - prompt removed
     //  - continued lines concatenated
-    //  - compound lines split
+    //  
 
     internal class CleanStringQueue
     {
@@ -25,7 +25,7 @@ namespace PLMain
         public int Count {get {return cleanedStrings.Count;}}
 
         // GetOldest
-        public string GetOldest {get {return cleanedStrings.Dequeue ();}}
+        public string GetOldest () {return cleanedStrings.Dequeue ();}
 
         //**********************************************************************
 

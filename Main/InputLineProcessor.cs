@@ -58,7 +58,7 @@ namespace PLMain
             while (CleanedStrings.Count > 0)
             {
                 AnnotatedString astr2 = null;
-                string          cleaned = CleanedStrings.GetOldest;
+                string          cleaned = CleanedStrings.GetOldest ();
                 AnnotatedString astr  = new AnnotatedString (cleaned);
                 AnnotatedStrings.Add (astr);
 
@@ -67,60 +67,67 @@ namespace PLMain
                     astr2 = AnnotatedStrings.GetOldest ();
                     astr2.CheckForTrailingSemi ();
 
+                    if (astr2 == null)
+                        return;
+
                     Console.WriteLine ("\n" + astr2);                    
-                }
-
-                if (astr2 == null)
-                    return;
-
-                InputLineType lineType = classifier.Classify (astr2);
-
-                Console.WriteLine ("line type = " + lineType);
+                    InputLineType lineType = classifier.Classify (astr2);
+                
+                    
+                    
+                  
 
 
-                //if (BlockManager.BlockCollectionInProgress)
-                //{ 
-                //    BlockManager.Add (cleaned, lineType);
-                //}
+                    //if (BlockManager.BlockCollectionInProgress)
+                    //{ 
+                    //    BlockManager.Add (cleaned, lineType);
+                    //}
 
-                //else
-                if (true)
-                { 
-                    switch (lineType)
-                    {
-                        case InputLineType.Unknown:
-                        case InputLineType.ExpressionTree:
-                        //    Print ("ExpressionTree: " + cleaned);
-                            break;
+                    //else
+                    if (true)
+                    { 
+                        switch (lineType)
+                        {
+                            case InputLineType.Unknown:
+                            case InputLineType.ExpressionTree:
+                                Print ("ExpressionTree: " + astr2.Plain);
+                                break;
 
-                        case InputLineType.VariableName:
-                            break;
+                            case InputLineType.VariableName:
+                                Print ("Variable: " + astr2.Plain);
+                                break;
 
-                        case InputLineType.SystemCommand:
-                            break;
+                            case InputLineType.SystemCommand:
+                                Print ("SystemCommand: " + astr2.Plain);
+                                break;
 
-                        case InputLineType.PlotCommand:
-                            break;
+                            case InputLineType.PlotCommand:
+                                Print ("PlotCommand: " + astr2.Plain);
+                                break;
 
-                        case InputLineType.WorkspaceCommand:
-                            break;
+                            case InputLineType.WorkspaceCommand:
+                                Print ("WorkspaceCOmmand: " + astr2.Plain);
+                                break;
 
-                        case InputLineType.ScriptFile:
-                      //      Print ("Script: " + cleaned);
-                            break;
+                            case InputLineType.ScriptFile:
+                                Print ("Script: " + astr2.Plain);
+                                break;
 
-                        case InputLineType.BlockStart:
-                          //  BlockManager.StartNewBlock (cleaned);
-                            break;
+                            case InputLineType.BlockStart:
+                                Print ("BlockStart: " + astr2.Plain);
+                              //  BlockManager.StartNewBlock (astr2.Plain);
+                                break;
 
-                        case InputLineType.BlockEnd:
-                            throw new Exception ("Error: \"end\" outside of block not allowed");
+                            case InputLineType.BlockEnd:
+                                Print ("BlockEnd: " + astr2.Plain);
+                     //         throw new Exception ("Error: \"end\" outside of block not allowed");
+                                break;
 
-                        default: throw new Exception ("Unsupported InputLineType: " + lineType);
+                            default: throw new Exception ("Unsupported InputLineType: " + lineType);
+                        }
                     }
+
                 }
-
-
             }
         }
 

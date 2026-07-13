@@ -1,9 +1,9 @@
 
 
 % InputLine tests	
-	% b = 7 + ...  % zzzz
-	    % 8 + ...
-		% 9;	
+	b = 7 + ...  % zzzz
+	    8 + ...
+		9;	
 
 	% c = [1 ; ...
 	     % 2 ; ...
@@ -13,10 +13,10 @@
 	     % 20, ...
 		 % 30];
 		 
-	a	
-	startup	
-	path	
-	figure
+	% a	
+	% startup	
+	% path	
+	% figure
 	
 	% j=3; k = 7; l=  9;
 	

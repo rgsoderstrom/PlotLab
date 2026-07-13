@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="AnnotatedChar.cs" />
     <Compile Include="AnnotatedString.cs" />
+    <Compile Include="AnnotatedStringSet.cs" />
     <Compile Include="App.xaml.cs" />
     <Compile Include="CommandLineHistory.cs" />
     <Compile Include="EntryPoint.cs" />
@@ -52,9 +53,6 @@
     <Compile Include="InputLineProcessor.cs" />
     <Compile Include="InputLineProcessor_Legacy.cs" />
     <Compile Include="InternalFunctions.cs" />
-    <Compile Include="NestedChar.cs" />
-    <Compile Include="NestedString.cs" />
-    <Compile Include="NestedStringSet.cs" />
     <Compile Include="ScriptPreprocessor.cs" />
     <Compile Include="ScriptProcessor.cs" />
     <Compile Include="ScriptUtils.cs" />

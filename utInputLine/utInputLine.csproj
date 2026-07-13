@@ -80,7 +80,6 @@
     </Compile>
     <Compile Include="Block.cs" />
     <Compile Include="BlockManager.cs" />
-    <Compile Include="InputLineUtils.cs" />
     <Compile Include="Interfaces\ICmndHistory.cs" />
     <Compile Include="Driver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
