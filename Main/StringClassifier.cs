@@ -64,11 +64,11 @@ namespace PLMain
             if (Workspace.WhatIs (FirstWord) == SymbolicNameTypes.WorkspaceCommand)
                 return InputLineType.WorkspaceCommand;
 
-            //if (BlockManager.WhatIs (FirstWord) == SymbolicNameTypes.BlockStart)
-            //    return InputLineType.BlockStart;
+            if (BlockManager.WhatIs (FirstWord) == SymbolicNameTypes.BlockStart)
+                return InputLineType.BlockStart;
 
-            //if (BlockManager.WhatIs (FirstWord) == SymbolicNameTypes.BlockEnd)
-            //    return InputLineType.BlockEnd;
+            if (BlockManager.WhatIs (FirstWord) == SymbolicNameTypes.BlockEnd)
+                return InputLineType.BlockEnd;
 
             return defaultType;
         }

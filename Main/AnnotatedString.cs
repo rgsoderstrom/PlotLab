@@ -91,23 +91,39 @@ namespace PLMain
         // Return everything after FirstWord
         //
         //      - clear a b c % returns "a b c" (no quotes)
-        //      - for a = 1:9, % returns a = 1:9,
+        //      - for a = 1:9, % returns "a = 1:9,"
 
-        public List<string> Arguments // all words after the first word
+        public string Arguments // all words after the first word
         {
             get
             {
                 if (level0Words.Count == 0)
                     BreakIntoWords ();
 
-                List<string> args = new List<string> ();
+                string args = "";
 
                 for (int i = 1; i<level0Words.Count; i++)
-                    args.Add (level0Words [i]);
+                    args += level0Words [i] + " ";
 
                 return args;
             }
         }
+
+        //public List<string> Arguments // all words after the first word
+        //{
+        //    get
+        //    {
+        //        if (level0Words.Count == 0)
+        //            BreakIntoWords ();
+
+        //        List<string> args = new List<string> ();
+
+        //        for (int i = 1; i<level0Words.Count; i++)
+        //            args.Add (level0Words [i]);
+
+        //        return args;
+        //    }
+        //}
 
         //*************************************************************************
         //
@@ -776,13 +792,18 @@ namespace PLMain
             str += "\n" + "IsCompound:       " + IsCompound.ToString ();
             str += "\n" + "AlphanumericOnly: " + AlphanumericOnly.ToString ();    
             
-            if (AlphanumericOnly)
-            { 
-                str += "\n" + "Nesting level 0 words:";
-                BreakIntoWords ();
-                foreach (string oneWord in level0Words)
-                    str += "\n   " + oneWord;
-            }
+            //if (AlphanumericOnly)
+            //{ 
+            //    str += "\n" + "Nesting level 0 words:";
+            //    BreakIntoWords ();
+            //    foreach (string oneWord in level0Words)
+            //        str += "\n   " + oneWord;
+            //}
+
+            str += "\n" + "FirstWord: " + FirstWord;
+            str += "\n" + "Arguments: ";
+            str += Arguments;
+            //foreach (string astr in Arguments) str += " " + astr;
 
             if (digits.Count > 0)       {str += "\nDigits      : "; foreach (int i in digits) str += i + ", ";}
             if (quotes.Count > 0)       {str += "\nQuotes      : "; foreach (int i in quotes) str += i + ", ";}

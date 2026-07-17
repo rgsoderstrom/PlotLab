@@ -2,6 +2,14 @@
 
 % TokenTests.m, for utTokens
 
+	A = 7;
+	B = 9;
+	if A > B,
+		C = A * B;
+	end
+	
+	
+	
 	% AnnotatedString - alphanumeric only
 	% clear a b c
 	% for a = 1:10,
@@ -45,8 +53,8 @@
 	
 	
 	% TokenParsing
-	a = sprintf ('%3d', 123);
-	disp (a);
+	% a = sprintf ('%3d', 123);
+	% disp (a);
 	% a = '%3d'
 	% '%3d'
 	% p = [1 ; 2 ; 3 ; 4 ; 5 ; 6 ; 7];

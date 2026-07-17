@@ -1,167 +1,84 @@
 ﻿
-///*
-//    Block.cs
-//        - a "Block" is a list of statements starting with one of (for, while, if)
-//          and ending with "end"
-//*/
+/*
+    Block.cs
+        - a "Block" is a list of statements starting with one of (for, while, if)
+          and ending with "end"
+*/
 
-//using System.Collections.Generic;
-//using PLCommon;
+using System.Collections.Generic;
+using PLCommon;
 
-//namespace PLMain
-//{
-//    abstract internal class Block
-//    {
-//        // a "Block" is a list of statements starting with one of (for, while, if) and ending with "end"
-//        protected List<string> blockStatements = new List<string> ();
+namespace PLMain
+{
+    abstract internal class Block
+    {
+        // a "Block" is a list of statements starting with one of (for, while, if) and ending with "end"
 
-//        // Complete when "end" encountered
-//        private bool complete = false;
-//        internal bool Complete {get {return complete;} set {complete = value;}}
+        protected string name = "";
+        public string Name {get {return name;} protected set {name = value;}}
 
-//        // debug printing
-//        static public PrintFunction Print = null;
-
-//        //************************************************************************
-
-//        protected Block ()
-//        {
-//            Complete = false;
-//        }
-
-//        internal void Add (string str)
-//        {
-//            Print ("adding statement to block: " + str);
-//            blockStatements.Add (str);
-//        }
-
-//        internal void Add (List<string> lst)
-//        {
-//            foreach (string str in lst)
-//                Add (str);
-//        }
-
-//        internal void Add (string [] arr)
-//        {
-//            foreach (string str in arr)
-//                Add (str);
-//        }
-
-//        internal virtual void Close ()
-//        {
-//            Print ("Closing block");
-//            Complete = true;
-//        }
-
-//        internal virtual void Run ()
-//        {
-//            Print ("Running block");
-//        }
-//    }
-
-//    //************************************************************************
-//    //************************************************************************
-//    //************************************************************************
-
-//    internal class ForBlock : Block
-//    {
-//        // the text following the word "for"
-//        internal string loopControl = "";
-
-//        internal ForBlock (string str)
-//        {
-//            Print ("new \"for\" block");
-
-//            // Extract loop control
-//            //
-//            //    Look for first comma.
-//            //       for a = 1:9, b = a ^ 2;
-//            //
-//            //    if none found, use everything after "for"
-//            //
-
-//            int startIndex = "for".Length; // start looking here
-//            int i;
-
-//            for (i=startIndex ; i<str.Length; i++)
-//            {
-//                if (str [i] == ',')
-//                    break;
-//            }
-
-//            loopControl = str.Substring (startIndex, i - startIndex).Trim ();
-//            Print ("loop control: " + loopControl);
-
-//            // anything after iterator string goes into blockStatements
-//            //if (i < str.Length)
-//            //{
-//            //    string remaining = str.Substring (i+1);
-//            //    AnnotatedString astr = new AnnotatedString (remaining);
-
-//            //    AnnotatedStringSet aset = new AnnotatedStringSet ();
-//            //    aset.Add (astr);
-
-//            //    while (aset.Count > 0)
-//            //        Add (aset.GetOldest.Plain);
+        private bool complete = false;
+        public bool Complete {get {return complete;} protected set {complete = value;}}
 
 
-//            //}
-//        }
+        //protected List<AnnotatedString> EntryStatements = new List<AnnotatedString> ();
+        //protected List<AnnotatedString> BodyStatements  = new List<AnnotatedString> ();
+        //protected List<AnnotatedString> ExitStatements  = new List<AnnotatedString> ();
 
-//        //************************************************************************
+        // Ready to execute when all statements have been read in
+        private bool ready = false;
+        internal bool Ready {get {return ready;} set {ready = value;}}
 
-//        internal override void Run ()
-//        {
-//            Print ("Running for " + loopControl + " block");
+        // debug printing
+        static protected PrintFunction Print = null;
 
-//            InputLineProcessor ip = new InputLineProcessor (Print);
+        static public void SetPrintFunction (PrintFunction pr)
+        {
+            Print = pr;
+        }
 
-//            foreach (string str in blockStatements)
-//            {
-//                Print ("  " + str);
-//                ip.ProcessString (str);
-//            }
-//        }
-//    }
+        //************************************************************************
 
-//    //************************************************************************
-//    //************************************************************************
-//    //************************************************************************
+        protected Block ()
+        {
+            Ready = false;
+        }
 
-//    internal class WhileBlock : Block
-//    {
-//        internal WhileBlock (string str)
-//        {
-//            Print ("new \"while\" block");
-//        }
+        internal virtual void Add (AnnotatedString astr)
+        {
+            //Print?.Invoke ("adding statement to block: " + astr.Plain);
+            //BodyStatements.Add (astr);
+        }
 
-//        internal override void Run ()
-//        {
-//            Print ("Running \"while\" block");
-//        }
+        //internal void Add (List<string> lst)
+        //{
+        //    foreach (string str in lst)
+        //        Add (str);
+        //}
 
-//    }
+        //internal void Add (string [] arr)
+        //{
+        //    foreach (string str in arr)
+        //        Add (str);
+        //}
 
-//    //************************************************************************
-//    //************************************************************************
-//    //************************************************************************
+        internal virtual void Close ()
+        {
+            Print?.Invoke ("Closing block");
+            Ready = true;
+        }
 
-//    internal class IfBlock : Block
-//    {
-//        private static readonly List<string> IfBlockKeywords = new List<string> () {"elseif", "else"};
+        internal virtual void Run ()
+        {
+            Print?.Invoke ("Running block");
+        }
+    
 
+    //************************************************************************
+    //************************************************************************
+    //************************************************************************
 
-//        internal IfBlock (string str)
-//        {
-//            Print ("new \"if\" block");
-//        }
-
-//        internal override void Run ()
-//        {
-//            Print ("Running \"if\" block");
-//        }
-
-//    }
-//}
+    }
+}
 
 

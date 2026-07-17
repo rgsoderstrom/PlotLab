@@ -1,9 +1,9 @@
 
 
 % InputLine tests	
-	b = 7 + ...  % zzzz
-	    8 + ...
-		9;	
+	% b = 7 + ...  % zzzz
+	    % 8 + ...
+		% 9;	
 
 	% c = [1 ; ...
 	     % 2 ; ...
@@ -19,24 +19,29 @@
 	% figure
 	
 	% j=3; k = 7; l=  9;
-	
-	
-	
+		
 	%
-	% loops
+	% Blocks
 	%
 
-	
+	A = 7;
+	B = 9;
+
+	if A > B,
+		C = A * B;
+		
+	elseif A > 19;
+		C = 3;
+		
+	else
+		C = -1;
+	end
+
 	% for a = 1:9
 		% b = a ^ 2; 
 		% disp (b);
-		% c = 23
 	% end
 
-	
-	% for a = 1:9,
-		% b = a ^ 2; disp (b);
-	% end
 
 
 	% for a = 1:9
@@ -48,28 +53,3 @@
 		
 		% disp (b);
 	% end
-
-
-
-
-	
-	% p = j + k * l;
-	
-
-	
-	
-	% z = [1 2 3 ; ...
-	     % 4 5 6 ; ... % comment
-		 % 7 8 0];
-		 
-	% ppp ...
-	
-	% FuncName (123);
-	
-	% clear all
-	
-	
-	
-	
-	
-	

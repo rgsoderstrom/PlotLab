@@ -1,95 +1,119 @@
 ﻿
-///*
-//    BlockManager.cs
-//*/
+/*
+    BlockManager.cs
+*/
 
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.NetworkInformation;
+using System.Text;
+using System.Threading.Tasks;
 
-//using PLCommon;
+using PLCommon;
 
-//namespace PLMain
-//{
-//    public static class BlockManager
-//    {
-//        //*************************************************************************************
+namespace PLMain
+{
+    public static class BlockManager
+    {
+        // debug printing
+        static PrintFunction Print = null;
 
-//        internal static readonly List<string> BlockStartKeywords = new List<string> () {"for", "while", "if" };
-//        internal static readonly List<string> BlockEndKeywords   = new List<string> () {"end", };
+        static public void SetPrintFunction (PrintFunction pr)
+        {
+            Print = pr;
+        }
 
-//        public static SymbolicNameTypes WhatIs (string str)
-//        {
-//            if (BlockStartKeywords.Contains (str))
-//                return SymbolicNameTypes.BlockStart;
+        //*************************************************************************************
 
-//            if (BlockEndKeywords.Contains (str))
-//                return SymbolicNameTypes.BlockEnd;
+        internal static readonly List<string> BlockStartKeywords = new List<string> () {"for", "while", "if"};
+        internal static readonly List<string> BlockEndKeywords = new List<string> () { "end", };
 
-//            return SymbolicNameTypes.Unknown;
-//        }
+        public static SymbolicNameTypes WhatIs (string str)
+        {
+            if (BlockStartKeywords.Contains (str))
+                return SymbolicNameTypes.BlockStart;
 
-//        //*************************************************************************************
+            if (BlockEndKeywords.Contains (str))
+                return SymbolicNameTypes.BlockEnd;
 
-//        // ActiveBlocks - a stack of incomplete blocks 
-//        private static readonly Stack<Block> ActiveBlocks = new Stack<Block> ();
+            return SymbolicNameTypes.Unknown;
+        }
 
-//        // PartialBlock - a block being built
-//        private static Block PartialBlock {get {return ActiveBlocks.Count > 0 
-//                                                     ? ActiveBlocks.Peek ()
-//                                                     : null;}}
+        //*************************************************************************************
 
-//        // BlockCollectionInProgress - a Block has been started but not ended
-//        public static bool BlockCollectionInProgress {get {return PartialBlock != null 
-//                                                               && PartialBlock.Complete == false;}}
+        // ActiveBlocks - a stack of incomplete blocks 
+        private static readonly Stack<Block> ActiveBlocks = new Stack<Block> ();
 
-//        //*************************************************************************************
+        // PartialBlock - a block being built
+        private static Block PartialBlock
+        {
+            get
+            {
+                return ActiveBlocks.Count > 0 ? ActiveBlocks.Peek ()
+                                              : null;
+            }
+        }
 
-//        public static void Add (string str, InputLineType type)
-//        {
-//            if (type == InputLineType.BlockStart)
-//            {
-//                StartNewBlock (str);
-//            }
+        // BlockCollectionInProgress - a Block has been started but not ended
+        public static bool BlockCollectionInProgress
+        {
+            get
+            {
+                return PartialBlock != null;// && PartialBlock.Complete == false;
+            }
+        }
 
-//            else if (type == InputLineType.BlockEnd)
-//            {
-//                PartialBlock.Close ();
-//                PartialBlock.Run ();
-//                ActiveBlocks.Pop ();
-//            }
+        //*************************************************************************************
 
-//            else
-//                PartialBlock.Add (str);
-//        }
+        public static void Add (AnnotatedString astr)
+        {
+            //StringClassifier classifier = new StringClassifier ();
+            //InputLineType lineType = classifier.Classify (astr);
 
-//        //*************************************************************************************
+            //if (lineType == InputLineType.BlockStart)
+            //{
+            //    StartNewBlock (astr);
+            //}
 
-//        public static void StartNewBlock (string str)
-//        {
-//            string keyword = StringUtils.FirstWord (str);
+            //else if (lineType == InputLineType.BlockEnd)
+            //{
+            //    PartialBlock.Close ();
+            //    PartialBlock.Run ();
+            //    ActiveBlocks.Pop ();
+            //}
 
-//            switch (keyword)
-//            {
-//                case "for":
-//                    ActiveBlocks.Push (new ForBlock (str));
-//                    break;
+            //else
+            //    PartialBlock.Add (astr);
 
-//                case "while":
-//                    ActiveBlocks.Push (new WhileBlock (str));
-//                    break;
+            PartialBlock.Add (astr);
 
-//                case "if":
-//                    ActiveBlocks.Push (new IfBlock (str));
-//                    break;
+            if (PartialBlock.Complete)
+                PartialBlock.Run ();
+        }
 
-//                default: throw new Exception ("Unrecognized block type: " + str);
-//            }
+        //*************************************************************************************
 
+        public static void StartNewBlock (AnnotatedString astr)
+        {
+            string keyword = astr.FirstWord;
 
-//        }
+            switch (keyword)
+            {
+                //case "for":
+                //    ActiveBlocks.Push (new ForBlock (astr));
+                //    break;
 
-//    }
-//}
+                //case "while":
+                //    ActiveBlocks.Push (new WhileBlock (str));
+                //    break;
+
+                case "if":
+                    ActiveBlocks.Push (new IfBlock (astr));
+                    break;
+
+                default: throw new Exception ("Unrecognized block type: " + astr.Plain);
+            }
+        }
+    }
+}

@@ -24,6 +24,9 @@ namespace utInputLine
 
         static void Main (string [] args)
         {
+            Block.SetPrintFunction (Print);
+            BlockManager.SetPrintFunction (Print);
+
             try
             {
                 FileSystem.Open (Print);

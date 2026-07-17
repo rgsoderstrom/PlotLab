@@ -41,8 +41,8 @@ namespace utTokens
                         if (trimmed.Length == 0 || trimmed [0] == '%')
                             continue;
 
-                        //AnnotatedStringTest (trimmed);
-                        //Print ("===========================================");
+                        AnnotatedStringTest (trimmed);
+                        Print ("===========================================");
 
                         //AnnotatedStringAppendTest (trimmed);
                         //Print ("===========================================");
@@ -50,8 +50,8 @@ namespace utTokens
                         //AnnotatedStringSetTest (trimmed);
                         //Print ("===========================================");
 
-                        TokenParsingTest (trimmed);
-                        Print ("===========================================");
+                        //TokenParsingTest (trimmed);
+                        //Print ("===========================================");
 
                         //TokenUtilsTest (trimmed);
                         //Print ("===========================================");

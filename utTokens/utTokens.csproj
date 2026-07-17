@@ -85,9 +85,6 @@
     <Compile Include="..\Main\TokenUtils2.cs">
       <Link>TokenUtils2.cs</Link>
     </Compile>
-    <Compile Include="..\utInputLine\InputLineUtils.cs">
-      <Link>InputLineUtils.cs</Link>
-    </Compile>
     <Compile Include="Driver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

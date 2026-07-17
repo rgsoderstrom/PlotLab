@@ -13,10 +13,6 @@ using PLFileSystem;
 using PLLibrary;
 using PLWorkspace;
 
-
-// all Block references commented out
-
-
 namespace PLMain
 {
     public partial class InputLineProcessor
@@ -50,10 +46,8 @@ namespace PLMain
         {
             bool somethingAdded = CleanedStrings.Add (rawString);
 
-            if (somethingAdded == false) // a blank line or a comment line
+            if (somethingAdded == false) // a blank line or a comment line was passed in
                 return;
-
-            Console.WriteLine ("=====================");
 
             while (CleanedStrings.Count > 0)
             {
@@ -70,22 +64,15 @@ namespace PLMain
                     if (astr2 == null)
                         return;
 
-                    Console.WriteLine ("\n" + astr2);                    
-                    InputLineType lineType = classifier.Classify (astr2);
-                
-                    
-                    
-                  
+                    if (BlockManager.BlockCollectionInProgress)
+                    {
+                        BlockManager.Add (astr2);
+                    }
 
-
-                    //if (BlockManager.BlockCollectionInProgress)
-                    //{ 
-                    //    BlockManager.Add (cleaned, lineType);
-                    //}
-
-                    //else
-                    if (true)
+                    else
                     { 
+                        InputLineType lineType = classifier.Classify (astr2);
+
                         switch (lineType)
                         {
                             case InputLineType.Unknown:
@@ -106,7 +93,7 @@ namespace PLMain
                                 break;
 
                             case InputLineType.WorkspaceCommand:
-                                Print ("WorkspaceCOmmand: " + astr2.Plain);
+                                Print ("WorkspaceCOomand: " + astr2.Plain);
                                 break;
 
                             case InputLineType.ScriptFile:
@@ -114,22 +101,17 @@ namespace PLMain
                                 break;
 
                             case InputLineType.BlockStart:
-                                Print ("BlockStart: " + astr2.Plain);
-                              //  BlockManager.StartNewBlock (astr2.Plain);
+                                BlockManager.StartNewBlock (astr2);
                                 break;
 
                             case InputLineType.BlockEnd:
-                                Print ("BlockEnd: " + astr2.Plain);
-                     //         throw new Exception ("Error: \"end\" outside of block not allowed");
-                                break;
+                                throw new Exception ("Error: \"end\" outside of block not allowed");
 
                             default: throw new Exception ("Unsupported InputLineType: " + lineType);
                         }
                     }
-
                 }
             }
         }
-
     }
 }
