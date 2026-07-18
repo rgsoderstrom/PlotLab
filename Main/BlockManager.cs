@@ -16,10 +16,10 @@ namespace PLMain
 {
     public static class BlockManager
     {
-        // PartialBlocks - a stack of incomplete blocks 
+        // PartialBlocks - incomplete blocks, as they are being read from input
         private static readonly Stack<Block> PartialBlocks = new Stack<Block> ();
 
-        // CompleteBlocks - map of complete blocks
+        // CompleteBlocks - ready for execution
         private static readonly Dictionary<string, Block> CompleteBlocks = new Dictionary<string, Block> ();
 
 

@@ -69,6 +69,21 @@
     <Compile Include="..\Main\AnnotatedStringSet.cs">
       <Link>AnnotatedStringSet.cs</Link>
     </Compile>
+    <Compile Include="..\Main\Block.cs">
+      <Link>Block.cs</Link>
+    </Compile>
+    <Compile Include="..\Main\BlockManager.cs">
+      <Link>BlockManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Main\Block_for.cs">
+      <Link>Block_for.cs</Link>
+    </Compile>
+    <Compile Include="..\Main\Block_if.cs">
+      <Link>Block_if.cs</Link>
+    </Compile>
+    <Compile Include="..\Main\Block_while.cs">
+      <Link>Block_while.cs</Link>
+    </Compile>
     <Compile Include="..\Main\InputLineProcessor.cs">
       <Link>InputLineProcessor.cs</Link>
     </Compile>
@@ -78,11 +93,6 @@
     <Compile Include="..\Main\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>
-    <Compile Include="Block.cs" />
-    <Compile Include="BlockManager.cs" />
-    <Compile Include="Block_for.cs" />
-    <Compile Include="Block_if.cs" />
-    <Compile Include="Block_while.cs" />
     <Compile Include="Interfaces\ICmndHistory.cs" />
     <Compile Include="Driver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
