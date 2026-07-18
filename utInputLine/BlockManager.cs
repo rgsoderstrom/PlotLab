@@ -16,6 +16,15 @@ namespace PLMain
 {
     public static class BlockManager
     {
+        // PartialBlocks - a stack of incomplete blocks 
+        private static readonly Stack<Block> PartialBlocks = new Stack<Block> ();
+
+        // CompleteBlocks - map of complete blocks
+        private static readonly Dictionary<string, Block> CompleteBlocks = new Dictionary<string, Block> ();
+
+
+        //*************************************************************************************
+
         // debug printing
         static PrintFunction Print = null;
 
@@ -42,15 +51,12 @@ namespace PLMain
 
         //*************************************************************************************
 
-        // ActiveBlocks - a stack of incomplete blocks 
-        private static readonly Stack<Block> ActiveBlocks = new Stack<Block> ();
-
         // PartialBlock - a block being built
         private static Block PartialBlock
         {
             get
             {
-                return ActiveBlocks.Count > 0 ? ActiveBlocks.Peek ()
+                return PartialBlocks.Count > 0 ? PartialBlocks.Peek ()
                                               : null;
             }
         }
@@ -80,7 +86,7 @@ namespace PLMain
             //{
             //    PartialBlock.Close ();
             //    PartialBlock.Run ();
-            //    ActiveBlocks.Pop ();
+            //    PartialBlocks.Pop ();
             //}
 
             //else
@@ -101,15 +107,15 @@ namespace PLMain
             switch (keyword)
             {
                 //case "for":
-                //    ActiveBlocks.Push (new ForBlock (astr));
+                //    PartialBlocks.Push (new ForBlock (astr));
                 //    break;
 
                 //case "while":
-                //    ActiveBlocks.Push (new WhileBlock (str));
+                //    PartialBlocks.Push (new WhileBlock (str));
                 //    break;
 
                 case "if":
-                    ActiveBlocks.Push (new IfBlock (astr));
+                    PartialBlocks.Push (new IfBlock (astr));
                     break;
 
                 default: throw new Exception ("Unrecognized block type: " + astr.Plain);

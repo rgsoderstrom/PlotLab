@@ -36,7 +36,7 @@ namespace PLMain
         }
 
         private readonly List<TestCodePair> IfBlockSections = new List<TestCodePair> ();
-        private TestCodePair BlockUnderConstruction = null;
+        private TestCodePair PartialBlock = null;
 
         //************************************************************************
 
@@ -45,7 +45,7 @@ namespace PLMain
             Print?.Invoke ("new \"if\" block");
             Name = "IF" + instanceCounter++.ToString ();
             Complete = false;
-            BlockUnderConstruction = new TestCodePair (astr.Arguments);
+            PartialBlock = new TestCodePair (astr.Arguments);
         }
 
         // Add to "code" section
@@ -53,17 +53,17 @@ namespace PLMain
         {
             if (IfBlockCloseKeywords.Contains (astr.FirstWord))
             {
-                IfBlockSections.Add (BlockUnderConstruction);
-                BlockUnderConstruction = null;
+                IfBlockSections.Add (PartialBlock);
+                PartialBlock = null;
 
                 switch (astr.FirstWord)
                 {
                     case "elseif":
-                        BlockUnderConstruction = new TestCodePair (astr.Arguments);
+                        PartialBlock = new TestCodePair (astr.Arguments);
                         break;
 
                     case "else":
-                        BlockUnderConstruction = new TestCodePair ();
+                        PartialBlock = new TestCodePair ();
                         break;
 
                     case "end":
@@ -76,7 +76,7 @@ namespace PLMain
             }
 
             else
-                BlockUnderConstruction.Add (astr);            
+                PartialBlock.Add (astr);            
         }
 
         internal override void Run ()
