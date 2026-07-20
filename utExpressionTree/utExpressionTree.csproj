@@ -130,15 +130,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="..\utInputLine\Interfaces\ICmndHistory.cs">
-      <Link>Interfaces\ICmndHistory.cs</Link>
-    </Compile>
-    <Compile Include="..\utInputLine\Stubs\CommandHistory.cs">
-      <Link>Stubs\CommandHistory.cs</Link>
-    </Compile>
-    <Compile Include="..\utInputLine\Stubs\FileSystem.cs">
-      <Link>Stubs\FileSystem.cs</Link>
-    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -173,6 +164,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
+    <Folder Include="Stubs\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
