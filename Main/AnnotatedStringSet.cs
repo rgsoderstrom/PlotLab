@@ -58,6 +58,10 @@ namespace PLMain
 
             int startIndex = 0;
             List<int> boundries = astr.Level0Semis; // these are indices of the breaks between expressions
+            boundries.AddRange (astr.Level0Commas);
+
+            boundries.Sort ();
+
 
             string str = astr.Plain;
 

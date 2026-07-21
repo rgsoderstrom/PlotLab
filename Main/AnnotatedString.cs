@@ -22,16 +22,32 @@ namespace PLMain
 
 
         // private members
+
         // white spaces outside of any brackets, parens or quotes
         //    - used to separate input text line into "words"
         private readonly List<int> level0Spaces  = new List<int> (); 
 
-
         private readonly List<int> level0Semis  = new List<int> ();
         public List<int> Level0Semis {get {return level0Semis;}}
 
-        // Requires at least 1 level 0 semi and it can't be the last character
-        public bool IsCompound {get {return (level0Semis.Count > 0 && level0Semis [0] != CharacterCount - 1);}}
+        // used to parse conditional and iterated blocks
+        private readonly List<int> level0Commas  = new List<int> ();
+        public List<int> Level0Commas {get {return level0Commas;}}
+
+
+
+        // Requires either:
+        //   at least 1 level 0 semi, not the last character
+        //   at least 1 level 0 comma, not the last character
+        public bool IsCompound 
+        {
+            get 
+            {   
+                bool t1 = level0Semis.Count  > 0 && level0Semis  [0] != CharacterCount - 1;
+                bool t2 = level0Commas.Count > 0 && level0Commas [0] != CharacterCount - 1;
+                return t1 || t2;
+            }
+        }
 
         private readonly List<string> level0Words = new List<string> ();
         public bool SingleWord {get {return level0Words.Count == 1;}}
@@ -223,6 +239,7 @@ namespace PLMain
 
                 if (annotatedChars [i].IsWhitespace == true  && annotatedChars [i].NestingLevel == 0) level0Spaces.Add (i);
                 if (annotatedChars [i].IsSemicolon  == true  && annotatedChars [i].NestingLevel == 0) level0Semis.Add  (i);
+                if (annotatedChars [i].IsComma      == true  && annotatedChars [i].NestingLevel == 0) level0Commas.Add (i);
 
                 if (annotatedChars [i].IsAlphanumeric == false) AlphanumericOnly = false;
             }
@@ -320,6 +337,7 @@ namespace PLMain
                     operators.Remove (i);
                     level0Spaces.Remove (i);
                     level0Semis.Remove (i);
+                    level0Commas.Remove (i);
                 }
             }
 
@@ -812,6 +830,7 @@ namespace PLMain
             if (operators.Count > 0)    {str += "\nOperators   : "; foreach (int i in operators) str += i + ", ";}
             if (level0Spaces.Count > 0) {str += "\nlevel0Spaces: "; foreach (int i in level0Spaces) str += i + ", ";}
             if (level0Semis.Count > 0)  {str += "\nlevel0Semis : "; foreach (int i in level0Semis) str += i + ", ";}
+            if (level0Commas.Count > 0) {str += "\nlevel0Commas: "; foreach (int i in level0Commas) str += i + ", ";}
 
             return str;
         }
