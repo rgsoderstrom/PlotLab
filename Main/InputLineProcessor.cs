@@ -28,9 +28,12 @@ namespace PLMain
         public InputLineProcessor (PrintFunction pr)
         {
             Print = pr;
-            //Block.Print = pr;  
             CleanedStrings = new CleanStringQueue ();
             AnnotatedStrings = new AnnotatedStringSet ();
+        }
+
+        public InputLineProcessor () : this (null)
+        {
         }
 
         //**************************************************************************************
@@ -46,8 +49,8 @@ namespace PLMain
         {
             bool somethingAdded = CleanedStrings.Add (rawString);
 
-            if (somethingAdded == false) // a blank line or a comment line was passed in
-                return;
+            if (somethingAdded == false) // if a blank line or a comment line was passed in
+                return;                  // just return
 
             while (CleanedStrings.Count > 0)
             {
@@ -77,27 +80,27 @@ namespace PLMain
                         {
                             case InputLineType.Unknown:
                             case InputLineType.ExpressionTree:
-                                Print ("ExpressionTree: " + astr2.Plain);
+                                Print?.Invoke ("ExpressionTree: " + astr2.Plain);
                                 break;
 
                             case InputLineType.VariableName:
-                                Print ("Variable: " + astr2.Plain);
+                                Print?.Invoke ("Variable: " + astr2.Plain);
                                 break;
 
                             case InputLineType.SystemCommand:
-                                Print ("SystemCommand: " + astr2.Plain);
+                                Print?.Invoke ("SystemCommand: " + astr2.Plain);
                                 break;
 
                             case InputLineType.PlotCommand:
-                                Print ("PlotCommand: " + astr2.Plain);
+                                Print?.Invoke ("PlotCommand: " + astr2.Plain);
                                 break;
 
                             case InputLineType.WorkspaceCommand:
-                                Print ("WorkspaceCOomand: " + astr2.Plain);
+                                Print?.Invoke ("WorkspaceCommand: " + astr2.Plain);
                                 break;
 
                             case InputLineType.ScriptFile:
-                                Print ("Script: " + astr2.Plain);
+                                Print?.Invoke ("Script: " + astr2.Plain);
                                 break;
 
                             case InputLineType.BlockStart:

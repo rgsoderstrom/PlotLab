@@ -56,8 +56,7 @@ namespace PLMain
         {
             get
             {
-                return PartialBlocks.Count > 0 ? PartialBlocks.Peek ()
-                                              : null;
+                return PartialBlocks.Count > 0 ? PartialBlocks.Peek () : null;
             }
         }
 
@@ -66,7 +65,7 @@ namespace PLMain
         {
             get
             {
-                return PartialBlock != null;// && PartialBlock.Complete == false;
+                return PartialBlock != null;
             }
         }
 
@@ -95,7 +94,23 @@ namespace PLMain
             PartialBlock.Add (astr);
 
             if (PartialBlock.Complete)
-                PartialBlock.Run ();
+            { 
+                if (PartialBlocks.Count == 1)
+                { 
+                    Print?.Invoke ("Running block " + PartialBlock.Name);
+                    PartialBlock.Run ();
+
+                    PartialBlocks.Clear ();
+                    CompleteBlocks.Clear ();
+                }
+
+                else
+                {
+                    Print?.Invoke ("Adding block " + PartialBlock.Name + " to dictionary");
+                    Block done = PartialBlocks.Pop ();
+                    CompleteBlocks.Add (done.Name, done);
+                }
+            }
         }
 
         //*************************************************************************************

@@ -17,17 +17,15 @@ namespace PLMain
         protected string name = "";
         public string Name {get {return name;} protected set {name = value;}}
 
+        static protected int instanceCounter = 1;
+
+        // All statements have been read in
         private bool complete = false;
         public bool Complete {get {return complete;} protected set {complete = value;}}
 
-
-        //protected List<AnnotatedString> EntryStatements = new List<AnnotatedString> ();
-        //protected List<AnnotatedString> BodyStatements  = new List<AnnotatedString> ();
-        //protected List<AnnotatedString> ExitStatements  = new List<AnnotatedString> ();
-
         // Ready to execute when all statements have been read in
         private bool ready = false;
-        internal bool Ready {get {return ready;} set {ready = value;}}
+        public bool Ready {get {return ready;} protected set {ready = value;}}
 
         // debug printing
         static protected PrintFunction Print = null;
@@ -41,7 +39,7 @@ namespace PLMain
 
         protected Block ()
         {
-            Ready = false;
+            Name = "BLOCK_" + instanceCounter++.ToString ();
         }
 
         internal virtual void Add (AnnotatedString astr)

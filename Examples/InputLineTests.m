@@ -24,18 +24,21 @@
 	% Blocks
 	%
 
-	A = 7;
-	B = 9;
+	% A = 7;
+	% B = 9;
 
 	if A > B,
-		C = A * B;
+		c = A * B;
 		
-	elseif A > 19;
-		C = 3;
+	elseif A > 19,
+		c = 3;
 		
 	else
-		C = -1;
+		c = -1;
 	end
+
+	% if A > B, c = A * B; disp (c); end
+	
 
 	% for a = 1:9
 		% b = a ^ 2; 

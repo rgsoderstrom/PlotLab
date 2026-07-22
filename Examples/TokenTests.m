@@ -2,13 +2,6 @@
 
 % TokenTests.m, for utTokens
 
-	A = 7;
-	B = 9;
-	if A > B,
-		C = A * B;
-	end
-	
-	
 	
 	% AnnotatedString - alphanumeric only
 	% clear a b c
@@ -18,6 +11,9 @@
 	% figure
 	
 	% AnnotatedString - 
+	% if A > B,
+	% if A > B, c = A * B; disp (c); end
+	% if z + x, a = [1,2,3]
 	% p = [1 ; (sqrt (5 * 3)) ; 7]
 	% p=[1 ; 2 ; 3 ; 4 ; (sqrt (5 * 3)) ; 6 ; 7]
 	% d = [1 ; (2 * 7) ; 3]'

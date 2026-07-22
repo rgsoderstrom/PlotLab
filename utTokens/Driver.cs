@@ -41,14 +41,14 @@ namespace utTokens
                         if (trimmed.Length == 0 || trimmed [0] == '%')
                             continue;
 
-                        AnnotatedStringTest (trimmed);
-                        Print ("===========================================");
+                        //AnnotatedStringTest (trimmed);
+                        //Print ("===========================================");
 
                         //AnnotatedStringAppendTest (trimmed);
                         //Print ("===========================================");
 
-                        //AnnotatedStringSetTest (trimmed);
-                        //Print ("===========================================");
+                        AnnotatedStringSetTest (trimmed);
+                        Print ("===========================================");
 
                         //TokenParsingTest (trimmed);
                         //Print ("===========================================");
