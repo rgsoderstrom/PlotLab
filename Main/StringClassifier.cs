@@ -48,6 +48,9 @@ namespace PLMain
 
                     if (FileSystem.IsScriptFile (astr.Plain))
                         return InputLineType.ScriptFile;
+
+                    if (BlockManager.IsBlockName (astr.Plain))
+                        return InputLineType.BlockName;
                 }
             }
 

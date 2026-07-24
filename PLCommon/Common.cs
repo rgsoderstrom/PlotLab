@@ -34,5 +34,6 @@ namespace PLCommon
         ScriptFile,
         BlockStart,
         BlockEnd,
+        BlockName,
     }
 }

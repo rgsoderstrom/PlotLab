@@ -104,12 +104,17 @@ namespace PLMain
 
                 if ((answer as PLBool).Data == true)
                 { 
+                    InputLineProcessor ilp = new InputLineProcessor (Console.WriteLine);
+
                     foreach (AnnotatedString astr2 in oneBlock.code)
                     { 
-                        tree = new ExpressionTree (astr2); // what about scripts, commands, etc??????????????????
-                        answer = tree.Evaluate ();
-                        if (tree.SupressPrinting == false)
-                            Print?.Invoke (answer.ToString ());
+                        string str = astr2.Plain;
+                        ilp.ProcessString (astr2.Plain);
+
+                        //tree = new ExpressionTree (astr2); // what about scripts, commands, etc??????????????????
+                        //answer = tree.Evaluate ();
+                        //if (tree.SupressPrinting == false)
+                        //    Print?.Invoke (answer.ToString ());
                     }
 
                     break; // don't run any more tests

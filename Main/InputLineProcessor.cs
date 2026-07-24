@@ -74,6 +74,7 @@ namespace PLMain
 
                     else
                     { 
+                        string str = astr2.Plain;
                         InputLineType lineType = classifier.Classify (astr2);
 
                         switch (lineType)

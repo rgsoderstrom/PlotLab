@@ -50,6 +50,11 @@ namespace PLMain
             return SymbolicNameTypes.Unknown;
         }
 
+        public static bool IsBlockName (string str)
+        {
+            return CompleteBlocks.ContainsKey (str);
+        }
+
         //*************************************************************************************
 
         // PartialBlock - a block being built
