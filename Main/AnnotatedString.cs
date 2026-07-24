@@ -177,6 +177,15 @@ namespace PLMain
 
                 AssignInitialTypes (trimmed);
                 AdjustTypes ();
+
+                foreach (AnnotatedChar ac in annotatedChars)
+                { 
+                    if (ac.IsAlphanumeric == false)
+                    { 
+                        AlphanumericOnly = false;
+                        break;
+                    }
+                }
             }
 
             catch (Exception ex)
@@ -241,7 +250,10 @@ namespace PLMain
                 if (annotatedChars [i].IsSemicolon  == true  && annotatedChars [i].NestingLevel == 0) level0Semis.Add  (i);
                 if (annotatedChars [i].IsComma      == true  && annotatedChars [i].NestingLevel == 0) level0Commas.Add (i);
 
-                if (annotatedChars [i].IsAlphanumeric == false) AlphanumericOnly = false;
+                /*
+                if (annotatedChars [i].IsAlphanumeric == false) 
+                    AlphanumericOnly = false;
+                */
             }
         }
 
