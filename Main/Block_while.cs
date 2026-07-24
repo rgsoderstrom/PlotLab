@@ -17,5 +17,10 @@ namespace PLMain
         {
             Print ("Running \"while\" block");
         }
+
+        internal override void Add (AnnotatedString astr)
+        {
+
+        }
     }
 }

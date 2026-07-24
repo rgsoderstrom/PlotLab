@@ -24,8 +24,8 @@ namespace PLMain
         public bool Complete {get {return complete;} protected set {complete = value;}}
 
         // Ready to execute when all statements have been read in
-        private bool ready = false;
-        public bool Ready {get {return ready;} protected set {ready = value;}}
+        //private bool ready = false;
+        //public bool Ready {get {return ready;} protected set {ready = value;}}
 
         // debug printing
         static protected PrintFunction Print = null;
@@ -42,11 +42,11 @@ namespace PLMain
             Name = "BLOCK_" + instanceCounter++.ToString ();
         }
 
-        internal virtual void Add (AnnotatedString astr)
-        {
-            //Print?.Invoke ("adding statement to block: " + astr.Plain);
-            //BodyStatements.Add (astr);
-        }
+        internal abstract void Add (AnnotatedString astr);
+        //{
+        //    //Print?.Invoke ("adding statement to block: " + astr.Plain);
+        //    //BodyStatements.Add (astr);
+        //}
 
         //internal void Add (List<string> lst)
         //{
@@ -60,21 +60,20 @@ namespace PLMain
         //        Add (str);
         //}
 
-        internal virtual void Close ()
-        {
-            Print?.Invoke ("Closing block");
-            Ready = true;
-        }
+        //internal virtual void Close ()
+        //{
+        //    Print?.Invoke ("Closing block");
+        //    //Ready = true;
+        //}
 
-        internal virtual void Run ()
-        {
-            Print?.Invoke ("Running block");
-        }
-    
+        internal abstract void Run ();
+        //{
+        //}
 
-    //************************************************************************
-    //************************************************************************
-    //************************************************************************
+
+        //************************************************************************
+        //************************************************************************
+        //************************************************************************
 
     }
 }

@@ -11,7 +11,7 @@ namespace PLMain
 {
     internal class IfBlock : Block
     {
-        private static readonly List<string> IfBlockCloseKeywords = new List<string> () {"elseif", "else", "end"};
+        private static readonly List<string> IfBlockCloseKeywords = new List<string> () {"elseif", "else"};//, "end"};
 
         private readonly List<TestCodePair> IfBlockSections = new List<TestCodePair> ();
         private TestCodePair PartialBlock = null;
@@ -38,31 +38,33 @@ namespace PLMain
         {
             string str = astr.Plain;
 
-            Print?.Invoke ("new \"if\" block");
+            //Print?.Invoke ("new \"if\" block");
             PartialBlock = new TestCodePair (astr.Arguments);
+            IfBlockSections.Add (PartialBlock);
         }
 
         // Add to "code" section
         internal override void Add (AnnotatedString astr)
         {
+            //Print?.Invoke ("Adding statement " + astr.Plain + " to " + Name);
+
             if (IfBlockCloseKeywords.Contains (astr.FirstWord))
             {
-                IfBlockSections.Add (PartialBlock);
-                PartialBlock = null;
-
                 switch (astr.FirstWord)
                 {
                     case "elseif":
                         PartialBlock = new TestCodePair (astr.Arguments);
+                        IfBlockSections.Add (PartialBlock);
                         break;
 
                     case "else":
                         PartialBlock = new TestCodePair ();
+                        IfBlockSections.Add (PartialBlock);
                         break;
 
-                    case "end":
-                        Complete = true;
-                        break;
+                    //case "end":
+                    //    Complete = true;
+                    //    break;
 
                     default:
                         throw new Exception ("Unsupported \"if\" statement break: " + astr.Plain);
@@ -77,40 +79,34 @@ namespace PLMain
         {
             InputLineProcessor proc = new InputLineProcessor ();
 
-            Print?.Invoke ("Running \"if\" block " + Name);
-
             foreach (TestCodePair oneBlock in IfBlockSections)
             { 
-                Print?.Invoke (oneBlock.ToString ());
-
                 //
                 // evaluate this blocks "Test"
                 //
 
-                string str = oneBlock.test.Trim ();
+                string testSTring = oneBlock.test.Trim ();
 
-                if (str.EndsWith (","))
-                    str = str.Remove (str.Length - 1, 1);
+                if (testSTring.EndsWith (","))
+                    testSTring = testSTring.Remove (testSTring.Length - 1, 1);
 
-                if (str [0] == '(' && str [str.Length-1] == ')')
+                if (testSTring [0] == '(' && testSTring [testSTring.Length-1] == ')')
                 {
-                    str = str.Remove (0, 1);
-                    str = str.Remove (str.Length-1, 1);
+                    testSTring = testSTring.Remove (0, 1);
+                    testSTring = testSTring.Remove (testSTring.Length-1, 1);
                 }
 
-                AnnotatedString astr = new AnnotatedString (str);
-                ExpressionTree tree = new ExpressionTree (astr);
+                ExpressionTree tree = new ExpressionTree (new AnnotatedString (testSTring));
                 PLVariable answer = tree.Evaluate ();
-                PLBool TF = answer as PLBool;
 
-                if (TF == null)
-                    throw new Exception ("if block test not a boolean: " + str);
+                if ((answer as PLBool) == null)
+                    throw new Exception ("if block test not a boolean: " + testSTring);
 
-                if (TF.Data == true)
+                if ((answer as PLBool).Data == true)
                 { 
                     foreach (AnnotatedString astr2 in oneBlock.code)
                     { 
-                        tree = new ExpressionTree (astr2);
+                        tree = new ExpressionTree (astr2); // what about scripts, commands, etc??????????????????
                         answer = tree.Evaluate ();
                         if (tree.SupressPrinting == false)
                             Print?.Invoke (answer.ToString ());
@@ -119,6 +115,23 @@ namespace PLMain
                     break; // don't run any more tests
                 }
             }
+        }
+
+        //************************************************************************
+
+        public override string ToString ()
+        {
+            string str = Name + " has " + IfBlockSections.Count.ToString () + " sections";
+
+            foreach (TestCodePair tp in IfBlockSections)
+            {
+                str += "\n  Test: " + tp.test;
+
+                foreach (AnnotatedString astr in tp.code)
+                    str += "\n     " + astr.Plain;
+            }
+
+            return str;
         }
 
 

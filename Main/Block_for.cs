@@ -8,6 +8,9 @@ namespace PLMain
 {
     internal class ForBlock : Block
     {
+        // Supported syntax:
+        //   for a = <vector>,
+
         internal ForBlock (AnnotatedString astr)
         {
             Print ("new \"for\" block");
@@ -48,8 +51,13 @@ namespace PLMain
             //}
         }
 
-        //internal override void Run ()
-        //{
+        internal override void Add (AnnotatedString astr)
+        {
+
+        }
+
+        internal override void Run ()
+        {
         //    Print ("Running for " + loopControl + " block");
 
         //    InputLineProcessor ip = new InputLineProcessor (Print);
@@ -60,6 +68,6 @@ namespace PLMain
         //        Print ("  " + str);
         //        ip.ProcessString (str);
         //    }
-        //}
+        }
     }
 }

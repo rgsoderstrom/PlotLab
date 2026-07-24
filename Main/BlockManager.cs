@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -73,44 +74,38 @@ namespace PLMain
 
         public static void Add (AnnotatedString astr)
         {
-            //StringClassifier classifier = new StringClassifier ();
-            //InputLineType lineType = classifier.Classify (astr);
+            StringClassifier classifier = new StringClassifier ();
+            InputLineType lineType = classifier.Classify (astr);
 
-            //if (lineType == InputLineType.BlockStart)
-            //{
-            //    StartNewBlock (astr);
-            //}
+            if (lineType == InputLineType.BlockStart)
+            {
+                StartNewBlock (astr);
+            }
 
-            //else if (lineType == InputLineType.BlockEnd)
-            //{
-            //    PartialBlock.Close ();
-            //    PartialBlock.Run ();
-            //    PartialBlocks.Pop ();
-            //}
+            else if (lineType == InputLineType.BlockEnd)
+            {
+                Block justCompleted = PartialBlocks.Pop ();
+                CompleteBlocks.Add (justCompleted.Name, justCompleted);
 
-            //else
-            //    PartialBlock.Add (astr);
-
-            PartialBlock.Add (astr);
-
-            if (PartialBlock.Complete)
-            { 
-                if (PartialBlocks.Count == 1)
-                { 
-                    Print?.Invoke ("Running block " + PartialBlock.Name);
-                    PartialBlock.Run ();
-
-                    PartialBlocks.Clear ();
-                    CompleteBlocks.Clear ();
-                }
-
+                if (PartialBlock != null)
+                    PartialBlock.Add (new AnnotatedString (justCompleted.Name));
                 else
                 {
-                    Print?.Invoke ("Adding block " + PartialBlock.Name + " to dictionary");
-                    Block done = PartialBlocks.Pop ();
-                    CompleteBlocks.Add (done.Name, done);
+                    justCompleted.Run ();
+
+                    //foreach (var kvp in CompleteBlocks)
+                    //{
+                    //    Block bl = kvp.Value;
+                    //    Print (bl.ToString () + "\n");
+                    //}
+
+
+                    CompleteBlocks.Clear ();
                 }
             }
+
+            else
+                PartialBlock.Add (astr);
         }
 
         //*************************************************************************************
