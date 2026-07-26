@@ -69,7 +69,7 @@ namespace PLMain
 
                     if (BlockManager.BlockCollectionInProgress)
                     {
-                        Print?.Invoke ("Send to BlockManager: " + astr2.Plain);
+                        //Print?.Invoke ("Send to BlockManager: " + astr2.Plain);
                         BlockManager.Add (astr2);
                     }
 
@@ -91,8 +91,8 @@ namespace PLMain
                         switch (lineType)
                         {
                             case InputLineType.Unknown:
-                                Print?.Invoke ("Unknown: " + astr2.Plain);
-                                break; 
+                                //Print?.Invoke ("Unknown: " + astr2.Plain);
+                                //break; 
 
                             case InputLineType.ExpressionTree:
                                 Print?.Invoke ("ExpressionTree: " + astr2.Plain);
@@ -120,10 +120,10 @@ namespace PLMain
 
                             case InputLineType.BlockName:
                                 Print?.Invoke ("BlockName: " + astr2.Plain);
-                            
-                                throw new NotImplementedException ("InputLineType.BlockName not implemented");
-                          //      BlockManager.Run (astr2);
-                          //      break;
+
+                                //throw new NotImplementedException ("InputLineType.BlockName not implemented");
+                                BlockManager.RunBlock (astr2);
+                                break;
 
                             case InputLineType.BlockStart:
                                 Print?.Invoke ("BlockStart: " + astr2.Plain);

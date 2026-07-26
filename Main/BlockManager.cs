@@ -139,5 +139,13 @@ namespace PLMain
                 default: throw new Exception ("Unrecognized block type: " + astr.Plain);
             }
         }
+
+        //*************************************************************************************
+
+        public static void RunBlock (AnnotatedString astr)
+        {
+            Block block = CompleteBlocks [astr.Plain];
+            block.Run ();
+        }
     }
 }

@@ -35,19 +35,27 @@ namespace PLMain
         public InputLineType Classify (AnnotatedString astr)
         {
             // anything we don't know what to do with will be passed to the expression tree
-            InputLineType defaultType = InputLineType.ExpressionTree;
+            InputLineType defaultType = InputLineType.Unknown;//ExpressionTree;
+
+            //Console.WriteLine ("A");
 
             // for lines with alphanumeric only
             if (astr.AlphanumericOnly)
             {
+                //Console.WriteLine ("B");
+
                 // if it's a single word, check variables and scripts
                 if (astr.SingleWord)
                 {
+                    //Console.WriteLine ("C");
+
                     if (Workspace.WhatIs (astr.Plain) == SymbolicNameTypes.Variable)
                         return InputLineType.VariableName;
 
                     if (FileSystem.IsScriptFile (astr.Plain))
                         return InputLineType.ScriptFile;
+
+                    //Console.WriteLine ("ask BM");
 
                     if (BlockManager.IsBlockName (astr.Plain))
                         return InputLineType.BlockName;

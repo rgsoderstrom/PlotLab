@@ -19,6 +19,7 @@ namespace PLMain
         {
             ["A > B"]  = new PLBool (true),
             ["A > 19"] = new PLBool (false),
+            ["Z > 33"] = new PLBool (false),
             ["true"]   = new PLBool (true),
             ["false"]  = new PLBool (false),
         };
