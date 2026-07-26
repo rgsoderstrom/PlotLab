@@ -25,15 +25,15 @@ namespace PLMain
 
         private StringClassifier classifier = new StringClassifier (); 
 
-        public InputLineProcessor (PrintFunction pr)
+        public InputLineProcessor (PrintFunction pr) : this ()
         {
             Print = pr;
-            CleanedStrings = new CleanStringQueue ();
-            AnnotatedStrings = new AnnotatedStringSet ();
         }
 
-        public InputLineProcessor () : this (null)
+        public InputLineProcessor ()
         {
+            CleanedStrings = new CleanStringQueue ();
+            AnnotatedStrings = new AnnotatedStringSet ();
         }
 
         //**************************************************************************************
@@ -69,20 +69,34 @@ namespace PLMain
 
                     if (BlockManager.BlockCollectionInProgress)
                     {
+                        Print?.Invoke ("Send to BlockManager: " + astr2.Plain);
                         BlockManager.Add (astr2);
                     }
 
                     else
                     { 
-                        string str = astr2.Plain;
+                 //       string str = astr2.Plain;
+
+
+                        // in debug returns Unknown when should be BlockName
+
+                 //       Console.WriteLine ("str = " + str);
+
                         InputLineType lineType = classifier.Classify (astr2);
+
+
+
+
 
                         switch (lineType)
                         {
                             case InputLineType.Unknown:
+                                Print?.Invoke ("Unknown: " + astr2.Plain);
+                                break; 
+
                             case InputLineType.ExpressionTree:
                                 Print?.Invoke ("ExpressionTree: " + astr2.Plain);
-                                break;
+                                break; 
 
                             case InputLineType.VariableName:
                                 Print?.Invoke ("Variable: " + astr2.Plain);
@@ -104,7 +118,15 @@ namespace PLMain
                                 Print?.Invoke ("Script: " + astr2.Plain);
                                 break;
 
+                            case InputLineType.BlockName:
+                                Print?.Invoke ("BlockName: " + astr2.Plain);
+                            
+                                throw new NotImplementedException ("InputLineType.BlockName not implemented");
+                          //      BlockManager.Run (astr2);
+                          //      break;
+
                             case InputLineType.BlockStart:
+                                Print?.Invoke ("BlockStart: " + astr2.Plain);
                                 BlockManager.StartNewBlock (astr2);
                                 break;
 

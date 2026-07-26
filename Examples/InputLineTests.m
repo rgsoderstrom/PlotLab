@@ -33,7 +33,7 @@
 
 		c = -4;
 
-		if A > 33,  % BLOCK_3, test [0]
+		if Z > 33,  % BLOCK_3, test [0]
 			c = 3;
 			
 		else        % BLOCK_3, test [1]

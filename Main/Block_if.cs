@@ -77,7 +77,7 @@ namespace PLMain
 
         internal override void Run ()
         {
-            InputLineProcessor proc = new InputLineProcessor ();
+            Print?.Invoke ("Running block " + Name);
 
             foreach (TestCodePair oneBlock in IfBlockSections)
             { 
@@ -85,26 +85,28 @@ namespace PLMain
                 // evaluate this blocks "Test"
                 //
 
-                string testSTring = oneBlock.test.Trim ();
+                string testString = oneBlock.test.Trim ();
 
-                if (testSTring.EndsWith (","))
-                    testSTring = testSTring.Remove (testSTring.Length - 1, 1);
+                if (testString.EndsWith (","))
+                    testString = testString.Remove (testString.Length - 1, 1);
 
-                if (testSTring [0] == '(' && testSTring [testSTring.Length-1] == ')')
+                if (testString [0] == '(' && testString [testString.Length-1] == ')')
                 {
-                    testSTring = testSTring.Remove (0, 1);
-                    testSTring = testSTring.Remove (testSTring.Length-1, 1);
+                    testString = testString.Remove (0, 1);
+                    testString = testString.Remove (testString.Length-1, 1);
                 }
 
-                ExpressionTree tree = new ExpressionTree (new AnnotatedString (testSTring));
+                ExpressionTree tree = new ExpressionTree (new AnnotatedString (testString));
                 PLVariable answer = tree.Evaluate ();
 
                 if ((answer as PLBool) == null)
-                    throw new Exception ("if block test not a boolean: " + testSTring);
+                    throw new Exception ("if block " + Name + " test not a boolean: " + testString);
+
+                Print?.Invoke ("Block " + Name + ", test " + testString + " = " + (answer as PLBool).Data);
 
                 if ((answer as PLBool).Data == true)
                 { 
-                    InputLineProcessor ilp = new InputLineProcessor (Console.WriteLine);
+                    InputLineProcessor ilp = new InputLineProcessor ();//Console.WriteLine);
 
                     foreach (AnnotatedString astr2 in oneBlock.code)
                     { 

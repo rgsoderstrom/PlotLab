@@ -52,6 +52,8 @@ namespace PLMain
 
         public static bool IsBlockName (string str)
         {
+            //Print?.Invoke ("IsBlockName " + CompleteBlocks.ContainsKey (str));
+
             return CompleteBlocks.ContainsKey (str);
         }
 
@@ -94,9 +96,9 @@ namespace PLMain
 
                 if (PartialBlock != null)
                     PartialBlock.Add (new AnnotatedString (justCompleted.Name));
+
                 else
                 {
-                    justCompleted.Run ();
 
                     //foreach (var kvp in CompleteBlocks)
                     //{
@@ -104,6 +106,7 @@ namespace PLMain
                     //    Print (bl.ToString () + "\n");
                     //}
 
+                    justCompleted.Run ();
 
                     CompleteBlocks.Clear ();
                 }
