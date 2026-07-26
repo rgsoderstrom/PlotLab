@@ -92,12 +92,6 @@ namespace PLMain
         {
             get
             {
-                if (level0Words.Count == 0)
-                    BreakIntoWords ();
-
-                if (level0Words.Count < 2)
-                    return Plain;
-
                 return level0Words [0];
             }
         }
@@ -113,9 +107,6 @@ namespace PLMain
         {
             get
             {
-                if (level0Words.Count == 0)
-                    BreakIntoWords ();
-
                 string args = "";
 
                 for (int i = 1; i<level0Words.Count; i++)
@@ -124,22 +115,6 @@ namespace PLMain
                 return args;
             }
         }
-
-        //public List<string> Arguments // all words after the first word
-        //{
-        //    get
-        //    {
-        //        if (level0Words.Count == 0)
-        //            BreakIntoWords ();
-
-        //        List<string> args = new List<string> ();
-
-        //        for (int i = 1; i<level0Words.Count; i++)
-        //            args.Add (level0Words [i]);
-
-        //        return args;
-        //    }
-        //}
 
         //*************************************************************************
         //
@@ -186,6 +161,8 @@ namespace PLMain
                         break;
                     }
                 }
+
+                BreakIntoWords ();
             }
 
             catch (Exception ex)
