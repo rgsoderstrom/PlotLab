@@ -8,6 +8,7 @@ namespace PLMain
 {
     // TestCodePair - a component of various blocks
     //  - "if" source code is split into a list of these
+    //  - "while" has a single instance, run repeatedly
 
     internal class TestCodePair
     {

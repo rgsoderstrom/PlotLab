@@ -23,10 +23,6 @@ namespace PLMain
         private bool complete = false;
         public bool Complete {get {return complete;} protected set {complete = value;}}
 
-        // Ready to execute when all statements have been read in
-        //private bool ready = false;
-        //public bool Ready {get {return ready;} protected set {ready = value;}}
-
         // debug printing
         static protected PrintFunction Print = null;
 
@@ -43,38 +39,7 @@ namespace PLMain
         }
 
         internal abstract void Add (AnnotatedString astr);
-        //{
-        //    //Print?.Invoke ("adding statement to block: " + astr.Plain);
-        //    //BodyStatements.Add (astr);
-        //}
-
-        //internal void Add (List<string> lst)
-        //{
-        //    foreach (string str in lst)
-        //        Add (str);
-        //}
-
-        //internal void Add (string [] arr)
-        //{
-        //    foreach (string str in arr)
-        //        Add (str);
-        //}
-
-        //internal virtual void Close ()
-        //{
-        //    Print?.Invoke ("Closing block");
-        //    //Ready = true;
-        //}
-
         internal abstract void Run ();
-        //{
-        //}
-
-
-        //************************************************************************
-        //************************************************************************
-        //************************************************************************
-
     }
 }
 

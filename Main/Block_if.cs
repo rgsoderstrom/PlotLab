@@ -11,7 +11,7 @@ namespace PLMain
 {
     internal class IfBlock : Block
     {
-        private static readonly List<string> IfBlockCloseKeywords = new List<string> () {"elseif", "else"};//, "end"};
+        private static readonly List<string> IfBlockKeywords = new List<string> () {"elseif", "else"};
 
         private readonly List<TestCodePair> IfBlockSections = new List<TestCodePair> ();
         private TestCodePair PartialBlock = null;
@@ -36,9 +36,6 @@ namespace PLMain
 
         internal IfBlock (AnnotatedString astr)
         {
-            string str = astr.Plain;
-
-            //Print?.Invoke ("new \"if\" block");
             PartialBlock = new TestCodePair (astr.Arguments);
             IfBlockSections.Add (PartialBlock);
         }
@@ -46,9 +43,7 @@ namespace PLMain
         // Add to "code" section
         internal override void Add (AnnotatedString astr)
         {
-            //Print?.Invoke ("Adding statement " + astr.Plain + " to " + Name);
-
-            if (IfBlockCloseKeywords.Contains (astr.FirstWord))
+            if (IfBlockKeywords.Contains (astr.FirstWord))
             {
                 switch (astr.FirstWord)
                 {
@@ -62,10 +57,6 @@ namespace PLMain
                         IfBlockSections.Add (PartialBlock);
                         break;
 
-                    //case "end":
-                    //    Complete = true;
-                    //    break;
-
                     default:
                         throw new Exception ("Unsupported \"if\" statement break: " + astr.Plain);
                 }
@@ -77,8 +68,6 @@ namespace PLMain
 
         internal override void Run ()
         {
-            Print?.Invoke ("Running block " + Name);
-
             foreach (TestCodePair oneBlock in IfBlockSections)
             { 
                 //
@@ -102,24 +91,16 @@ namespace PLMain
                 if ((answer as PLBool) == null)
                     throw new Exception ("if block " + Name + " test not a boolean: " + testString);
 
-                Print?.Invoke ("Block " + Name + ", test " + testString + " = " + (answer as PLBool).Data);
-
                 if ((answer as PLBool).Data == true)
                 { 
-                    InputLineProcessor ilp = new InputLineProcessor ();//Console.WriteLine);
+                    InputLineProcessor ilp = new InputLineProcessor ();
 
                     foreach (AnnotatedString astr2 in oneBlock.code)
                     { 
-                        string str = astr2.Plain;
                         ilp.ProcessString (astr2.Plain);
-
-                        //tree = new ExpressionTree (astr2); // what about scripts, commands, etc??????????????????
-                        //answer = tree.Evaluate ();
-                        //if (tree.SupressPrinting == false)
-                        //    Print?.Invoke (answer.ToString ());
                     }
 
-                    break; // don't run any more tests
+                    break; // one test passed, so don't run any more
                 }
             }
         }
@@ -128,7 +109,7 @@ namespace PLMain
 
         public override string ToString ()
         {
-            string str = Name + " has " + IfBlockSections.Count.ToString () + " sections";
+            string str = "IfBlock " + Name + " has " + IfBlockSections.Count.ToString () + " sections";
 
             foreach (TestCodePair tp in IfBlockSections)
             {
@@ -140,45 +121,5 @@ namespace PLMain
 
             return str;
         }
-
-
-        //************************************************************************
-        //************************************************************************
-        //************************************************************************
-
-        // TestCodePair - "if" source code is split into a list of these
-
-        private class TestCodePair
-        {
-            readonly internal string test;
-            readonly internal List<AnnotatedString> code;
-        
-            internal TestCodePair (string str) 
-            {
-                test = str; 
-                code = new List<AnnotatedString> ();
-            }   
-            
-            internal TestCodePair () : this ("true") 
-            {
-            } 
-
-            internal void Add (AnnotatedString astr) 
-            {
-                code.Add (astr);
-            }
-
-            public override string ToString ()
-            {
-                string str = "Test: " + test;
-
-                foreach (AnnotatedString astr in code)
-                    str += "\n      " + astr.Plain;
-
-                str += "\n";
-                return str;
-            }
-        }
     }
-
 }

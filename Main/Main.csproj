@@ -43,6 +43,7 @@
     <Compile Include="AnnotatedString.cs" />
     <Compile Include="AnnotatedStringSet.cs" />
     <Compile Include="App.xaml.cs" />
+    <Compile Include="Block_TestCodePair.cs" />
     <Compile Include="CommandLineHistory.cs" />
     <Compile Include="EntryPoint.cs" />
     <Compile Include="EvaluateNode.cs" />

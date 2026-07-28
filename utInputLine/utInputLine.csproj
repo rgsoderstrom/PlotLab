@@ -81,6 +81,9 @@
     <Compile Include="..\Main\Block_if.cs">
       <Link>Block_if.cs</Link>
     </Compile>
+    <Compile Include="..\Main\Block_TestCodePair.cs">
+      <Link>Block_TestCodePair.cs</Link>
+    </Compile>
     <Compile Include="..\Main\Block_while.cs">
       <Link>Block_while.cs</Link>
     </Compile>

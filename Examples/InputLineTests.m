@@ -24,44 +24,31 @@
 	% Blocks
 	%
 
-	if A > B,       % BLOCK_1, test [0]
-		c = A * B;
-		
-		if A > 19,  % BLOCK_2, test [0]
-			c = 3;
-		end
-
-		c = -4;
-
-		if Z > 33,  % BLOCK_3, test [0]
-			c = 3;
-			
-		else        % BLOCK_3, test [1]
-			c = 99;
-		end
-
-		c = -1;
-	end
-
-
-	% if A > B,      % BLOCK_1, test [0]
+	% if A > B,       % BLOCK_1, test [0]
 		% c = A * B;
 		
-	% elseif A > 19, % BLOCK_1, test [1]
-		% c = 3;
-		
-	% else           % BLOCK_1, test [2]
+		% if A > 19,  % BLOCK_2, test [0]
+			% c = 3;
+		% end
+
+		% c = -4;
+
+		% if Z > 33,  % BLOCK_3, test [0]
+			% c = 3;
+			
+		% else        % BLOCK_3, test [1]
+			% c = 99;
+		% end
+
 		% c = -1;
 	% end
 
-	% if A > B, c = A * B; disp (c); end
-	
 
-	% for a = 1:9
-		% b = a ^ 2; 
-		% disp (b);
-	% end
-
+	while A > B,
+		if Z > 33,
+			c = 456;
+		end
+	end
 
 
 	% for a = 1:9
