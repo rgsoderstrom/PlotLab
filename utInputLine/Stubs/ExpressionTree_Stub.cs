@@ -17,23 +17,6 @@ namespace PLMain
     {
         private static int instanceCounter = 0;
 
-        private static readonly Dictionary<string, PLVariable> IfBlockTests = new Dictionary<string, PLVariable> ()
-        {
-            ["A > B"]  = new PLBool (true),
-            ["A > 19"] = new PLBool (false),
-            ["Z > 33"] = new PLBool (false),
-            ["true"]   = new PLBool (true),
-            ["false"]  = new PLBool (false),
-        };
-
-        private static readonly Dictionary<string, PLVariable> CodeEvaluation = new Dictionary<string, PLVariable> ()
-        {
-            ["c = A * B"] = new PLDouble (5),
-            ["c = 3"]     = new PLDouble (3),
-            ["c = -1"]    = new PLDouble (-1),
-            ["disp (c)"]  = new PLDouble (0),
-        };
-
         private bool supressPrinting = false;
         //private bool supressPrinting = true;
         public  bool SupressPrinting {get {return supressPrinting;} private set {supressPrinting = value;}}
@@ -44,19 +27,37 @@ namespace PLMain
         {
             instanceCounter++;
 
-            if (IfBlockTests.ContainsKey (astr.Plain))
-                Answer = IfBlockTests [astr.Plain];
+            switch (astr.Plain)
+            {
+                case "A > B": 
+                    Answer = new PLBool (instanceCounter < 15);
+                    break;
 
-            else if (CodeEvaluation.ContainsKey (astr.Plain))
-                Answer = CodeEvaluation [astr.Plain];
+                case "C > D": 
+                    Answer = new PLBool (instanceCounter < 5);
+                    break;
 
-            else
-                throw new Exception ("ExpressionTree stub can't evaluate " + astr.Plain);
+                case "E > F": 
+                    Answer = new PLBool (instanceCounter < 10);
+                    break;
+
+                case "true":
+                    Answer = new PLBool (true);
+                    break;
+
+                case "false":
+                    Answer = new PLBool (false);
+                    break;
+
+                default:
+                    throw new Exception ("ExpressionTree stub can't evaluate " + astr.Plain);
+
+            }
         }
 
         internal PLVariable Evaluate ()
         {
-            return new PLBool (instanceCounter < 5); // Answer;
+            return Answer;
         }
     }
 }

@@ -100,13 +100,13 @@ namespace PLMain
                 else
                 {
 
-                    foreach (var kvp in CompleteBlocks)
-                    {
-                        Block bl = kvp.Value;
-                        Print (bl.ToString () + "\n");
-                    }
+                    //foreach (var kvp in CompleteBlocks)
+                    //{
+                    //    Block bl = kvp.Value;
+                    //    Print (bl.ToString () + "\n");
+                    //}
 
-                    // justCompleted.Run ();
+                    justCompleted.Run ();
 
 
 

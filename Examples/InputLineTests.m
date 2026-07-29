@@ -45,9 +45,16 @@
 
 
 	while A > B,
-		if Z > 33,
-			c = 456;
+		if C > D,
+			e = 3;
+		elseif E > F
+			f = 2;
+		else
+			break  % doesn't work  ---- THROW EXCEPTION???
+		%	g = 1;
 		end
+		
+		%break	% works
 	end
 
 
