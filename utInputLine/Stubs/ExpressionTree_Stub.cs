@@ -23,22 +23,42 @@ namespace PLMain
 
         private readonly PLVariable Answer = new PLNull ();
 
+
+        static PLDouble a = new PLDouble ("a", 0);
+        static PLDouble b = new PLDouble ("b", 0);
+        static PLDouble c = new PLDouble ("c", 0);
+
         internal ExpressionTree (AnnotatedString astr)
         {
             instanceCounter++;
 
             switch (astr.Plain)
             {
+                case "a = a + 1":
+                    a = new PLDouble (a.Data + 1);
+                    Answer = a;
+                    break;
+
+                case "b = b + 1":
+                    b = new PLDouble (b.Data + 1);
+                    Answer = b;
+                    break;
+
+                case "c = c + 1":
+                    c = new PLDouble (c.Data + 1);
+                    Answer = c;
+                    break;
+
                 case "A > B": 
-                    Answer = new PLBool (instanceCounter < 15);
+                    Answer = new PLBool (instanceCounter < 25);
                     break;
 
                 case "C > D": 
-                    Answer = new PLBool (instanceCounter < 5);
+                    Answer = new PLBool (instanceCounter < 20);
                     break;
 
                 case "E > F": 
-                    Answer = new PLBool (instanceCounter < 10);
+                    Answer = new PLBool (instanceCounter < 15);
                     break;
 
                 case "true":
