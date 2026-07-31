@@ -105,7 +105,11 @@ namespace PLMain
                         if (str == "continue")
                             return TerminationReason.ContinueEncountered;
 
-                        ilp.ProcessString (str);
+                        TerminationReason status = ilp.ProcessString (str);
+
+                        // "if" blocks pass these up to parent block
+                        if (status == TerminationReason.ContinueEncountered || status == TerminationReason.BreakEncountered)
+                            return status;
                     }
 
                     break; // one test passed, so don't run any more
