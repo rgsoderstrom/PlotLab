@@ -61,17 +61,22 @@ namespace PLMain
                     if (str == "break")
                         return TerminationReason.Completed;
 
-
+                    // on "continue" just skip to end and iterate again
                     if (str == "continue")
                         break;
 
                     TerminationReason reason = ilp.ProcessString (str);
 
-                    // test for BreakEncountered passed up from the block just completed
-                    //    - typically an "if" block
+                    // if BreakEncountered passed up from the block just completed, his block terminates but
+                    // any containing block does not need to take any special action
+                    //    - typically an "if" block 
                     if (reason == TerminationReason.BreakEncountered) 
-                        return TerminationReason.Completed;  // this block terminates but any containg block does
-                                                             // not need to take any special action
+                        return TerminationReason.Completed;
+
+                    // if ContinueEncountered passed up from the block just completed, this remaining statements
+                    // in the code block of are skipped
+                    if (reason == TerminationReason.ContinueEncountered)
+                        break;
                 }
             }
 
