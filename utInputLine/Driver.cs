@@ -48,7 +48,7 @@ namespace utInputLine
             catch (Exception ex)
             {
                 Print ("Exception: " + ex.Message);
-                Print (ex.StackTrace);
+                //Print (ex.StackTrace);
             }
         }
 

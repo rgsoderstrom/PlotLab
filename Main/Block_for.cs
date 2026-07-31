@@ -56,8 +56,9 @@ namespace PLMain
 
         }
 
-        internal override void Run ()
+        internal override TerminationReason Run ()
         {
+            return TerminationReason.Completed;
         //    Print ("Running for " + loopControl + " block");
 
         //    InputLineProcessor ip = new InputLineProcessor (Print);

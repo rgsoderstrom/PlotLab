@@ -39,7 +39,7 @@ namespace PLMain
         }
 
         internal abstract void Add (AnnotatedString astr);
-        internal abstract void Run ();
+        internal abstract TerminationReason Run ();
     }
 }
 

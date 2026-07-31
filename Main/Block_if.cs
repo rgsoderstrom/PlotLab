@@ -66,7 +66,7 @@ namespace PLMain
                 PartialBlock.Add (astr);            
         }
 
-        internal override void Run ()
+        internal override TerminationReason Run ()
         {
             foreach (TestCodePair oneBlock in IfBlockSections)
             { 
@@ -97,12 +97,22 @@ namespace PLMain
 
                     foreach (AnnotatedString astr2 in oneBlock.code)
                     { 
-                        ilp.ProcessString (astr2.Plain);
+                        string str = astr2.Plain;
+
+                        if (str == "break")
+                            return TerminationReason.BreakEncountered;
+
+                        if (str == "continue")
+                            return TerminationReason.ContinueEncountered;
+
+                        ilp.ProcessString (str);
                     }
 
                     break; // one test passed, so don't run any more
                 }
             }
+
+            return TerminationReason.Completed;
         }
 
         //************************************************************************

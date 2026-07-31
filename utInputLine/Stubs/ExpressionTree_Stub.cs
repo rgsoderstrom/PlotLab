@@ -15,8 +15,6 @@ namespace PLMain
 {
     internal class ExpressionTree
     {
-        private static int instanceCounter = 0;
-
         private bool supressPrinting = false;
         //private bool supressPrinting = true;
         public  bool SupressPrinting {get {return supressPrinting;} private set {supressPrinting = value;}}
@@ -25,13 +23,11 @@ namespace PLMain
 
 
         static PLDouble a = new PLDouble ("a", 0);
-        static PLDouble b = new PLDouble ("b", 0);
-        static PLDouble c = new PLDouble ("c", 0);
+        static PLDouble b = new PLDouble ("b", 10);
+        static PLDouble c = new PLDouble ("c", 20);
 
         internal ExpressionTree (AnnotatedString astr)
         {
-            instanceCounter++;
-
             switch (astr.Plain)
             {
                 case "a = a + 1":
@@ -49,16 +45,16 @@ namespace PLMain
                     Answer = c;
                     break;
 
-                case "A > B": 
-                    Answer = new PLBool (instanceCounter < 25);
+                case "a < 8": 
+                    Answer = new PLBool (a.Data < 8);
                     break;
 
-                case "C > D": 
-                    Answer = new PLBool (instanceCounter < 20);
+                case "b > 12": 
+                    Answer = new PLBool (b.Data > 12);
                     break;
 
-                case "E > F": 
-                    Answer = new PLBool (instanceCounter < 15);
+                case "c < 2": 
+                    Answer = new PLBool (c.Data < 2);
                     break;
 
                 case "true":

@@ -15,6 +15,8 @@ using PLWorkspace;
 
 namespace PLMain
 {
+    public enum TerminationReason {Completed, BreakEncountered, ContinueEncountered};
+
     public partial class InputLineProcessor
     {
         static private PrintFunction Print;
@@ -45,12 +47,15 @@ namespace PLMain
         //  - may contain prompt, a comment and extra spaces
         //
 
-        public void ProcessString (string rawString)
+        public TerminationReason ProcessString (string rawString)
         {
+            //TerminationReason status = TerminationReason.Completed;
+
             bool somethingAdded = CleanedStrings.Add (rawString);
 
-            if (somethingAdded == false) // if a blank line or a comment line was passed in
-                return;                  // just return
+            // if a blank line or a comment line was passed in just return
+            if (somethingAdded == false) 
+                return TerminationReason.Completed;
 
             while (CleanedStrings.Count > 0)
             {
@@ -65,37 +70,25 @@ namespace PLMain
                     astr2.CheckForTrailingSemi ();
 
                     if (astr2 == null)
-                        return;
+                        return TerminationReason.Completed;
 
                     if (BlockManager.BlockCollectionInProgress)
                     {
-                        //Print?.Invoke ("Send to BlockManager: " + astr2.Plain);
                         BlockManager.Add (astr2);
                     }
 
                     else
                     { 
-                 //       string str = astr2.Plain;
-
-
-                        // in debug returns Unknown when should be BlockName
-
-                 //       Console.WriteLine ("str = " + str);
-
                         InputLineType lineType = classifier.Classify (astr2);
-
-
-
-
 
                         switch (lineType)
                         {
                             case InputLineType.Unknown:
-                                //Print?.Invoke ("Unknown: " + astr2.Plain);
-                                //break; 
-
                             case InputLineType.ExpressionTree:
                                 Print?.Invoke ("ExpressionTree: " + astr2.Plain);
+                                ExpressionTree tree = new ExpressionTree (astr2);
+                                PLVariable ans = tree.Evaluate ();
+                                Console.WriteLine (ans.ToString ());
                                 break; 
 
                             case InputLineType.VariableName:
@@ -119,14 +112,16 @@ namespace PLMain
                                 break;
 
                             case InputLineType.BlockName:
-                                Print?.Invoke ("BlockName: " + astr2.Plain);
+                            //    Print?.Invoke ("BlockName: " + astr2.Plain);
+                                TerminationReason status = BlockManager.RunBlock (astr2);
+                                Console.WriteLine ("BlockExit status = " + status);
 
-                                //throw new NotImplementedException ("InputLineType.BlockName not implemented");
-                                BlockManager.RunBlock (astr2);
+                                if (status == TerminationReason.BreakEncountered)    return status;
+                                if (status == TerminationReason.ContinueEncountered) return status;
                                 break;
 
                             case InputLineType.BlockStart:
-                                Print?.Invoke ("BlockStart: " + astr2.Plain);
+                            //    Print?.Invoke ("BlockStart: " + astr2.Plain);
                                 BlockManager.StartNewBlock (astr2);
                                 break;
 
@@ -138,6 +133,8 @@ namespace PLMain
                     }
                 }
             }
+
+            return TerminationReason.Completed;
         }
     }
 }

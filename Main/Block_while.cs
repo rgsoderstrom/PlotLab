@@ -24,7 +24,7 @@ namespace PLMain
             BlockStatements.Add (astr);
         }
 
-        internal override void Run ()
+        internal override TerminationReason Run ()
         {
             bool done = false;
 
@@ -48,7 +48,7 @@ namespace PLMain
                     throw new Exception ("while block " + Name + " test not a boolean: " + testString);
 
                 if ((answer as PLBool).Data == false)
-                    return;
+                    return TerminationReason.Completed;
 
                 InputLineProcessor ilp = new InputLineProcessor ();
 
@@ -56,20 +56,26 @@ namespace PLMain
                 { 
                     string str = astr2.Plain;
 
+                    // if "break" executed, this block terminates but any containg block does
+                    // not need to take any special action
                     if (str == "break")
-                    {
-                        done = true;
-                        break;
-                    }
+                        return TerminationReason.Completed;
+
 
                     if (str == "continue")
-                    {
                         break;
-                    }
 
-                    ilp.ProcessString (str);
+                    TerminationReason reason = ilp.ProcessString (str);
+
+                    // test for BreakEncountered passed up from the block just completed
+                    //    - typically an "if" block
+                    if (reason == TerminationReason.BreakEncountered) 
+                        return TerminationReason.Completed;  // this block terminates but any containg block does
+                                                             // not need to take any special action
                 }
             }
+
+            return TerminationReason.Completed;
         }
 
         //************************************************************************

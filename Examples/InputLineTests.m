@@ -44,17 +44,54 @@
 	% end
 
 
-	while A > B,
-		if C > D,
-			e = 3;
-		elseif E > F
-			f = 2;
-		else
-			break  % doesn't work  ---- THROW EXCEPTION???
-		%	g = 1;
+	% while A > B,
+		% if C > D,
+			% e = 3;
+		% elseif E > F
+			% f = 2;
+		% else
+			% g = 1;
+			% break;
+		% end
+		
+		% h = 0;
+		% %break;	
+	% end
+
+	% while A > B,
+		% while C > D,
+			% f = 2;
+		% %	break;
+		% end
+		
+		% h = 0;
+	% end
+
+
+% % INFINITE LOOP
+	% while a < 2,
+		% while b < 3,
+			% if c < 2,
+				% a = a + 1;
+			% else
+				% b = b + 1;
+				% %break;
+			% end
+		% end
+		
+		% c = c + 1;
+	% end
+
+
+	while a < 8,
+		a = a + 1;
+		b = b + 1;
+		
+		if b > 12,
+			continue;
 		end
 		
-		%break	% works
+		c = c + 1;
 	end
 
 

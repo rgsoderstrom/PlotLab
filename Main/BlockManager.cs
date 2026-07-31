@@ -146,10 +146,10 @@ namespace PLMain
 
         //*************************************************************************************
 
-        public static void RunBlock (AnnotatedString astr)
+        public static TerminationReason RunBlock (AnnotatedString astr)
         {
             Block block = CompleteBlocks [astr.Plain];
-            block.Run ();
+            return block.Run ();
         }
     }
 }
