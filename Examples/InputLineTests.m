@@ -58,14 +58,14 @@
 		% %break;	
 	% end
 
-	% while A > B,
-		% while C > D,
-			% f = 2;
-		% %	break;
-		% end
+	while a < 8,
+		while b <= 12,
+			b = b + 1;
+			break;
+		end
 		
-		% h = 0;
-	% end
+		a = a + 1;
+	end
 
 
 % % INFINITE LOOP
@@ -83,16 +83,18 @@
 	% end
 
 
-	while a < 8,
-		a = a + 1;
-		b = b + 1;
+	% while a < 8,
+		% a = a + 1;
+		% b = b + 1;
 		
-		if b > 12,
-			continue;
-		end
+		% if b > 12,
+			% if c > 22,
+				% break;
+			% end
+		% end
 		
-		c = c + 1;
-	end
+		% c = c + 1;
+	% end
 
 
 	% for a = 1:9

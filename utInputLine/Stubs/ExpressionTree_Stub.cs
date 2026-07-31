@@ -53,8 +53,12 @@ namespace PLMain
                     Answer = new PLBool (b.Data > 12);
                     break;
 
-                case "c < 2": 
-                    Answer = new PLBool (c.Data < 2);
+                case "b <= 12": 
+                    Answer = new PLBool (b.Data <= 12);
+                    break;
+
+                case "c > 22": 
+                    Answer = new PLBool (c.Data > 22);
                     break;
 
                 case "true":
