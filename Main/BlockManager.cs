@@ -92,6 +92,8 @@ namespace PLMain
             else if (lineType == InputLineType.BlockEnd)
             {
                 Block justCompleted = PartialBlocks.Pop ();
+                justCompleted.Close (); // needed by "for" block
+
                 CompleteBlocks.Add (justCompleted.Name, justCompleted);
 
                 if (PartialBlock != null)

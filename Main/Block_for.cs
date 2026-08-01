@@ -6,49 +6,31 @@ using System.Threading.Tasks;
 
 namespace PLMain
 {
-    internal class ForBlock : Block
+    internal class ForBlock : WhileBlock
     {
-        // Supported syntax:
-        //   for a = <vector>,
+        // Typical supported syntax:
+        //    for a = 12 : 15,
+        //      <loop code>
+        //    end
 
-        internal ForBlock (AnnotatedString astr)
+        // initialization list, runs before first iteration
+        //    cases = 12 : 15;
+        //    count = 4;
+        //    get = 1;
+
+        // remainder is same as "while" loop
+
+        // test string
+        //    get <= count;
+
+        // code list
+        //    a = cases (get);    
+        //    <loop code>
+        //    get = get + 1;
+
+                                                                         /* will fail for nested for-loops */
+        internal ForBlock (AnnotatedString astr) : base (new AnnotatedString ("get <= count"))
         {
-            Print ("new \"for\" block");
-
-            // Extract loop control
-            //
-            //    Look for first comma.
-            //       for a = 1:9, b = a ^ 2;
-            //
-            //    if none found, use everything after "for"
-            //
-
-            //int startIndex = "for".Length; // start looking here
-            //int i;
-
-            //for (i=startIndex; i<str.Length; i++)
-            //{
-            //    if (str [i] == ',')
-            //        break;
-            //}
-
-            //loopControl = str.Substring (startIndex, i - startIndex).Trim ();
-            //Print ("loop control: " + loopControl);
-
-            // anything after iterator string goes into blockStatements
-            //if (i < str.Length)
-            //{
-            //    string remaining = str.Substring (i+1);
-            //    AnnotatedString astr = new AnnotatedString (remaining);
-
-            //    AnnotatedStringSet aset = new AnnotatedStringSet ();
-            //    aset.Add (astr);
-
-            //    while (aset.Count > 0)
-            //        Add (aset.GetOldest.Plain);
-
-
-            //}
         }
 
         internal override void Add (AnnotatedString astr)
@@ -59,16 +41,6 @@ namespace PLMain
         internal override TerminationReason Run ()
         {
             return TerminationReason.Completed;
-        //    Print ("Running for " + loopControl + " block");
-
-        //    InputLineProcessor ip = new InputLineProcessor (Print);
-
-
-        //    foreach (string str in blockStatements)
-        //    {
-        //        Print ("  " + str);
-        //        ip.ProcessString (str);
-        //    }
         }
     }
 }
