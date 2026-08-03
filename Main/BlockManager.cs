@@ -101,19 +101,7 @@ namespace PLMain
 
                 else
                 {
-
-                    //foreach (var kvp in CompleteBlocks)
-                    //{
-                    //    Block bl = kvp.Value;
-                    //    Print (bl.ToString () + "\n");
-                    //}
-
                     justCompleted.Run ();
-
-
-
-
-
                     CompleteBlocks.Clear ();
                 }
             }
@@ -130,9 +118,9 @@ namespace PLMain
 
             switch (keyword)
             {
-                //case "for":
-                //    PartialBlocks.Push (new ForBlock (astr));
-                //    break;
+                case "for":
+                    PartialBlocks.Push (new ForBlock (astr));
+                    break;
 
                 case "while":
                     PartialBlocks.Push (new WhileBlock (astr));

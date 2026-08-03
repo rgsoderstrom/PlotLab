@@ -10,7 +10,7 @@ namespace PLMain
 {
     internal class WhileBlock : Block
     {
-        private readonly TestCodePair BlockStatements = new TestCodePair ();
+        private readonly TestCodePair BlockStatements;// = new TestCodePair ();
 
         //************************************************************************
 
@@ -19,10 +19,20 @@ namespace PLMain
             BlockStatements = new TestCodePair (astr.Arguments);
         }
 
+        //************************************************************************
+
         internal override void Add (AnnotatedString astr)
         {
             BlockStatements.Add (astr);
         }
+
+        //************************************************************************
+
+        internal override void Close ()
+        {
+        }
+
+        //************************************************************************
 
         internal override TerminationReason Run ()
         {

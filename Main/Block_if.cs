@@ -66,6 +66,14 @@ namespace PLMain
                 PartialBlock.Add (astr);            
         }
 
+        //***************************************************************************
+
+        internal override void Close ()
+        {
+        }
+
+        //***************************************************************************
+
         internal override TerminationReason Run ()
         {
             foreach (TestCodePair oneBlock in IfBlockSections)

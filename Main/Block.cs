@@ -38,7 +38,8 @@ namespace PLMain
             Name = "BLOCK_" + instanceCounter++.ToString ();
         }
 
-        internal abstract void Add (AnnotatedString astr);
+        internal abstract void Add   (AnnotatedString astr);
+        internal abstract void Close ();
         internal abstract TerminationReason Run ();
     }
 }

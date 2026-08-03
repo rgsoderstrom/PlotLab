@@ -18,7 +18,7 @@ namespace PLMain
         //    count = 4;
         //    get = 1;
 
-        // remainder is same as "while" loop
+        // remainder is same structure as "while" loop
 
         // test string
         //    get <= count;
@@ -28,19 +28,45 @@ namespace PLMain
         //    <loop code>
         //    get = get + 1;
 
-                                                                         /* will fail for nested for-loops */
+        //******************************************************************************
+
+        List<AnnotatedString> InitializationCode = new List<AnnotatedString> ();
+
+        //******************************************************************************
+
         internal ForBlock (AnnotatedString astr) : base (new AnnotatedString ("get <= count"))
         {
+            Console.WriteLine ("new ForBlock " + astr.Plain);
+
+            string loopArgs     = astr.Arguments; // a = 12 : 15,
+            int    index        = loopArgs.IndexOf ('=');
+            string loopVariable = loopArgs.Substring (0, index - 1).Trim (); // a
+            InitializationCode.Add (new AnnotatedString ("cases " + loopArgs.Substring (index) + ";"));
+            InitializationCode.Add (new AnnotatedString ("count = size (cases, 2);"));
+            InitializationCode.Add (new AnnotatedString ("get = 1;"));
+
+            Add (new AnnotatedString (loopVariable + " = cases (get);"));
         }
 
         internal override void Add (AnnotatedString astr)
         {
+            base.Add (astr);
+            Console.WriteLine ("Add " + astr.Plain);
 
+        }
+
+        internal override void Close ()
+        {
+            Add (new AnnotatedString ("get = get + 1;"));
+            Console.WriteLine ("Close");
         }
 
         internal override TerminationReason Run ()
         {
+            Console.WriteLine ("run");
             return TerminationReason.Completed;
         }
+
+      
     }
 }

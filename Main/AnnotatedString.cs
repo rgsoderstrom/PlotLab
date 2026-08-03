@@ -112,7 +112,7 @@ namespace PLMain
                 for (int i = 1; i<level0Words.Count; i++)
                     args += level0Words [i] + " ";
 
-                return args;
+                return args.Trim ();
             }
         }
 

@@ -21,8 +21,9 @@ namespace utAnnotatedStringUtils
 
             Console.WriteLine ("Alpha only = " + annotated.AlphanumericOnly);
             Console.WriteLine ("First Word = " + annotated.FirstWord);
-            Console.WriteLine ("Args:");
-            foreach (string str in annotated.Arguments) Console.WriteLine (str);
+            Console.WriteLine ("Args:      = " + annotated.Arguments);
+            //foreach (string str in annotated.Arguments) Console.WriteLine (str);
+
             Console.WriteLine ();
 
             //AnnotatedString annotated = new AnnotatedString ("-");
