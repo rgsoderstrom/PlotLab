@@ -3,6 +3,8 @@
     BlockManager.cs
 */
 
+#define UnitTest
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -101,7 +103,23 @@ namespace PLMain
 
                 else
                 {
-                    justCompleted.Run ();
+                    #if UnitTest
+                    {
+                        string str = "";
+
+                        foreach (KeyValuePair<string, Block> entry in CompleteBlocks)
+                        {
+                            str += entry.Value.ToString ();
+                            str += "\n\n";
+                        }
+
+                        Console.WriteLine (str);
+                    }
+
+                    #else
+                        justCompleted.Run ();
+                    #endif
+
                     CompleteBlocks.Clear ();
                 }
             }

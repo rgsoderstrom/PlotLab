@@ -10,7 +10,7 @@ namespace PLMain
 {
     internal class WhileBlock : Block
     {
-        private readonly TestCodePair BlockStatements;// = new TestCodePair ();
+        protected readonly TestCodePair BlockStatements;// = new TestCodePair ();
 
         //************************************************************************
 
@@ -36,21 +36,23 @@ namespace PLMain
 
         internal override TerminationReason Run ()
         {
+            // extract and format while block "test"
+            string testString = BlockStatements.test.Trim ();
+
+            if (testString.EndsWith (","))
+                testString = testString.Remove (testString.Length - 1, 1);
+
+            if (testString [0] == '(' && testString [testString.Length-1] == ')')
+            {
+                testString = testString.Remove (0, 1);
+                testString = testString.Remove (testString.Length-1, 1);
+            }
+
             bool done = false;
 
             while (done == false)
             { 
-                string testString = BlockStatements.test.Trim ();
-
-                if (testString.EndsWith (","))
-                    testString = testString.Remove (testString.Length - 1, 1);
-
-                if (testString [0] == '(' && testString [testString.Length-1] == ')')
-                {
-                    testString = testString.Remove (0, 1);
-                    testString = testString.Remove (testString.Length-1, 1);
-                }
-
+                // run the test before each loop
                 ExpressionTree tree = new ExpressionTree (new AnnotatedString (testString));
                 PLVariable answer = tree.Evaluate ();
 
@@ -60,6 +62,7 @@ namespace PLMain
                 if ((answer as PLBool).Data == false)
                     return TerminationReason.Completed;
 
+                // if we get here, test has passed so run all satements in "code" section
                 InputLineProcessor ilp = new InputLineProcessor ();
 
                 foreach (AnnotatedString astr2 in BlockStatements.code)
@@ -100,6 +103,8 @@ namespace PLMain
             string str = "WhileBlock " + Name;
 
             str += "\n  Test: " + BlockStatements.test;
+
+            str += "\n  loop code: ";
 
             foreach (AnnotatedString astr in BlockStatements.code)
                 str += "\n     " + astr.Plain;
