@@ -85,30 +85,9 @@
 	for AAA = 1:9
 		a = a + 1; 
 		
-		% for z = 11 : 18,
-			% x = z ^ 3;
-		% end
+		for z = 11 : 18,
+			x = z ^ 3;
+		end
 		
 		b = b + 1;
 	end
-
-
-% // Typical supported syntax:
-% //    for a = 12 : 15,
-% //      <loop code>
-% //    end
-
-% // initialization list, runs before first iteration
-% //    cases = 12 : 15;
-% //    count = 4;
-% //    get = 1;
-
-% // remainder is same as "while" loop
-
-% // test string
-% //    get <= count;
-
-% // code list
-% //    a = cases (get);    
-% //    <loop code>
-% //    get = get + 1;
