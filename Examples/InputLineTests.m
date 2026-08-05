@@ -85,7 +85,9 @@
 	for AAA = 1:9
 		a = a + 1; 
 		
-		for z = 11 : 18,
+		ZZ = 11 : 18;
+		
+		for z = ZZ,
 			x = z ^ 3;
 		end
 		

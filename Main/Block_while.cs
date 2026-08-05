@@ -10,13 +10,22 @@ namespace PLMain
 {
     internal class WhileBlock : Block
     {
-        protected readonly TestCodePair BlockStatements;// = new TestCodePair ();
+        protected TestCodePair BlockStatements;// = new TestCodePair ();
 
         //************************************************************************
 
         internal WhileBlock (AnnotatedString astr)
         {
             BlockStatements = new TestCodePair (astr.Arguments);
+        }
+
+        protected internal WhileBlock ()
+        {
+        }
+
+        protected void SetBlockTest (string arguments)
+        {
+            BlockStatements = new TestCodePair (arguments);
         }
 
         //************************************************************************
