@@ -48,20 +48,21 @@ namespace PLMain
         private string CountVar;
         private string CasesVar;
 
-        private static string GenerateNames (ForBlock _this)
+        private string GenerateNames ()
         {
-            _this.GetVar   = GetVarBase   + instanceCounter;
-            _this.CountVar = CountVarBase + instanceCounter;
-            _this.CasesVar = CasesVarBase + instanceCounter;
+            int N = instanceCounter - 1; // makes the number appended to variables match
+                                         // the number appended to the block name
+            GetVar   = GetVarBase   + N;
+            CountVar = CountVarBase + N;
+            CasesVar = CasesVarBase + N;
 
-            return "while " + _this.GetVar + " <= " + _this.CountVar + ",";
+            return "while " + GetVar + " <= " + CountVar + ",";
         }
 
         internal ForBlock (AnnotatedString astr) : base ()
         {
-            SetBlockTest (GenerateNames (this));
-
-            Console.WriteLine ("new ForBlock " + astr.Plain);
+            // set test in base class "while" block
+            SetBlockTest (GenerateNames ());
 
             // initialization code
             string loopArgs     = astr.Arguments; // a = 12 : 15, % in example
@@ -74,7 +75,6 @@ namespace PLMain
             // count = 4; // size (cases, 2) == 4
             InitializationCode.Add (new AnnotatedString (CountVar + " = size (" + CasesVar + ", 2);"));
 
-
             InitializationCode.Add (new AnnotatedString (GetVar + " = 1;"));
          // InitializationCode.Add (new AnnotatedString ("get = 1;"));
 
@@ -82,7 +82,7 @@ namespace PLMain
             string loopVariable = loopArgs.Substring (0, index - 1).Trim (); // a % in example
             Add (new AnnotatedString (loopVariable + " = " + CasesVar + " (" + GetVar + ");"));
 
-            CleanupCode.Add (new AnnotatedString ("clear cases count get;"));
+            CleanupCode.Add (new AnnotatedString ("clear " + CasesVar + " " + CountVar + " " + GetVar));
         }
 
         //******************************************************************************
@@ -90,23 +90,19 @@ namespace PLMain
         internal override void Add (AnnotatedString astr)
         {
             base.Add (astr);
-            Console.WriteLine ("Add " + astr.Plain);
         }
 
         //******************************************************************************
 
         internal override void Close ()
         {
-            Add (new AnnotatedString ("get = get + 1;"));
-            Console.WriteLine ("Close");
+            Add (new AnnotatedString (GetVar + " = " + GetVar + " + 1;"));  // ("get = get + 1;"));
         }
 
         //******************************************************************************
 
         internal override TerminationReason Run ()
         {
-            Console.WriteLine ("run");
-
             InputLineProcessor ilp = new InputLineProcessor ();
 
             // run initialization
