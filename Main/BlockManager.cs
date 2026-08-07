@@ -3,7 +3,8 @@
     BlockManager.cs
 */
 
-#define UnitTest
+// define UnitTest to print blocks rather than run them
+//#define UnitTest
 
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,6 @@ namespace PLMain
 
         // CompleteBlocks - ready for execution
         private static readonly Dictionary<string, Block> CompleteBlocks = new Dictionary<string, Block> ();
-
 
         //*************************************************************************************
 

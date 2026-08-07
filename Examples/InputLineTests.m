@@ -93,3 +93,16 @@
 		
 		b = b + 1;
 	end
+	
+% day = 'Saturday';
+
+% switch day
+    % case 'Monday'
+        % disp('Start of the work week.')
+    % case 'Friday'
+        % disp('Last day of the work week.')
+    % case 'Saturday'
+        % disp('It is the weekend!')
+    % otherwise
+        % disp('Just another regular day.')
+% end

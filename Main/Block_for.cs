@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PLMain
 {
-    internal class ForBlock : WhileBlock
+    internal class ForBlock : Block_loop
     {
         // Typical supported syntax:
         //    for a = 12 : 15,
@@ -61,35 +61,28 @@ namespace PLMain
 
         internal ForBlock (AnnotatedString astr) : base ()
         {
-            // set test in base class "while" block
+            // set test in base class loop block
             SetBlockTest (GenerateNames ());
 
             // initialization code
             string loopArgs     = astr.Arguments; // a = 12 : 15, % in example
             int    index        = loopArgs.IndexOf ('=');
 
-            string cases = loopArgs.Substring (index); // the equal sign and everything past it
-            InitializationCode.Add (new AnnotatedString (CasesVar + " " + cases + ";"));
-         // InitializationCode.Add (new AnnotatedString ("cases " + loopArgs.Substring (index) + ";"));
+            // the equal sign and everything past it
+            string cases = loopArgs.Substring (index); 
+            InitializationCode.Add (new AnnotatedString (CasesVar + " " + cases + ";")); // Cases = 12 : 15;
 
             // count = 4; // size (cases, 2) == 4
             InitializationCode.Add (new AnnotatedString (CountVar + " = size (" + CasesVar + ", 2);"));
 
+            // get = 1; 
             InitializationCode.Add (new AnnotatedString (GetVar + " = 1;"));
-         // InitializationCode.Add (new AnnotatedString ("get = 1;"));
 
             // a = cases (get);
-            string loopVariable = loopArgs.Substring (0, index - 1).Trim (); // a % in example
+            string loopVariable = loopArgs.Substring (0, index - 1).Trim ();
             Add (new AnnotatedString (loopVariable + " = " + CasesVar + " (" + GetVar + ");"));
 
             CleanupCode.Add (new AnnotatedString ("clear " + CasesVar + " " + CountVar + " " + GetVar));
-        }
-
-        //******************************************************************************
-
-        internal override void Add (AnnotatedString astr)
-        {
-            base.Add (astr);
         }
 
         //******************************************************************************
