@@ -38,9 +38,14 @@ namespace PLMain
             Name = "BLOCK_" + instanceCounter++.ToString ();
         }
 
+        // Add () and Run () must be implemented by any derived class
         internal abstract void Add   (AnnotatedString astr);
-        internal abstract void Close ();
         internal abstract TerminationReason Run ();
+
+        // not all derived blocks require Close () to do anything
+        internal virtual void Close ()
+        {
+        }
     }
 }
 

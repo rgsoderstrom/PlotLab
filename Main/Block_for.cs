@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PLMain
 {
-    internal class ForBlock : Block_loop
+    internal class ForBlock : LoopBlock
     {
         // Typical supported syntax:
         //    for a = 12 : 15,

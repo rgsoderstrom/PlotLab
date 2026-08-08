@@ -9,7 +9,7 @@ using PLCommon;
 
 namespace PLMain
 {
-    internal abstract class Block_loop : Block
+    internal abstract class LoopBlock : Block
     {
         // a single test-code pair run repeatedly
         protected TestCodePair BlockStatements; // = new TestCodePair ();

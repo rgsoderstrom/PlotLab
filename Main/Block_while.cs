@@ -8,17 +8,13 @@ using PLCommon;
 
 namespace PLMain
 {
-    internal class WhileBlock : Block_loop
+    internal class WhileBlock : LoopBlock
     {
         //************************************************************************
 
         internal WhileBlock (AnnotatedString astr)
         {
             BlockStatements = new TestCodePair (astr.Arguments);
-        }
-
-        internal override void Close ()
-        {
         }
 
         //************************************************************************
