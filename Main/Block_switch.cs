@@ -12,53 +12,47 @@ namespace PLMain
 {
     internal class SwitchBlock : SelectBlock
     {
+        private static readonly List<string> SwitchBlockKeywords = new List<string> () {"case", "otherwise"};
 	
+        //switch day
+        //    case 'Monday'
+        //        disp('Start of the work week.')
+        //    case 'Friday'
+        //        disp('Last day of the work week.')
+        //    case 'Saturday'
+        //        disp('It is the weekend!')
+        //    otherwise
+        //        disp('Just another regular day.')
+        //end
 	
-	
-	
-	
+        private readonly string switchVar;
 
-        private static readonly List<string> IfBlockKeywords = new List<string> () {"elseif", "else"};
-
-        // Supported syntax:
-        //   Single line
-        //     if A > B, c = A * B; ... end
-        //     if (A > B), c = A * B; ... end
-        //   Multi line
-        //     if A > B
-        //     if (A > B)
-        //     if A > B,
-        //     if (A > B),
-        //
-        //   All must terminate with "end"
-
-        // also elseif and else
-
-        internal IfBlock (AnnotatedString astr)
+        internal SwitchBlock (AnnotatedString astr)
         {
-            PartialBlock = new TestCodePair (astr.Arguments);
-            SelectBlockSections.Add (PartialBlock);
+            switchVar = astr.Arguments;
         }
 
         // Add to "code" section
         internal override void Add (AnnotatedString astr)
         {
-            if (IfBlockKeywords.Contains (astr.FirstWord))
+            string firstWord = astr.FirstWord;
+
+            if (SwitchBlockKeywords.Contains (firstWord))
             {
-                switch (astr.FirstWord)
+                switch (firstWord)
                 {
-                    case "elseif":
-                        PartialBlock = new TestCodePair (astr.Arguments);
+                    case "case":
+                        PartialBlock = new TestCodePair (switchVar + " == " + astr.Arguments);
                         SelectBlockSections.Add (PartialBlock);
                         break;
 
-                    case "else":
+                    case "otherwise":
                         PartialBlock = new TestCodePair ();
                         SelectBlockSections.Add (PartialBlock);
                         break;
 
                     default:
-                        throw new Exception ("Unsupported \"if\" statement break: " + astr.Plain);
+                        throw new Exception ("Unsupported \"switch\" statement break: " + astr.Plain);
                 }
             }
 
@@ -70,7 +64,7 @@ namespace PLMain
 
         public override string ToString ()
         {
-            string str = "IfBlock " + Name + " has " + SelectBlockSections.Count.ToString () + " sections";
+            string str = "SwitchBlock " + Name + " has " + SelectBlockSections.Count.ToString () + " sections";
 
             foreach (TestCodePair tp in SelectBlockSections)
             {

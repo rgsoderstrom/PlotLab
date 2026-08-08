@@ -98,11 +98,11 @@
 
 switch day
     case 'Monday'
-        disp('Start of the work week.')
+        A = 1;
     case 'Friday'
-        disp('Last day of the work week.')
+        B = 1;
     case 'Saturday'
-        disp('It is the weekend!')
+        C = 1;
     otherwise
-        disp('Just another regular day.')
+        Z = 123;
 end
