@@ -82,27 +82,27 @@
 	% end
 
 
-	for AAA = 1:9
-		a = a + 1; 
+	% for AAA = 1:9
+		% a = a + 1; 
 		
-		ZZ = 11 : 18;
+		% ZZ = 11 : 18;
 		
-		for z = ZZ,
-			x = z ^ 3;
-		end
+		% for z = ZZ,
+			% x = z ^ 3;
+		% end
 		
-		b = b + 1;
-	end
+		% b = b + 1;
+	% end
 	
 % day = 'Saturday';
 
-% switch day
-    % case 'Monday'
-        % disp('Start of the work week.')
-    % case 'Friday'
-        % disp('Last day of the work week.')
-    % case 'Saturday'
-        % disp('It is the weekend!')
-    % otherwise
-        % disp('Just another regular day.')
-% end
+switch day
+    case 'Monday'
+        disp('Start of the work week.')
+    case 'Friday'
+        disp('Last day of the work week.')
+    case 'Saturday'
+        disp('It is the weekend!')
+    otherwise
+        disp('Just another regular day.')
+end

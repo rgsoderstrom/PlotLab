@@ -1,16 +1,23 @@
-﻿using System;
+﻿
+/*
+    Block_switch.cs - 
+*/
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 using PLCommon;
 
 namespace PLMain
 {
-    internal class IfBlock : SelectBlock
+    internal class SwitchBlock : SelectBlock
     {
+	
+	
+	
+	
+	
+
         private static readonly List<string> IfBlockKeywords = new List<string> () {"elseif", "else"};
 
         // Supported syntax:

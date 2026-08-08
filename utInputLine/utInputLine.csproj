@@ -84,6 +84,12 @@
     <Compile Include="..\Main\Block_loop.cs">
       <Link>Block_loop.cs</Link>
     </Compile>
+    <Compile Include="..\Main\Block_select.cs">
+      <Link>Block_select.cs</Link>
+    </Compile>
+    <Compile Include="..\Main\Block_switch.cs">
+      <Link>Block_switch.cs</Link>
+    </Compile>
     <Compile Include="..\Main\Block_TestCodePair.cs">
       <Link>Block_TestCodePair.cs</Link>
     </Compile>

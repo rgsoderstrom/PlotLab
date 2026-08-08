@@ -4,7 +4,7 @@
 */
 
 // define UnitTest to print blocks rather than run them
-//#define UnitTest
+#define UnitTest
 
 using System;
 using System.Collections.Generic;
@@ -38,7 +38,7 @@ namespace PLMain
 
         //*************************************************************************************
 
-        internal static readonly List<string> BlockStartKeywords = new List<string> () {"for", "while", "if"};
+        internal static readonly List<string> BlockStartKeywords = new List<string> () {"for", "while", "if", "switch"};
         internal static readonly List<string> BlockEndKeywords = new List<string> () { "end", };
 
         public static SymbolicNameTypes WhatIs (string str)
@@ -54,8 +54,6 @@ namespace PLMain
 
         public static bool IsBlockName (string str)
         {
-            //Print?.Invoke ("IsBlockName " + CompleteBlocks.ContainsKey (str));
-
             return CompleteBlocks.ContainsKey (str);
         }
 
@@ -146,6 +144,10 @@ namespace PLMain
 
                 case "if":
                     PartialBlocks.Push (new IfBlock (astr));
+                    break;
+
+                case "switch":
+                    PartialBlocks.Push (new SwitchBlock (astr));
                     break;
 
                 default: throw new Exception ("Unrecognized block type: " + astr.Plain);
