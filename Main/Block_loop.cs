@@ -70,7 +70,8 @@ namespace PLMain
                     if (str == "continue")
                         break;
 
-                    TerminationReason reason = ilp.ProcessString (str);
+                    PLVariable unused = null;
+                    TerminationReason reason = ilp.ProcessString (ref unused, str);
 
                     // if BreakEncountered passed up from the block just completed, his block terminates but
                     // any containing block does not need to take any special action

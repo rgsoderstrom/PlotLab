@@ -19,7 +19,7 @@ namespace PLMain
 
     public partial class InputLineProcessor
     {
-        static private PrintFunction Print;
+        static public PrintFunction Print;
 
         // queue of strings for processing
         private readonly CleanStringQueue CleanedStrings;
@@ -47,10 +47,8 @@ namespace PLMain
         //  - may contain prompt, a comment and extra spaces
         //
 
-        public TerminationReason ProcessString (string rawString)
+        public TerminationReason ProcessString (ref PLVariable answer, string rawString)
         {
-            //TerminationReason status = TerminationReason.Completed;
-
             bool somethingAdded = CleanedStrings.Add (rawString);
 
             // if a blank line or a comment line was passed in just return
@@ -59,14 +57,13 @@ namespace PLMain
 
             while (CleanedStrings.Count > 0)
             {
-                AnnotatedString astr2 = null;
                 string          cleaned = CleanedStrings.GetOldest ();
                 AnnotatedString astr  = new AnnotatedString (cleaned);
                 AnnotatedStrings.Add (astr);
 
                 while (AnnotatedStrings.Count > 0)
                 {
-                    astr2 = AnnotatedStrings.GetOldest ();
+                    AnnotatedString astr2 = AnnotatedStrings.GetOldest ();
                     astr2.CheckForTrailingSemi ();
 
                     if (astr2 == null)
@@ -85,10 +82,8 @@ namespace PLMain
                         {
                             case InputLineType.Unknown:
                             case InputLineType.ExpressionTree:
-                                Print?.Invoke ("ExpressionTree: " + astr2.Plain);
                                 ExpressionTree tree = new ExpressionTree (astr2);
-                                PLVariable ans = tree.Evaluate ();
-                                Console.WriteLine (ans.ToString ());
+                                answer = tree.Evaluate ();
                                 break; 
 
                             case InputLineType.VariableName:

@@ -1,321 +1,321 @@
-﻿using System;
-using System.Windows.Controls;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//using System;
+//using System.Windows.Controls;
+//using System.Collections.Generic;
+//using System.IO;
+//using System.Linq;
+//using System.Text;
+//using System.Threading.Tasks;
 
-using PLCommon;
-using PLFileSystem;
-using PLWorkspace;
-//using ScriptPreprocess;
+//using PLCommon;
+//using PLFileSystem;
+//using PLWorkspace;
+////using ScriptPreprocess;
 
-namespace PLMain
-{
-    public class ScriptProcessor
-    {
-        PrintFunction print = null;
+//namespace PLMain
+//{
+//    public class ScriptProcessor
+//    {
+//        PrintFunction print = null;
 
-        NumberedScript expanded = null; // preprocessor output
+//        NumberedScript expanded = null; // preprocessor output
 
-        public enum ScriptTerminationReason {Complete, Failed};
+//        public enum ScriptTerminationReason {Complete, Failed};
 
-        public ScriptProcessor (PrintFunction pf)
-        {
-            print = pf;
-        }
+//        public ScriptProcessor (PrintFunction pf)
+//        {
+//            print = pf;
+//        }
         
-        //***************************************************************************************************************
+//        //***************************************************************************************************************
 
-        // passed lines to run as a script. Typically copied and pasted in
+//        // passed lines to run as a script. Typically copied and pasted in
 
-        internal ScriptTerminationReason RunScriptLines (List<string> scriptLines)
-        {
-            try
-            {
-                ScriptPreprocessor spp = new ScriptPreprocessor ();
-                expanded = spp.Run (scriptLines);
+//        internal ScriptTerminationReason RunScriptLines (List<string> scriptLines)
+//        {
+//            try
+//            {
+//                ScriptPreprocessor spp = new ScriptPreprocessor ();
+//                expanded = spp.Run (scriptLines);
 
-                int start = expanded.FirstLineNumber;
-                int finish = expanded.LastLineNumber;
+//                int start = expanded.FirstLineNumber;
+//                int finish = expanded.LastLineNumber;
 
-                return RunScriptLines (expanded, start, finish);
-            }
+//                return RunScriptLines (expanded, start, finish);
+//            }
 
-            catch (Exception ex)
-            {
-                throw new Exception ("Script processor error: " + ex.Message);
-            }
-        }
+//            catch (Exception ex)
+//            {
+//                throw new Exception ("Script processor error: " + ex.Message);
+//            }
+//        }
 
-        //***************************************************************************************************************
+//        //***************************************************************************************************************
 
-        // passed script name only, no path and no extension
+//        // passed script name only, no path and no extension
         
-        public ScriptTerminationReason FindAndRunScript (string scriptName)
-        {
-            string fullName = "";
+//        public ScriptTerminationReason FindAndRunScript (string scriptName)
+//        {
+//            string fullName = "";
 
-            if (FileSystem.NameSearch (scriptName, ref fullName))
-                return RunScript (fullName);
+//            if (FileSystem.NameSearch (scriptName, ref fullName))
+//                return RunScript (fullName);
 
-            else
-                throw new Exception ("Script " + scriptName + " not found");
-        }
+//            else
+//                throw new Exception ("Script " + scriptName + " not found");
+//        }
 
-        //***************************************************************************************************************
-        /****
-        //
-        // passed in name of expanded script --- INTENDED FOR DEBUG ONLY
-        //
-        public void RunExpandedScript (string fullName)
-        {
-            try
-            {
-                expanded = new NumberedScript (fullName);
+//        //***************************************************************************************************************
+//        /****
+//        //
+//        // passed in name of expanded script --- INTENDED FOR DEBUG ONLY
+//        //
+//        public void RunExpandedScript (string fullName)
+//        {
+//            try
+//            {
+//                expanded = new NumberedScript (fullName);
 
-                int start = expanded.FirstLineNumber;
-                int finish = expanded.LastLineNumber;
+//                int start = expanded.FirstLineNumber;
+//                int finish = expanded.LastLineNumber;
 
-                RunScriptLines (expanded, start, finish);
-            }
+//                RunScriptLines (expanded, start, finish);
+//            }
 
-            catch (Exception ex)
-            {
-                throw new Exception ("Script processor error: " + ex.Message);
-            }
-        }
-        ****/
+//            catch (Exception ex)
+//            {
+//                throw new Exception ("Script processor error: " + ex.Message);
+//            }
+//        }
+//        ****/
 
-        ScriptTerminationReason RunScript (string fullName)
-        {
-            try
-            {
-                ScriptPreprocessor spp = new ScriptPreprocessor ();
-                bool writeDebugFile = false;
-                expanded = spp.Run (fullName, writeDebugFile);
+//        ScriptTerminationReason RunScript (string fullName)
+//        {
+//            try
+//            {
+//                ScriptPreprocessor spp = new ScriptPreprocessor ();
+//                bool writeDebugFile = false;
+//                expanded = spp.Run (fullName, writeDebugFile);
 
-                if (expanded.Count == 0)
-                    return ScriptTerminationReason.Complete; // nothing to run
+//                if (expanded.Count == 0)
+//                    return ScriptTerminationReason.Complete; // nothing to run
 
-                int start = expanded.FirstLineNumber;
-                int finish = expanded.LastLineNumber;
+//                int start = expanded.FirstLineNumber;
+//                int finish = expanded.LastLineNumber;
 
-                return RunScriptLines (expanded, start, finish);
-            }
+//                return RunScriptLines (expanded, start, finish);
+//            }
 
-            catch (Exception ex)
-            {
-                throw new Exception ("Script processor error: " + ex.Message);
-            }
-        }
+//            catch (Exception ex)
+//            {
+//                throw new Exception ("Script processor error: " + ex.Message);
+//            }
+//        }
 
-        //***********************************************************************************
+//        //***********************************************************************************
 
-        ScriptTerminationReason RunScriptLines (NumberedScript script, int from, int to)
-        {
-            if (from == 0 || to == 0)
-                return ScriptTerminationReason.Complete;
+//        ScriptTerminationReason RunScriptLines (NumberedScript script, int from, int to)
+//        {
+//            if (from == 0 || to == 0)
+//                return ScriptTerminationReason.Complete;
 
-            int lineNumber = from;
+//            int lineNumber = from;
 
-            while (lineNumber <= to)
-            {
-                string text = script.GetTextForLineNumber (lineNumber);
+//            while (lineNumber <= to)
+//            {
+//                string text = script.GetTextForLineNumber (lineNumber);
 
-                string[] words = text.Split (new char [] { '{', '}'}, StringSplitOptions.RemoveEmptyEntries);
+//                string[] words = text.Split (new char [] { '{', '}'}, StringSplitOptions.RemoveEmptyEntries);
 
-                switch (words [0].Trim ())
-                {
-                    case "return":
-                    case "return;":
-                        return ScriptTerminationReason.Complete;
+//                switch (words [0].Trim ())
+//                {
+//                    case "return":
+//                    case "return;":
+//                        return ScriptTerminationReason.Complete;
 
-                    case "ASSN": // assignment
-                    {
-                        // get everything between outer parens
-                        int index1 = text.IndexOf ('{');
-                        int index2 = text.LastIndexOf ('}');
-                        string ss1 = text.Substring (index1 + 1, index2 - index1 - 1);
-                        string [] stmts = ss1.Split (new char [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+//                    case "ASSN": // assignment
+//                    {
+//                        // get everything between outer parens
+//                        int index1 = text.IndexOf ('{');
+//                        int index2 = text.LastIndexOf ('}');
+//                        string ss1 = text.Substring (index1 + 1, index2 - index1 - 1);
+//                        string [] stmts = ss1.Split (new char [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 
-                        EntryPoint ep = new EntryPoint ();
-                        PLVariable results = new PLNull ();
+//                        EntryPoint ep = new EntryPoint ();
+//                        PLVariable results = new PLNull ();
 
-                        foreach (string str in stmts)
-                            ep.ProcessArithmeticExpression (ref results, str, print);
+//                        foreach (string str in stmts)
+//                            ep.ProcessArithmeticExpression (ref results, str, print);
 
-                        lineNumber = script.NextLineNumber (lineNumber);
-                    }
-                    break;
+//                        lineNumber = script.NextLineNumber (lineNumber);
+//                    }
+//                    break;
 
-                    case "TEST":
-                    {
-                        PLVariable results = new PLNull ();
-                        TestParsing tp = ParseTEST (words);
+//                    case "TEST":
+//                    {
+//                        PLVariable results = new PLNull ();
+//                        TestParsing tp = ParseTEST (words);
 
-                        EntryPoint ep = new EntryPoint ();
-                        ep.ProcessArithmeticExpression (ref results, tp.expression, print);
+//                        EntryPoint ep = new EntryPoint ();
+//                        ep.ProcessArithmeticExpression (ref results, tp.expression, print);
 
-                        //PLBool res = results as PLBool;
-                        PLBool res = new PLBool (results);
+//                        //PLBool res = results as PLBool;
+//                        PLBool res = new PLBool (results);
 
 
-                        if (res == null)
-                            throw new Exception ("Test " + tp.expression + " must resolve to a bool");
+//                        if (res == null)
+//                            throw new Exception ("Test " + tp.expression + " must resolve to a bool");
 
-                        if (res.Data == true)
-                        {
-                            if (tp.trueLines.Count == 3)
-                            {
-                                RunScriptLines (script, tp.trueLines [0], tp.trueLines [1]);
-                                lineNumber = tp.trueLines [2];
-                            }
+//                        if (res.Data == true)
+//                        {
+//                            if (tp.trueLines.Count == 3)
+//                            {
+//                                RunScriptLines (script, tp.trueLines [0], tp.trueLines [1]);
+//                                lineNumber = tp.trueLines [2];
+//                            }
 
-                            else if (tp.trueLines.Count == 1)
-                            {
-                                lineNumber = tp.trueLines [0];
-                            }
+//                            else if (tp.trueLines.Count == 1)
+//                            {
+//                                lineNumber = tp.trueLines [0];
+//                            }
 
-                            else throw new Exception ("Error parsing " + words);
-                        }
+//                            else throw new Exception ("Error parsing " + words);
+//                        }
 
-                        if (res.Data == false)
-                        {
-                            if (tp.falseLines.Count == 3)
-                            {
-                                RunScriptLines (script, tp.falseLines [0], tp.falseLines [1]);
-                                lineNumber = tp.falseLines [2];
-                            }
+//                        if (res.Data == false)
+//                        {
+//                            if (tp.falseLines.Count == 3)
+//                            {
+//                                RunScriptLines (script, tp.falseLines [0], tp.falseLines [1]);
+//                                lineNumber = tp.falseLines [2];
+//                            }
 
-                            else if (tp.falseLines.Count == 1)
-                            {
-                                lineNumber = tp.falseLines [0];
-                            }
+//                            else if (tp.falseLines.Count == 1)
+//                            {
+//                                lineNumber = tp.falseLines [0];
+//                            }
 
-                            else throw new Exception ("Error parsing " + words);
-                        }
+//                            else throw new Exception ("Error parsing " + words);
+//                        }
 
-                    }
-                    break;
+//                    }
+//                    break;
 
-                    case "CLEAR":
-                    {
-                        string expression = "clear ";
-                        for (int i = 1; i<words.Length; i++)
-                            expression += words [i] + " ";
+//                    case "CLEAR":
+//                    {
+//                        string expression = "clear ";
+//                        for (int i = 1; i<words.Length; i++)
+//                            expression += words [i] + " ";
 
-                        InputLineProcessor_Legacy ip = new InputLineProcessor_Legacy ();
-                        PLVariable ans = new PLInteger (-1);
-                        ip.ProcessOneStatement (ref ans, expression);
-                        lineNumber = script.NextLineNumber (lineNumber);
-                    }
-                    break;
+//                        InputLineProcessor_Legacy ip = new InputLineProcessor_Legacy ();
+//                        PLVariable ans = new PLInteger (-1);
+//                        ip.ProcessOneStatement (ref ans, expression);
+//                        lineNumber = script.NextLineNumber (lineNumber);
+//                    }
+//                    break;
 
-                    case "NOP":
-                        lineNumber = script.NextLineNumber (lineNumber);
-                        break;
+//                    case "NOP":
+//                        lineNumber = script.NextLineNumber (lineNumber);
+//                        break;
 
-                    default:
-                        RunOneScriptLine (text);
-                        lineNumber = script.NextLineNumber (lineNumber);
-                        break;
-                }
-            }
+//                    default:
+//                        RunOneScriptLine (text);
+//                        lineNumber = script.NextLineNumber (lineNumber);
+//                        break;
+//                }
+//            }
 
-            return ScriptTerminationReason.Complete;
-        }
+//            return ScriptTerminationReason.Complete;
+//        }
 
-        //***********************************************************************************
+//        //***********************************************************************************
 
-        List<Utils.InputLine> inputLines = new List<Utils.InputLine> (); 
-    //    Utils.NestingLevel nestingLevel = new Utils.NestingLevel ();
+//        List<Utils.InputLine> inputLines = new List<Utils.InputLine> (); 
+//    //    Utils.NestingLevel nestingLevel = new Utils.NestingLevel ();
 
-        void RunOneScriptLine (string raw)
-        {
-            //bool unused = false;
-            //InputLineProcessor ip = new InputLineProcessor (print);
-            //Utils.CleanupRawInput (raw, inputLines, ref nestingLevel);
+//        void RunOneScriptLine (string raw)
+//        {
+//            //bool unused = false;
+//            //InputLineProcessor ip = new InputLineProcessor (print);
+//            //Utils.CleanupRawInput (raw, inputLines, ref nestingLevel);
 
-            //int startIndex = 0;
-            //int endIndex = -1;
+//            //int startIndex = 0;
+//            //int endIndex = -1;
 
-            //for (int i=0; i<inputLines.Count; i++)
-            //{
-            //    if (inputLines [i].complete)
-            //    {
-            //        endIndex = i;
-            //        string expr = "";
+//            //for (int i=0; i<inputLines.Count; i++)
+//            //{
+//            //    if (inputLines [i].complete)
+//            //    {
+//            //        endIndex = i;
+//            //        string expr = "";
 
-            //        for (int j=startIndex; j<=endIndex; j++)
-            //            expr += inputLines [j].text;
+//            //        for (int j=startIndex; j<=endIndex; j++)
+//            //            expr += inputLines [j].text;
 
-            //        PLVariable ans = new PLNull ();
-            //        ip.ProcessOneStatement (ref ans, expr, ref unused);
+//            //        PLVariable ans = new PLNull ();
+//            //        ip.ProcessOneStatement (ref ans, expr, ref unused);
 
-            //        if (ans != null && ans is PLNull == false && ans is PLCanvasObject == false)
-            //        {
-            //            ans.Name = "ans";
-            //            Workspace.Add (ans);
+//            //        if (ans != null && ans is PLNull == false && ans is PLCanvasObject == false)
+//            //        {
+//            //            ans.Name = "ans";
+//            //            Workspace.Add (ans);
 
-            //            // kludge to print "disp" results
-            //            bool forcePrint = false;
+//            //            // kludge to print "disp" results
+//            //            bool forcePrint = false;
 
-            //            if (expr.Length > 4)
-            //                if (expr.Substring (0, 4) == "disp")
-            //                    forcePrint = true;
+//            //            if (expr.Length > 4)
+//            //                if (expr.Substring (0, 4) == "disp")
+//            //                    forcePrint = true;
 
-            //            if (inputLines [endIndex].printFlag || forcePrint)
-            //            {
-            //                print (ans.ToString ());
-            //                print ("\n");
-            //            }
-            //        }
+//            //            if (inputLines [endIndex].printFlag || forcePrint)
+//            //            {
+//            //                print (ans.ToString ());
+//            //                print ("\n");
+//            //            }
+//            //        }
 
-            //        startIndex = endIndex + 1;
-            //    }
-            //}
+//            //        startIndex = endIndex + 1;
+//            //    }
+//            //}
 
-            //if (endIndex != -1)
-            //{
-            //    inputLines.RemoveRange (0, endIndex + 1);
-            //}
-        }
+//            //if (endIndex != -1)
+//            //{
+//            //    inputLines.RemoveRange (0, endIndex + 1);
+//            //}
+//        }
 
-        //*******************************************************************************************************
-        //
-        // parse TEST command
-        //
+//        //*******************************************************************************************************
+//        //
+//        // parse TEST command
+//        //
 
-        class TestParsing
-        {
-            public string expression;
-            public List<int> trueLines = new List<int> (3);
-            public List<int> falseLines = new List<int> (3);
-        }
+//        class TestParsing
+//        {
+//            public string expression;
+//            public List<int> trueLines = new List<int> (3);
+//            public List<int> falseLines = new List<int> (3);
+//        }
 
-        TestParsing ParseTEST (string[] inputWords)
-        {
-            TestParsing tp = new TestParsing ();
+//        TestParsing ParseTEST (string[] inputWords)
+//        {
+//            TestParsing tp = new TestParsing ();
 
-            tp.expression = inputWords [1];
-            string t2 = inputWords [3];
-            string t3 = inputWords [5];
+//            tp.expression = inputWords [1];
+//            string t2 = inputWords [3];
+//            string t3 = inputWords [5];
 
-            string [] t2Numbers = t2.Split (new char [] { ',' });
-            string [] t3Numbers = t3.Split (new char [] { ',' });
+//            string [] t2Numbers = t2.Split (new char [] { ',' });
+//            string [] t3Numbers = t3.Split (new char [] { ',' });
 
-            foreach (string str in t2Numbers)
-                tp.trueLines.Add (Convert.ToInt32 (str));
+//            foreach (string str in t2Numbers)
+//                tp.trueLines.Add (Convert.ToInt32 (str));
 
-            foreach (string str in t3Numbers)
-                tp.falseLines.Add (Convert.ToInt32 (str));
+//            foreach (string str in t3Numbers)
+//                tp.falseLines.Add (Convert.ToInt32 (str));
 
-            return tp;
-        }
-    }
-}
+//            return tp;
+//        }
+//    }
+//}
 
 
 

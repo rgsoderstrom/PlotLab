@@ -16,6 +16,7 @@ namespace PLMain
     {
         public UserConsole ()
         {
+            InputLineProcessor.Print = Print;
             FileSystem.Open (Print);
             InitializeComponent ();
 
@@ -53,9 +54,10 @@ namespace PLMain
                 Workspace.Print = Print;
                 TextPane.Focus ();
 
-                PLVariable ans = new PLNull ();
-                InputLineProcessor_Legacy ip = new InputLineProcessor_Legacy (Print);
-                ip.ProcessOneStatement (ref ans, "startup"); 
+                Print ("Not running startup script\n");
+                //PLVariable ans = new PLNull ();
+                //InputLineProcessor ip = new InputLineProcessor (Print);
+                //TerminationReason a = ip.ProcessString (ref ans, "startup"); 
 
 
              //   SystemFunctions.UserConsoleRequests = SystemRequests;
@@ -96,79 +98,79 @@ namespace PLMain
 
         private void CommandPreview (object sender, RoutedEventArgs e)
         {
-            if ((e as ExecutedRoutedEventArgs).Command == ApplicationCommands.Paste)
-            {
-                if (sender is System.Windows.Controls.TextBox)
-                {
-                    if (Clipboard.ContainsText ())
-                    {
-                        try
-                        {
-                            e.Handled = true;
-                            string str = Clipboard.GetText ();
-                            string [] lines = str.Split (new string [] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            //if ((e as ExecutedRoutedEventArgs).Command == ApplicationCommands.Paste)
+            //{
+            //    if (sender is System.Windows.Controls.TextBox)
+            //    {
+            //        if (Clipboard.ContainsText ())
+            //        {
+            //            try
+            //            {
+            //                e.Handled = true;
+            //                string str = Clipboard.GetText ();
+            //                string [] lines = str.Split (new string [] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 
 
-                            bool A = str.Contains ("\n");
-                            bool B = str.Contains ("\r");
-                            int  C = lines.Length;
+            //                bool A = str.Contains ("\n");
+            //                bool B = str.Contains ("\r");
+            //                int  C = lines.Length;
 
-                            int firstScriptLine = 999999999;
+            //                int firstScriptLine = 999999999;
 
-                            //
-                            // look for if/for/while statements
-                            //
-                            for (int i = 0; i<lines.Length; i++)
-                            {
-                                string [] words = lines [i].Split (new char [] { '(', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            //                //
+            //                // look for if/for/while statements
+            //                //
+            //                for (int i = 0; i<lines.Length; i++)
+            //                {
+            //                    string [] words = lines [i].Split (new char [] { '(', ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                                if (words.Length > 0)
-                                {
-                                    if (words [0] == "if" || words [0] == "while" || words [0] == "for")
-                                    {
-                                        firstScriptLine = i;
-                                        break;
-                                    }
-                                }
-                            }
+            //                    if (words.Length > 0)
+            //                    {
+            //                        if (words [0] == "if" || words [0] == "while" || words [0] == "for")
+            //                        {
+            //                            firstScriptLine = i;
+            //                            break;
+            //                        }
+            //                    }
+            //                }
 
-                            //
-                            // process like typed-in lines until if/for/while found. pass remainder to script processor
-                            //
-                            for (int i = 0; i<lines.Length; i++)
-                            {
-                                if (i == firstScriptLine)
-                                    break;
+            //                //
+            //                // process like typed-in lines until if/for/while found. pass remainder to script processor
+            //                //
+            //                for (int i = 0; i<lines.Length; i++)
+            //                {
+            //                    if (i == firstScriptLine)
+            //                        break;
 
-                                TextPane.Text += lines [i];
-                                ReturnKeyHandler ();
-                            }
+            //                    TextPane.Text += lines [i];
+            //                    ReturnKeyHandler ();
+            //                }
 
-                            if (firstScriptLine < lines.Length)
-                            {
-                                List<string> scriptLines = new List<string> (lines);
-                                scriptLines.RemoveRange (0, firstScriptLine);
+            //                if (firstScriptLine < lines.Length)
+            //                {
+            //                    List<string> scriptLines = new List<string> (lines);
+            //                    scriptLines.RemoveRange (0, firstScriptLine);
 
-                                // write lines to text pane w/o processing them
-                                foreach (string str2 in scriptLines)
-                                    TextPane.Text += str2 + '\n';
+            //                    // write lines to text pane w/o processing them
+            //                    foreach (string str2 in scriptLines)
+            //                        TextPane.Text += str2 + '\n';
 
-                                ScriptProcessor sp = new ScriptProcessor (Print);
-                                sp.RunScriptLines (scriptLines);
-                            }
+            //                    ScriptProcessor sp = new ScriptProcessor (Print);
+            //                    sp.RunScriptLines (scriptLines);
+            //                }
 
-                            TextPane.CaretIndex = TextPane.Text.Length;
-                        }
+            //                TextPane.CaretIndex = TextPane.Text.Length;
+            //            }
 
-                        catch (Exception ex)
-                        {
-                            Print ("Error: " + ex.Message);
-                        }
-                    }
+            //            catch (Exception ex)
+            //            {
+            //                Print ("Error: " + ex.Message);
+            //            }
+            //        }
 
-                    Print (Utils.Prompt);
-                }
-            }
+            //        Print (Utils.Prompt);
+            //    }
+            //}
         }
 
         //*****************************************************************************************
@@ -207,7 +209,7 @@ namespace PLMain
                 TextPane.CaretIndex = TextPane.Text.Length;
                 caretLowerLimit     = TextPane.CaretIndex;
 
-                InputLineProcessor_Legacy ip = new InputLineProcessor_Legacy (Print);
+                InputLineProcessor ip = new InputLineProcessor (Print);
 
                 //
                 // Look for bang (i.e. !) followed by a number and maybe the letter 'p'. Number is index of command
@@ -265,7 +267,7 @@ namespace PLMain
                             expr += inputLines [j].text;
 
                         PLVariable ans = new PLNull ();
-                        ip.ProcessOneStatement (ref ans, expr);
+                        ip.ProcessString (ref ans, expr);
 
                         if (ans != null && ans is PLNull == false && ans is PLCanvasObject == false && ans is PLViewportObject == false)
                         {

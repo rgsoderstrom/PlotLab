@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using PLCommon;
+
 namespace PLMain
 {
     internal class ForBlock : LoopBlock
@@ -97,17 +99,18 @@ namespace PLMain
         internal override TerminationReason Run ()
         {
             InputLineProcessor ilp = new InputLineProcessor ();
+            PLVariable unused = null;            
 
             // run initialization
             foreach (AnnotatedString astr in InitializationCode)
-                ilp.ProcessString (astr.Plain);
+                ilp.ProcessString (ref unused, astr.Plain);
 
             // run loop code
             TerminationReason reason = base.Run ();
 
             // run cleanup
             foreach (AnnotatedString astr in CleanupCode)
-                ilp.ProcessString (astr.Plain);
+                ilp.ProcessString (ref unused, astr.Plain);
 
             return reason;
         }

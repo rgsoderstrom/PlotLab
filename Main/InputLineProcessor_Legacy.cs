@@ -1,124 +1,124 @@
-﻿using System;
-using System.Collections.Generic;
-//using System.Windows.Controls;
+﻿//using System;
+//using System.Collections.Generic;
+////using System.Windows.Controls;
 
-using PLCommon;
-using PLLibrary;
-using PLFileSystem;
-using PLWorkspace;
-using PLSystem;
+//using PLCommon;
+//using PLLibrary;
+//using PLFileSystem;
+//using PLWorkspace;
+//using PLSystem;
 
-namespace PLMain
-{
-    public class InputLineProcessor_Legacy
-    {
-        PrintFunction Print;
+//namespace PLMain
+//{
+//    public class InputLineProcessor_Legacy
+//    {
+//        PrintFunction Print;
 
-        public InputLineProcessor_Legacy (PrintFunction pr) //, Button res) //, UserConsole uc)
-        {
-            Print = pr;
-        }
+//        public InputLineProcessor_Legacy (PrintFunction pr) //, Button res) //, UserConsole uc)
+//        {
+//            Print = pr;
+//        }
 
-        public InputLineProcessor_Legacy ()
-        {
-            Print = null;
-        }
+//        public InputLineProcessor_Legacy ()
+//        {
+//            Print = null;
+//        }
 
-        /// <summary>
-        /// Process a single statement. Input lines like:
-        /// a = 2; b = 3;
-        /// must be broken up into two calls to this function
-        /// </summary>
-        /// <param name="results"></param>
-        /// <param name="text">a single PlotLab statement</param>
+//        /// <summary>
+//        /// Process a single statement. Input lines like:
+//        /// a = 2; b = 3;
+//        /// must be broken up into two calls to this function
+//        /// </summary>
+//        /// <param name="results"></param>
+//        /// <param name="text">a single PlotLab statement</param>
         
-        public void ProcessOneStatement (ref PLVariable results, string text)
-        {
-            text = text.Trim ();
+//        public void ProcessOneStatement (ref PLVariable results, string text)
+//        {
+//            text = text.Trim ();
 
-            //
-            // isolate the first word and try to figure out what to do with it
-            //
-            string firstWord;    // characters up to the first space
-            PLString arguments;  // all characters after the first space
+//            //
+//            // isolate the first word and try to figure out what to do with it
+//            //
+//            string firstWord;    // characters up to the first space
+//            PLString arguments;  // all characters after the first space
 
-            int i = text.IndexOf (' ');
+//            int i = text.IndexOf (' ');
 
-            if (i == -1) // no space found
-            {
-                firstWord = text;
-                arguments = new PLString ("");
-            }
+//            if (i == -1) // no space found
+//            {
+//                firstWord = text;
+//                arguments = new PLString ("");
+//            }
 
-            else
-            {
-                firstWord = text.Substring (0, i);
-                arguments = new PLString (text.Substring (i + 1));
-            }
+//            else
+//            {
+//                firstWord = text.Substring (0, i);
+//                arguments = new PLString (text.Substring (i + 1));
+//            }
 
 
 
-            //
-            // Test for system command (e.g. cd, ls, path)
-            //
-            if (SystemFunctions.WhatIs (firstWord) == SymbolicNameTypes.SystemCommand)
-            {
-                results = SystemFunctions.RunSystemCommand (new PLString (firstWord), arguments);
-                return;
-            }
+//            //
+//            // Test for system command (e.g. cd, ls, path)
+//            //
+//            if (SystemFunctions.WhatIs (firstWord) == SymbolicNameTypes.SystemCommand)
+//            {
+//                results = SystemFunctions.RunSystemCommand (new PLString (firstWord), arguments);
+//                return;
+//            }
 
-            //
-            // Search the path to see if it's the name of a script file
-            //
-            if (FileSystem.WhatIs (firstWord) == FileTypes.ScriptFile)
-            {
-                ScriptProcessor sp = new ScriptProcessor (Print);
-                ScriptProcessor.ScriptTerminationReason reason = sp.FindAndRunScript (firstWord);
+//            //
+//            // Search the path to see if it's the name of a script file
+//            //
+//            if (FileSystem.WhatIs (firstWord) == FileTypes.ScriptFile)
+//            {
+//                ScriptProcessor sp = new ScriptProcessor (Print);
+//                ScriptProcessor.ScriptTerminationReason reason = sp.FindAndRunScript (firstWord);
 
-                if (reason == ScriptProcessor.ScriptTerminationReason.Failed)
-                    throw new Exception ("Script error");
+//                if (reason == ScriptProcessor.ScriptTerminationReason.Failed)
+//                    throw new Exception ("Script error");
 
-                return;
-            }
+//                return;
+//            }
 
-            //
-            // Parse remaining words in the input text. This is a remnant of an earlier version
-            // and will eventually moved down to the RunCOmmand () functions
-            //
-            TokenParsing tp = new TokenParsing ();
-            TokenSet tok = tp.ParsingPassOne (new AnnotatedString (text));
+//            //
+//            // Parse remaining words in the input text. This is a remnant of an earlier version
+//            // and will eventually moved down to the RunCOmmand () functions
+//            //
+//            TokenParsing tp = new TokenParsing ();
+//            TokenSet tok = tp.ParsingPassOne (new AnnotatedString (text));
 
-            if (tok.Count == 0)
-                return;
+//            if (tok.Count == 0)
+//                return;
 
-            PLList  args  = new PLList ();
-            for (i = 1; i<tok.Count; i++)
-                args.Add (new PLString (tok [i].AnnotatedText.Plain));
+//            PLList  args  = new PLList ();
+//            for (i = 1; i<tok.Count; i++)
+//                args.Add (new PLString (tok [i].AnnotatedText.Plain));
             
-            //
-            // PlotCommand act on figures, they don't plot any data
-            //
-            if (LibraryManager.WhatIs (firstWord) == SymbolicNameTypes.PlotCommand)
-            {
-                results = LibraryManager.RunPlotCommand (new PLString (firstWord), args);
-                return;
-            }
+//            //
+//            // PlotCommand act on figures, they don't plot any data
+//            //
+//            if (LibraryManager.WhatIs (firstWord) == SymbolicNameTypes.PlotCommand)
+//            {
+//                results = LibraryManager.RunPlotCommand (new PLString (firstWord), args);
+//                return;
+//            }
 
-            //
-            // Workspace commands return information on things in the
-            // workspace, e.g. length (a)
-            // 
-            if (Workspace.WhatIs (firstWord) == SymbolicNameTypes.WorkspaceCommand)
-            {
-                results = Workspace.RunCommand (firstWord, args);
-                return;
-            }
+//            //
+//            // Workspace commands return information on things in the
+//            // workspace, e.g. length (a)
+//            // 
+//            if (Workspace.WhatIs (firstWord) == SymbolicNameTypes.WorkspaceCommand)
+//            {
+//                results = Workspace.RunCommand (firstWord, args);
+//                return;
+//            }
 
-            //
-            // Most arithmetic, plotting and function statements will come here
-            //
-            EntryPoint kernel = new EntryPoint ();
-            kernel.ProcessArithmeticExpression (ref results, text, Print);
-        }
-    }
-}
+//            //
+//            // Most arithmetic, plotting and function statements will come here
+//            //
+//            EntryPoint kernel = new EntryPoint ();
+//            kernel.ProcessArithmeticExpression (ref results, text, Print);
+//        }
+//    }
+//}

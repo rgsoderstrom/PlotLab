@@ -62,7 +62,8 @@ namespace PLMain
                         if (str == "continue")
                             return TerminationReason.ContinueEncountered;
 
-                        TerminationReason status = ilp.ProcessString (str);
+                        PLVariable unused = null;
+                        TerminationReason status = ilp.ProcessString (ref unused, str);
 
                         // "if" blocks pass these up to parent block
                         if (status == TerminationReason.ContinueEncountered || status == TerminationReason.BreakEncountered)
