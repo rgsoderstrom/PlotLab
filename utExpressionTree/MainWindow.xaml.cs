@@ -103,7 +103,7 @@ namespace utExpressionTree
                             { 
                                 Window win2 = new Window ();
                                 TreeView tv = new TreeView ();
-                                tv.Items.Add (tree.TreeView ());
+                                tv.Items.Add (tree.BuildTreeView ());
                                 win2.Content = tv;
                                 win2.Title = "Tree " + Counter;
                                 win2.Width = 400;

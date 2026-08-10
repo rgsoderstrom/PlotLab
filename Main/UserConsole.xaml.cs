@@ -23,8 +23,8 @@ namespace PLMain
             TextPane.AddHandler (CommandManager.PreviewExecutedEvent, new RoutedEventHandler (CommandPreview), true);
 
             // get initial state of check boxes
-            EntryPoint.ShowParsingTokens = (bool) ShowParse_Checkbox.IsChecked;
-            EntryPoint.ShowExprTree      = (bool) ShowTree_Checkbox.IsChecked;
+            ExpressionTree.ShowParsingTokens = (bool) ShowParse_Checkbox.IsChecked;
+            ExpressionTree.ShowExprTree      = (bool) ShowTree_Checkbox.IsChecked;
         }
 
 
@@ -653,13 +653,13 @@ namespace PLMain
 
         private void ShowParse_Click (object sender, RoutedEventArgs e)
         {
-            EntryPoint.ShowParsingTokens = (bool) (e.OriginalSource as CheckBox).IsChecked;
+            ExpressionTree.ShowParsingTokens = (bool) (e.OriginalSource as CheckBox).IsChecked;
             TextPane.Focus ();
         }
 
         private void ShowTree_Click (object sender, RoutedEventArgs e)
         {
-            EntryPoint.ShowExprTree = (bool) (e.OriginalSource as CheckBox).IsChecked;
+            ExpressionTree.ShowExprTree = (bool) (e.OriginalSource as CheckBox).IsChecked;
             TextPane.Focus ();
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using System.Linq;
 using System.Text;
@@ -12,43 +13,105 @@ namespace PLMain
 {
     public class ExpressionTree
     {
-        readonly ExpressionTreeNode root;
+        readonly ExpressionTreeNode tree;
+        readonly string originalExpression;
 
         private bool supressPrinting = false;
         public  bool SupressPrinting {get {return supressPrinting;} private set {supressPrinting = value;}}
 
+        static public bool ShowParsingTokens = false;
+        static public bool ShowExprTree = false;
+        static private int Counter = 0;
+
         public ExpressionTree (AnnotatedString expression)
         {
-            expression.CheckForTrailingSemi ();
-            SupressPrinting = expression.SupressPrinting;
+            originalExpression = expression.Plain;
 
-            ExpressionTreeNode.NodeCounter = 0;
-            root = new ExpressionTreeNode (expression);
-            Compact ();
+            try
+            { 
+                expression.CheckForTrailingSemi ();
+                SupressPrinting = expression.SupressPrinting;
+
+                ExpressionTreeNode.NodeCounter = 0;
+                tree = new ExpressionTreeNode (expression);
+                Compact ();
+
+                if (ShowParsingTokens == false && ShowExprTree == false)
+                    return;
+
+                Counter++;
+
+                if (ShowParsingTokens)
+                {
+                    // this runs a copy of the actual parsing code
+                    TokenParsing parsing = new TokenParsing ();
+                    TextBox tb = new TextBox ();
+
+                    // first pass
+                    TokenSet tokens = parsing.ParsingPassOne (expression);
+                    tb.Text += "First pass:\n";
+                    foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
+
+                    // second pass
+                    tokens = parsing.ParsingPassTwo (tokens);
+                    tb.Text += "\nSecond pass:\n";
+                    foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
+
+                    Window win = new Window
+                    {
+                        Content = tb,
+                        Title   = "Token Parsing " + Counter,
+                        Width   = 400,
+                        Height  = 300
+                    };
+
+                    win.Show ();
+                }
+
+                if (ShowExprTree)
+                {
+                    TreeView tv = new TreeView ();
+                    tv.Items.Add (BuildTreeView ());
+                    Window win = new Window
+                    {
+                        Content = tv,
+                        Title   = "Expression Tree " + Counter,
+                        Width   = 400,
+                        Height  = 300
+                    };
+
+                    win.Show ();
+                }
+            }
+
+            catch (Exception ex)
+            {
+                throw new Exception ("    ExpressionTree build failed for " + originalExpression + " , " + ex.Message + "\n");
+            }
         }
 
         //******************************************************************************
 
-        public TreeViewItem TreeView ()
+        private TreeViewItem BuildTreeView ()
         {
-            TreeViewItem tree = new TreeViewItem ();
+            TreeViewItem treeView = new TreeViewItem ();
 
             string headerString = "";
 
-            if (root.Operator.Length > 0)
-                headerString = root.Operator + ", " + root.NodeType.ToString ();
+            if (tree.Operator.Length > 0)
+                headerString = tree.Operator + ", " + tree.NodeType.ToString ();
 
-            else if (root.ValueValid)
-                headerString = root.Value.ToString () + ", " + root.NodeType.ToString ();
+            else if (tree.ValueValid)
+                headerString = tree.Value.ToString () + ", " + tree.NodeType.ToString ();
 
-            tree.Header = headerString;
+            treeView.Header = headerString;
 
-            foreach (ExpressionTreeNode node in root.Operands)
-                node.BuildTreeView (tree);
+            foreach (ExpressionTreeNode node in tree.Operands)
+                node.BuildTreeView (treeView);
 
-            tree.ExpandSubtree ();
+            treeView.ExpandSubtree ();
 
-            return tree;
+            return treeView;
         }
 
         //******************************************************************************
@@ -57,14 +120,26 @@ namespace PLMain
 
         void Compact ()
         {
-            root.Compact ();
+            tree.Compact ();
         }
 
         //******************************************************************************
 
         public PLVariable Evaluate ()
         {
-            return root.Evaluate ();
+            PLVariable answer;
+
+            try
+            {
+                answer = tree.Evaluate ();
+            }
+
+            catch (Exception ex)
+            {
+                throw new Exception ("    ExpressionTree evaluation failed for " + originalExpression + " , " + ex.Message + "\n");
+            }
+
+            return answer;
         }
 
 

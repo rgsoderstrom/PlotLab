@@ -53,14 +53,12 @@
     <Compile Include="Block_TestCodePair.cs" />
     <Compile Include="Block_while.cs" />
     <Compile Include="CommandLineHistory.cs" />
-    <Compile Include="EntryPoint.cs" />
     <Compile Include="EvaluateNode.cs" />
     <Compile Include="EvaluateNode2.cs" />
     <Compile Include="ExpressionTree.cs" />
     <Compile Include="ExpressionTreeNode.cs" />
     <Compile Include="ExpressionTreeNodeBuilders.cs" />
     <Compile Include="InputLineProcessor.cs" />
-    <Compile Include="InputLineProcessor_Legacy.cs" />
     <Compile Include="InternalFunctions.cs" />
     <Compile Include="ScriptPreprocessor.cs" />
     <Compile Include="ScriptProcessor.cs" />
