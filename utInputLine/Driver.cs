@@ -39,7 +39,8 @@ namespace utInputLine
 
                 while ((inputString = inputFile.ReadLine ()) != null)
                 {
-                    inputLineProcessor.ProcessString (inputString);
+                    PLVariable answer = null;
+                    inputLineProcessor.ProcessString (ref answer, inputString);
                 }
 
                 inputFile.Close ();
