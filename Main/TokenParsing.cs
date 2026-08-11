@@ -180,6 +180,8 @@ namespace PLMain
 
             else if (status.currentChar.IsOperator) status.state = ParsingState.InOperator;
 
+            else if (status.currentChar.IsColon) status.state = ParsingState.InOperator;
+
             else if (status.currentChar.IsAlphanumeric) status.state = ParsingState.InAlpha;
 
             else if (status.currentChar.IsNumber) status.state = ParsingState.InNumber;

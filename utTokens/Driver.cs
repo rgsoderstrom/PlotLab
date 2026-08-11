@@ -47,11 +47,11 @@ namespace utTokens
                         //AnnotatedStringAppendTest (trimmed);
                         //Print ("===========================================");
 
-                        AnnotatedStringSetTest (trimmed);
-                        Print ("===========================================");
-
-                        //TokenParsingTest (trimmed);
+                        //AnnotatedStringSetTest (trimmed);
                         //Print ("===========================================");
+
+                        TokenParsingTest (trimmed);
+                        Print ("===========================================");
 
                         //TokenUtilsTest (trimmed);
                         //Print ("===========================================");
@@ -167,11 +167,12 @@ namespace utTokens
             if (annotated.IsEmpty)
                 return false;
 
+            Print (annotated.ToString ());
+
             // pass annotated string to token processor
             TokenParsing parser = new TokenParsing ();
             TokenSet statementtokens = parser.StringToTokens (annotated);
 
-            Print (annotated.ToString ());
             Print (statementtokens.ToString ());
 
             return true;
