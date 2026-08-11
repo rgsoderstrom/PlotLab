@@ -75,8 +75,6 @@
     <Compile Include="UserConsole.xaml.cs">
       <DependentUpon>UserConsole.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Utils.cs" />
-    <Compile Include="Utils2.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PLCommon\PLCommon.csproj">

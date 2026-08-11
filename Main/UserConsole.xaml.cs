@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
@@ -14,6 +15,8 @@ namespace PLMain
 {
     public partial class UserConsole : Window
     {
+        public static readonly string Prompt = "--> ";
+
         public UserConsole ()
         {
             InputLineProcessor.Print = Print;
@@ -26,17 +29,6 @@ namespace PLMain
             ExpressionTree.ShowParsingTokens = (bool) ShowParse_Checkbox.IsChecked;
             ExpressionTree.ShowExprTree      = (bool) ShowTree_Checkbox.IsChecked;
         }
-
-
-
-        //private bool SystemRequests (string str)
-        //{
-
-        //    Console.WriteLine ("SystemRequest: " + str);
-        //    return true;
-        //}
-
-
 
         private void Window_Loaded (object sender, RoutedEventArgs e)
         {
@@ -74,11 +66,8 @@ namespace PLMain
                 //Print ("Startup error: " + ex.StackTrace + "\n");
             }
 
-            Print (Utils.Prompt);
+            Print (Prompt);
         }
-
-        //*****************************************************************************************
-
 
         //*****************************************************************************************
 
@@ -168,7 +157,7 @@ namespace PLMain
             //            }
             //        }
 
-            //        Print (Utils.Prompt);
+            //        Print (Prompt);
             //    }
             //}
         }
@@ -177,8 +166,8 @@ namespace PLMain
         //*****************************************************************************************
         //*****************************************************************************************
 
-        List<Utils.InputLine> inputLines = new List<Utils.InputLine> ();
-        Utils.NestingLevel nestingLevel = new Utils.NestingLevel ();
+    //    List<Utils.InputLine> inputLines = new List<Utils.InputLine> ();
+     //   Utils.NestingLevel nestingLevel = new Utils.NestingLevel ();
 
         private void ReturnKeyHandler ()
         {
@@ -192,13 +181,13 @@ namespace PLMain
                 //
                 // remove prompt if present
                 //
-                if (raw.Length >= Utils.Prompt.Length)
-                    if (raw.Substring (0, Utils.Prompt.Length).Contains (Utils.Prompt))
-                        raw = raw.Remove (0, Utils.Prompt.Length);
+                if (raw.Length >= Prompt.Length)
+                    if (raw.Substring (0, Prompt.Length).Contains (Prompt))
+                        raw = raw.Remove (0, Prompt.Length);
 
                 if (raw.Length == 0)
                 {
-                    Print ("\n"); // + Utils.Prompt);
+                    Print ("\n"); // + Prompt);
                     return;
                 }
 
@@ -211,6 +200,7 @@ namespace PLMain
 
                 InputLineProcessor ip = new InputLineProcessor (Print);
 
+                /* bang
                 //
                 // Look for bang (i.e. !) followed by a number and maybe the letter 'p'. Number is index of command
                 // to recall. It is executed unless followed by :p. If so it is just printed for editting
@@ -246,55 +236,70 @@ namespace PLMain
                 //        return;
                 //    }
                 //}
+                */
 
+                PLVariable ans = new PLNull ();
+                ip.ProcessString (ref ans, raw);
 
-
-
-
-                Utils.CleanupRawInput (raw, inputLines, ref nestingLevel);
-
-                int startIndex = 0;
-                int endIndex = -1;
-
-                for (int i=0; i<inputLines.Count; i++)
+                if (ans != null && ans is PLNull == false && ans is PLCanvasObject == false && ans is PLViewportObject == false)
                 {
-                    if (inputLines [i].complete)
+                    ans.Name = "ans";
+                    Workspace.Add (ans);
+
+                    if (ip.SupressPrinting == false)
                     {
-                        endIndex = i;
-                        string expr = "";
-
-                        for (int j=startIndex; j<=endIndex; j++)
-                            expr += inputLines [j].text;
-
-                        PLVariable ans = new PLNull ();
-                        ip.ProcessString (ref ans, expr);
-
-                        if (ans != null && ans is PLNull == false && ans is PLCanvasObject == false && ans is PLViewportObject == false)
-                        {
-                            ans.Name = "ans";
-                            Workspace.Add (ans);
-
-                            if (inputLines [endIndex].printFlag)
-                            {
-                                Print (ans.ToString ());
-                                Print ("\n");
-                            }
-                        }
-
-                        startIndex = endIndex + 1;
+                        Print (ans.ToString ());
+                        Print ("\n");
                     }
-                }
-
-                if (endIndex != -1)
-                {
-                    inputLines.RemoveRange (0, endIndex + 1);
                 }
             }
 
+
+
+            //CleanupRawInput (raw, inputLines, ref nestingLevel);
+
+            //int startIndex = 0;
+            //int endIndex = -1;
+
+            //for (int i=0; i<inputLines.Count; i++)
+            //{
+            //    if (inputLines [i].complete)
+            //    {
+            //        endIndex = i;
+            //        string expr = "";
+
+            //        for (int j=startIndex; j<=endIndex; j++)
+            //            expr += inputLines [j].text;
+
+            //        PLVariable ans = new PLNull ();
+            //        ip.ProcessString (ref ans, expr);
+
+            //        if (ans != null && ans is PLNull == false && ans is PLCanvasObject == false && ans is PLViewportObject == false)
+            //        {
+            //            ans.Name = "ans";
+            //            Workspace.Add (ans);
+
+            //                if (inputLines [endIndex].printFlag)
+            //                {
+            //                    Print (ans.ToString ());
+            //                    Print ("\n");
+            //                }
+            //            }
+
+            //            startIndex = endIndex + 1;
+            //        }
+            //    }
+
+            //    if (endIndex != -1)
+            //    {
+            //        inputLines.RemoveRange (0, endIndex + 1);
+            //    }
+            //}
+
             catch (Exception ex)
             {
-                inputLines.Clear ();
-                nestingLevel = new Utils.NestingLevel ();
+           //    inputLines.Clear ();
+            //    nestingLevel = new Utils.NestingLevel ();
                 throw new Exception ("Error in UserConsole ReturnKeyHandler:\n" + "  " + ex.Message);
             }
         }
@@ -361,9 +366,9 @@ namespace PLMain
             typedIn = TextPane.GetLineText (TextPane.LineCount - 1);
 
             // remove prompt if present
-            if (typedIn.Length >= Utils.Prompt.Length)
-                if (typedIn.Substring (0, Utils.Prompt.Length).Contains (Utils.Prompt))
-                    typedIn = typedIn.Remove (0, Utils.Prompt.Length);
+            if (typedIn.Length >= Prompt.Length)
+                if (typedIn.Substring (0, Prompt.Length).Contains (Prompt))
+                    typedIn = typedIn.Remove (0, Prompt.Length);
         }
 
         //***************************************************************************************
@@ -464,7 +469,7 @@ namespace PLMain
                             }
 
                             // re-display what was entered plus any completion characters common to all
-                            Print ("\n\n" + Utils.Prompt);
+                            Print ("\n\n" + Prompt);
                             EditablePrint (typedIn);
 
                             if (matchingCharCount > 0)
@@ -557,7 +562,7 @@ namespace PLMain
                     CommandLineHistory.ResetIndices (); 
                     e.Handled = true;
                     ReturnKeyHandler ();
-                    Print (Utils.Prompt);
+                    Print (Prompt);
                 }
 
                 else
@@ -578,7 +583,7 @@ namespace PLMain
             {
                 Print (ex.Message);
                 Print ("\n");
-                Print (Utils.Prompt);
+                Print (Prompt);
             }
         }
 
@@ -617,7 +622,7 @@ namespace PLMain
         private void ClearConsole_Click (object sender, RoutedEventArgs e)
         {
             TextPane.Clear (); 
-            Print (Utils.Prompt);
+            Print (Prompt);
             TextPane.Focus ();
         }
 
@@ -633,7 +638,7 @@ namespace PLMain
                 Print (str);
             }
 
-            Print ('\n' + Utils.Prompt);
+            Print ('\n' + Prompt);
             TextPane.Focus ();
         }
 

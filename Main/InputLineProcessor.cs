@@ -21,6 +21,8 @@ namespace PLMain
     {
         static public PrintFunction Print;
 
+        public bool SupressPrinting {get; protected set;}
+
         // queue of strings for processing
         private readonly CleanStringQueue CleanedStrings;
         private readonly AnnotatedStringSet AnnotatedStrings;
@@ -65,6 +67,8 @@ namespace PLMain
                 {
                     AnnotatedString astr2 = AnnotatedStrings.GetOldest ();
                     astr2.CheckForTrailingSemi ();
+
+                    SupressPrinting = astr2.SupressPrinting;
 
                     if (astr2 == null)
                         return TerminationReason.Completed;
