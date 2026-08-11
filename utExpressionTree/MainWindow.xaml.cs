@@ -69,7 +69,7 @@ namespace utExpressionTree
 
                             //**********************************************************************
 
-                            if (false) // show token parsing
+                            if (true) // show token parsing
                             { 
                                 // first pass
                                 TokenParsing parsing = new TokenParsing ();
@@ -99,7 +99,7 @@ namespace utExpressionTree
 
                             ExpressionTree tree = new ExpressionTree (annotated);
 
-                            if (false) // show expression tree
+                            if (true) // show expression tree
                             { 
                                 Window win2 = new Window ();
                                 TreeView tv = new TreeView ();

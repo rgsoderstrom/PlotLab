@@ -92,7 +92,9 @@ namespace PLMain
 
         //******************************************************************************
 
-        private TreeViewItem BuildTreeView ()
+        // this is public so unit test can show tree view
+
+        public TreeViewItem BuildTreeView ()
         {
             TreeViewItem treeView = new TreeViewItem ();
 
