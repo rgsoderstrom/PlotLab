@@ -127,9 +127,9 @@ namespace PLMain
         //**********************************************************************************
 
         // all charcters in any operator: oneChar, twoChar, unary, transpose
-        //static List<char> Operators = new List<char> () {',', ';', ':', '\'', '.', '^', '*', '/', '+', '-', '&', '|', '>', '<', '~', '='};
-        //static List<char> Operators = new List<char> () {',', ';', ':',       '.', '^', '*', '/', '+', '-', '&', '|', '>', '<', '~', '='};
-        static List<char>   Operators = new List<char> () {                          '^', '*', '/', '+', '-', '&', '|', '>', '<', '~', '='};
+        //static readonly List<char> Operators = new List<char> () {',', ';', ':', '\'', '.', '^', '*', '/', '+', '-', '&', '|', '>', '<', '~', '='};
+        //static readonly List<char> Operators = new List<char> () {',', ';', ':',       '.', '^', '*', '/', '+', '-', '&', '|', '>', '<', '~', '='};
+          static readonly List<char> Operators = new List<char> () {                          '^', '*', '/', '+', '-', '&', '|', '>', '<', '~', '='};
 
         //static public bool IsTwoCharOpStr (string s) {return twoCharBinaryOperators.Contains (s);}
         //static readonly List<string> twoCharBinaryOperators = new List<string> () {".*", "./", ".^", "&&", "||", "~=", "==", ">=", "<="};
