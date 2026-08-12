@@ -91,7 +91,17 @@ namespace PLWorkspace
         static public PLVariable Evaluate (PLString  funcName, PLVariable args) {return Current.Evaluate (funcName, args);}
 
 
-        static public PLVariable RunCommand (string cmnd, PLList args) {return Current.RunCommand (cmnd, args);}
+        static public PLVariable RunCommand (string cmnd, string args) 
+        {
+            PLList lst = new PLList ();
+            string [] words = args.Split (new char [] {' '});
+
+            foreach (string w in words)
+                lst.Add (new PLString (w));
+
+            return Current.RunCommand (cmnd, lst);
+        }
+
 
 
         // check Current first. if not there check global 

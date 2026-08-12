@@ -103,7 +103,17 @@ namespace PLMain
                                 break;
 
                             case InputLineType.WorkspaceCommand:
-                                Print?.Invoke ("WorkspaceCommand: " + astr2.Plain);
+                                //Print?.Invoke ("WorkspaceCommand: " + astr2.Plain);
+
+                                //
+                                // Workspace commands return information on things in the
+                                // workspace, e.g. length (a)
+                                // 
+                                if (Workspace.WhatIs (astr2.FirstWord) == SymbolicNameTypes.WorkspaceCommand)
+                                {
+                                    PLVariable results = Workspace.RunCommand (astr2.FirstWord, astr2.Arguments);
+                                }
+
                                 break;
 
                             case InputLineType.ScriptFile:
