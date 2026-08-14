@@ -18,15 +18,17 @@ namespace FunctionLibrary
         // map command strings to executable functions
         //
 
-        static public Dictionary<string, PLFunction> GetPlotCommands ()
+        static public Dictionary<string, BSFunction> GetPlotCommands ()
         {
-            return new Dictionary<string, PLFunction> ()
+            return new Dictionary<string, BSFunction> ()
             {
-              //{"title",  Title},
-                {"figure", Figure},
+                {"title",  Title},
               //{"clf",    ClearFigure},
                 {"close",  CloseFigure},
                 {"hold",   Hold},
+                {"clf",    ClearFigure},
+                {"xlabel", XLabel},
+                {"ylabel", YLabel},
             };
         }
 
@@ -84,58 +86,18 @@ namespace FunctionLibrary
 
         //*********************************************************************************************
 
-        static string ExtractOneString (PLVariable arg, string name = "")
+        static bool Title (string txt)
         {
-            PLString str = arg as PLString;
-            PLList   lst = arg as PLList;
-            PLString tstr;
-
-            if      (str != null) tstr = str;
-            else if (lst != null) tstr = lst [0] as PLString;
-            else throw new Exception (name + " argument error");
-
-            string txt = tstr.Data;
-            if (txt [0] == '\'') txt = txt.Remove (0, 1);
-            if (txt [txt.Length - 1] == '\'') txt = txt.Remove (txt.Length - 1);
-
-            // look for embedded quote. remove the preceeding backslash
-            int count = 0;
-            int i1 = 0, i2 = 0;
-            
-            while (count++ < 100)
-            {
-                i1 = txt.IndexOf ('\\', i1);
-                i2 = txt.IndexOf ('\'', i2);
-
-                if (i1 >= 0 && i2 >= 0)
-                    if (i2 == i1 + 1)
-                        txt = txt.Remove (i1, 1);
-                    else
-                        break;
-                else
-                    break;
-            }
-
-            return txt;
-        }
-
-        //*********************************************************************************************
-
-        static PLVariable Title (PLVariable arg)
-        {
-            string txt = ExtractOneString (arg, "title");
-
             if (CurrentFigure == null)
-                return new PLNull ();
+                return false;
 
             if (CurrentFigure is PlotFigure)
                 (CurrentFigure as PlotFigure).DataAreaTitle = txt;
 
-
             IPlotDrawable fig = CurrentFigure as IPlotDrawable;
 
             if (fig == null)
-                return new PLNull ();
+                return false;
 
             //if (fig is PlotFigure)
             //    (fig as PlotFigure).DataAreaTitle = txt;
@@ -146,54 +108,50 @@ namespace FunctionLibrary
             if (fig is Plot3D)
                 (fig as Plot3D).DataAreaTitle = txt;
 
-            return new PLNull ();
+            return true;
         }
 
         //*********************************************************************************************
 
-        static PLVariable XLabel (PLVariable arg)
+        static bool XLabel (string txt)
         {
             if (CurrentFigure == null)
-                return new PLNull ();
+                return false;
 
             IPlotDrawable fig = CurrentFigure as IPlotDrawable;
 
             if (fig == null)
-                return new PLNull ();
-
-            string txt = ExtractOneString (arg, "xlabel");
+                return false;
 
             if (fig is Plot2D)
                 (fig as Plot2D).XAxisLabel = txt;
 
-            return new PLNull ();
+            return true;
         }
 
         //*********************************************************************************************
 
-        static PLVariable YLabel (PLVariable arg)
+        static bool YLabel (string txt)
         {
             if (CurrentFigure == null)
-                return new PLNull ();
+                return false;
 
             IPlotDrawable fig = CurrentFigure as IPlotDrawable;
 
             if (fig == null)
-                return new PLNull ();
-
-            string txt = ExtractOneString (arg, "ylabel");
+                return false;
 
             if (fig is Plot2D)
                 (fig as Plot2D).YAxisLabel = txt;
 
-            return new PLNull ();
+            return true;
         }
 
         //*********************************************************************************************
 
         // called in response to clf
 
-        static PLVariable ClearFigure (PLVariable _)
+        static bool ClearFigure (string _)
         {
             if (CurrentFigure == null)
                 NewFigure ();
@@ -201,7 +159,7 @@ namespace FunctionLibrary
             else if (CurrentFigure is IPlotDrawable)
                 (CurrentFigure as IPlotDrawable).Clear ();
 
-            return new PLNull ();
+            return true;
         }
 
         //*********************************************************************************************
@@ -259,80 +217,68 @@ namespace FunctionLibrary
 
         //*********************************************************************************************
 
-        static PLVariable Hold (PLVariable arg)
+        static bool Hold (string arg)
         {
-            PLList args = arg as PLList;
+            if (arg.Length == 0)
+            { 
+                if (CurrentFigure != null)
+                    CurrentFigure.Hold = true;
 
-            if (args == null)
-                throw new Exception ("Hold command argument error");
-
-            if (CurrentFigure == null)
-                return new PLNull ();
-
-            if (args.Count > 1)
-                throw new Exception ("Too many args for Hold command");
-
-            if (args.Count == 0)
-                CurrentFigure.Hold = true;
-
-            else
-            {
-                PLString str = args [0] as PLString;
-
-                if (str == null)
-                    throw new Exception ("Hold command argument error");
-
-                else
-                {
-                    if (str.Data == "on")
-                        CurrentFigure.Hold = true;
-
-                    else if (str.Data == "off")
-                        CurrentFigure.Hold = false;
-
-                    else
-                        throw new Exception ("Unrecognized argument for Hold command");
-                }
+                return true;
             }
 
-            return new PLNull ();
+            if (arg == "on")
+                CurrentFigure.Hold = true;
+
+            else if (arg == "off")
+                CurrentFigure.Hold = false;
+
+            else
+                throw new Exception ("Unrecognized argument for Hold command");
+
+            return true;
         }
 
         //*********************************************************************************************
 
-        static PLVariable CloseFigure (PLVariable arg)
+        static bool CloseFigure (string arg)
         {
-            PLList pll = arg as PLList;
+            if (arg.Length == 0)
+            { 
+                if (CurrentFigure != null)
+                    (CurrentFigure as Window).Close ();
 
-            if (pll != null)
-            {
-                if (pll.Count == 0)
-                {
-                    if (CurrentFigure != null)
-                        (CurrentFigure as Window).Close ();
-                }
-
-                else if (pll.Count == 1) // 
-                {
-                    if (pll [0] is PLString)
-                    {
-                        if ((pll [0] as PLString).Text == "all")
-                        {
-                            CloseAll ();
-                        }
-
-                        else 
-                        {
-                            int fig = Convert.ToInt32 ((pll [0] as PLString).Text);
-                            CloseOne (fig);
-                        }
-                    }
-                }
-
-                else throw new Exception ("Close - invalid args");
+                return true;
             }
 
-            return new PLNull ();
+            string [] tokens = arg.Split (new char [] {' '}, StringSplitOptions.RemoveEmptyEntries);
+
+            if (tokens.Length == 0)
+            {
+                if (CurrentFigure != null)
+                    (CurrentFigure as Window).Close ();
+                
+                return true;
+            }
+
+            if (tokens [0] == "all")
+            { 
+                CloseAll ();
+                return true;
+            }
+
+            try 
+            {
+                int fig = Convert.ToInt32 (tokens [0]);
+                CloseOne (fig);
+            }
+
+            catch (Exception)
+            { 
+                throw new Exception ("Close - invalid args");
+            }
+
+            return true;
         }
     }
 }

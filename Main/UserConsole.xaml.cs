@@ -20,6 +20,7 @@ namespace PLMain
         public UserConsole ()
         {
             InputLineProcessor.Print = Print;
+            PLSystem.SystemFunctions.Print = Print;
             FileSystem.Open (Print);
             InitializeComponent ();
 

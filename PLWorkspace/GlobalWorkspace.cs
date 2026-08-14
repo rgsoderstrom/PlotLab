@@ -82,23 +82,17 @@ namespace PLWorkspace
 
     //***************************************************************************************************
 
-        internal override PLVariable Exists (PLVariable arg)
+        internal override bool Exists (string arg)
         {
             if (arg != null)
             {
-                PLString str = arg as PLString;
-
-                if (Variables.ContainsKey (str.Text)) return new PLBool (true);
-                if (Constants.ContainsKey (str.Text)) return new PLBool (true);
+                if (Variables.ContainsKey (arg)) return true;
+                if (Constants.ContainsKey (arg)) return true;
             }
 
-            return new PLBool (false);
+            return false;
         }
 
-        internal override bool Exists (string str)
-        {
-            return Variables.ContainsKey (str) || Constants.ContainsKey (str);
-        }
 
         //internal PLVariable Get (string name)
         //{

@@ -37,6 +37,7 @@ namespace FunctionLibrary
             {
                 {"plot",         Plot},
                 {"text",         Text},
+                {"figure",       Figure},
                 {"PlotVector",   PlotVector2D},
                 {"PlotVector2D", PlotVector2D},
                 {"PlotVector3D", PlotVector3D},
@@ -47,11 +48,6 @@ namespace FunctionLibrary
                 {"get",          Get},
                 {"axis",         PlotLimits}, // a = axis; 
                 {"axes",         Axes},
-             // {"figure",       Figure},
-                {"clf",          ClearFigure},
-                {"title",        Title},
-                {"xlabel",       XLabel},
-                {"ylabel",       YLabel},
                 {"PlotCenter",   CameraCenter},
                 {"CameraCenter", CameraCenter},
                 {"CameraAbsPos", CameraPosition},

@@ -17,15 +17,13 @@ namespace PLSystem
 {
     static public partial class SystemFunctions
     {
-        public static Dictionary<string, PLFunction> SystemCommands = new Dictionary<string, PLFunction> ();
-        //public static PLRequest UserConsoleRequests = null; // to user console
+        static public PrintFunction Print = null;
+
+        static public Dictionary<string, BSFunction> SystemCommands;
 
         static SystemFunctions ()
         {
-            Dictionary<string, PLFunction> infCmnds = GetContents ();
-
-            foreach (string str in infCmnds.Keys)
-                SystemCommands.Add (str, infCmnds [str]);
+            SystemCommands = GetContents ();
         }
 
         //*********************************************************************************************
@@ -33,20 +31,20 @@ namespace PLSystem
         // map function name strings to executable functions
         //
 
-        static public Dictionary<string, PLFunction> GetContents ()
+        static public Dictionary<string, BSFunction> GetContents ()
         {
-            return new Dictionary<string, PLFunction> 
+            return new Dictionary<string, BSFunction> 
             {
                 {"cd",    Cd  },
                 {"ls",    Ls  },
                 {"pwd",   Pwd },
              // {"exit",  Exit},
                 {"edit",  Edit},
-                {"clc",   Clc },
-                {"path",  Path},
-                {"addpath", AddPath},
-             // {"history", History},
-                {"help",    HelpWindow},
+             ////   {"clc",   Clc },
+             ////   {"path",  Path},
+             ////   {"addpath", AddPath},
+             ////// {"history", History},
+             ////   {"help",    HelpWindow},
             };
         }
 
@@ -81,11 +79,11 @@ namespace PLSystem
         //***************************************************************************************************
         //***************************************************************************************************
 
-        public static PLVariable RunSystemCommand (PLString name, PLVariable args)
+        public static bool RunSystemCommand (string name, string args)
         {
-            if (SystemCommands.ContainsKey (name.Text))
+            if (SystemCommands.ContainsKey (name))
             {
-                PLFunction func = SystemCommands [name.Text];
+                BSFunction func = SystemCommands [name];
                 return func (args);
             }
             else
@@ -130,24 +128,21 @@ namespace PLSystem
         /// <param name="filename"></param>
         /// <returns></returns>
 
-        public static PLVariable Edit (PLVariable filename)
+        public static bool Edit (string filename)
         {
-            PLString pstr = filename as PLString;
-            string str = pstr.Data;
-
-            if (str.Contains (".m")) // NameSearch function assumes no extension
-                str = str.Replace (".m", "");
+            if (filename.Contains (".m")) // NameSearch function assumes no extension
+                filename = filename.Replace (".m", "");
 
             string fullName = "";
 
-            bool found = FileSystem.NameSearch (str, ref fullName);
+            bool found = FileSystem.NameSearch (filename, ref fullName);
 
             if (found)
                 System.Diagnostics.Process.Start (fullName);
             else
                 throw new Exception ("File " + filename + " not found");
 
-            return new PLNull ();
+            return true;
         }
 
         //*********************************************************************************************
@@ -157,87 +152,80 @@ namespace PLSystem
         /// <summary>
         /// Change Directory. Invoked to handle "cd" command
         /// </summary>
-        /// <param name="arg">Relative or absolute path</param>
+        /// <param name="path">Relative or absolute path</param>
         /// <returns></returns>
 
-        public static PLVariable Cd (PLVariable arg)
+        public static bool Cd (string path)
         {
-            if (arg is PLString pstr)
+            string nextCurrentDir;
+
+            // look for leading and trailing single quote. silently eliminate if found
+            int i0 = path.IndexOf ('\'');
+            int i1 = path.LastIndexOf ('\'');
+
+            if (i0 == 0 && i1 == path.Length - 1)
             {
-                string nextCurrentDir;
-                string path = pstr.Data;
+                path = path.Remove (path.Length - 1, 1);
+                path = path.Remove (0, 1);
+            }
 
-                // look for leading and trailing single quote. silently eliminate if found
-                int i0 = path.IndexOf ('\'');
-                int i1 = path.LastIndexOf ('\'');
+            if (path [0] == '\\') // absolute path on same disk
+            {
+                int i = FileSystem.CurrentDirectory.IndexOf ("\\");
 
-                if (i0 == 0 && i1 == path.Length - 1)
-                {
-                    path = path.Remove (path.Length - 1, 1);
-                    path = path.Remove (0, 1);
-                }
+                if (i == -1)
+                    throw new Exception ("Error reading current disk");
 
-                if (path [0] == '\\') // absolute path on same disk
-                {
-                    int i = FileSystem.CurrentDirectory.IndexOf ("\\");
+                string disk = FileSystem.CurrentDirectory.Substring (0, i);
 
-                    if (i == -1)
-                        throw new Exception ("Error reading current disk");
-
-                    string disk = FileSystem.CurrentDirectory.Substring (0, i);
-
-                    nextCurrentDir = disk + path;
-                }
-
-                else
-                {
-                    string [] tokens = path.Split (new string [] {"\\" }, StringSplitOptions.RemoveEmptyEntries);
-
-                    for (int i=0; i<tokens.Length; i++)
-                        tokens [i] = RemoveQuotes (tokens [i]); // remove leading or trailing single quotes
-
-
-                    if (tokens [0].EndsWith (":")) // absolute path with disk specified
-                    {
-                        nextCurrentDir = path;
-                    }
-
-                    else // relative path
-                    {
-                        nextCurrentDir = FileSystem.CurrentDirectory;
-
-                        foreach (string tok in tokens)
-                        {
-                            switch (tok)
-                            {
-                                case ".":
-                                    break;
-
-                                case "..":
-                                    nextCurrentDir = RemoveLastFolder (nextCurrentDir);
-                                    break;
-
-                                default:
-                                    nextCurrentDir += "\\" + tok;
-                                    break;
-                            }
-                        }
-                    }
-                }
-
-                if (Directory.Exists (nextCurrentDir))
-                {
-                    FileSystem.CurrentDirectory = nextCurrentDir;
-                    MFileFunctionMgr.CurrentDir = nextCurrentDir;
-                }
-                else
-                    throw new Exception ("Directory " + nextCurrentDir + " doesn't exist");
+                nextCurrentDir = disk + path;
             }
 
             else
-                throw new Exception ("cd - argument error");
+            {
+                string [] tokens = path.Split (new string [] {"\\" }, StringSplitOptions.RemoveEmptyEntries);
 
-            return new PLNull ();
+                for (int i=0; i<tokens.Length; i++)
+                    tokens [i] = RemoveQuotes (tokens [i]); // remove leading or trailing single quotes
+
+
+                if (tokens [0].EndsWith (":")) // absolute path with disk specified
+                {
+                    nextCurrentDir = path;
+                }
+
+                else // relative path
+                {
+                    nextCurrentDir = FileSystem.CurrentDirectory;
+
+                    foreach (string tok in tokens)
+                    {
+                        switch (tok)
+                        {
+                            case ".":
+                                break;
+
+                            case "..":
+                                nextCurrentDir = RemoveLastFolder (nextCurrentDir);
+                                break;
+
+                            default:
+                                nextCurrentDir += "\\" + tok;
+                                break;
+                        }
+                    }
+                }
+            }
+
+            if (Directory.Exists (nextCurrentDir))
+            {
+                FileSystem.CurrentDirectory = nextCurrentDir;
+                MFileFunctionMgr.CurrentDir = nextCurrentDir;
+            }
+            else
+                throw new Exception ("Directory " + nextCurrentDir + " doesn't exist");
+
+            return true;
         }
 
         /// <summary>
@@ -283,9 +271,10 @@ namespace PLSystem
         /// <param name="_">None</param>
         /// <returns>PLString containing cwd</returns>
         
-        public static PLVariable Pwd (PLVariable _)
+        public static bool Pwd (string _)
         {
-            return new PLString (FileSystem.CurrentDirectory);
+            Print (FileSystem.CurrentDirectory);
+            return true;
         }
 
         //*********************************************************************************************
@@ -298,16 +287,14 @@ namespace PLSystem
         /// <param name="arg">Optional pattern to search for</param>
         /// <returns>List of PLStrings</returns>
 
-        public static PLVariable Ls (PLVariable arg)
+        public static bool Ls (string arg)
         {
-            PLList fileList = new PLList ();
+            List<string> fileList = new List<string> ();
             string searchPattern = null;
 
-            // see if there is a search patterm
-            if (arg is PLString pstr && pstr.Data.Length > 0)
-            {
-                searchPattern = pstr.Data;
-            }
+            // see if there is a search pattern
+            if (arg .Length > 0)
+                searchPattern = arg;
 
             //*******************************************************************************
 
@@ -324,7 +311,7 @@ namespace PLSystem
                     str = str.Remove (0, j + 1);
 
                 // add what's left to print list, with a trailing backslash appended to indicate this is a directory
-                fileList.Add (new PLString (str + "\\"));
+                fileList.Add (str + "\\");
             }
 
             //*******************************************************************************
@@ -342,10 +329,15 @@ namespace PLSystem
                     str = str.Remove (0, j + 1);
 
                 // add what's left to print list
-                fileList.Add (new PLString (str));
+                fileList.Add (str);
             }
 
-            return fileList;
+            //return fileList;
+
+            foreach (string str in fileList)
+                Print (str);
+
+            return true;
         }
 
         //*********************************************************************************************

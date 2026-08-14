@@ -16,7 +16,7 @@ namespace PLLibrary
         static readonly Dictionary<string, PLFunction>  MathFunctions    = new Dictionary<string, PLFunction> ();
         static readonly Dictionary<string, PLFunction>  IOFunctionsDict      = new Dictionary<string, PLFunction> ();
         static readonly Dictionary<string, PLFunction>  PlotFunctions    = new Dictionary<string, PLFunction> ();
-        static readonly Dictionary<string, PLFunction>  PlotCommands     = new Dictionary<string, PLFunction> ();
+        static readonly Dictionary<string, BSFunction>  PlotCommands;
 
         static readonly List<string> ZeroArgFunctions = new List<string> (); // functions that can be invoked with no arguments
 
@@ -60,8 +60,7 @@ namespace PLLibrary
             //
             // Plot commands
             //
-            Dictionary<string, PLFunction> plotCmnds = FunctionLibrary.PlotFunctions.GetPlotCommands ();
-            foreach (string str in plotCmnds.Keys) PlotCommands.Add (str, plotCmnds [str]);
+            PlotCommands = FunctionLibrary.PlotFunctions.GetPlotCommands ();
         }
 
         //***************************************************************************************************
@@ -184,11 +183,11 @@ namespace PLLibrary
 
         //***************************************************************************************************
 
-        public static PLVariable RunPlotCommand (PLString name, PLVariable args)
+        public static bool RunPlotCommand (string name, string args)
         {
-            if (PlotCommands.ContainsKey (name.Text))
+            if (PlotCommands.ContainsKey (name))
             {
-                PLFunction func = PlotCommands [name.Text];
+                BSFunction func = PlotCommands [name];
                 return func (args);
             }
             else

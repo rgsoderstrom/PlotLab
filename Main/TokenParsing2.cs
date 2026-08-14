@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using PLCommon;
 using PLFileSystem;
 using PLWorkspace;
 using PLLibrary;
@@ -98,6 +99,9 @@ namespace PLMain
                 {
                     if (Workspace.IsDefined (initial [i].AnnotatedText.Plain))
                         initial [i].Type = TokenType.VariableName;
+
+                    else if (Workspace.WhatIs (initial [i].AnnotatedText.Plain) == SymbolicNameTypes.Function)
+                        initial [i].Type = TokenType.FunctionName;
 
                     else if (LibraryManager.Contains (initial [i].AnnotatedText.Plain))
                         initial [i].Type = TokenType.FunctionName;

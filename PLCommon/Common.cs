@@ -2,6 +2,8 @@
 namespace PLCommon
 {
     public delegate PLVariable PLFunction    (PLVariable var);
+    public delegate bool       BSFunction    (string str);
+
     public delegate void       PrintFunction (string str);
     public delegate bool       PLRequest     (string str);
 

@@ -111,7 +111,7 @@ namespace PLMain
                                 // 
                                 if (Workspace.WhatIs (astr2.FirstWord) == SymbolicNameTypes.WorkspaceCommand)
                                 {
-                                    PLVariable results = Workspace.RunCommand (astr2.FirstWord, astr2.Arguments);
+                                    bool results = Workspace.RunCommand (astr2.FirstWord, astr2.Arguments);
                                 }
 
                                 break;

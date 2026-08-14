@@ -313,8 +313,8 @@ namespace PLMain
                 if (LibraryManager.Contains (Operator))
                     Value = LibraryManager.Evaluate (Operator, Operands [0].Value);
 
-                //else if (workspace.Functions.ContainsKey (Operator))
-                //    Value = workspace.Evaluate (Operator, Operands [0].Value);
+                else if (Workspace.Functions.ContainsKey (Operator))
+                    Value = Workspace.Evaluate (Operator, Operands [0].Value);
 
 
                 else if (Operator == "not")
@@ -322,28 +322,8 @@ namespace PLMain
                     Operator_Logical_Not ();
                 }
 
-
-
-                else throw new Exception ("EvaluateNode, Operands.Count == 1 not implemented for operator " + Operator);
-
-                //else // if (ValueValid == false)
-                //{
-                //    if (Operator == "Transpose")
-                //    {
-                //        if (Operands [0].Value is PLRMatrix)
-                //            Value = InternalFunctions.Transpose (Operands [0].Value as PLRMatrix);
-                //        else
-                //            throw new Exception ("Can only transpose matrices");
-                //    }
-
-                //    if (Operator == "Not")
-                //    {
-                //        Operator_Logical_Not ();
-                //    }
-                //}
-
-                //    if (ValueValid == false) throw new Exception ("Error evaluating expression");                
-
+                else 
+                    throw new Exception ("EvaluateNode, Operands.Count == 1 not implemented for operator " + Operator);
             }
 
             else // operand count > 1
@@ -356,8 +336,8 @@ namespace PLMain
                 if (LibraryManager.Contains (Operator))
                     Value = LibraryManager.Evaluate (Operator, args);
 
-                //else if (Workspace.Functions.ContainsKey (Operator))
-                //    Value = Workspace.Evaluate (Operator, args);
+                else if (Workspace.Functions.ContainsKey (Operator))
+                    Value = Workspace.Evaluate (Operator, args);
 
                 else
                     throw new Exception ("Can't find function " + Operator);

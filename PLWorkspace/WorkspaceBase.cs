@@ -21,8 +21,8 @@ namespace PLWorkspace
     abstract internal class WorkspaceBase
     {
         protected readonly Dictionary<string, PLVariable> Variables = new Dictionary<string, PLVariable> ();
-        protected readonly Dictionary<string, PLFunction> Commands  = new Dictionary<string, PLFunction> ();
-        internal  readonly Dictionary<string, PLFunction> Functions = new Dictionary<string, PLFunction> ();
+        internal  readonly Dictionary<string, PLFunction> Functions;
+        protected readonly Dictionary<string, BSFunction> Commands;
 
         internal readonly string Name;
         internal static PrintFunction Print = Console.Write;
@@ -30,24 +30,21 @@ namespace PLWorkspace
         internal WorkspaceBase (string name)
         {
             Name = name;
-
-            Dictionary<string, PLFunction> workCmnds = GetCommands ();
-            foreach (string str in workCmnds.Keys) Commands.Add (str, workCmnds [str]);
-
-            Dictionary<string, PLFunction> workFuncs = GetFunctions ();
-            foreach (string str in workFuncs.Keys) Functions.Add (str, workFuncs [str]);
+            Commands = GetCommands ();
+            Functions = GetFunctions ();
         }
 
         //***************************************************************************************************
 
         //
-        // Workspace Commands - no arguments passed in
+        // Workspace Commands - 
         //
 
-        internal Dictionary<string, PLFunction> GetCommands ()
+        internal Dictionary<string, BSFunction> GetCommands ()
         {
-            return new Dictionary<string, PLFunction> ()
+            return new Dictionary<string, BSFunction> ()
             {
+                {"exists", Exists},
                 {"clear",  Clear},
                 {"who",    Who},
                 {"whos",   Whos},
@@ -63,7 +60,6 @@ namespace PLWorkspace
         {
             return new Dictionary<string, PLFunction> ()
             {
-                {"exists", Exists},
                 {"rows",   WorkspaceUtils.Rows},
                 {"cols",   WorkspaceUtils.Cols},
                 {"length", WorkspaceUtils.Length},
@@ -73,21 +69,21 @@ namespace PLWorkspace
 
         //***************************************************************************************************
 
-        internal PLVariable RunCommand (string cmnd, PLList args)
+        internal bool RunCommand (string cmnd, string args)
         {
             if (Commands.ContainsKey (cmnd))
             {
-                PLFunction func = Commands [cmnd];
+                BSFunction func = Commands [cmnd];
                 return func (args);
             }
 
-            return new PLNull ();
+            return false;
         }
 
-        internal PLVariable RunCommand (PLString cmnd, PLList args)
-        {
-            return RunCommand (cmnd.Text, args);
-        }
+        //internal PLVariable RunCommand (PLString cmnd, PLList args)
+        //{
+        //    return RunCommand (cmnd.Text, args);
+        //}
 
         //***************************************************************************************************
 
@@ -259,35 +255,28 @@ namespace PLWorkspace
         //***************************************************************************************************
         //***************************************************************************************************
 
-        internal PLVariable Clear (PLVariable sel)
+        internal bool Clear (string select)
         {
-            if (sel != null)
+            if (select != null)
             {
-                PLList lst = sel as PLList;
+                string [] lst = select.Split (new char [] {' ', ','}, StringSplitOptions.RemoveEmptyEntries);
 
-                if (lst.Count == 0)
+                if (lst.Length == 0)
                     Variables.Clear ();
 
                 else
                 {
-                    foreach (PLString str in lst)
+                    foreach (string str in lst)
                     {
-                        if (str.Data == "all")
+                        if (str == "all")
                         {
                             Variables.Clear ();
                           //PLLibrary.MFileFunctionMgr.ClearCache ();
                             break;
                         }
 
-                        try
-                        {
-                            Variables.Remove (str.Data);
-                        }
-
-                        catch (KeyNotFoundException)
-                        {
-
-                        }
+                        if (Variables.ContainsKey (str))
+                            Variables.Remove (str);
                     }
                 }
             }
@@ -295,48 +284,42 @@ namespace PLWorkspace
             else
                 Variables.Clear ();
 
-            return new PLNull ();
+            return true;
         }
 
         //***********************************************************************************************
 
-        internal virtual PLVariable Exists (PLVariable arg)
+        internal virtual bool Exists (string arg)
         {
             if (arg != null)
             {
-                PLString str = arg as PLString;
-                if (Variables.ContainsKey (str.Text))
-                    return new PLBool (true);
+                if (Variables.ContainsKey (arg))
+                    return true;
             }
 
-            return new PLBool (false);
-        }
-
-        internal virtual bool Exists (string str)
-        {
-            return Variables.ContainsKey (str);
+            return false;
         }
 
         //***********************************************************************************************
 
-        internal PLVariable Who (PLVariable _)
+        internal bool Who (string _)
         {
             PrintKeys (Print);
-            return new PLNull ();
+            return true;
         }
 
-        internal PLVariable Whos (PLVariable _)
+        internal bool Whos (string _)
         {
             PrintKeysAndSizes (Print);
-            return new PLNull (); 
+            return true; 
         }
 
-        internal PLVariable Dump (PLVariable _)
-        {
-            return Dump ();
-        }
+        //internal PLVariable Dump (PLVariable _)
+        //{
+        //    return Dump ();
+        //}
 
-        internal PLVariable Dump ()
+        internal bool Dump (string _)
         {
             if (Name != null) Print (Name + " Workspace contents:\n");
             else              Print ("Workspace contents:\n");
@@ -368,7 +351,7 @@ namespace PLWorkspace
                 Print ("\n");
             }
 
-            return null;
+            return true;
         }
 
     }

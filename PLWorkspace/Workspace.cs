@@ -91,15 +91,14 @@ namespace PLWorkspace
         static public PLVariable Evaluate (PLString  funcName, PLVariable args) {return Current.Evaluate (funcName, args);}
 
 
-        static public PLVariable RunCommand (string cmnd, string args) 
+        static public bool RunCommand (string cmnd, string args) 
         {
-            PLList lst = new PLList ();
-            string [] words = args.Split (new char [] {' '});
+            //string [] words = args.Split (new char [] {' '}, StringSplitOptions.RemoveEmptyEntries);
 
-            foreach (string w in words)
-                lst.Add (new PLString (w));
+            //foreach (string w in words)
+            //    lst.Add (new PLString (w));
 
-            return Current.RunCommand (cmnd, lst);
+            return Current.RunCommand (cmnd, args);
         }
 
 
@@ -116,9 +115,9 @@ namespace PLWorkspace
         }
 
 
-        static public void Dump ()  {Current.Dump ();}
+     //   static public void Dump ()  {Current.Dump ("");}
 
-        static public void Clear (PLVariable lst)  {Current.Clear (lst);} // one or several variables
+//        static public void Clear (PLVariable lst)  {Current.Clear (lst);} // one or several variables
 
 
         static public List<string> PartialMatch (string str)
