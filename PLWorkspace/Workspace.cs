@@ -91,13 +91,11 @@ namespace PLWorkspace
         static public PLVariable Evaluate (PLString  funcName, PLVariable args) {return Current.Evaluate (funcName, args);}
 
 
+        // Workspace commands print information on things in the
+        // workspace, e.g. whos
+
         static public bool RunCommand (string cmnd, string args) 
         {
-            //string [] words = args.Split (new char [] {' '}, StringSplitOptions.RemoveEmptyEntries);
-
-            //foreach (string w in words)
-            //    lst.Add (new PLString (w));
-
             return Current.RunCommand (cmnd, args);
         }
 

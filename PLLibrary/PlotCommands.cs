@@ -22,13 +22,9 @@ namespace FunctionLibrary
         {
             return new Dictionary<string, BSFunction> ()
             {
-                {"title",  Title},
-              //{"clf",    ClearFigure},
                 {"close",  CloseFigure},
                 {"hold",   Hold},
                 {"clf",    ClearFigure},
-                {"xlabel", XLabel},
-                {"ylabel", YLabel},
             };
         }
 
@@ -86,65 +82,80 @@ namespace FunctionLibrary
 
         //*********************************************************************************************
 
-        static bool Title (string txt)
+        static PLVariable Title (PLVariable ptxt)
         {
-            if (CurrentFigure == null)
-                return false;
+            if (ptxt is PLString)
+            { 
+                string txt = (ptxt as PLString).Text;
 
-            if (CurrentFigure is PlotFigure)
-                (CurrentFigure as PlotFigure).DataAreaTitle = txt;
+                if (CurrentFigure == null)
+                    return new PLBool (false);
 
-            IPlotDrawable fig = CurrentFigure as IPlotDrawable;
+                if (CurrentFigure is PlotFigure)
+                    (CurrentFigure as PlotFigure).DataAreaTitle = txt;
 
-            if (fig == null)
-                return false;
+                IPlotDrawable fig = CurrentFigure as IPlotDrawable;
 
-            //if (fig is PlotFigure)
-            //    (fig as PlotFigure).DataAreaTitle = txt;
+                if (fig == null)
+                    return new PLBool (false);
 
-            if (fig is Plot2D)
-                (fig as Plot2D).DataAreaTitle = txt;
+                //if (fig is PlotFigure)
+                //    (fig as PlotFigure).DataAreaTitle = txt;
 
-            if (fig is Plot3D)
-                (fig as Plot3D).DataAreaTitle = txt;
+                if (fig is Plot2D)
+                    (fig as Plot2D).DataAreaTitle = txt;
 
-            return true;
+                if (fig is Plot3D)
+                    (fig as Plot3D).DataAreaTitle = txt;
+            }
+
+            return new PLNull ();
         }
 
         //*********************************************************************************************
 
-        static bool XLabel (string txt)
+        static PLVariable XLabel (PLVariable ptxt)
         {
             if (CurrentFigure == null)
-                return false;
+                return new PLNull ();
 
             IPlotDrawable fig = CurrentFigure as IPlotDrawable;
 
             if (fig == null)
-                return false;
+                return new PLNull ();
 
-            if (fig is Plot2D)
-                (fig as Plot2D).XAxisLabel = txt;
+            if (ptxt is PLString)
+            { 
+                string txt = (ptxt as PLString).Text;
 
-            return true;
+                if (fig is Plot2D)
+                    (fig as Plot2D).XAxisLabel = txt;
+            }
+
+            return new PLNull ();
         }
 
         //*********************************************************************************************
 
-        static bool YLabel (string txt)
+        static PLVariable YLabel (PLVariable ptxt)
         {
             if (CurrentFigure == null)
-                return false;
+                return new PLNull ();
 
             IPlotDrawable fig = CurrentFigure as IPlotDrawable;
 
             if (fig == null)
-                return false;
+                return new PLNull ();
 
-            if (fig is Plot2D)
-                (fig as Plot2D).YAxisLabel = txt;
+            if (ptxt is PLString)
+            { 
+                string txt = (ptxt as PLString).Text;
 
-            return true;
+                if (fig is Plot2D)
+                    (fig as Plot2D).YAxisLabel = txt;
+            }
+
+            return new PLNull ();
         }
 
         //*********************************************************************************************

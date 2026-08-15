@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Windows;
 using System.IO;
 
 using PLCommon;
@@ -18,6 +19,7 @@ namespace PLSystem
     static public partial class SystemFunctions
     {
         static public PrintFunction Print = null;
+        static public BSFunction UserConsoleRequests;
 
         static public Dictionary<string, BSFunction> SystemCommands;
 
@@ -38,13 +40,13 @@ namespace PLSystem
                 {"cd",    Cd  },
                 {"ls",    Ls  },
                 {"pwd",   Pwd },
-             // {"exit",  Exit},
+                {"exit",  Exit},
                 {"edit",  Edit},
-             ////   {"clc",   Clc },
-             ////   {"path",  Path},
-             ////   {"addpath", AddPath},
-             ////// {"history", History},
-             ////   {"help",    HelpWindow},
+                {"clc",   Clc },
+                {"path",  Path},
+                {"addpath", AddPath},
+             // {"history", History},
+                {"help",    HelpWindow},
             };
         }
 
@@ -109,14 +111,11 @@ namespace PLSystem
         //*********************************************************************************************
         //*********************************************************************************************
 
-        //public static PLVariable Exit (PLVariable _)
-        //{
-        //    if (UserConsoleRequests != null)
-        //        UserConsoleRequests ("shutdown");
-
-        //  //Application.Current.Shutdown();           
-        //    return new PLNull ();
-        //}
+        public static bool Exit (string _)
+        {
+            UserConsoleRequests?.Invoke ("shutdown");
+            return true;
+        }
 
         //*********************************************************************************************
         //*********************************************************************************************
@@ -335,75 +334,60 @@ namespace PLSystem
             //return fileList;
 
             foreach (string str in fileList)
-                Print (str);
+                Print (str + "\n");
 
             return true;
         }
 
         //*********************************************************************************************
 
-        public static PLVariable Clc (PLVariable _)
+        public static bool Clc (string _)
         {
-            //if (UserConsoleRequests != null)
-            //    UserConsoleRequests ("clc");
-
-            //UserConsole.thisConsole.TextPane.Clear (); 
-            //UserConsole.ClearInputLine ();
-            return new PLNull ();
+            UserConsoleRequests?.Invoke ("ClearConsole");
+            return true;
         }
 
         //*********************************************************************************************
 
-        public static PLVariable AddPath (PLVariable arg)
+        public static bool AddPath (string pathEntry)
         {
-            PLString pstr = arg as PLString;
-
-            if (pstr != null)
+            if (pathEntry != null)
             {
-                string path = pstr.Data;
-
-                if (path [0] == '(') path = path.Substring (1);
-                if (path [path.Length - 1] == ')') path = path.Substring (0, path.Length - 1);
+                if (pathEntry [0] == '(') pathEntry = pathEntry.Substring (1);
+                if (pathEntry [pathEntry.Length - 1] == ')') pathEntry = pathEntry.Substring (0, pathEntry.Length - 1);
  
-                if (path [0] == '\'') path = path.Substring (1);
-                if (path [path.Length - 1] == '\'') path = path.Substring (0, path.Length - 1);
+                if (pathEntry [0] == '\'') pathEntry = pathEntry.Substring (1);
+                if (pathEntry [pathEntry.Length - 1] == '\'') pathEntry = pathEntry.Substring (0, pathEntry.Length - 1);
 
-                FileSystem.AddPath (path);
+                FileSystem.AddPath (pathEntry);
             //  MFileFunctionMgr.SearchPathCopy = FileSystem.GetPathCopy ();
             }
 
-            return new PLNull ();
+            return true;
         }
 
         //*********************************************************************************************
 
         // invoked when user requests path
-        public static PLVariable Path (PLVariable _)
+
+        public static bool Path (string _)
         {
             List<string> pathStrings = FileSystem.GetPathCopy ();
-            PLList copy = new PLCommon.PLList ();
 
             foreach (string str in pathStrings)
-            {
-                PLString pls = new PLString (str);
-                copy.Add (pls);
-            }
+                Print (str + "\n");
 
-            return copy;
+            return true;
         }
 
         //*********************************************************************************************
 
-        public static PLVariable HelpWindow (PLVariable _topic)
+        public static bool HelpWindow (string topic)
         {
-            PLVariable status = new PLNull ();
-
-            if ((_topic is PLString) && (_topic as PLString).Text != null && (_topic as PLString).Text.Length > 0)
+            if (topic != null)
             {
-                string topic = (_topic as PLString).Text;
-
                 if (PLHelpWindow.HelpWindowManager.DisplayHelpTopic (topic) == false)
-                    status = new PLString ("Not found");
+                    Print ("Not found");
             }
 
             else
@@ -411,7 +395,7 @@ namespace PLSystem
                 PLHelpWindow.HelpWindowManager.LaunchNewHelpWindow ();
             }
 
-            return status;
+            return true;
         }
     }
 }

@@ -36,6 +36,9 @@ namespace FunctionLibrary
             return new Dictionary<string, PLFunction>
             {
                 {"plot",         Plot},
+                {"title",        Title},
+                {"xlabel",       XLabel},
+                {"ylabel",       YLabel},
                 {"text",         Text},
                 {"figure",       Figure},
                 {"PlotVector",   PlotVector2D},
