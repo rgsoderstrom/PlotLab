@@ -91,37 +91,30 @@ namespace PLMain
                                 break; 
 
                             case InputLineType.VariableName:
-                                Print?.Invoke ("Variable: " + astr2.Plain);
+                                PLVariable v = Workspace.Get (astr2.Plain);
+                                Print?.Invoke (v.ToString () + "\n");
                                 break;
 
                             case InputLineType.SystemCommand:
-                                Print?.Invoke ("SystemCommand: " + astr2.Plain);
+                                PLSystem.SystemFunctions.RunSystemCommand (astr2.FirstWord, astr2.Arguments);
+                                Print?.Invoke ("\n");
                                 break;
 
                             case InputLineType.PlotCommand:
-                                Print?.Invoke ("PlotCommand: " + astr2.Plain);
+                                PLLibrary.LibraryManager.RunPlotCommand (astr2.FirstWord, astr2.Arguments);
+                                Print?.Invoke ("\n");
                                 break;
 
-                            case InputLineType.WorkspaceCommand:
-                                //Print?.Invoke ("WorkspaceCommand: " + astr2.Plain);
-
-                                //
-                                // Workspace commands return information on things in the
-                                // workspace, e.g. length (a)
-                                // 
-                                if (Workspace.WhatIs (astr2.FirstWord) == SymbolicNameTypes.WorkspaceCommand)
-                                {
-                                    bool results = Workspace.RunCommand (astr2.FirstWord, astr2.Arguments);
-                                }
-
+                            case InputLineType.WorkspaceCommand: 
+                                Workspace.RunCommand (astr2.FirstWord, astr2.Arguments);
                                 break;
 
                             case InputLineType.ScriptFile:
                                 Print?.Invoke ("Script: " + astr2.Plain);
+                                Print?.Invoke ("\n");
                                 break;
 
                             case InputLineType.BlockName:
-                            //    Print?.Invoke ("BlockName: " + astr2.Plain);
                                 TerminationReason status = BlockManager.RunBlock (astr2);
                                 Console.WriteLine ("BlockExit status = " + status);
 
@@ -130,7 +123,6 @@ namespace PLMain
                                 break;
 
                             case InputLineType.BlockStart:
-                            //    Print?.Invoke ("BlockStart: " + astr2.Plain);
                                 BlockManager.StartNewBlock (astr2);
                                 break;
 
