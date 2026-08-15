@@ -46,10 +46,12 @@
             </GroupBox>
         </Grid>
 
-
         <TextBox MinHeight="100" Margin="5" Name="TextPane" FontSize="14" VerticalScrollBarVisibility="Visible" 
-                 HorizontalScrollBarVisibility="Auto" AcceptsReturn="True" TextWrapping="Wrap" PreviewKeyDown="TextPane_PreviewKeyDown"
-                 PreviewMouseLeftButtonDown="TextPane_PreviewMouseLeftButtonDown" KeyUp="TextPane_KeyUp" LostKeyboardFocus="TextPane_LostFocus" GotKeyboardFocus="TextPane_GotKeyboardFocus">
+                 HorizontalScrollBarVisibility="Auto" AcceptsReturn="True" 
+                 TextWrapping="Wrap" PreviewKeyDown="TextPane_PreviewKeyDown"
+                 PreviewMouseLeftButtonDown="TextPane_PreviewMouseLeftButtonDown" 
+                 KeyUp="TextPane_KeyUp" LostKeyboardFocus="TextPane_LostFocus" 
+                 GotKeyboardFocus="TextPane_GotKeyboardFocus">
         </TextBox>
     </DockPanel>
 </Window>

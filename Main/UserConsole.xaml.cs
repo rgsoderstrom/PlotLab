@@ -29,7 +29,38 @@ namespace PLMain
             // get initial state of check boxes
             ExpressionTree.ShowParsingTokens = (bool) ShowParse_Checkbox.IsChecked;
             ExpressionTree.ShowExprTree      = (bool) ShowTree_Checkbox.IsChecked;
+
+
+            PLSystem.SystemFunctions.UserConsoleRequests = UserConsoleRequests;
         }
+
+        //************************************************************************
+
+        // Requests from services (e.g. PLSystem) for UserConsole to do something
+
+        private bool UserConsoleRequests (string str)
+        {
+            switch (str)
+            {
+                case "shutdown":
+                    Window_Closed (null, null);
+                    break;
+
+                case "ClearConsole":
+                    TextPane.Text = "";
+                    TextPane.CaretIndex = TextPane.Text.Length;
+                    caretLowerLimit     = TextPane.CaretIndex;
+                    break;
+
+                default:
+                    Print ("UserConsole received unrecognized request: " + str);
+                    break;
+            }
+
+            return true;
+        }
+
+        //************************************************************************
 
         private void Window_Loaded (object sender, RoutedEventArgs e)
         {
@@ -47,18 +78,18 @@ namespace PLMain
                 Workspace.Print = Print;
                 TextPane.Focus ();
 
-                Print ("Not running startup script\n");
-                //PLVariable ans = new PLNull ();
-                //InputLineProcessor ip = new InputLineProcessor (Print);
-                //TerminationReason a = ip.ProcessString (ref ans, "startup"); 
+                Print ("Running startup script\n");
+                PLVariable ans = new PLNull ();
+                InputLineProcessor ip = new InputLineProcessor (Print);
+                TerminationReason a = ip.ProcessString (ref ans, "startup");
 
 
-             //   SystemFunctions.UserConsoleRequests = SystemRequests;
+                //   SystemFunctions.UserConsoleRequests = SystemRequests;
 
 
 
-        //        MFileFunctionMgr.CurrentDir = FileSearch.CurrentDirectory;
-          //      MFileFunctionMgr.SearchPathCopy = FileSearch.GetPathCopy ();
+                //        MFileFunctionMgr.CurrentDir = FileSearch.CurrentDirectory;
+                //      MFileFunctionMgr.SearchPathCopy = FileSearch.GetPathCopy ();
             }
 
             catch (Exception ex)
@@ -88,87 +119,43 @@ namespace PLMain
 
         private void CommandPreview (object sender, RoutedEventArgs e)
         {
-            //if ((e as ExecutedRoutedEventArgs).Command == ApplicationCommands.Paste)
-            //{
-            //    if (sender is System.Windows.Controls.TextBox)
-            //    {
-            //        if (Clipboard.ContainsText ())
-            //        {
-            //            try
-            //            {
-            //                e.Handled = true;
-            //                string str = Clipboard.GetText ();
-            //                string [] lines = str.Split (new string [] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            if ((e as ExecutedRoutedEventArgs).Command == ApplicationCommands.Paste)
+            {
+                if (sender is TextBox)
+                {
+                    if (Clipboard.ContainsText ())
+                    {
+                        try
+                        {
+                            e.Handled = true;
+                            string str = Clipboard.GetText ();
+                            string [] lines = str.Split (new string [] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 
+                            //
+                            // process like typed-in lines
+                            //
 
-            //                bool A = str.Contains ("\n");
-            //                bool B = str.Contains ("\r");
-            //                int  C = lines.Length;
+                            for (int i = 0; i<lines.Length; i++)
+                            {
+                                TextPane.Text += lines [i];
+                                ReturnKeyHandler ();
+                            }
+                        }
 
-            //                int firstScriptLine = 999999999;
+                        catch (Exception ex)
+                        {
+                            Print ("Error on \"paste\": " + ex.Message);
+                        }
+                    }
 
-            //                //
-            //                // look for if/for/while statements
-            //                //
-            //                for (int i = 0; i<lines.Length; i++)
-            //                {
-            //                    string [] words = lines [i].Split (new char [] { '(', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-            //                    if (words.Length > 0)
-            //                    {
-            //                        if (words [0] == "if" || words [0] == "while" || words [0] == "for")
-            //                        {
-            //                            firstScriptLine = i;
-            //                            break;
-            //                        }
-            //                    }
-            //                }
-
-            //                //
-            //                // process like typed-in lines until if/for/while found. pass remainder to script processor
-            //                //
-            //                for (int i = 0; i<lines.Length; i++)
-            //                {
-            //                    if (i == firstScriptLine)
-            //                        break;
-
-            //                    TextPane.Text += lines [i];
-            //                    ReturnKeyHandler ();
-            //                }
-
-            //                if (firstScriptLine < lines.Length)
-            //                {
-            //                    List<string> scriptLines = new List<string> (lines);
-            //                    scriptLines.RemoveRange (0, firstScriptLine);
-
-            //                    // write lines to text pane w/o processing them
-            //                    foreach (string str2 in scriptLines)
-            //                        TextPane.Text += str2 + '\n';
-
-            //                    ScriptProcessor sp = new ScriptProcessor (Print);
-            //                    sp.RunScriptLines (scriptLines);
-            //                }
-
-            //                TextPane.CaretIndex = TextPane.Text.Length;
-            //            }
-
-            //            catch (Exception ex)
-            //            {
-            //                Print ("Error: " + ex.Message);
-            //            }
-            //        }
-
-            //        Print (Prompt);
-            //    }
-            //}
+                    Print (Prompt);
+                }
+            }
         }
 
         //*****************************************************************************************
         //*****************************************************************************************
         //*****************************************************************************************
-
-    //    List<Utils.InputLine> inputLines = new List<Utils.InputLine> ();
-     //   Utils.NestingLevel nestingLevel = new Utils.NestingLevel ();
 
         private void ReturnKeyHandler ()
         {
