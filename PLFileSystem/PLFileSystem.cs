@@ -19,7 +19,8 @@ namespace PLFileSystem
 
     public static class FileSystem
     {
-        private static PrintFunction Print;
+        public static PrintFunction Print;
+
         private static readonly string baseFolder = "PlotLabV2";
         private static readonly string startupScript = "startup.m";
         public  static          string StartupScript {get {return startupScript;}}
@@ -54,12 +55,10 @@ namespace PLFileSystem
         {
         }
 
-        public static void Open (PrintFunction pf)
+        public static void Open ()
         { 
             try
             { 
-                Print = pf;
-
                 string myDocs = Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments)
                              ?? throw new Exception ("Can't find user's \"Documents\" folder");
 

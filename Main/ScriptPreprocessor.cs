@@ -89,46 +89,6 @@
 //            return expanded;
 //        }
 
-//        //*******************************************************************************
-//        //
-//        // Passed full name of a script
-//        //    - including path and extension
-//        //
-//        List<string> ReadInputFile (string fullName)
-//        {
-//            try
-//            {
-//                List<string> scriptLines = new List<string> ();
-//                StreamReader file = new StreamReader (fullName);
-//                string raw;
-
-//                while ((raw = file.ReadLine ()) != null)
-//                {
-//                    if (raw.Length > 0)
-//                    {
-//                        int index, count = 0;
-
-//                        while ((index = raw.IndexOf ('\t')) >= 0) // replace tabs with spaces
-//                        {
-//                            raw = raw.Remove (index, 1);
-//                            raw = raw.Insert (index, "    ");
-
-//                            if (count++ > 100) throw new Exception ("Error removing tabs");
-//                        }
-
-//                        scriptLines.Add (raw);
-//                    }
-//                }
-
-//                file.Close ();
-//                return scriptLines;
-//            }
-
-//            catch (Exception ex)
-//            {
-//                throw new Exception ("Error reading script file: " + ex.Message);
-//            }
-//        }
 
 //        //*******************************************************************************
 //        //

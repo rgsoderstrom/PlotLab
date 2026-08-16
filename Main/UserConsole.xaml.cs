@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System.Windows.Controls;
 
 using Common;
+using PLSystem;
 using PLCommon;
 using PLWorkspace;
 using PLLibrary;
@@ -20,8 +21,11 @@ namespace PLMain
         public UserConsole ()
         {
             InputLineProcessor.Print = Print;
-            PLSystem.SystemFunctions.Print = Print;
-            FileSystem.Open (Print);
+            SystemFunctions.Print = Print;
+            ScriptProcessor.Print = Print;
+            FileSystem.Print = Print;
+
+            FileSystem.Open ();
             InitializeComponent ();
 
             TextPane.AddHandler (CommandManager.PreviewExecutedEvent, new RoutedEventHandler (CommandPreview), true);
@@ -66,8 +70,6 @@ namespace PLMain
         {
             try
             {
-                FileSystem.Open (Print);
-
                 string s1 = FileSystem.LogFileDir;
 
                 EventLog.Open (FileSystem.LogFileDir + "\\Log.txt", true); // false);
@@ -242,52 +244,8 @@ namespace PLMain
                 }
             }
 
-
-
-            //CleanupRawInput (raw, inputLines, ref nestingLevel);
-
-            //int startIndex = 0;
-            //int endIndex = -1;
-
-            //for (int i=0; i<inputLines.Count; i++)
-            //{
-            //    if (inputLines [i].complete)
-            //    {
-            //        endIndex = i;
-            //        string expr = "";
-
-            //        for (int j=startIndex; j<=endIndex; j++)
-            //            expr += inputLines [j].text;
-
-            //        PLVariable ans = new PLNull ();
-            //        ip.ProcessString (ref ans, expr);
-
-            //        if (ans != null && ans is PLNull == false && ans is PLCanvasObject == false && ans is PLViewportObject == false)
-            //        {
-            //            ans.Name = "ans";
-            //            Workspace.Add (ans);
-
-            //                if (inputLines [endIndex].printFlag)
-            //                {
-            //                    Print (ans.ToString ());
-            //                    Print ("\n");
-            //                }
-            //            }
-
-            //            startIndex = endIndex + 1;
-            //        }
-            //    }
-
-            //    if (endIndex != -1)
-            //    {
-            //        inputLines.RemoveRange (0, endIndex + 1);
-            //    }
-            //}
-
             catch (Exception ex)
             {
-           //    inputLines.Clear ();
-            //    nestingLevel = new Utils.NestingLevel ();
                 throw new Exception ("Error in UserConsole ReturnKeyHandler:\n" + "  " + ex.Message);
             }
         }
@@ -550,7 +508,7 @@ namespace PLMain
                     CommandLineHistory.ResetIndices (); 
                     e.Handled = true;
                     ReturnKeyHandler ();
-                    Print (Prompt);
+                    Print ("\n" + Prompt);
                 }
 
                 else
