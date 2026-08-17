@@ -100,7 +100,7 @@ namespace PLMain
                 //Print ("Startup error: " + ex.StackTrace + "\n");
             }
 
-            Print (Prompt);
+            PrintPrompt ();
         }
 
         //*****************************************************************************************
@@ -150,7 +150,7 @@ namespace PLMain
                         }
                     }
 
-                    Print (Prompt);
+                    PrintPrompt ();
                 }
             }
         }
@@ -177,7 +177,7 @@ namespace PLMain
 
                 if (raw.Length == 0)
                 {
-                    Print ("\n"); // + Prompt);
+                    Print ("\n");
                     return;
                 }
 
@@ -415,7 +415,7 @@ namespace PLMain
                             }
 
                             // re-display what was entered plus any completion characters common to all
-                            Print ("\n\n" + Prompt);
+                            PrintPrompt ();
                             EditablePrint (typedIn);
 
                             if (matchingCharCount > 0)
@@ -508,7 +508,7 @@ namespace PLMain
                     CommandLineHistory.ResetIndices (); 
                     e.Handled = true;
                     ReturnKeyHandler ();
-                    Print ("\n" + Prompt);
+                    PrintPrompt ();
                 }
 
                 else
@@ -528,9 +528,23 @@ namespace PLMain
             catch (Exception ex)
             {
                 Print (ex.Message);
-                Print ("\n");
-                Print (Prompt);
+                PrintPrompt ();
             }
+        }
+
+        private void PrintPrompt ()
+        {
+            int caretIndex = TextPane.CaretIndex;
+
+            // Get the 0-based line index (Row)
+            int lineIndex = TextPane.GetLineIndexFromCharacterIndex (caretIndex);
+
+            // Calculate the 0-based column index
+            int lineStartIndex = TextPane.GetCharacterIndexFromLineIndex (lineIndex);
+            int columnIndex = caretIndex - lineStartIndex;
+
+            if (columnIndex == 0) Print (Prompt);
+            else                  Print ("\n" + Prompt);
         }
 
         //****************************************************************************************************
@@ -568,7 +582,7 @@ namespace PLMain
         private void ClearConsole_Click (object sender, RoutedEventArgs e)
         {
             TextPane.Clear (); 
-            Print (Prompt);
+            PrintPrompt ();
             TextPane.Focus ();
         }
 
@@ -584,7 +598,7 @@ namespace PLMain
                 Print (str);
             }
 
-            Print ('\n' + Prompt);
+            PrintPrompt ();
             TextPane.Focus ();
         }
 
