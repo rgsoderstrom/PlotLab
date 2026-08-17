@@ -56,6 +56,11 @@ namespace PLMain
                     caretLowerLimit     = TextPane.CaretIndex;
                     break;
 
+                case "history":
+                    string hstr = CommandLineHistory.ToString ();
+                    Print (hstr);
+                    break;
+
                 default:
                     Print ("UserConsole received unrecognized request: " + str);
                     break;

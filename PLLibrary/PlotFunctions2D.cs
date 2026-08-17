@@ -68,10 +68,10 @@ namespace FunctionLibrary
                 return new PLNull ();
 
             PLRMatrix mat = arg as PLRMatrix; // axis ([1 3 5 7])
-            PLString str = arg as PLString; // axis auto
+            //PLString str = arg as PLString; // axis auto
 
-            if (str != null)
-                return AxisConstraints (str);
+            //if (str != null)
+            //    return AxisConstraints (str);
 
             Plot2D fig = CurrentFigure as Plot2D;
 

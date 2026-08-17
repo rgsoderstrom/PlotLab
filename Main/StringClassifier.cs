@@ -24,6 +24,8 @@ namespace PLMain
         //
         public InputLineType Classify (AnnotatedString astr)
         {
+            string FirstWord = astr.FirstWord;
+
             // anything remaining unknown will be passed to the expression tree
             InputLineType defaultType = InputLineType.Unknown;
 
@@ -42,16 +44,21 @@ namespace PLMain
                     if (BlockManager.IsBlockName (astr.Plain))
                         return InputLineType.BlockName;
                 }
+
+                else
+                {
+                    if (LibraryManager.WhatIs (FirstWord) == SymbolicNameTypes.PlotCommand)
+                        return InputLineType.PlotCommand;
+                }
             }
 
-            string FirstWord = astr.FirstWord;
 
             // see if the first word is a system command
             if (SystemFunctions.WhatIs (FirstWord) == SymbolicNameTypes.SystemCommand)
                 return InputLineType.SystemCommand;
 
-            if (LibraryManager.WhatIs (FirstWord) == SymbolicNameTypes.PlotCommand)
-                return InputLineType.PlotCommand;
+            //if (LibraryManager.WhatIs (FirstWord) == SymbolicNameTypes.PlotCommand)
+            //    return InputLineType.PlotCommand;
 
             if (Workspace.WhatIs (FirstWord) == SymbolicNameTypes.WorkspaceCommand)
                 return InputLineType.WorkspaceCommand;

@@ -45,7 +45,7 @@ namespace PLSystem
                 {"clc",   Clc },
                 {"path",  Path},
                 {"addpath", AddPath},
-             // {"history", History},
+                {"history", History},
                 {"help",    HelpWindow},
             };
         }
@@ -96,16 +96,11 @@ namespace PLSystem
         //*********************************************************************************************
         //*********************************************************************************************
 
-        //public static PLVariable History (PLVariable args)
-        //{
-        //    PLList hist = new PLList ();
-        //    int count = 1;
-
-        //    foreach (string s in CommandLineHistory.History)
-        //        hist.Add (new PLString (count++ + ": " + s));
-
-        //    return hist;
-        //}
+        public static bool History (string _)
+        {
+            UserConsoleRequests?.Invoke ("history");
+            return true;
+        }
 
         //*********************************************************************************************
         //*********************************************************************************************

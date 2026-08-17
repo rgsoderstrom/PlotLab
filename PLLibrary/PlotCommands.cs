@@ -25,6 +25,7 @@ namespace FunctionLibrary
                 {"close",  CloseFigure},
                 {"hold",   Hold},
                 {"clf",    ClearFigure},
+                {"axis",   AxisConstraints},
             };
         }
 
@@ -36,48 +37,43 @@ namespace FunctionLibrary
 
         // argument formats:
         //  axis equal       - adjust limits
-        //  axis ([1 2 3 4]) - set limits
-        //  axis             - no arg, return current limits
 
-        static PLVariable AxisConstraints (PLVariable arg)
+        static bool AxisConstraints (string arg)
         {
             if (CurrentFigure == null)
-                return new PLNull ();
+                return false;
 
             IPlotDrawable fig = CurrentFigure as IPlotDrawable;
 
             if (fig == null)
-                return new PLNull ();
+                return false;
 
-            if (arg is PLString str)
+            switch (arg)
             {
-                switch (str.Data)
-                {
-                    case "tight":
-                        fig.AxesTight = true;
-                        break;
+                case "tight":
+                    fig.AxesTight = true;
+                    break;
 
-                    case "equal":
-                        fig.AxesEqual = true;
-                        break;
+                case "equal":
+                    fig.AxesEqual = true;
+                    break;
 
-                    case "frozen":
-                        fig.AxesFrozen = true;
-                        break;
+                case "frozen":
+                    fig.AxesFrozen = true;
+                    break;
 
-                    case "auto":
-                        (fig as IPlotCommon).Hold = true;
-                        fig.AxesFrozen = false;
-                        fig.AxesTight  = true;
-                        fig.AxesEqual  = false;
-                        break;
+                case "auto":
+                    (fig as IPlotCommon).Hold = true;
+                    fig.AxesFrozen = false;
+                    fig.AxesTight  = true;
+                    fig.AxesEqual  = false;
+                    break;
 
-                    default:
-                        throw new Exception ("Axis command - unrecognized option");
-                }
+                default:
+                    throw new Exception ("Axis command - unrecognized option");
             }
 
-            return new PLNull ();
+            return true;
         }
 
         //*********************************************************************************************

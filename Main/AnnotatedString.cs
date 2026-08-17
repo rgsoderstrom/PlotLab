@@ -155,7 +155,7 @@ namespace PLMain
 
                 foreach (AnnotatedChar ac in annotatedChars)
                 { 
-                    if (ac.IsAlphanumeric == false)
+                    if (ac.IsAlphanumeric == false && ac.IsWhitespace == false)
                     { 
                         AlphanumericOnly = false;
                         break;
