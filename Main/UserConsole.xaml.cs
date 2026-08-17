@@ -239,7 +239,7 @@ namespace PLMain
                     if (ip.SupressPrinting == false)
                     {
                         Print (ans.ToString ());
-                        Print ("\n");
+                        //Print ("\n");
                     }
                 }
             }
