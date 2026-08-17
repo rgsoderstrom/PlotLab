@@ -92,17 +92,15 @@ namespace PLMain
 
                             case InputLineType.VariableName:
                                 PLVariable v = Workspace.Get (astr2.Plain);
-                                //Print?.Invoke (v.ToString () + "\n");
+                                Print?.Invoke (v.ToString ());
                                 break;
 
                             case InputLineType.SystemCommand:
                                 PLSystem.SystemFunctions.RunSystemCommand (astr2.FirstWord, astr2.Arguments);
-                                //Print?.Invoke ("\n");
                                 break;
 
                             case InputLineType.PlotCommand:
                                 PLLibrary.LibraryManager.RunPlotCommand (astr2.FirstWord, astr2.Arguments);
-                                //Print?.Invoke ("\n");
                                 break;
 
                             case InputLineType.WorkspaceCommand: 
@@ -110,9 +108,7 @@ namespace PLMain
                                 break;
 
                             case InputLineType.ScriptFile:
-                                //Print?.Invoke ("Script: " + astr2.Plain);
                                 ScriptProcessor script = new ScriptProcessor (astr2.Plain);
-                                //Print?.Invoke ("\n");
                                 break;
 
                             case InputLineType.BlockName:
