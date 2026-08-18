@@ -29,7 +29,8 @@ namespace utInputLine
 
             try
             {
-                FileSystem.Open (Print);
+                FileSystem.Open ();
+                FileSystem.Print = Print;
                 Workspace.Add (new PLDouble ("a", 1.23));
 
                 StreamReader inputFile = new StreamReader (InputMFileName);

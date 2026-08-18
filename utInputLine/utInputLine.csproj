@@ -99,6 +99,9 @@
     <Compile Include="..\Main\InputLineProcessor.cs">
       <Link>InputLineProcessor.cs</Link>
     </Compile>
+    <Compile Include="..\Main\ScriptProcessor.cs">
+      <Link>ScriptProcessor.cs</Link>
+    </Compile>
     <Compile Include="..\Main\StringClassifier.cs">
       <Link>StringClassifier.cs</Link>
     </Compile>

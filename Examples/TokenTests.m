@@ -7,6 +7,7 @@
 	% BLOCK_2
 	% BLOCK_T
 	length ([3 : 12])
+	axis equal
 	
 	% clear a b c
 	% for a = 1:10,
