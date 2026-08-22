@@ -301,30 +301,20 @@ namespace FunctionLibrary
 
         static public PLVariable Rand ()
         {
-            return new PLDouble (789);
+            return new PLDouble (random.NextDouble ());
         }
 
         static public PLVariable Rand (PLVariable var)
         {
-            PLRMatrix mat = var as PLRMatrix;
-            PLNull   nul = var as PLNull;
-            PLDouble dbl = var as PLDouble;
-            PLList   lst = var as PLList;
-
             PLRMatrix rmat = new PLRMatrix (1, 1);
 
-            if (nul != null) // true if rand invoked with no argument
-            {
-                // use default mat size of 1 x 1
-            }
-
-            else if (dbl != null)
+            if (var is PLDouble dbl)
             {
                 int N = (int)(0.5 + dbl.Data);
                 rmat = new PLRMatrix (N, N);
             }
 
-            else if (lst != null)
+            else if (var is PLList lst)
             {
                 if (lst.Count == 2)
                 {
@@ -334,7 +324,7 @@ namespace FunctionLibrary
                 }
             }
 
-            else if (mat != null) // rand (size (z)); % where z is a matrix
+            else if (var is PLRMatrix mat) // rand (size (z)); % where z is a matrix
             {
                 rmat = new PLRMatrix ((int) mat [0, 0], (int) mat [0, 1]);
             }

@@ -4,8 +4,13 @@ using System.Windows;
 using System.Windows.Media;
 
 using Common;
+
+using MathNet.Numerics;
+
 using PLCommon;
+
 using Plot2D_Embedded;
+
 using PlottingLib;
 
 //
@@ -64,43 +69,38 @@ namespace FunctionLibrary
 
         static public PLVariable PlotLimits ()
         {
-            return new PLDouble (123);
+            if (CurrentFigure is Plot2D == false)
+                return new PLNull ();
+
+            Plot2D fig = CurrentFigure as Plot2D;
+
+            PLRMatrix lim = new PLRMatrix (1, 4);
+
+            double x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+            fig.GetAxes (ref x1, ref x2, ref y1, ref y2);
+
+            lim [0, 0] = x1;
+            lim [0, 1] = x2;
+            lim [0, 2] = y1;
+            lim [0, 3] = y2;
+            return lim;
         }
 
+        // eg: axis ([1 3 5 7])
         static public PLVariable PlotLimits (PLVariable arg)
         {
             if (CurrentFigure is Plot2D == false)
                 return new PLNull ();
 
-            PLRMatrix mat = arg as PLRMatrix; // axis ([1 3 5 7])
-            //PLString str = arg as PLString; // axis auto
-
-            //if (str != null)
-            //    return AxisConstraints (str);
-
             Plot2D fig = CurrentFigure as Plot2D;
 
-            if (mat != null)
+            if (arg is PLRMatrix mat)
             {
                 fig.AxesEqual  = false;
                 fig.AxesFrozen = false;
                 fig.AxesTight  = false;
                 fig.SetAxes (mat [0, 0], mat [0, 1], mat [0, 2], mat [0, 3]);
                 return new PLNull ();
-            }
-
-            else // no arg, so return current limits
-            { 
-                PLRMatrix lim = new PLRMatrix (1, 4);
-
-                double x1 = 0, x2 = 0, y1 = 0, y2 = 0;
-                fig.GetAxes (ref x1, ref x2, ref y1, ref y2);
-
-                lim [0, 0] = x1;
-                lim [0, 1] = x2;
-                lim [0, 2] = y1;
-                lim [0, 3] = y2;
-                return lim;
             }
 
             throw new Exception ("Axis argument error");
@@ -169,7 +169,7 @@ namespace FunctionLibrary
                 throw new Exception ("Figure " + args [0].ToString () + " not found");
 
             // look for that id. if found make it the current figure
-            foreach (Window w in Figures)
+            foreach (System.Windows.Window w in Figures)
             {
                 PlotFigure pf = w as PlotFigure; if (pf != null) { if (pf.ID == figureID) { found = true; figure = pf; break; } }
                 Plot2D p2 = w as Plot2D; if (p2 != null) { if (p2.ID == figureID) { found = true; figure = p2; break; } }
