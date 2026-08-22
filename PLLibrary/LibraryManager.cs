@@ -6,69 +6,64 @@ using System.Threading.Tasks;
 using FunctionLibrary;
 
 using PLCommon;
+//using FunctionLibrary;
 using PLFileSystem;
 
 namespace PLLibrary
 {
     static public class LibraryManager
     {
-        static readonly Dictionary<string, PLFunction>  SigProcFunctions = new Dictionary<string, PLFunction> ();
-        static readonly Dictionary<string, PLFunction>  MathFunctions    = new Dictionary<string, PLFunction> ();
-        static readonly Dictionary<string, PLFunction>  IOFunctionsDict      = new Dictionary<string, PLFunction> ();
-        static readonly Dictionary<string, PLFunction>  PlotFunctions    = new Dictionary<string, PLFunction> ();
-        static readonly Dictionary<string, BSFunction>  PlotCommands;
+        static readonly Dictionary<string, PLFunction> SigProcFunctions = new Dictionary<string, PLFunction> ();
+        static readonly Dictionary<string, PLFunction> MathFunctions    = new Dictionary<string, PLFunction> ();
+        static readonly Dictionary<string, PLFunction> IOFunctionsDict  = new Dictionary<string, PLFunction> ();
+        static readonly Dictionary<string, PLFunction> PlotFunctions    = new Dictionary<string, PLFunction> ();
+        static readonly Dictionary<string, BSFunction> PlotCommands     = new Dictionary<string, BSFunction> ();
+        static readonly Dictionary<string, PZFunction> ZeroArgFunctions = new Dictionary<string, PZFunction> ();
 
-        static readonly List<string> ZeroArgFunctions = new List<string> (); // functions that can be invoked with no arguments
-
-        static public PrintFunction Print {set { IOFunctions.Print = value;} }
+        static public PrintFunction Print {set {IOFunctions.Print = value;}}
 
         static LibraryManager ()
         {
             //
             // Signal Processing functions
             //
-            Dictionary<string, PLFunction> sigProcFuncts = FunctionLibrary.SignalProcessing.GetSignalProcessingContents ();
-            foreach (string str in sigProcFuncts.Keys) SigProcFunctions.Add (str, sigProcFuncts [str]);
+            SignalProcessing.AddSignalProcessingFunctions (ref SigProcFunctions);
 
             //
             // Math functions
             //
-            Dictionary<string, PLFunction> mathFuncts = FunctionLibrary.MathFunctions.GetBuiltInContents ();
-            foreach (string str in mathFuncts.Keys) MathFunctions.Add (str, mathFuncts [str]);
-
-            FunctionLibrary.MathFunctions.GetZeroArgNames (ZeroArgFunctions);
-
-            mathFuncts = FunctionLibrary.MathFunctions.GetUserDefinedContents ();
-            foreach (string str in mathFuncts.Keys) MathFunctions.Add (str, mathFuncts [str]);
+            FunctionLibrary.MathFunctions.AddBuiltInMathFunctions (ref MathFunctions);
+            FunctionLibrary.MathFunctions.AddUserDefinedContents (ref MathFunctions);
 
             //
             // IO functions
             //
-            Dictionary<string, PLFunction> ioFuncts = FunctionLibrary.IOFunctions.GetContents ();
-            foreach (string str in ioFuncts.Keys) IOFunctionsDict.Add (str, ioFuncts [str]);
-
-            FunctionLibrary.IOFunctions.GetZeroArgNames (ZeroArgFunctions);
+             IOFunctions.AddIOFunctions (ref IOFunctionsDict);
 
             //
             // Plot functions
             //
-            Dictionary<string, PLFunction> plotFuncts = FunctionLibrary.PlotFunctions.GetFunctionContents ();
-            foreach (string str in plotFuncts.Keys) PlotFunctions.Add (str, plotFuncts [str]);
+            FunctionLibrary.PlotFunctions.AddPlotFunctions (ref PlotFunctions);
 
-            FunctionLibrary.PlotFunctions.GetZeroArgNames (ZeroArgFunctions);
+            //
+            // Zero Argument functions
+            //
+            FunctionLibrary.IOFunctions.AddZeroArgIOFunctions     (ref ZeroArgFunctions);
+            FunctionLibrary.MathFunctions.AddZeroArgMathFunctions (ref ZeroArgFunctions);
+            FunctionLibrary.PlotFunctions.AddZeroArgFunctions     (ref ZeroArgFunctions);
 
             //
             // Plot commands
             //
-            PlotCommands = FunctionLibrary.PlotFunctions.GetPlotCommands ();
+            FunctionLibrary.PlotFunctions.AddPlotCommands (ref PlotCommands);
         }
 
         //***************************************************************************************************
 
-        public static bool IsZeroArgFunction (string fname)
-        {
-            return ZeroArgFunctions.Contains (fname);
-        }
+        //public static bool IsZeroArgFunction (string fname)
+        //{
+        //    return ZeroArgFunctions.Contains (fname);
+        //}
 
         //***************************************************************************************************
         //***************************************************************************************************
@@ -80,20 +75,35 @@ namespace PLLibrary
         /// <param name="str">string containing a single word</param>
         /// <returns>The type or unknown</returns>
         
-        public static SymbolicNameTypes WhatIs (string str)
+        //public static SymbolicNameTypes WhatIs (string str)
+        //{
+        //    SymbolicNameTypes type = SymbolicNameTypes.Unknown;
+
+        //    if      (PlotCommands.ContainsKey         (str)) {type = SymbolicNameTypes.PlotCommand;}
+        //    else if (MathFunctions.ContainsKey        (str)) {type = SymbolicNameTypes.Function;}
+        //    else if (SigProcFunctions.ContainsKey     (str)) {type = SymbolicNameTypes.Function;}
+        //    else if (IOFunctionsDict.ContainsKey      (str)) {type = SymbolicNameTypes.Function;}
+        //    else if (PlotFunctions.ContainsKey        (str)) {type = SymbolicNameTypes.Function;}
+        //    else if (MFileFunctionMgr.IsMFileFunction (str)) {type = SymbolicNameTypes.FunctionFile;}
+
+        //    return type;
+        //}
+
+        public static bool IsZeroArgFunction (string str)
         {
-            SymbolicNameTypes type = SymbolicNameTypes.Unknown;
-
-            if      (PlotCommands.ContainsKey         (str)) {type = SymbolicNameTypes.PlotCommand;}
-            else if (MathFunctions.ContainsKey        (str)) {type = SymbolicNameTypes.Function;}
-            else if (SigProcFunctions.ContainsKey     (str)) {type = SymbolicNameTypes.Function;}
-            else if (IOFunctionsDict.ContainsKey          (str)) {type = SymbolicNameTypes.Function;}
-            else if (PlotFunctions.ContainsKey        (str)) {type = SymbolicNameTypes.Function;}
-            else if (MFileFunctionMgr.IsMFileFunction (str)) {type = SymbolicNameTypes.FunctionFile;}
-
-            return type;
+            return ZeroArgFunctions.ContainsKey (str);
         }
 
+        public static bool IsPlotCommand (string str)
+        {
+            return PlotCommands.ContainsKey (str);
+        }
+
+        public static PLVariable RunZeroArgFunction (string fname)
+        {
+            PZFunction func = ZeroArgFunctions [fname];
+            return func ();
+        }
 
         public static List<string> PartialMatch (string str)
         {
@@ -102,7 +112,7 @@ namespace PLLibrary
             foreach (string cmd in PlotCommands.Keys)     {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
             foreach (string cmd in MathFunctions.Keys)    {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
             foreach (string cmd in SigProcFunctions.Keys) {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
-            foreach (string cmd in IOFunctionsDict.Keys)      {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
+            foreach (string cmd in IOFunctionsDict.Keys)  {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
             foreach (string cmd in PlotFunctions.Keys)    {if (cmd.StartsWith (str)) matches.Add (cmd + " ");}
 
             //if (matches.Count > 0) matches.Add ("\n");

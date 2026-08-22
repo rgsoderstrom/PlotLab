@@ -22,53 +22,50 @@ namespace FunctionLibrary
         // map function name strings to executable functions
         //
 
-        static public Dictionary<string, PLFunction> GetBuiltInContents ()
+        static public void AddBuiltInMathFunctions (ref Dictionary<string, PLFunction> dst)
         {
-            return new Dictionary<string, PLFunction>
-            {
-                {"linspace", Linspace},
-                {"zeros",  Zeros},
-                {"ones",   Ones},
-                {"ceil",   Ceil},
-                {"floor",  Floor},
-                {"square", Square},
-                {"sin",  Sin},
-                {"cos",  Cos},
-                {"asin", ASin},
-                {"acos", ACos},
-                {"tan",  Tan},
-                {"sinh", Sinh},
-                {"cosh", Cosh},
-                {"tanh", Tanh},
-                {"abs",  Abs},
-                {"sqrt", Sqrt},
-                {"inv",  Inverse},
-                {"atan2", Atan2},
-                {"rand", Rand},
-                {"transpose", Transpose},
-                {"Transpose", Transpose},
-                {"log",   Log},
-                {"log2",  Log2},
-                {"log10", Log10},
-                {"exp",   Exp},
-                {"max",   Max},
-                {"min",   Min},
-                {"cross", CrossProduct},
-                {"real",  Real},
-                {"imag",  Imag},
-                {"conj",  Conj},
-                {"mag",   Mag},
-                {"angle", Angle},
-                {"round", Round},
-                {"sum",   Sum},
-                {"mean",  Mean},
-                {"median", Median},
-            };
+            dst.Add ("linspace", Linspace);
+            dst.Add ("zeros",  Zeros);
+            dst.Add ("ones",   Ones);
+            dst.Add ("ceil",   Ceil);
+            dst.Add ("floor",  Floor);
+            dst.Add ("square", Square);
+            dst.Add ("sin",  Sin);
+            dst.Add ("cos",  Cos);
+            dst.Add ("asin", ASin);
+            dst.Add ("acos", ACos);
+            dst.Add ("tan",  Tan);
+            dst.Add ("sinh", Sinh);
+            dst.Add ("cosh", Cosh);
+            dst.Add ("tanh", Tanh);
+            dst.Add ("abs",  Abs);
+            dst.Add ("sqrt", Sqrt);
+            dst.Add ("inv",  Inverse);
+            dst.Add ("atan2", Atan2);
+            dst.Add ("rand", Rand);
+            dst.Add ("transpose", Transpose);
+            dst.Add ("Transpose", Transpose);
+            dst.Add ("log",   Log);
+            dst.Add ("log2",  Log2);
+            dst.Add ("log10", Log10);
+            dst.Add ("exp",   Exp);
+            dst.Add ("max",   Max);
+            dst.Add ("min",   Min);
+            dst.Add ("cross", CrossProduct);
+            dst.Add ("real",  Real);
+            dst.Add ("imag",  Imag);
+            dst.Add ("conj",  Conj);
+            dst.Add ("mag",   Mag);
+            dst.Add ("angle", Angle);
+            dst.Add ("round", Round);
+            dst.Add ("sum",   Sum);
+            dst.Add ("mean",  Mean);
+            dst.Add ("median", Median);
         }
 
-        static public void GetZeroArgNames (List<string> funcs)
+        static public void AddZeroArgMathFunctions (ref Dictionary<string, PZFunction> dst)
         {
-            funcs.Add ("rand");
+            dst.Add ("rand", Rand);
         }
 
         //*********************************************************************************************
@@ -301,6 +298,11 @@ namespace FunctionLibrary
         //*********************************************************************************************
 
         static Random random = new Random ();
+
+        static public PLVariable Rand ()
+        {
+            return new PLDouble (789);
+        }
 
         static public PLVariable Rand (PLVariable var)
         {

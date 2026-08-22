@@ -13,9 +13,9 @@ namespace FunctionLibrary
         // map function name strings to executable functions
         //
 
-        static public Dictionary<string, PLFunction> GetUserDefinedContents ()
+        static public void AddUserDefinedContents (ref Dictionary<string, PLFunction> dst)
         {
-            return new Dictionary<string, PLFunction> 
+            Dictionary<string, PLFunction> local = new Dictionary<string, PLFunction> 
             {
                 {"ContourZ1",   ContourTestFunction},
                 {"scalarField", ScalarField},
@@ -23,6 +23,9 @@ namespace FunctionLibrary
                 {"Covector2",   Covector2},
                 {"TransducerSamples", TransducerSamples}
             };
+
+            foreach (KeyValuePair<string, PLFunction> kvp in local)
+                dst.Add (kvp.Key, kvp.Value);
         }
 
         //*********************************************************************************************
