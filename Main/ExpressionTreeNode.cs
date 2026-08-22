@@ -36,7 +36,7 @@ namespace PLMain
         //******************************************************************************************
 
     //    public static PrintFunction PF = null;
-        public static int NodeCounter = 0; // zeroed when new tree started
+        public int NodeCounter = 0; // too many nodes in one tree will cause an exception
 
         //
         // public ctor used to construct root node
@@ -189,8 +189,8 @@ namespace PLMain
         //*******************************************************************************************
 
     // fails for expressions of the form: 1000 / (10 / 2)
-    //  readonly List<string> CanCompact = new List<string> () { "+", ":", "/", "Comma"};
-        readonly List<string> CanCompact = new List<string> () { "+", ":", "Comma"};
+    //  static List<string> CanCompact = new List<string> () { "+", ":", "/", "Comma"};
+        static List<string> CanCompact = new List<string> () { "+", ":", "Comma"};
 
         internal void Compact ()
         {
