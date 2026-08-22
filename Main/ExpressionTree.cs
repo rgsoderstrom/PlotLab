@@ -32,7 +32,7 @@ namespace PLMain
                 expression.CheckForTrailingSemi ();
                 SupressPrinting = expression.SupressPrinting;
 
-                ExpressionTreeNode.NodeCounter = 0;
+                //ExpressionTreeNode.NodeCounter = 0;
                 tree = new ExpressionTreeNode (expression);
                 Compact ();
 
