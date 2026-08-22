@@ -13,7 +13,7 @@ using PLCommon;
 
 namespace PLFileSystem
 {
-    public enum FileTypes {Unknown, ScriptFile, FunctionFile, TextFile}
+    public enum FileTypes {Unknown, ScriptFile, FunctionFile };
 
     //************************************************************************************
 
@@ -90,8 +90,8 @@ namespace PLFileSystem
         //*******************************************************************************************
         //
         // Add directory to search path
-        //  - if a directory is already in the path remove the old entry and re-add to the head. this
-        //    gives highest priority to newest additions
+        //  - if a directory is already in the path remove the old entry and re-add to the head.
+        //  - later additions have higher priority
         //
         public static bool AddPath (string path)
         {

@@ -12,11 +12,11 @@ namespace PLFileSystem
         public string functionName;
         public string functionPathAndName;
 
-        public List<string> InputFormalParams  = new List<string> ();
-        public List<string> ExecutableScript   = new List<string> ();
+        public List<string> InputFormalParams = new List<string> ();
+        public List<string> ExecutableScript = new List<string> ();
         public List<string> OutputFormalParams = new List<string> ();
 
-        enum ParseState {LookingForStart, InExecutable};
+        enum ParseState { LookingForStart, InExecutable };
         ParseState ps = ParseState.LookingForStart;
 
         public MFileFunctionProcessor (string funcName, string fullName)
@@ -31,18 +31,18 @@ namespace PLFileSystem
             //      - executable script
             //      - output format parameters
             //
-  
+
             using (StreamReader reader = new StreamReader (fullName))
             {
                 string line;
 
-                while ((line = reader.ReadLine()) != null)
+                while ((line = reader.ReadLine ()) != null)
                 {
                     if (line.Length > 0)
                     {
                         string [] tokens = line.Split (new char [] { ' ', ',', '[', ']', '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
 
-                        if (tokens [0][0] == '%')
+                        if (tokens [0] [0] == '%')
                             continue;
 
                         if (ps == ParseState.LookingForStart)
@@ -56,7 +56,7 @@ namespace PLFileSystem
 
                                 int equalIndex = -1;
 
-                                for (int i = 0; i<tokens.Length; i++) { if (tokens [i] == "=") {equalIndex = i; break; } }
+                                for (int i = 0; i<tokens.Length; i++) { if (tokens [i] == "=") { equalIndex = i; break; } }
 
                                 if (equalIndex == -1) // not found
                                     throw new Exception ("Function syntax error, equal sign not found in " + funcName);

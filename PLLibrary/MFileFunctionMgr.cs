@@ -1,4 +1,11 @@
-﻿//using System;
+﻿
+
+/*
+   Moved to PLFileSystem
+*/
+
+
+//using System;
 //using System.Collections.Generic;
 //using System.IO;
 
@@ -18,26 +25,26 @@
 
 //        static public List<string> SearchPathCopy
 //        {
-//            get {return pathCopy;}
-//            set {pathCopy = value;}
+//            get { return pathCopy; }
+//            set { pathCopy = value; }
 //        }
 
 //        //*****************************************************************************
 //        //*****************************************************************************
 //        //*****************************************************************************
 
-//     //   static Dictionary<string, MFileFunctionProcessor> MFileCache = new Dictionary<string, MFileFunctionProcessor> ();
+//        //   static Dictionary<string, MFileFunctionProcessor> MFileCache = new Dictionary<string, MFileFunctionProcessor> ();
 
 //        public static MFileFunctionProcessor ParseMFile (string funcName, string fullName)
 //        {
 //            MFileFunctionProcessor proc = new MFileFunctionProcessor (funcName, fullName);
-//     //     MFileCache.Add (funcName, proc);
+//            //     MFileCache.Add (funcName, proc);
 //            return proc;
 //        }
 
 //        public static void ClearCache ()
 //        {
-//      //      MFileCache.Clear ();
+//            //      MFileCache.Clear ();
 //        }
 
 //        //*****************************************************************************
@@ -101,7 +108,7 @@
 //                    }
 //                }
 //            }
-           
+
 //            return false;
 //        }
 

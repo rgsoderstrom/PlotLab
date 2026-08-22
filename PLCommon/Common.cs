@@ -1,8 +1,9 @@
 ﻿
 namespace PLCommon
 {
-    public delegate PLVariable PLFunction    (PLVariable var);
-    public delegate bool       BSFunction    (string str);
+    public delegate PLVariable PLFunction (PLVariable var);
+    public delegate bool       BSFunction (string str);
+    public delegate PLVariable PZFunction ();  // return PLVariable, no input args
 
     public delegate void       PrintFunction (string str);
     public delegate bool       PLRequest     (string str);
@@ -17,12 +18,12 @@ namespace PLCommon
         PlotCommand,
         SystemCommand,
 
+        ZeroArgFunction,
         Function,
         BlockStart, // for, while, if
         BlockEnd,
         ScriptFile,
         FunctionFile, 
-
     };
 
     public enum InputLineType
@@ -30,6 +31,7 @@ namespace PLCommon
         Unknown,
         ExpressionTree, 
         VariableName,
+        ZeroArgFunction,
         SystemCommand,
         PlotCommand,
         WorkspaceCommand,

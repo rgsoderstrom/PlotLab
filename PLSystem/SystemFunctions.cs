@@ -214,7 +214,7 @@ namespace PLSystem
             if (Directory.Exists (nextCurrentDir))
             {
                 FileSystem.CurrentDirectory = nextCurrentDir;
-                MFileFunctionMgr.CurrentDir = nextCurrentDir;
+             //   MFileFunctionMgr.CurrentDir = nextCurrentDir;
             }
             else
                 throw new Exception ("Directory " + nextCurrentDir + " doesn't exist");

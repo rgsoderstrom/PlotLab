@@ -13,18 +13,14 @@ namespace FunctionLibrary
         //
         // map function name strings to executable functions
         //
-
-        static public Dictionary<string, PLFunction> GetContents ()
+        static public void AddIOFunctions (ref Dictionary<string, PLFunction> dst)
         {
-            return new Dictionary<string, PLFunction>
-            {
-                {"sprintf", PrintToString},
-                {"disp",    Display},  
-                {"format",  Format},  
-            };
+            dst.Add ("sprintf", PrintToString);
+            dst.Add ("disp",    Display);  
+            dst.Add ("format",  Format);  
         }
 
-        static public void GetZeroArgNames (List<string> funcs)
+        static public void AddZeroArgIOFunctions (ref Dictionary<string, PZFunction> dst)
         {
         }
 

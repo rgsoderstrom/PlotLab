@@ -20,10 +20,9 @@ namespace FunctionLibrary
         //
         // map function name strings to executable functions
         //
-
-        static public Dictionary<string, PLFunction> GetSignalProcessingContents ()
+        static public void AddSignalProcessingFunctions (ref Dictionary<string, PLFunction> dst)
         {
-            return new Dictionary<string, PLFunction> 
+            Dictionary<string, PLFunction> local = new Dictionary<string, PLFunction> 
             {
                 {"CreateLPF",    CreateLPF},
                 {"CreateFIR",    CreateFIR},
@@ -32,11 +31,9 @@ namespace FunctionLibrary
                 {"DeleteFilter", DeleteFilter},
                 {"fft",          FFT }
             };
+
+            foreach (KeyValuePair<string, PLFunction> kvp in local)
+                dst.Add (kvp.Key, kvp.Value);
         }
-
-
-
     }
-
-
 }

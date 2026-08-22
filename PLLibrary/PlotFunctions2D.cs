@@ -62,6 +62,11 @@ namespace FunctionLibrary
 
         // PlotLimits - "axis" handler for some options
 
+        static public PLVariable PlotLimits ()
+        {
+            return new PLDouble (123);
+        }
+
         static public PLVariable PlotLimits (PLVariable arg)
         {
             if (CurrentFigure is Plot2D == false)

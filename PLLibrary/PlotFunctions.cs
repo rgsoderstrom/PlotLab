@@ -31,40 +31,37 @@ namespace FunctionLibrary
         //
         // map function name strings to executable functions
         //
-        static public Dictionary<string, PLFunction> GetFunctionContents ()
+        static public void AddPlotFunctions (ref Dictionary<string, PLFunction> dst)
         {
-            return new Dictionary<string, PLFunction>
-            {
-                {"plot",         Plot},
-                {"title",        Title},
-                {"xlabel",       XLabel},
-                {"ylabel",       YLabel},
-                {"text",         Text},
-                {"figure",       Figure},
-                {"PlotVector",   PlotVector2D},
-                {"PlotVector2D", PlotVector2D},
-                {"PlotVector3D", PlotVector3D},
-                {"quiver",       PlotVectorField},
-                {"arrow",        PlotVector2D},
-                {"contour",      ContourPlotFunctions.ContourPlot},
-                {"set",          Set},
-                {"get",          Get},
-                {"axis",         PlotLimits}, // a = axis; 
-                {"axes",         Axes},
-                {"PlotCenter",   CameraCenter},
-                {"CameraCenter", CameraCenter},
-                {"CameraAbsPos", CameraPosition},
-                {"CameraRelPos", CameraRelPosition},
-                {"grid",         Grid},
-            };
+            dst.Add ("plot",         Plot);
+            dst.Add ("title",        Title);
+            dst.Add ("xlabel",       XLabel);
+            dst.Add ("ylabel",       YLabel);
+            dst.Add ("text",         Text);
+            dst.Add ("figure",       Figure);
+            dst.Add ("PlotVector",   PlotVector2D);
+            dst.Add ("PlotVector2D", PlotVector2D);
+            dst.Add ("PlotVector3D", PlotVector3D);
+            dst.Add ("quiver",       PlotVectorField);
+            dst.Add ("arrow",        PlotVector2D);
+            dst.Add ("contour",      ContourPlotFunctions.ContourPlot);
+            dst.Add ("set",          Set);
+            dst.Add ("get",          Get);
+            dst.Add ("axis",         PlotLimits); // a = axis; 
+            dst.Add ("axes",         Axes);
+            dst.Add ("PlotCenter",   CameraCenter);
+            dst.Add ("CameraCenter", CameraCenter);
+            dst.Add ("CameraAbsPos", CameraPosition);
+            dst.Add ("CameraRelPos", CameraRelPosition);
+            dst.Add ("grid",         Grid);
         }
 
         // functions that can be invoked with no arguments
-        static public void GetZeroArgNames (List<string> names)
+        static public void AddZeroArgFunctions (ref Dictionary<string, PZFunction> dst)
         {
-            names.Add ("axis");
-            names.Add ("figure");
-            names.Add ("clf");
+            dst.Add ("axis",   PlotLimits);
+            dst.Add ("figure", Figure);
+            dst.Add ("clf",    ClearFigure);
         }
 
         //*********************************************************************************************
@@ -78,7 +75,7 @@ namespace FunctionLibrary
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        
+
         //
         //
         //      - format args

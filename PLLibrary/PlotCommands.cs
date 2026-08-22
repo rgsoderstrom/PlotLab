@@ -18,15 +18,11 @@ namespace FunctionLibrary
         // map command strings to executable functions
         //
 
-        static public Dictionary<string, BSFunction> GetPlotCommands ()
+        static public void AddPlotCommands (ref Dictionary<string, BSFunction> dst)
         {
-            return new Dictionary<string, BSFunction> ()
-            {
-                {"close",  CloseFigure},
-                {"hold",   Hold},
-                {"clf",    ClearFigure},
-                {"axis",   AxisConstraints},
-            };
+            dst.Add ("close",  CloseFigure);
+            dst.Add ("hold",   Hold);
+            dst.Add ("axis",   AxisConstraints);
         }
 
         //*********************************************************************************************
@@ -158,7 +154,7 @@ namespace FunctionLibrary
 
         // called in response to clf
 
-        static bool ClearFigure (string _)
+        static PLVariable ClearFigure ()
         {
             if (CurrentFigure == null)
                 NewFigure ();
@@ -166,10 +162,15 @@ namespace FunctionLibrary
             else if (CurrentFigure is IPlotDrawable)
                 (CurrentFigure as IPlotDrawable).Clear ();
 
-            return true;
+            return new PLBool (true);
         }
 
         //*********************************************************************************************
+
+        static PLVariable Figure ()
+        {
+            return new PLDouble (456);
+        }
 
         static PLVariable Figure (PLVariable arg)
         {
