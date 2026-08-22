@@ -162,63 +162,55 @@ namespace FunctionLibrary
             else if (CurrentFigure is IPlotDrawable)
                 (CurrentFigure as IPlotDrawable).Clear ();
 
-            return new PLBool (true);
+            return new PLNull ();
         }
 
         //*********************************************************************************************
 
         static PLVariable Figure ()
         {
-            return new PLDouble (456);
+            NewFigure ();
+            return new PLInteger (CurrentFigure.ID);
         }
 
         static PLVariable Figure (PLVariable arg)
         {
             int figNumber;
 
-            if (arg is PLNull)
+            PLDouble  dbl  = arg as PLDouble;
+            PLInteger intr = arg as PLInteger;
+            if (dbl == null && intr == null) throw new Exception ("Figure command argument error");
+
+            int requestedFigNumber = intr == null ? (int) dbl.Data : intr.Data;
+            bool found = false;
+
+            // look for that id. if found make it the current figure
+            foreach (Window w in Figures)
+            {
+                // see if "w" is a PlotFigure (i.e. not assigned to 2D or 3D yet)
+                PlotFigure pf = w as PlotFigure; if (pf != null) {if (pf.ID == requestedFigNumber) {found = true; CurrentFigure = pf; break;}}
+
+                // see if it's a Plot2D
+                Plot2D p2 = w as Plot2D; if (p2 != null) {if (p2.ID == requestedFigNumber) {found = true; CurrentFigure = p2; break;}}
+
+                // or a Plot3D
+                Plot3D p3 = w as Plot3D; if (p3 != null) {if (p3.ID == requestedFigNumber) {found = true; CurrentFigure = p3; break;}}
+            }
+
+            if (found) // pull it to front
+            {
+                (CurrentFigure as Window).Topmost = true;
+                (CurrentFigure as Window).Topmost = false;
+            }
+
+            else // not found, so make a new figure and assign that id                
             {
                 NewFigure ();
-                figNumber = CurrentFigure.ID;
+                (CurrentFigure as Window).Title = "Figure " + requestedFigNumber.ToString ();
+                CurrentFigure.ID = requestedFigNumber;
             }
 
-            else
-            {
-                PLDouble  dbl  = arg as PLDouble;
-                PLInteger intr = arg as PLInteger;
-                if (dbl == null && intr == null) throw new Exception ("Figure command argument error");
-
-                int requestedFigNumber = intr == null ? (int) dbl.Data : intr.Data;
-                bool found = false;
-
-                // look for that id. if found make it the current figure
-                foreach (Window w in Figures)
-                {
-                    // see if "w" is a PlotFigure (i.e. not assigned to 2D or 3D yet)
-                    PlotFigure pf = w as PlotFigure; if (pf != null) {if (pf.ID == requestedFigNumber) {found = true; CurrentFigure = pf; break;}}
-
-                    // see if it's a Plot2D
-                    Plot2D p2 = w as Plot2D; if (p2 != null) {if (p2.ID == requestedFigNumber) {found = true; CurrentFigure = p2; break;}}
-
-                    // or a Plot3D
-                    Plot3D p3 = w as Plot3D; if (p3 != null) {if (p3.ID == requestedFigNumber) {found = true; CurrentFigure = p3; break;}}
-                }
-
-                if (found) // pull it to front
-                {
-                    (CurrentFigure as Window).Topmost = true;
-                    (CurrentFigure as Window).Topmost = false;
-                }
-
-                else // not found, so make a new figure and assign that id                
-                {
-                    NewFigure ();
-                    (CurrentFigure as Window).Title = "Figure " + requestedFigNumber.ToString ();
-                    CurrentFigure.ID = requestedFigNumber;
-                }
-
-                figNumber = requestedFigNumber;
-            }
+            figNumber = requestedFigNumber;
 
             return new PLInteger (figNumber);
         }
