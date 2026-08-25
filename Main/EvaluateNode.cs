@@ -300,9 +300,9 @@ namespace PLMain
             {
                 PLFunction func = LibraryManager.GetFunctionDelegate (Operator);
 
-                if (LibraryManager.IsZeroArgFunction (Operator)) // if function can be invoked with zero args ...
-                    Value = func (new PLNull ());
-                else
+                //if (LibraryManager.IsZeroArgFunction (Operator)) // if function can be invoked with zero args ...
+                //    Value = func (new PLNull ());
+                //else
                     Value = new PLFunctionWrapper (func);
             }
 
@@ -310,7 +310,7 @@ namespace PLMain
             {
                 Operands [0].Evaluate ();
 
-                if (LibraryManager.Contains (Operator))
+                if (LibraryManager.IsFunctionWithArgs (Operator))
                     Value = LibraryManager.Evaluate (Operator, Operands [0].Value);
 
                 else if (Workspace.Functions.ContainsKey (Operator))
@@ -333,7 +333,7 @@ namespace PLMain
                 foreach (ExpressionTreeNode op in Operands)
                     args.Add (op.Evaluate ());
 
-                if (LibraryManager.Contains (Operator))
+                if (LibraryManager.IsFunctionWithArgs (Operator))
                     Value = LibraryManager.Evaluate (Operator, args);
 
                 else if (Workspace.Functions.ContainsKey (Operator))

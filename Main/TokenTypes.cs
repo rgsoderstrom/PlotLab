@@ -33,7 +33,12 @@ namespace PLMain
         FunctionName,    // built-in
         ScriptFile,
         FunctionFile,    // .m file
+        ZeroArgCommand,  // return a bool
         Undefined,       // on LHS a new variable, on RHS will be an error
+
+        // FunctionName changed to on of these in 3rd pass
+        ZeroArgFunction, // return a PLVariable
+        FunctionWithArgs,
 
         GroupingParens,  // A * (B + C)
         FunctionParens,  // Func1 (P, Q, R, S)

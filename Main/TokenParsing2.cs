@@ -97,14 +97,44 @@ namespace PLMain
             {
                 if (initial [i].Type == TokenType.Alphanumeric)
                 {
-                    if (Workspace.IsDefined (initial [i].AnnotatedText.Plain))
-                        initial [i].Type = TokenType.VariableName;
+                    string str = initial [i].AnnotatedText.Plain;
 
-                    else if (Workspace.WhatIs (initial [i].AnnotatedText.Plain) == SymbolicNameTypes.Function)
+                    SymbolicNameTypes whatIs = Workspace.WhatIs (str);
+
+                    if (whatIs != SymbolicNameTypes.Unknown)
+                    {
+                        switch (whatIs)
+                        {
+                            case SymbolicNameTypes.Variable:
+                                initial [i].Type = TokenType.VariableName;
+                                break;
+
+                            case SymbolicNameTypes.Function:
+                                initial [i].Type = TokenType.FunctionName;
+                                break;
+
+                            case SymbolicNameTypes.ZeroArgFunction:
+                                initial [i].Type = TokenType.FunctionName;
+                                break;
+
+                            case SymbolicNameTypes.WorkspaceCommand:
+                                throw new Exception ("Unexpected Workspace Command: " + str);
+                                //break;
+
+                            default:
+                                throw new Exception ("Unsupported token type: " + str);
+                        }
+                    }
+
+
+
+
+                    else if (LibraryManager.IsFunctionWithArgs (str) || LibraryManager.IsZeroArgFunction (str))
                         initial [i].Type = TokenType.FunctionName;
 
-                    else if (LibraryManager.Contains (initial [i].AnnotatedText.Plain))
-                        initial [i].Type = TokenType.FunctionName;
+
+
+
 
                     else if (FileSystem.IsFunctionFile (initial [i].AnnotatedText.Plain))
                         initial [i].Type = TokenType.FunctionFile;
@@ -391,12 +421,20 @@ namespace PLMain
                         break;
 
                     case TokenType.FunctionName:
-                        if (initial [i+1].Type != TokenType.FunctionParens)
-                            throw new Exception ("Function name " + initial [i].AnnotatedText.Plain + " without arguments");
+                        if (initial [i+1].Type == TokenType.FunctionParens)
+                        {
+                            initial [i].Type = TokenType.FunctionWithArgs;
+                            TokenPair funcPair = new TokenPair (TokenPairType.Function, initial [i], initial [i+1]);
+                            edited.Add (funcPair);
+                            i++; // don't look at the function parens token a second time
+                        }
 
-                        TokenPair funcPair = new TokenPair (TokenPairType.Function, initial [i], initial [i+1]);
-                        edited.Add (funcPair);
-                        i++; // don't look at the function parens token a second time
+                        else
+                        { 
+                            initial [i].Type = TokenType.ZeroArgFunction;
+                            edited.Add (initial [i]);
+                        }
+
                         break;
 
                     default:
@@ -406,8 +444,12 @@ namespace PLMain
             }
 
             // add last initial token if it isn't part of a token pair 
-            if ((initial [initial.Count - 1].Type != TokenType.SubmatrixParens) && (initial [initial.Count - 1].Type != TokenType.FunctionParens))
-                edited.Add (initial [initial.Count - 1]);
+            int last = initial.Count - 1;
+
+            if (initial [last].Type == TokenType.FunctionName) initial [last].Type = TokenType.ZeroArgFunction;
+
+            if ((initial [last].Type != TokenType.SubmatrixParens) && (initial [last].Type != TokenType.FunctionParens))
+                edited.Add (initial [last]);
 
             return edited;
         }

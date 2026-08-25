@@ -90,6 +90,11 @@ namespace PLMain
                                 answer = tree.Evaluate ();
                                 break; 
 
+                            case InputLineType.ZeroArgFunction:
+                                answer = LibraryManager.RunZeroArgFunction (astr2.Plain);
+                                break;
+
+
                             case InputLineType.VariableName:
                                 PLVariable v = Workspace.Get (astr2.Plain);
                                 Print?.Invoke (v.ToString ());

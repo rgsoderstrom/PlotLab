@@ -89,6 +89,16 @@ namespace PLLibrary
         //    return type;
         //}
 
+        public static bool IsFunctionWithArgs (string str)
+        {
+            if (MathFunctions.ContainsKey    (str)) return true;
+            if (SigProcFunctions.ContainsKey (str)) return true;
+            if (IOFunctionsDict.ContainsKey  (str)) return true;
+            if (PlotFunctions.ContainsKey    (str)) return true;
+
+            return false;
+        }
+
         public static bool IsZeroArgFunction (string str)
         {
             return ZeroArgFunctions.ContainsKey (str);
@@ -128,22 +138,24 @@ namespace PLLibrary
         // Evaluate - looks for a named function in a dictionary and if found, calls it
         //
         
-        public static bool Contains (string name) 
-        {
-            if (SigProcFunctions.ContainsKey (name))
-                return true;
+        //public static bool Contains (string name) 
+        //{
+        //    throw new Exception ("Contains - obsolete");
 
-            if (MathFunctions.ContainsKey (name))
-                return true;
+        //    //if (SigProcFunctions.ContainsKey (name))
+        //    //    return true;
 
-            if (IOFunctionsDict.ContainsKey (name))
-                return true;
+        //    //if (MathFunctions.ContainsKey (name))
+        //    //    return true;
 
-            if (PlotFunctions.ContainsKey (name))
-                return true;
+        //    //if (IOFunctionsDict.ContainsKey (name))
+        //    //    return true;
 
-            return false;
-        }
+        //    //if (PlotFunctions.ContainsKey (name))
+        //    //    return true;
+
+        //    //return false;
+        //}
 
         public static PLVariable Evaluate (string name, PLVariable args)
         {

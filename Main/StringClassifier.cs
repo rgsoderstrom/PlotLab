@@ -32,9 +32,12 @@ namespace PLMain
             // for lines with alphanumeric only
             if (astr.AlphanumericOnly)
             {
-                // if it's a single word, check variables and scripts
+                // if it's a single word, check commands, variables and scripts
                 if (astr.SingleWord)
                 {
+                    if (LibraryManager.IsZeroArgFunction (astr.Plain))
+                        return InputLineType.ZeroArgFunction;
+
                     if (Workspace.WhatIs (astr.Plain) == SymbolicNameTypes.Variable)
                         return InputLineType.VariableName;
 
@@ -47,7 +50,7 @@ namespace PLMain
 
                 else
                 {
-                    if (LibraryManager.WhatIs (FirstWord) == SymbolicNameTypes.PlotCommand)
+                    if (LibraryManager.IsPlotCommand (FirstWord))
                         return InputLineType.PlotCommand;
                 }
             }

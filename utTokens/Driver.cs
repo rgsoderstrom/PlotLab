@@ -169,11 +169,18 @@ namespace utTokens
 
             Print (annotated.ToString ());
 
-            // pass annotated string to token processor
-            TokenParsing parser = new TokenParsing ();
-            TokenSet statementtokens = parser.StringToTokens (annotated);
+            if (annotated.AlphanumericOnly)
+            {
+                Print ("\nAlphanumericOnly, token parsing skipped");
+            }
+            else
+            { 
+                // pass annotated string to token processor
+                TokenParsing parser = new TokenParsing ();
+                TokenSet statementtokens = parser.StringToTokens (annotated);
 
-            Print (statementtokens.ToString ());
+                Print (statementtokens.ToString ());
+            }
 
             return true;
         }

@@ -6,8 +6,11 @@
 	% AnnotatedString - alphanumeric only
 	% BLOCK_2
 	% BLOCK_T
-	length ([3 : 12])
-	axis equal
+	% axis + 2 
+	% p = axis;
+	% axis equal
+	% axis ([1 2 3 4]);
+	% rand + 2
 	
 	% clear a b c
 	% for a = 1:10,

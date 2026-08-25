@@ -21,11 +21,11 @@ namespace PLSystem
         static public PrintFunction Print = null;
         static public BSFunction UserConsoleRequests;
 
-        static public Dictionary<string, BSFunction> SystemCommands;
+        static public Dictionary<string, BSFunction> SystemCommands = new Dictionary<string, BSFunction> ();
 
         static SystemFunctions ()
         {
-            SystemCommands = GetContents ();
+            AddCommands (ref SystemCommands);
         }
 
         //*********************************************************************************************
@@ -33,35 +33,32 @@ namespace PLSystem
         // map function name strings to executable functions
         //
 
-        static public Dictionary<string, BSFunction> GetContents ()
+        static private void AddCommands (ref Dictionary<string, BSFunction> dst)
         {
-            return new Dictionary<string, BSFunction> 
-            {
-                {"cd",    Cd  },
-                {"ls",    Ls  },
-                {"pwd",   Pwd },
-                {"exit",  Exit},
-                {"edit",  Edit},
-                {"clc",   Clc },
-                {"path",  Path},
-                {"addpath", AddPath},
-                {"history", History},
-                {"help",    HelpWindow},
-            };
+            dst.Add ("cd",    Cd);
+            dst.Add ("ls",    Ls);
+            dst.Add ("pwd",   Pwd);
+            dst.Add ("exit",  Exit);
+            dst.Add ("edit",  Edit);
+            dst.Add ("clc",   Clc);
+            dst.Add ("path",  Path);
+            dst.Add ("addpath", AddPath);
+            dst.Add ("history", History);
+            dst.Add ("help",    HelpWindow);
         }
 
         //***************************************************************************************************
         //***************************************************************************************************
         //***************************************************************************************************
 
-        public static SymbolicNameTypes WhatIs (string str)
-        {
-            SymbolicNameTypes type = SymbolicNameTypes.Unknown;
+        //public static SymbolicNameTypes WhatIs (string str)
+        //{
+        //    SymbolicNameTypes type = SymbolicNameTypes.Unknown;
 
-            if (SystemCommands.ContainsKey (str)) {type = SymbolicNameTypes.SystemCommand;}
+        //    if (SystemCommands.ContainsKey (str)) {type = SymbolicNameTypes.SystemCommand;}
 
-            return type;
-        }
+        //    return type;
+        //}
 
         public static List<string> PartialMatch (string str)
         {
