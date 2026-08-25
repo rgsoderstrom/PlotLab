@@ -6,22 +6,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using PLCommon;
 
 namespace PLWorkspace
 {
-    internal class FunctionWorkspace : WorkspaceBase
+    internal class FunctionWorkspace : WorkspaceBaseClass
     {
         //*************************************************************
 
         // Copy and rename input arguments into this function's workspace 
 
         internal FunctionWorkspace (string        functionName,
-                                    WorkspaceBase callersWorkspace, 
+                                    WorkspaceBaseClass callersWorkspace, 
                                     List<string>  callersNames,   // names in the source workspace
                                     List<string>  functionsNames) // parallel array of their names in this workspace
                                   : base (functionName)
@@ -56,7 +53,7 @@ namespace PLWorkspace
 
         // Copy and rename function's output args into caller's workspace
 
-        internal void GetOutputs (WorkspaceBase callersWorkspace,
+        internal void GetOutputs (WorkspaceBaseClass callersWorkspace,
                                   List<string>  callersNames,  // names in the caller's workspace
                                   List<string>  localNames)    // parallel array of their names in this workspace
         {

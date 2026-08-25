@@ -1,17 +1,17 @@
 ﻿
 /*
-    Workspace - Two components:
-                    - a single GlobalWorkspace
+    Workspace - Container and public interface
+              - Two components:
                     - a stack of:
-                        - one BaseWorkspace
+                        - DefaultWorkspace
                         - possibly one or more FunctionWorkspaces 
+                        - top-of-stack is "current" workspace
+                    - a single GlobalWorkspace
+                        - searched if a variable is not found in current workspace
 */
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using PLCommon;
 
@@ -19,113 +19,96 @@ namespace PLWorkspace
 {
     static public class Workspace
     {
-        private  static readonly Stack<WorkspaceBase> workSpaces = new Stack<WorkspaceBase> ();
+        private  static readonly Stack<WorkspaceBaseClass> workSpaceStack = new Stack<WorkspaceBaseClass> ();
         internal static readonly GlobalWorkspace Global;  // secondary for retrieval. Must be explicitly specified for storage 
 
         static Workspace ()
         {
-            workSpaces.Push (new BaseWorkspace ("Base1"));
+            workSpaceStack.Push (new DefaultWorkspace ("Default"));
             Global = new GlobalWorkspace ();
         }
 
-        static private WorkspaceBase Current 
+        static private WorkspaceBaseClass Current {get {return workSpaceStack.Peek ();}}
+        static public  PrintFunction Print   {set {WorkspaceBaseClass.Print = value;}}
+
+        //************************************************************************************
+        //
+        // Write or read variables
+        //
+
+        // Add () - add to Current workspace
+        static public void Add (PLVariable var)  
         {
-            get 
-            {
-                return workSpaces.Peek ();
-            }
+            Current.Add (var);
         }
 
-        //************************************************************************************
-
-        static public PrintFunction Print
+        // Contains () - test whether a variable is defined
+        static public bool IsVariable (string str) 
         {
-            set
-            { 
-                WorkspaceBase.Print = value;
-            }
+            return Current.Contains (str) || Global.Contains (str);
         }
 
-        //************************************************************************************
-        //************************************************************************************
-
-        // stack management
-
-        static public void PushNew (string name, List<string> callersNames, List<string> functionsNames)
+        // AddGlobal () - add to global workspace
+        static public void AddGlobal (PLVariable var) 
         {
-            if (workSpaces.Count > 100)
-                throw new Exception ("Workspace stack overflow");
-
-            WorkspaceBase caller = workSpaces.Peek();
-            workSpaces.Push (new FunctionWorkspace (name, caller, callersNames, functionsNames));
+            Global.Add (var);
         }
 
-        //************************************************************************************
-
-        static public void PopFunction (List<string> callersNames, List<string> functionsNames)
-        {
-            if (workSpaces.Count == 1)
-                throw new Exception ("Workspace stack underflow, attempt to pop base workspace");
-
-            FunctionWorkspace function = workSpaces.Pop () as FunctionWorkspace;
-
-            function.GetOutputs (Current,
-                                 callersNames,    // parallel array of their names in this workspace
-                                 functionsNames); // names in the caller's workspace
-        }
-
-        //************************************************************************************
-        //************************************************************************************
-
-        // low-level functions and commands
-
-        static public bool Contains  (string var) {return Current.Contains (var) || Global.Contains (var);}
-        static public bool IsDefined (string var) {return Contains (var);}
-
-        static public void Add       (PLVariable var)  {Current.Add (var);}
-        static public void AddGlobal (PLVariable var)  {Global.Add (var);}
-
-
-        static public Dictionary<string, PLFunction> Functions {get             {return Current.Functions;}}
-        static public PLVariable Evaluate (string    funcName, PLVariable args) {return Current.Evaluate (funcName, args);}
-        static public PLVariable Evaluate (PLString  funcName, PLVariable args) {return Current.Evaluate (funcName, args);}
-
-
-        // Workspace commands print information on things in the
-        // workspace, e.g. whos
-
-        static public bool RunCommand (string cmnd, string args) 
-        {
-            return Current.RunCommand (cmnd, args);
-        }
-
-
-
-        // check Current first. if not there check global 
+        // Get () - read and return a variable
         static public PLVariable Get (string name) 
         {
             PLVariable plv = null;
 
-            if (Current.Get (name, ref plv)) return plv;
+            if (Current.Get (name, ref plv)) return plv; // check Current first. if not there check global 
             if (Global.Get  (name, ref plv)) return plv;
 
             throw new Exception ("Cannot find " + name + " in Workspace");
         }
 
 
-     //   static public void Dump ()  {Current.Dump ("");}
+        //************************************************************************************
+        //************************************************************************************
+        //************************************************************************************
 
-//        static public void Clear (PLVariable lst)  {Current.Clear (lst);} // one or several variables
+        // stack management
+
+        //static public void PushNew (string name, List<string> callersNames, List<string> functionsNames)
+        //{
+        //    if (workSpaceStack.Count > 100)
+        //        throw new Exception ("Workspace stack overflow");
+
+        //    WorkspaceBaseClass caller = workSpaceStack.Peek();
+        //    workSpaceStack.Push (new FunctionWorkspace (name, caller, callersNames, functionsNames));
+        //}
+
+        //************************************************************************************
+
+        //static public void PopFunction (List<string> callersNames, List<string> functionsNames)
+        //{
+        //    if (workSpaceStack.Count == 1)
+        //        throw new Exception ("Workspace stack underflow, attempt to pop base workspace");
+
+        //    FunctionWorkspace function = workSpaceStack.Pop () as FunctionWorkspace;
+
+        //    function.GetOutputs (Current,
+        //                         callersNames,    // parallel array of their names in this workspace
+        //                         functionsNames); // names in the caller's workspace
+        //}
+
+        //************************************************************************************
+        //************************************************************************************
+        //************************************************************************************
 
 
-        static public List<string> PartialMatch (string str)
+
+        static public Dictionary<string, PLFunction> Functions {get             {return Current.Functions;}}
+
+        static public PLVariable Evaluate (string    funcName, PLVariable args) 
         {
-            //List<string> matches = new List<string> ();
-            //return matches;
-
-            return Current.PartialMatch (str);
-
+            return Current.Evaluate (funcName, args);
         }
+
+        static public PLVariable Evaluate (PLString  funcName, PLVariable args) {return Current.Evaluate (funcName, args);}
 
         static public SymbolicNameTypes WhatIs (string str)
         {
@@ -138,14 +121,41 @@ namespace PLWorkspace
         }
 
 
+
+
+        // Workspace commands print information on things in the
+        // workspace, e.g. whos
+
+        static public bool RunCommand (string cmnd, string args) 
+        {
+            return Current.RunCommand (cmnd, args);
+        }
+
+        static public bool RunCommand (string cmnd) 
+        {
+            return Current.RunCommand (cmnd);
+        }
+
+
+
+        static public List<string> PartialMatch (string str)
+        {
+            return Current.PartialMatch (str);
+
+        }
+
+
+
+
+
         //**********************************************************************************************
 
-        static public void OverwriteSubmatrix (string name,            // name of matrix already in workspace
-                                               int tlcRow, int tlcCol, // 1-based
-                                               PLVariable var)         // new data to overwrite some of old
-        {
-            Current.OverwriteSubmatrix (name, tlcRow, tlcCol, var);
-        }
+        //static public void OverwriteSubmatrix (string name,            // name of matrix already in workspace
+        //                                       int tlcRow, int tlcCol, // 1-based
+        //                                       PLVariable var)         // new data to overwrite some of old
+        //{
+        //    Current.OverwriteSubmatrix (name, tlcRow, tlcCol, var);
+        //}
 
 
 

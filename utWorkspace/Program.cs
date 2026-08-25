@@ -18,11 +18,11 @@ namespace PLWorkspace
             {
                 Workspace.Print = Console.Write;
 
-                //PushPopTest ();
-                //ReadWriteTest ();
+                ReadWriteTest ();
                 //OverwriteSubmatrix_Test2 ();
                 //OverwriteSubmatrix_Test1 ();
-                Functions_Test1 ();
+                //Functions_Test1 ();
+                //PushPopTest ();
 
 
 
@@ -133,120 +133,122 @@ namespace PLWorkspace
 
         static void OverwriteSubmatrix_Test1 ()
         {
-            Matrix mat2 = new Matrix (2, 2);
-            mat2.FillByRow (new double [] {101, 102, 
-                                           103, 104});
-            PLMatrix RealMat = new PLRMatrix ("RealMat", mat2);
-            Workspace.Add (RealMat);
+            //Matrix mat2 = new Matrix (2, 2);
+            //mat2.FillByRow (new double [] {101, 102, 
+            //                               103, 104});
+            //PLMatrix RealMat = new PLRMatrix ("RealMat", mat2);
+            //Workspace.Add (RealMat);
 
-            PLVariable RealScalar = new PLDouble ("RealScalar", 123);
-            Workspace.Add (RealScalar);
+            //PLVariable RealScalar = new PLDouble ("RealScalar", 123);
+            //Workspace.Add (RealScalar);
 
-            CMatrix mat3 = new CMatrix (2, 3);
-            mat3.FillByRow (new Complex [] {new Complex (12, 34),  new Complex (22, 22),  new Complex (33, 33),  
-                                            new Complex (44, 44),  new Complex (55, 55),  new Complex (67, 89)});
-            PLMatrix ComplexMat = new PLCMatrix ("ComplexMat", mat3);
-            Workspace.Add (ComplexMat);
+            //CMatrix mat3 = new CMatrix (2, 3);
+            //mat3.FillByRow (new Complex [] {new Complex (12, 34),  new Complex (22, 22),  new Complex (33, 33),  
+            //                                new Complex (44, 44),  new Complex (55, 55),  new Complex (67, 89)});
+            //PLMatrix ComplexMat = new PLCMatrix ("ComplexMat", mat3);
+            //Workspace.Add (ComplexMat);
 
-            PLVariable ComplexScalar = new PLComplex ("ComplexScalar", 777, 888);
-            Workspace.Add (ComplexScalar);
+            //PLVariable ComplexScalar = new PLComplex ("ComplexScalar", 777, 888);
+            //Workspace.Add (ComplexScalar);
 
-            Console.WriteLine ("before: " + RealMat.ToString ());
-            Console.WriteLine ();
+            //Console.WriteLine ("before: " + RealMat.ToString ());
+            //Console.WriteLine ();
 
-            Workspace.OverwriteSubmatrix ("RealMat",    // name of matrix already in workspace
-                                          1, 1,   // 1-based
-                                          RealScalar);    // new data to overwrite some of old
+            //Workspace.OverwriteSubmatrix ("RealMat",    // name of matrix already in workspace
+            //                              1, 1,   // 1-based
+            //                              RealScalar);    // new data to overwrite some of old
 
-            RealMat = Workspace.Get ("RealMat") as PLMatrix;
-            Console.WriteLine ("After: " + RealMat.ToString ());
+            //RealMat = Workspace.Get ("RealMat") as PLMatrix;
+            //Console.WriteLine ("After: " + RealMat.ToString ());
         }
 
         //********************************************************************************
 
         static void OverwriteSubmatrix_Test2 ()
         {
-            Matrix mat1 = new Matrix (4, 5);
-            mat1.FillByRow (new double [] {11, 12, 13, 14, 15, 
-                                           21, 22, 23, 24, 25, 
-                                           31, 32, 33, 34, 35, 
-                                           41, 42, 43, 44, 45 });
-            PLMatrix Z1 = new PLRMatrix ("Z1", mat1);
-            Workspace.Add (Z1);
+       //     Matrix mat1 = new Matrix (4, 5);
+       //     mat1.FillByRow (new double [] {11, 12, 13, 14, 15, 
+       //                                    21, 22, 23, 24, 25, 
+       //                                    31, 32, 33, 34, 35, 
+       //                                    41, 42, 43, 44, 45 });
+       //     PLMatrix Z1 = new PLRMatrix ("Z1", mat1);
+       //     Workspace.Add (Z1);
 
-            Matrix mat2 = new Matrix (2, 2);
-            mat2.FillByRow (new double [] { 101, 102, 103, 104 });
-            PLMatrix Z2 = new PLRMatrix ("Z2", mat2);
-            Workspace.Add (Z2);
+       //     Matrix mat2 = new Matrix (2, 2);
+       //     mat2.FillByRow (new double [] { 101, 102, 103, 104 });
+       //     PLMatrix Z2 = new PLRMatrix ("Z2", mat2);
+       //     Workspace.Add (Z2);
 
-            CMatrix mat3 = new CMatrix (2, 3);
-            mat3.FillByRow (new Complex [] {new Complex (12, 34),  new Complex (22, 22),  new Complex (33, 33),  
-                                            new Complex (44, 44),  new Complex (55, 55),  new Complex (67, 89)});
-            PLMatrix Z3 = new PLCMatrix ("Z3", mat3);
-            Workspace.Add (Z3);
+       //     CMatrix mat3 = new CMatrix (2, 3);
+       //     mat3.FillByRow (new Complex [] {new Complex (12, 34),  new Complex (22, 22),  new Complex (33, 33),  
+       //                                     new Complex (44, 44),  new Complex (55, 55),  new Complex (67, 89)});
+       //     PLMatrix Z3 = new PLCMatrix ("Z3", mat3);
+       //     Workspace.Add (Z3);
 
-            CMatrix mat4 = new CMatrix (1, 2);
-            mat4.FillByRow (new Complex [] {new Complex (-12, 34),  new Complex (-22, 22)});
-            PLMatrix Z4 = new PLCMatrix ("Z4", mat4);
-            Workspace.Add (Z4);
+       //     CMatrix mat4 = new CMatrix (1, 2);
+       //     mat4.FillByRow (new Complex [] {new Complex (-12, 34),  new Complex (-22, 22)});
+       //     PLMatrix Z4 = new PLCMatrix ("Z4", mat4);
+       //     Workspace.Add (Z4);
 
-            PLMatrix ZReadback = Workspace.Get ("Z3") as PLMatrix;
-            Console.WriteLine (ZReadback.ToString ());
-            Console.WriteLine ();
+       //     PLMatrix ZReadback = Workspace.Get ("Z3") as PLMatrix;
+       //     Console.WriteLine (ZReadback.ToString ());
+       //     Console.WriteLine ();
 
-            //Workspace.OverwriteSubmatrix ("Z1",    // name of matrix already in workspace
-            //                              2,2,    // 1-based
-            //                              Z3);    // new data to overwrite some of old
+       //     //Workspace.OverwriteSubmatrix ("Z1",    // name of matrix already in workspace
+       //     //                              2,2,    // 1-based
+       //     //                              Z3);    // new data to overwrite some of old
 
-            //Workspace.OverwriteSubmatrix ("Z1",    // name of matrix already in workspace
-            //                              2, 2,   // 1-based
-            //                              Z2);    // new data to overwrite some of old
+       //     //Workspace.OverwriteSubmatrix ("Z1",    // name of matrix already in workspace
+       //     //                              2, 2,   // 1-based
+       //     //                              Z2);    // new data to overwrite some of old
 
-            //Workspace.OverwriteSubmatrix ("Z3",    // name of matrix already in workspace
-            //                              1, 1,   // 1-based
-            //                              Z2);    // new data to overwrite some of old
+       //     //Workspace.OverwriteSubmatrix ("Z3",    // name of matrix already in workspace
+       //     //                              1, 1,   // 1-based
+       //     //                              Z2);    // new data to overwrite some of old
 
-            Workspace.OverwriteSubmatrix ("Z3",    // name of matrix already in workspace
-                                          1, 1,   // 1-based
-                                          Z4);    // new data to overwrite some of old
+       //     Workspace.OverwriteSubmatrix ("Z3",    // name of matrix already in workspace
+       //                                   1, 1,   // 1-based
+       //                                   Z4);    // new data to overwrite some of old
 
-            ZReadback = Workspace.Get ("Z3") as PLMatrix;
-            Console.WriteLine (ZReadback.ToString ());
+       //     ZReadback = Workspace.Get ("Z3") as PLMatrix;
+       //     Console.WriteLine (ZReadback.ToString ());
 
-       //     Workspace.Dump ();
+       ////     Workspace.Dump ();
         }
 
         //********************************************************************************
 
         static void PushPopTest ()
         {
-            PLDouble X1 = new PLDouble ("X1", 2.456);
-            PLDouble X2 = new PLDouble ("X2", 3.33);
+            throw new NotImplementedException ("stack not implemented");
 
-            Workspace.Add (X1);
-            Workspace.Add (X2);
+         //   PLDouble X1 = new PLDouble ("X1", 2.456);
+         //   PLDouble X2 = new PLDouble ("X2", 3.33);
 
-            Workspace.Dump ();
+         //   Workspace.Add (X1);
+         //   Workspace.Add (X2);
 
-            //************************************************
+         //   Workspace.RunCommand ("whos", "");
 
-            List<string> ActualInputParameters = new List<string> () {"X1"};
-            List<string> FormalInputParameters = new List<string> () {"XX1"};
+         //   //************************************************
+
+         //   List<string> ActualInputParameters = new List<string> () {"X1"};
+         //   List<string> FormalInputParameters = new List<string> () {"XX1"};
                 
-            Workspace.PushNew ("Func1", ActualInputParameters, FormalInputParameters);
+         //   Workspace.PushNew ("Func1", ActualInputParameters, FormalInputParameters);
 
-            PLDouble X3 = new PLDouble ("X3", 88);
-            Workspace.Add (X3);
+         //   PLDouble X3 = new PLDouble ("X3", 88);
+         //   Workspace.Add (X3);
 
-            Workspace.Dump ();
+         ////   Workspace.Dump ();
 
-            //************************************************
+         //   //************************************************
 
-            List<string> ActualOutputParameters = new List<string> () {"XXX1"};
-            List<string> FormalOutputParameters = new List<string> () {"X3"};
+         //   List<string> ActualOutputParameters = new List<string> () {"XXX1"};
+         //   List<string> FormalOutputParameters = new List<string> () {"X3"};
 
-            Workspace.PopFunction (ActualOutputParameters, FormalOutputParameters);
-            Workspace.Dump ();
+         //   Workspace.PopFunction (ActualOutputParameters, FormalOutputParameters);
+         ////  Workspace.Dump ();
         }
 
         //********************************************************************************
@@ -262,7 +264,7 @@ namespace PLWorkspace
             PLDouble GX3 = new PLDouble ("GX3", 88);
             Workspace.AddGlobal (GX3);
 
-            Workspace.Dump ();
+            Workspace.RunCommand ("dump");
 
             PLVariable v1 = Workspace.Get ("X1");
             PLVariable v2 = Workspace.Get ("X2");
@@ -276,9 +278,11 @@ namespace PLWorkspace
             List<string> ActualInputParameters = new List<string> () {"X1"};
             List<string> FormalInputParameters = new List<string> () {"XX1"};
                 
-            Workspace.PushNew ("Func1", ActualInputParameters, FormalInputParameters);
+            throw new NotImplementedException ("stack not implemented");
 
-            Workspace.Dump ();
+         //   Workspace.PushNew ("Func1", ActualInputParameters, FormalInputParameters);
+
+        //    Workspace.Dump ();
 
          // verify can get global but not local from caller
 

@@ -71,6 +71,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "utAnnotatedStringUtils", "utAnnotatedStringUtils\utAnnotatedStringUtils.csproj", "{A0D63BC6-C810-4B21-AE7A-83B1A4308D92}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "utWorkspace", "utWorkspace\utWorkspace.csproj", "{56956CBF-D5F5-4BD6-ACC7-ED4F3581A59F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3769E3A7-B965-4B82-9430-402D88227140} = {3769E3A7-B965-4B82-9430-402D88227140}
+		{509D9AD1-4FFF-4DDB-AB62-1385FC175CA8} = {509D9AD1-4FFF-4DDB-AB62-1385FC175CA8}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

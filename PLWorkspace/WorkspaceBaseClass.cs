@@ -1,24 +1,19 @@
 ﻿
 /*
     WorkspaceBase.cs - abstract base class for:
-                     - BaseWorkspace
+                     - DefaultWorkspace
                      - GlobalWorkspace
                      - FunctionWorkspace
 */
 
 using System;
-using System.Windows;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using PLCommon;
-using System.Linq.Expressions;
 
 namespace PLWorkspace
 {
-    abstract internal class WorkspaceBase
+    abstract internal partial class WorkspaceBaseClass
     {
         protected readonly Dictionary<string, PLVariable> Variables = new Dictionary<string, PLVariable> ();
         internal  readonly Dictionary<string, PLFunction> Functions;
@@ -27,7 +22,7 @@ namespace PLWorkspace
         internal readonly string Name;
         internal static PrintFunction Print = Console.Write;
 
-        internal WorkspaceBase (string name)
+        internal WorkspaceBaseClass (string name)
         {
             Name = name;
             Commands = GetCommands ();
@@ -44,7 +39,6 @@ namespace PLWorkspace
         {
             return new Dictionary<string, BSFunction> ()
             {
-                {"exists", Exists},
                 {"clear",  Clear},
                 {"who",    Who},
                 {"whos",   Whos},
@@ -60,10 +54,11 @@ namespace PLWorkspace
         {
             return new Dictionary<string, PLFunction> ()
             {
-                {"rows",   WorkspaceUtils.Rows},
-                {"cols",   WorkspaceUtils.Cols},
-                {"length", WorkspaceUtils.Length},
-                {"size",   WorkspaceUtils.Size},
+                {"exists", Exists},
+                {"rows",   Rows},
+                {"cols",   Cols},
+                {"length", Length},
+                {"size",   Size},
             };
         }
 
@@ -75,6 +70,17 @@ namespace PLWorkspace
             {
                 BSFunction func = Commands [cmnd];
                 return func (args);
+            }
+
+            return false;
+        }
+
+        internal bool RunCommand (string cmnd)
+        {
+            if (Commands.ContainsKey (cmnd))
+            {
+                BSFunction func = Commands [cmnd];
+                return func ("");
             }
 
             return false;
@@ -208,16 +214,18 @@ namespace PLWorkspace
             else Variables.Add (var.Name, var);
         }
 
-        internal void OverwriteSubmatrix (string name,            // name of matrix already in workspace
-                                          int tlcRow, int tlcCol, // 1-based
-                                          PLVariable newData)     // new data to overwrite some of old
-        {
-            WorkspaceUtils.OverwriteSubmatrix (this,
-                                               name,           // name of matrix already in workspace
-                                               tlcRow, tlcCol, // 1-based
-                                               newData);       // new data to overwrite some of old
+        //*****************************************************************************************
 
-        }
+        //internal void OverwriteSubmatrix (string name,            // name of matrix already in workspace
+        //                                  int tlcRow, int tlcCol, // 1-based
+        //                                  PLVariable newData)     // new data to overwrite some of old
+        //{
+        //    OverwriteSubmatrix (this,
+        //                        name,           // name of matrix already in workspace
+        //                        tlcRow, tlcCol, // 1-based
+        //                        newData);       // new data to overwrite some of old
+
+        //}
 
 
 
@@ -285,19 +293,6 @@ namespace PLWorkspace
                 Variables.Clear ();
 
             return true;
-        }
-
-        //***********************************************************************************************
-
-        internal virtual bool Exists (string arg)
-        {
-            if (arg != null)
-            {
-                if (Variables.ContainsKey (arg))
-                    return true;
-            }
-
-            return false;
         }
 
         //***********************************************************************************************

@@ -10,7 +10,7 @@ using PLCommon;
 
 namespace PLWorkspace
 {
-    internal class GlobalWorkspace : WorkspaceBase
+    internal class GlobalWorkspace : WorkspaceBaseClass
     {
         static int InstanceCounter;
 
@@ -82,16 +82,16 @@ namespace PLWorkspace
 
     //***************************************************************************************************
 
-        internal override bool Exists (string arg)
-        {
-            if (arg != null)
-            {
-                if (Variables.ContainsKey (arg)) return true;
-                if (Constants.ContainsKey (arg)) return true;
-            }
+        //internal override bool Exists (string arg)
+        //{
+        //    if (arg != null)
+        //    {
+        //        if (Variables.ContainsKey (arg)) return true;
+        //        if (Constants.ContainsKey (arg)) return true;
+        //    }
 
-            return false;
-        }
+        //    return false;
+        //}
 
 
         //internal PLVariable Get (string name)

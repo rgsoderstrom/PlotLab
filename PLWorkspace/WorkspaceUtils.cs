@@ -10,9 +10,14 @@ using PLCommon;
 
 namespace PLWorkspace
 {
-    internal class WorkspaceUtils
+    internal partial class WorkspaceBaseClass
     {
         //***********************************************************************************************
+
+        internal virtual PLVariable Exists (PLVariable pstr)
+        {
+            return new PLBool (Contains ((pstr as PLString).Text));
+        }
 
         internal static PLVariable Rows (PLVariable a)
         {
@@ -73,7 +78,7 @@ namespace PLWorkspace
         // Replace part of a matrix
         //    - LIMITATION: assumes data will overwrite consecutive rows, cols
         //
-        internal static void OverwriteSubmatrix (WorkspaceBase ws,
+        internal static void OverwriteSubmatrix (WorkspaceBaseClass ws,
                                                  string name,            // name of matrix already in workspace
                                                  int tlcRow, int tlcCol, // 1-based
                                                  PLVariable newData)     // new data to overwrite some of old
@@ -165,9 +170,5 @@ namespace PLWorkspace
                     throw new Exception ("Unsupported matrix-matrix overwrite option");
             }
         }
-
-        //************************************************************************
-
-
     }
 }
