@@ -1230,6 +1230,12 @@ namespace PLCommon
             Data = d;
         }
 
+        public PLBool (string n, bool d)
+        {
+            Name = n;
+            Data = d;
+        }
+
         public override int    DataAsInteger {get {return Data == true ? 1 : 0;}}
         public override double DataAsDouble  {get {return Data == true ? 1 : 0;}}
 
