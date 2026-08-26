@@ -72,53 +72,58 @@ namespace PLWorkspace
 
         // stack management
 
-        //static public void PushNew (string name, List<string> callersNames, List<string> functionsNames)
-        //{
-        //    if (workSpaceStack.Count > 100)
-        //        throw new Exception ("Workspace stack overflow");
+        static public void Push (string name, 
+                                 List<string> currentNames, 
+                                 List<string> localNames)
+        {
+            if (workSpaceStack.Count > 100)
+                throw new Exception ("Workspace stack overflow");
 
-        //    WorkspaceBaseClass caller = workSpaceStack.Peek();
-        //    workSpaceStack.Push (new FunctionWorkspace (name, caller, callersNames, functionsNames));
-        //}
-
-        //************************************************************************************
-
-        //static public void PopFunction (List<string> callersNames, List<string> functionsNames)
-        //{
-        //    if (workSpaceStack.Count == 1)
-        //        throw new Exception ("Workspace stack underflow, attempt to pop base workspace");
-
-        //    FunctionWorkspace function = workSpaceStack.Pop () as FunctionWorkspace;
-
-        //    function.GetOutputs (Current,
-        //                         callersNames,    // parallel array of their names in this workspace
-        //                         functionsNames); // names in the caller's workspace
-        //}
+            workSpaceStack.Push (new FunctionWorkspace (name, Current, currentNames, localNames));
+        }
 
         //************************************************************************************
+
+        static public void Pop (List<string> callersNames, List<string> functionsNames)
+        {
+            if (workSpaceStack.Count == 1)
+                throw new Exception ("Workspace stack underflow, attempt to pop base workspace");
+
+            FunctionWorkspace function = workSpaceStack.Pop () as FunctionWorkspace;
+
+            function.GetOutputs (Current,         // copy into Current
+                                 callersNames,    // names in Current
+                                 functionsNames); // names in function
+        }
+
         //************************************************************************************
         //************************************************************************************
+        //************************************************************************************
 
 
 
-        static public Dictionary<string, PLFunction> Functions {get             {return Current.Functions;}}
+        // static public Dictionary<string, PLFunction> Functions {get             {return Current.Functions;}}
 
-        static public PLVariable Evaluate (string    funcName, PLVariable args) 
+
+        static public PLVariable EvaluateFunction(string funcName, PLVariable args) 
         {
             return Current.Evaluate (funcName, args);
         }
 
-        static public PLVariable Evaluate (PLString  funcName, PLVariable args) {return Current.Evaluate (funcName, args);}
+        //static public PLVariable EvaluateFunction (PLString funcName, PLVariable args) 
+        //{
+        //    return Current.Evaluate (funcName, args);
+        //}
 
-        static public SymbolicNameTypes WhatIs (string str)
-        {
-            SymbolicNameTypes type = Current.WhatIs (str);
+        //static public SymbolicNameTypes WhatIs (string str)
+        //{
+        //    SymbolicNameTypes type = Current.WhatIs (str);
 
-            if (type == SymbolicNameTypes.Unknown) 
-                type = Global.WhatIs (str);
+        //    if (type == SymbolicNameTypes.Unknown) 
+        //        type = Global.WhatIs (str);
 
-            return type;
-        }
+        //    return type;
+        //}
 
 
 
@@ -141,7 +146,6 @@ namespace PLWorkspace
         static public List<string> PartialMatch (string str)
         {
             return Current.PartialMatch (str);
-
         }
 
 

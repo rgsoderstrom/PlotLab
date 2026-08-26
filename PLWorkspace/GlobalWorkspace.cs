@@ -12,31 +12,29 @@ namespace PLWorkspace
 {
     internal class GlobalWorkspace : WorkspaceBaseClass
     {
-        static int InstanceCounter;
+        static int InstanceCounter = 0;
 
         static private readonly Dictionary<string, PLVariable> Constants = new Dictionary<string, PLVariable> ();
 
         static GlobalWorkspace ()
         {
-            InstanceCounter = 0;
+            PLDouble pi = new PLDouble ("pi", Math.PI);      Constants.Add (pi.Name, pi);
+            PLDouble e  = new PLDouble ("e",  Math.Exp (1)); Constants.Add (e.Name, e);
 
-            PLDouble PI = new PLDouble (Math.PI); PI.Name = "PI"; Constants.Add ("PI", PI); Constants.Add ("pi", PI);
-            PLDouble e  = new PLDouble (Math.Exp (0)); e.Name = "e";   Constants.Add ("e", e);
+            PLBool TRUE  = new PLBool ("true",  true);       Constants.Add (TRUE.Name, TRUE);
+            PLBool FALSE = new PLBool ("false", false);      Constants.Add (FALSE.Name, FALSE);
 
-            PLBool TRUE  = new PLBool (true);  TRUE.Name = "true";   Constants.Add ("true", TRUE);
-            PLBool FALSE = new PLBool (false); FALSE.Name = "false"; Constants.Add ("false", FALSE);
+            PLComplex i = new PLComplex ("i", 0, 1);         Constants.Add (i.Name, i);
+            PLComplex j = new PLComplex ("j", 0, 1);         Constants.Add (j.Name, j);
 
-            PLComplex i = new PLComplex (0, 1); i.Name = "i"; Constants.Add ("i", i);
-            PLComplex j = new PLComplex (0, 1); j.Name = "j"; Constants.Add ("j", i);
-
-            Constants.Add ("equal",  new PLString ("equal"));
-            Constants.Add ("tight",  new PLString ("tight"));
-            Constants.Add ("frozen", new PLString ("frozen"));
-            Constants.Add ("auto",   new PLString ("auto"));
-            Constants.Add ("on",     new PLString ("on"));
-            Constants.Add ("off",    new PLString ("off"));
-            Constants.Add ("long",   new PLString ("long"));
-            Constants.Add ("short",  new PLString ("short"));
+            //Constants.Add ("equal",  new PLString ("equal"));
+            //Constants.Add ("tight",  new PLString ("tight"));
+            //Constants.Add ("frozen", new PLString ("frozen"));
+            //Constants.Add ("auto",   new PLString ("auto"));
+            //Constants.Add ("on",     new PLString ("on"));
+            //Constants.Add ("off",    new PLString ("off"));
+            //Constants.Add ("long",   new PLString ("long"));
+            //Constants.Add ("short",  new PLString ("short"));
         }
 
     //***************************************************************************************************
@@ -49,17 +47,17 @@ namespace PLWorkspace
 
     //***************************************************************************************************
 
-        internal override SymbolicNameTypes WhatIs (string str)
-        {
-            SymbolicNameTypes type = base.WhatIs (str);
+        //internal override SymbolicNameTypes WhatIs (string str)
+        //{
+        //    SymbolicNameTypes type = base.WhatIs (str);
 
-            if (type == SymbolicNameTypes.Unknown) 
-                if (Constants.ContainsKey (str))
-                    type = SymbolicNameTypes.Constant;
+        //    if (type == SymbolicNameTypes.Unknown) 
+        //        if (Constants.ContainsKey (str))
+        //            type = SymbolicNameTypes.Constant;
 
-            return type;
-        }
-
+        //    return type;
+        //}
+       
         internal override bool Contains (string var)
         {
             return Variables.ContainsKey (var) || Constants.ContainsKey (var);

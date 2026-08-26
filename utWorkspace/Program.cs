@@ -116,14 +116,15 @@ namespace PLWorkspace
             Workspace.Add (ComplexMat);
 
 
+            PLVariable results;
 
-            PLVariable results = Workspace.Evaluate ("exists", new PLString ("RealScalar"));
+            results = Workspace.EvaluateFunction ("exists", new PLString ("RealScalar"));
             Console.WriteLine ("RealScalar: " + results.ToString ());
 
-            results = Workspace.Evaluate ("cols", Workspace.Get ("ComplexMat"));
+            results = Workspace.EvaluateFunction ("cols", Workspace.Get ("ComplexMat"));
             Console.WriteLine ("ComplexMat: " + results.ToString ());
 
-            results = Workspace.Evaluate ("rows", ComplexMat);
+            results = Workspace.EvaluateFunction ("rows", ComplexMat);
             Console.WriteLine ("ComplexMat: " + results.ToString ());
 
 
@@ -269,20 +270,19 @@ namespace PLWorkspace
             PLVariable v1 = Workspace.Get ("X1");
             PLVariable v2 = Workspace.Get ("X2");
             PLVariable v3 = Workspace.Get ("GX3");
+            //PLVariable v4 = Workspace.Get ("XX3");  // not defined, will throw exception
 
             Console.WriteLine (v1.ToString ());
             Console.WriteLine (v2.ToString ());
             Console.WriteLine (v3.ToString ());
 
          // push new function workspace
-            List<string> ActualInputParameters = new List<string> () {"X1"};
-            List<string> FormalInputParameters = new List<string> () {"XX1"};
+            List<string> SourceVarNames = new List<string> () {"X1"};
+            List<string> DstVarNames    = new List<string> () {"localX1"};
                 
-            throw new NotImplementedException ("stack not implemented");
+            Workspace.Push ("Func1", SourceVarNames, DstVarNames);
 
-         //   Workspace.PushNew ("Func1", ActualInputParameters, FormalInputParameters);
-
-        //    Workspace.Dump ();
+            Workspace.RunCommand ("dump");
 
          // verify can get global but not local from caller
 

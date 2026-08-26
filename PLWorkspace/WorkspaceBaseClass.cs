@@ -16,8 +16,8 @@ namespace PLWorkspace
     abstract internal partial class WorkspaceBaseClass
     {
         protected readonly Dictionary<string, PLVariable> Variables = new Dictionary<string, PLVariable> ();
-        internal  readonly Dictionary<string, PLFunction> Functions;
-        protected readonly Dictionary<string, BSFunction> Commands;
+        internal  readonly Dictionary<string, PLFunction> Functions = new Dictionary<string, PLFunction> ();
+        protected readonly Dictionary<string, BSFunction> Commands  = new Dictionary<string, BSFunction> ();
 
         internal readonly string Name;
         internal static PrintFunction Print = Console.Write;
@@ -25,41 +25,37 @@ namespace PLWorkspace
         internal WorkspaceBaseClass (string name)
         {
             Name = name;
-            Commands = GetCommands ();
-            Functions = GetFunctions ();
+            AddCommands (Commands);
+            AddFunctions (Functions);
         }
 
         //***************************************************************************************************
 
         //
-        // Workspace Commands - 
+        // Workspace Commands - invoked from command line or script but not
+        //                      part of an expression
         //
 
-        internal Dictionary<string, BSFunction> GetCommands ()
+        internal void AddCommands (Dictionary<string, BSFunction> dst)
         {
-            return new Dictionary<string, BSFunction> ()
-            {
-                {"clear",  Clear},
-                {"who",    Who},
-                {"whos",   Whos},
-                {"dump",   Dump},
-            };
+            dst.Add ("clear",  Clear);
+            dst.Add ("who",    Who);
+            dst.Add ("whos",   Whos);
+            dst.Add ("dump",   Dump);
         }
-        
+
         //
-        // Workspace Functions - require arguments passed in
+        // Workspace Functions - require an argument passed in, can be part
+        //                       of a general expression
         //
 
-        internal Dictionary<string, PLFunction> GetFunctions ()
-        {
-            return new Dictionary<string, PLFunction> ()
-            {
-                {"exists", Exists},
-                {"rows",   Rows},
-                {"cols",   Cols},
-                {"length", Length},
-                {"size",   Size},
-            };
+        internal void AddFunctions (Dictionary<string, PLFunction> dst)
+        { 
+            dst.Add ("exists", Exists);
+            dst.Add ("rows",   Rows);
+            dst.Add ("cols",   Cols);
+            dst.Add ("length", Length);
+            dst.Add ("size",   Size);
         }
 
         //***************************************************************************************************

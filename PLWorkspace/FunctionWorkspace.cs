@@ -15,67 +15,64 @@ namespace PLWorkspace
     {
         //*************************************************************
 
-        // Copy and rename input arguments into this function's workspace 
+        // Creates workspace, then copies and renames source variables into this workspace 
 
-        internal FunctionWorkspace (string        functionName,
-                                    WorkspaceBaseClass callersWorkspace, 
-                                    List<string>  callersNames,   // names in the source workspace
-                                    List<string>  functionsNames) // parallel array of their names in this workspace
-                                  : base (functionName)
+        internal FunctionWorkspace (string             name,
+                                    WorkspaceBaseClass sourceWorkspace, 
+                                    List<string>       sourceNames, // names in the source workspace
+                                    List<string>       destNames)   // parallel array of their names in this workspace
+                                  : base (name)
         {
-            if (callersNames.Count != functionsNames.Count)
-                throw new Exception ("In " + functionName + " source and local name lists not same length");
+            if (sourceNames.Count != destNames.Count)
+                throw new Exception ("In " + name + " source and local name lists not same length");
 
-            for (int i=0; i<callersNames.Count; i++)
+            for (int i=0; i<sourceNames.Count; i++)
             {
-                PLVariable vvar = null;
+                PLVariable plv = null;
 
                 // true if caller local variable passed to a function
-                if (callersWorkspace.Get (callersNames [i], ref vvar) == true) 
+                if (sourceWorkspace.Get (sourceNames [i], ref plv) == true) 
                 { 
-                    vvar.Name = functionsNames [i]; // change to local name
-                    Add (vvar); // store in local function workspace
+                    plv.Name = destNames [i]; // change to local name
+                    Add (plv); // store in local function workspace
                 }
 
                 // check for a global variable passed to a function
-                else if (Workspace.Global.Get (callersNames [i], ref vvar))
+                else if (Workspace.Global.Get (sourceNames [i], ref plv))
                 {
-                    vvar.Name = functionsNames [i]; // change to local name
-                    Add (vvar); // store in local function workspace
+                    plv.Name = destNames [i]; // change to local name
+                    Add (plv); // store in local function workspace
                 }
 
                 else
-                    throw new Exception ("Variable " + callersNames [i] + " undefined");
+                    throw new Exception ("Variable " + sourceNames [i] + " undefined");
             }
         }
 
         //*************************************************************
 
-        // Copy and rename function's output args into caller's workspace
+        // Copy and rename variables from this workspace to destination workspace
 
-        internal void GetOutputs (WorkspaceBaseClass callersWorkspace,
-                                  List<string>  callersNames,  // names in the caller's workspace
-                                  List<string>  localNames)    // parallel array of their names in this workspace
+        internal void GetOutputs (WorkspaceBaseClass dstWorkspace,
+                                  List<string>       dstNames,   // names in the caller's workspace
+                                  List<string>       localNames) // parallel array of their names in this workspace
         {
-            if (callersNames.Count != localNames.Count)
+            if (dstNames.Count != localNames.Count)
                 throw new Exception ("In " + Name + " caller's namees and local names lists not same length");
 
-            for (int i=0; i<callersNames.Count; i++)
+            for (int i=0; i<dstNames.Count; i++)
             {
                 PLVariable var = null;
                 
                 if (Get (localNames [i], ref var))
                 { 
-                    var.Name = callersNames [i];
-                    callersWorkspace.Add (var);
+                    var.Name = dstNames [i];
+                    dstWorkspace.Add (var);
                 }
 
                 else
-                    throw new Exception ("Error copying output " + callersNames [i] + " to caller's workspace");
+                    throw new Exception ("Error copying output " + dstNames [i] + " to caller's workspace");
             }
         }
-
-
-
     }
 }
