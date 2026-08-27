@@ -280,7 +280,7 @@ namespace PLMain
             /***/
             string LeftSideName = Operands [0].Operator;
 
-            if (Workspace.Contains (LeftSideName))
+            if (Workspace.IsVariable (LeftSideName))
             {
                 PLRMatrix LeftSide = Workspace.Get (LeftSideName) as PLRMatrix;
 

@@ -51,14 +51,15 @@ namespace PLSystem
         //***************************************************************************************************
         //***************************************************************************************************
 
-        //public static SymbolicNameTypes WhatIs (string str)
-        //{
-        //    SymbolicNameTypes type = SymbolicNameTypes.Unknown;
+        public static SymbolicNameTypes WhatIs (string str)
+        {
+            SymbolicNameTypes type = SymbolicNameTypes.Unknown;
 
-        //    if (SystemCommands.ContainsKey (str)) {type = SymbolicNameTypes.SystemCommand;}
+            if (SystemCommands.ContainsKey (str)) 
+                type = SymbolicNameTypes.SystemCommand;
 
-        //    return type;
-        //}
+            return type;
+        }
 
         public static List<string> PartialMatch (string str)
         {

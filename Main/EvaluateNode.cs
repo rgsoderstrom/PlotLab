@@ -313,8 +313,8 @@ namespace PLMain
                 if (LibraryManager.IsFunctionWithArgs (Operator))
                     Value = LibraryManager.Evaluate (Operator, Operands [0].Value);
 
-                else if (Workspace.Functions.ContainsKey (Operator))
-                    Value = Workspace.Evaluate (Operator, Operands [0].Value);
+                else if (Workspace.ContainsFunction (Operator))
+                    Value = Workspace.EvaluateFunction (Operator, Operands [0].Value);
 
 
                 else if (Operator == "not")
@@ -336,8 +336,8 @@ namespace PLMain
                 if (LibraryManager.IsFunctionWithArgs (Operator))
                     Value = LibraryManager.Evaluate (Operator, args);
 
-                else if (Workspace.Functions.ContainsKey (Operator))
-                    Value = Workspace.Evaluate (Operator, args);
+                else if (Workspace.ContainsFunction (Operator))
+                    Value = Workspace.EvaluateFunction (Operator, args);
 
                 else
                     throw new Exception ("Can't find function " + Operator);

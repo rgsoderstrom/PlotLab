@@ -100,33 +100,36 @@ namespace PLWorkspace
         //************************************************************************************
         //************************************************************************************
 
+        // Queries from other services
 
+        static public bool ContainsFunction (string str)
+        {
+            return Current.Functions.ContainsKey (str);
+        }
 
-        // static public Dictionary<string, PLFunction> Functions {get             {return Current.Functions;}}
+        static public SymbolicNameTypes WhatIs (string str)
+        {
+            SymbolicNameTypes type = Current.WhatIs (str); // check Current first, ...
 
+            if (type == SymbolicNameTypes.Unknown) // ... and if it doesn't know, check Global
+                type = Global.WhatIs (str);
+
+            return type;
+        }
+
+        static public List<string> PartialMatch (string str)
+        {
+            return Current.PartialMatch (str);
+        }
+
+        //************************************************************************************
+
+        // Requests from other services
 
         static public PLVariable EvaluateFunction(string funcName, PLVariable args) 
         {
             return Current.Evaluate (funcName, args);
         }
-
-        //static public PLVariable EvaluateFunction (PLString funcName, PLVariable args) 
-        //{
-        //    return Current.Evaluate (funcName, args);
-        //}
-
-        //static public SymbolicNameTypes WhatIs (string str)
-        //{
-        //    SymbolicNameTypes type = Current.WhatIs (str);
-
-        //    if (type == SymbolicNameTypes.Unknown) 
-        //        type = Global.WhatIs (str);
-
-        //    return type;
-        //}
-
-
-
 
         // Workspace commands print information on things in the
         // workspace, e.g. whos
@@ -141,28 +144,14 @@ namespace PLWorkspace
             return Current.RunCommand (cmnd);
         }
 
-
-
-        static public List<string> PartialMatch (string str)
-        {
-            return Current.PartialMatch (str);
-        }
-
-
-
-
-
         //**********************************************************************************************
 
-        //static public void OverwriteSubmatrix (string name,            // name of matrix already in workspace
-        //                                       int tlcRow, int tlcCol, // 1-based
-        //                                       PLVariable var)         // new data to overwrite some of old
-        //{
-        //    Current.OverwriteSubmatrix (name, tlcRow, tlcCol, var);
-        //}
-
-
-
-
+        static public void OverwriteSubmatrix (string name,            // name of matrix already in workspace
+                                               int tlcRow, int tlcCol, // 1-based
+                                               PLVariable var)         // new data to overwrite some of old
+        {
+            throw new Exception ("OverwriteSubmatrix Not implemented");
+         //   Current.OverwriteSubmatrix (name, tlcRow, tlcCol, var);
+        }
     }
 }
