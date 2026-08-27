@@ -147,11 +147,10 @@ namespace PLWorkspace
         //**********************************************************************************************
 
         static public void OverwriteSubmatrix (string name,            // name of matrix already in workspace
-                                               int tlcRow, int tlcCol, // 1-based
+                                               int tlcRow, int tlcCol, // start over-write here, 1-based
                                                PLVariable var)         // new data to overwrite some of old
         {
-            throw new Exception ("OverwriteSubmatrix Not implemented");
-         //   Current.OverwriteSubmatrix (name, tlcRow, tlcCol, var);
+            Current.OverwriteSubmatrix (name, tlcRow, tlcCol, var);
         }
     }
 }

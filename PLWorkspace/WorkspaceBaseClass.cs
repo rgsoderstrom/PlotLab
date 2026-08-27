@@ -212,16 +212,16 @@ namespace PLWorkspace
 
         //*****************************************************************************************
 
-        //internal void OverwriteSubmatrix (string name,            // name of matrix already in workspace
-        //                                  int tlcRow, int tlcCol, // 1-based
-        //                                  PLVariable newData)     // new data to overwrite some of old
-        //{
-        //    OverwriteSubmatrix (this,
-        //                        name,           // name of matrix already in workspace
-        //                        tlcRow, tlcCol, // 1-based
-        //                        newData);       // new data to overwrite some of old
+        internal void OverwriteSubmatrix (string name,            // name of matrix already in workspace
+                                          int tlcRow, int tlcCol, // 1-based
+                                          PLVariable newData)     // new data to overwrite some of old
+        {
+            OverwriteSubmatrix (this,
+                                name,           // name of matrix already in workspace
+                                tlcRow, tlcCol, // 1-based
+                                newData);       // new data to overwrite some of old
 
-        //}
+        }
 
 
 

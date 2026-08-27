@@ -76,7 +76,7 @@ namespace PLWorkspace
         //*****************************************************************************************
         //
         // Replace part of a matrix
-        //    - LIMITATION: assumes data will overwrite consecutive rows, cols
+        //    - LIMITATION: assumes newData will overwrite consecutive rows, cols
         //
         internal static void OverwriteSubmatrix (WorkspaceBaseClass ws,
                                                  string name,            // name of matrix already in workspace
