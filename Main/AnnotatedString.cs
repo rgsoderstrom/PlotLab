@@ -62,7 +62,7 @@ namespace PLMain
 
         //********************************************************************************
         //
-        // CheckForTrailingSemi () - remove and mark string waith SupressPrinting true
+        // CheckForTrailingSemi () - remove it and mark string with SupressPrinting true
         //
         internal void CheckForTrailingSemi ()
         {

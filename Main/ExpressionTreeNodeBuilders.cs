@@ -247,6 +247,19 @@ namespace PLMain
         //*************************************************************************************************
         //*************************************************************************************************
 
+        void BuildNodeFrom_ZeroArgFunction (TokenSet tokens)
+        {
+            Operator = tokens [0].AnnotatedText.Plain;
+            NodeType = tokens [0].Type;
+
+            //if (tokens.Count > 1)
+            //    for (int i = 1; i<tokens.Count; i++)
+            //        Operands.Add (new ExpressionTreeNode (tokens [i].AnnotatedText));
+        }
+
+        //*************************************************************************************************
+        //*************************************************************************************************
+
         void BuildNodeFrom_String (TokenSet tokens)
         {
             NodeType = tokens [0].Type;

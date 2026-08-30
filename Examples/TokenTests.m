@@ -7,7 +7,11 @@
 	% BLOCK_2
 	% BLOCK_T
 	% axis + 2 
-	% p = axis;
+	
+	% plot (1:10);
+	a = axis;
+	p = rand;
+	% q = rand (3);
 	% axis equal
 	% axis ([1 2 3 4]);
 	% rand + 2

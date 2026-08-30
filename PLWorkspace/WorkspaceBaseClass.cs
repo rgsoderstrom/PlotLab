@@ -60,6 +60,11 @@ namespace PLWorkspace
 
         //***************************************************************************************************
 
+        public bool IsCommand (string str)
+        {
+            return Commands.ContainsKey (str);
+        }
+
         internal bool RunCommand (string cmnd, string args)
         {
             if (Commands.ContainsKey (cmnd))
@@ -81,11 +86,6 @@ namespace PLWorkspace
 
             return false;
         }
-
-        //internal PLVariable RunCommand (PLString cmnd, PLList args)
-        //{
-        //    return RunCommand (cmnd.Text, args);
-        //}
 
         //***************************************************************************************************
 

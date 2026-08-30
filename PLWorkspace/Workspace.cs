@@ -42,7 +42,7 @@ namespace PLWorkspace
             Current.Add (var);
         }
 
-        // Contains () - test whether a variable is defined
+        // test whether a variable is defined
         static public bool IsVariable (string str) 
         {
             return Current.Contains (str) || Global.Contains (str);
@@ -102,10 +102,18 @@ namespace PLWorkspace
 
         // Queries from other services
 
-        static public bool ContainsFunction (string str)
+        static public bool IsFunction (string str)
         {
             return Current.Functions.ContainsKey (str);
         }
+
+
+        /*
+            WhatIs can return:
+                SymbolicNameTypes.Variable;
+                SymbolicNameTypes.WorkspaceCommand;
+                SymbolicNameTypes.Function;
+        */
 
         static public SymbolicNameTypes WhatIs (string str)
         {

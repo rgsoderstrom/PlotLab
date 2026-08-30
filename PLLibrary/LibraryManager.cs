@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using FunctionLibrary;
 
 using PLCommon;
-//using FunctionLibrary;
-using PLFileSystem;
+//using PLFileSystem;
 
 namespace PLLibrary
 {
@@ -74,20 +73,20 @@ namespace PLLibrary
         /// </summary>
         /// <param name="str">string containing a single word</param>
         /// <returns>The type or unknown</returns>
-        
-        //public static SymbolicNameTypes WhatIs (string str)
-        //{
-        //    SymbolicNameTypes type = SymbolicNameTypes.Unknown;
 
-        //    if      (PlotCommands.ContainsKey         (str)) {type = SymbolicNameTypes.PlotCommand;}
-        //    else if (MathFunctions.ContainsKey        (str)) {type = SymbolicNameTypes.Function;}
-        //    else if (SigProcFunctions.ContainsKey     (str)) {type = SymbolicNameTypes.Function;}
-        //    else if (IOFunctionsDict.ContainsKey      (str)) {type = SymbolicNameTypes.Function;}
-        //    else if (PlotFunctions.ContainsKey        (str)) {type = SymbolicNameTypes.Function;}
-        //    else if (MFileFunctionMgr.IsMFileFunction (str)) {type = SymbolicNameTypes.FunctionFile;}
+        public static SymbolicNameTypes WhatIs (string str)
+        {
+            SymbolicNameTypes type = SymbolicNameTypes.Unknown;
 
-        //    return type;
-        //}
+            if      (false) /*(PlotCommands.ContainsKey         (str))*/ {type = SymbolicNameTypes.PlotCommand;}
+            else if (MathFunctions.ContainsKey        (str)) {type = SymbolicNameTypes.Function;}
+            else if (SigProcFunctions.ContainsKey     (str)) {type = SymbolicNameTypes.Function;}
+            else if (IOFunctionsDict.ContainsKey      (str)) {type = SymbolicNameTypes.Function;}
+            else if (PlotFunctions.ContainsKey        (str)) {type = SymbolicNameTypes.Function;}
+       //   else if (MFileFunctionMgr.IsMFileFunction (str)) {type = SymbolicNameTypes.FunctionFile;}
+
+            return type;
+        }
 
         public static bool IsFunctionWithArgs (string str)
         {
@@ -111,8 +110,14 @@ namespace PLLibrary
 
         public static PLVariable RunZeroArgFunction (string fname)
         {
-            PZFunction func = ZeroArgFunctions [fname];
-            return func ();
+            if (ZeroArgFunctions.ContainsKey (fname))
+            { 
+                PZFunction func = ZeroArgFunctions [fname];
+                return func ();
+            }
+
+            else
+                throw new Exception ("Function " + fname + " can't be invoked with no arguments");
         }
 
         public static List<string> PartialMatch (string str)

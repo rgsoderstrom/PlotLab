@@ -88,12 +88,11 @@ namespace PLMain
                             case InputLineType.ExpressionTree:
                                 ExpressionTree tree = new ExpressionTree (astr2);
                                 answer = tree.Evaluate ();
-                                break; 
+                                break;
 
                             case InputLineType.ZeroArgFunction:
                                 answer = LibraryManager.RunZeroArgFunction (astr2.Plain);
                                 break;
-
 
                             case InputLineType.VariableName:
                                 PLVariable v = Workspace.Get (astr2.Plain);

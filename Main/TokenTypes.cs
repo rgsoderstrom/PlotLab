@@ -30,15 +30,22 @@ namespace PLMain
         BinaryOperator,
         UnaryOperator,
         VariableName,
-        FunctionName,    // built-in
         ScriptFile,
+
         FunctionFile,    // .m file
         ZeroArgCommand,  // return a bool
         Undefined,       // on LHS a new variable, on RHS will be an error
 
-        // FunctionName changed to on of these in 3rd pass
-        ZeroArgFunction, // return a PLVariable
+        //---------------------------------------
+
+        // any function, after first pass
+        Function,        
+
+        // revised to one of these
+        ZeroArgFunction, 
         FunctionWithArgs,
+
+        //---------------------------------------
 
         GroupingParens,  // A * (B + C)
         FunctionParens,  // Func1 (P, Q, R, S)
@@ -56,7 +63,7 @@ namespace PLMain
 
     public enum TokenPairType
     {
-        Function,
+        FunctionWithArgs,
         Submatrix,
     };
 }

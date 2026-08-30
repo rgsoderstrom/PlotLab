@@ -18,7 +18,7 @@ namespace PLCommon
         PlotCommand,
         SystemCommand,
 
-        ZeroArgFunction,
+       // ZeroArgFunction,
         Function,
         BlockStart, // for, while, if
         BlockEnd,

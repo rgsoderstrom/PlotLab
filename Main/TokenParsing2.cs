@@ -110,12 +110,12 @@ namespace PLMain
                                 break;
 
                             case SymbolicNameTypes.Function:
-                                initial [i].Type = TokenType.FunctionName;
+                                initial [i].Type = TokenType.Function;// .FunctionName;
                                 break;
 
-                            case SymbolicNameTypes.ZeroArgFunction:
-                                initial [i].Type = TokenType.FunctionName;
-                                break;
+                            //case SymbolicNameTypes.ZeroArgFunction:
+                            //    initial [i].Type = TokenType.FunctionName;
+                            //    break;
 
                             case SymbolicNameTypes.WorkspaceCommand:
                                 throw new Exception ("Unexpected Workspace Command: " + str);
@@ -129,8 +129,11 @@ namespace PLMain
 
 
 
-                    else if (LibraryManager.IsFunctionWithArgs (str) || LibraryManager.IsZeroArgFunction (str))
-                        initial [i].Type = TokenType.FunctionName;
+                    else if (LibraryManager.WhatIs (str) == SymbolicNameTypes.Function)
+                        initial [i].Type = TokenType.Function;
+
+                    //else if (LibraryManager.IsFunctionWithArgs (str) || LibraryManager.IsZeroArgFunction (str))
+                    //    initial [i].Type = TokenType.FunctionName;
 
 
 
@@ -178,7 +181,7 @@ namespace PLMain
                                 edited.Add (tok1);
                                 break;
 
-                            case TokenType.FunctionName:
+                            case TokenType.Function: // FunctionName:
                                 Token tok2 = new Token (TokenType.FunctionParens, tokens [i].AnnotatedText);
                                 edited.Add (tok2);
                                 break;
@@ -306,7 +309,8 @@ namespace PLMain
                 while (get < index - 1)
                     edited.Add (initial [get++]);
 
-                edited.Add (new Token (TokenType.FunctionName, new AnnotatedString ("transpose"))); // NESTING LEVELS NEEDED?
+                edited.Add (new Token (TokenType.Function, new AnnotatedString ("transpose")));
+             // edited.Add (new Token (TokenType.FunctionName, new AnnotatedString ("transpose"))); // NESTING LEVELS NEEDED?
 
                 // add parens unless outer level is already parens                
                 if (initial [get].Type != TokenType.GroupingParens) edited.Add (new Token (TokenType.FunctionParens, AnnotatedString.AddOuterParens (initial [get].AnnotatedText)));
@@ -376,14 +380,15 @@ namespace PLMain
                         break;
 
                     case '~': // "not" function
-                        Token t3 = new Token (TokenType.FunctionName, new AnnotatedString ("not"));
+                        Token t3 = new Token (TokenType.Function, new AnnotatedString ("not"));
+                      //Token t3 = new Token (TokenType.FunctionName, new AnnotatedString ("not"));
 
                         // add parens unless outer level is already parens                
                         Token t4 = initial [get].Type != TokenType.GroupingParens ?
                                    new Token (TokenType.FunctionParens, AnnotatedString.AddOuterParens (initial [get + 1].AnnotatedText)) :
                                    new Token (TokenType.FunctionParens, initial [get + 1].AnnotatedText);
 
-                        TokenPair funcPair = new TokenPair (TokenPairType.Function, t3, t4);
+                        TokenPair funcPair = new TokenPair (TokenPairType.FunctionWithArgs, t3, t4);
                         edited.Add (funcPair);
                         get += 2;
                         break;
@@ -420,11 +425,11 @@ namespace PLMain
                             edited.Add (initial [i]);
                         break;
 
-                    case TokenType.FunctionName:
+                    case TokenType.Function:
                         if (initial [i+1].Type == TokenType.FunctionParens)
                         {
                             initial [i].Type = TokenType.FunctionWithArgs;
-                            TokenPair funcPair = new TokenPair (TokenPairType.Function, initial [i], initial [i+1]);
+                            TokenPair funcPair = new TokenPair (TokenPairType.FunctionWithArgs, initial [i], initial [i+1]);
                             edited.Add (funcPair);
                             i++; // don't look at the function parens token a second time
                         }
@@ -446,7 +451,8 @@ namespace PLMain
             // add last initial token if it isn't part of a token pair 
             int last = initial.Count - 1;
 
-            if (initial [last].Type == TokenType.FunctionName) initial [last].Type = TokenType.ZeroArgFunction;
+            if (initial [last].Type == TokenType.Function) 
+                initial [last].Type = TokenType.ZeroArgFunction;
 
             if ((initial [last].Type != TokenType.SubmatrixParens) && (initial [last].Type != TokenType.FunctionParens))
                 edited.Add (initial [last]);

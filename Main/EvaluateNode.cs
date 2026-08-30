@@ -43,8 +43,13 @@ namespace PLMain
                     Evaluate_Operator (Operator);
                     break;
 
-                case TokenType.FunctionName:
+                case TokenType.FunctionWithArgs:
                     Evaluate_Function ();
+                    break;
+
+                case TokenType.ZeroArgFunction:
+              //      throw new Exception ("zzzzzzzzzzzz");
+                    Evaluate_ZeroArgFunction ();
                     break;
 
                 //case TokenType.FunctionFile:
@@ -52,7 +57,7 @@ namespace PLMain
                 //    break;
 
 
-                default: throw new Exception ("ExpressionTree Evaluate can't find: " + Operator.ToString ());
+                default: throw new Exception ("ExpressionTree Evaluate can't find token: " + Operator.ToString ());
                 //default: throw new Exception ("Evaluate: node type not supported: " + NodeType.ToString ());
             }
 
@@ -294,7 +299,19 @@ namespace PLMain
         //*****************************************************************************************************
         //*****************************************************************************************************
 
-        void Evaluate_Function ()//, string expression)
+        void Evaluate_ZeroArgFunction ()
+        {
+            if (LibraryManager.IsZeroArgFunction (Operator))
+                Value = LibraryManager.RunZeroArgFunction (Operator);
+            else
+                throw new Exception ("Error evaluating " + Operator + " as a zero-arg function");
+        }
+
+        //*****************************************************************************************************
+        //*****************************************************************************************************
+        //*****************************************************************************************************
+
+        void Evaluate_Function ()
         {
             if (Operands.Count == 0)
             {
@@ -313,7 +330,7 @@ namespace PLMain
                 if (LibraryManager.IsFunctionWithArgs (Operator))
                     Value = LibraryManager.Evaluate (Operator, Operands [0].Value);
 
-                else if (Workspace.ContainsFunction (Operator))
+                else if (Workspace.IsFunction (Operator))
                     Value = Workspace.EvaluateFunction (Operator, Operands [0].Value);
 
 
@@ -336,7 +353,7 @@ namespace PLMain
                 if (LibraryManager.IsFunctionWithArgs (Operator))
                     Value = LibraryManager.Evaluate (Operator, args);
 
-                else if (Workspace.ContainsFunction (Operator))
+                else if (Workspace.IsFunction (Operator))
                     Value = Workspace.EvaluateFunction (Operator, args);
 
                 else

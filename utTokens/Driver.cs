@@ -160,6 +160,7 @@ namespace utTokens
             Print (str);
 
             AnnotatedString annotated = new AnnotatedString (str);
+            annotated.CheckForTrailingSemi ();
 
             if (annotated == null)
                 return false;

@@ -96,7 +96,8 @@ namespace PLMain
                             BuildNodeFrom_Numeric (tokens);
                             break;
 
-                        case TokenType.FunctionName:
+                        //case TokenType.FunctionName:
+                       // case TokenType.FunctionWithArgs:
                         case TokenType.Undefined:
                         case TokenType.VariableName:  // symbolic name for a variable or constant
                             BuildNodeFrom_VariableName (tokens);
@@ -110,11 +111,15 @@ namespace PLMain
                             BuildNodeFrom_String (tokens);
                             break;
 
+                        case TokenType.ZeroArgFunction:
+                            BuildNodeFrom_ZeroArgFunction (tokens);
+                            break;
+
                         case TokenType.Pair:
                         {
                             switch ((tokens [0] as TokenPair).PairType)
                             {
-                                case TokenPairType.Function:
+                                case TokenPairType.FunctionWithArgs:
                                     BuildNodeFrom_FunctionPair (tokens [0] as TokenPair);
                                     break;
 
