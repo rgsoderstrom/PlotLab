@@ -346,11 +346,26 @@ namespace PLSystem
         {
             if (pathEntry != null)
             {
+                // remove any leading open paren
                 if (pathEntry [0] == '(') pathEntry = pathEntry.Substring (1);
-                if (pathEntry [pathEntry.Length - 1] == ')') pathEntry = pathEntry.Substring (0, pathEntry.Length - 1);
- 
+
+                // remove any leading backslash
                 if (pathEntry [0] == '\'') pathEntry = pathEntry.Substring (1);
-                if (pathEntry [pathEntry.Length - 1] == '\'') pathEntry = pathEntry.Substring (0, pathEntry.Length - 1);
+
+                // remove any trailing semicolon
+                int last = pathEntry.Length - 1;
+
+                if (pathEntry [last] == ';') pathEntry = pathEntry.Substring (0, pathEntry.Length - 1);
+
+                // remove any closing paren
+                last = pathEntry.Length - 1;
+
+                if (pathEntry [last] == ')') pathEntry = pathEntry.Substring (0, last);
+ 
+                // remove any trailing backslash
+                last = pathEntry.Length - 1;
+
+                if (pathEntry [last] == '\'') pathEntry = pathEntry.Substring (0, last);
 
                 FileSystem.AddPath (pathEntry);
             //  MFileFunctionMgr.SearchPathCopy = FileSystem.GetPathCopy ();

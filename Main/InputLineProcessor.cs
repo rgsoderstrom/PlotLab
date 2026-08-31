@@ -112,7 +112,7 @@ namespace PLMain
                                 break;
 
                             case InputLineType.ScriptFile:
-                                ScriptProcessor script = new ScriptProcessor (astr2.Plain);
+                                /*ScriptProcessor script = */ new ScriptProcessor (astr2.Plain);
                                 break;
 
                             case InputLineType.BlockName:
