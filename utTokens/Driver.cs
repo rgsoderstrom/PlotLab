@@ -44,14 +44,14 @@ namespace utTokens
                         //AnnotatedStringTest (trimmed);
                         //Print ("===========================================");
 
-                        //AnnotatedStringAppendTest (trimmed);
-                        //Print ("===========================================");
+                        AnnotatedStringAppendTest (trimmed);
+                        Print ("===========================================");
 
                         //AnnotatedStringSetTest (trimmed);
                         //Print ("===========================================");
 
-                        TokenParsingTest (trimmed);
-                        Print ("===========================================");
+                        //TokenParsingTest (trimmed);
+                        //Print ("===========================================");
 
                         //TokenUtilsTest (trimmed);
                         //Print ("===========================================");
@@ -83,7 +83,7 @@ namespace utTokens
                 return false;
 
             AnnotatedString astr = new AnnotatedString (inputString);   
-            astr.CheckForTrailingSemi ();
+            //astr.CheckForTrailingSemi ();
             Print (inputString);
             Print (astr.ToString ());
 
@@ -105,10 +105,10 @@ namespace utTokens
 
             Print ("------------");
 
-            AnnotatedString charAtATime = new AnnotatedString (allAtOnce [0]);
+            AnnotatedString charAtATime = new AnnotatedString (inputString.Substring (0, 1));
 
             for (int i=1; i<allAtOnce.Length; i++)
-                charAtATime.Append (allAtOnce [i]);
+                charAtATime.Append (inputString [i]);
 
             Print (charAtATime.ToString ());
 
@@ -160,7 +160,7 @@ namespace utTokens
             Print (str);
 
             AnnotatedString annotated = new AnnotatedString (str);
-            annotated.CheckForTrailingSemi ();
+          //  annotated.CheckForTrailingSemi ();
 
             if (annotated == null)
                 return false;
