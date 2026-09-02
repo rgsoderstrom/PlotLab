@@ -8,9 +8,12 @@
 	% BLOCK_T
 	% axis + 2 
 	
-	% plot (1:10);
+	plot (1:10);
 	a = axis;
 	p = rand;
+	q = sin (12)
+	clear a b c
+	clear d e f;
 	% q = rand (3);
 	% axis equal
 	% axis ([1 2 3 4]);
@@ -32,7 +35,7 @@
 	% x >= 3;	
 	% y = z12' .* xyzx';
 	% y = z12' .* xyzx'
-	% z = A' + [1:2:20]'
+	% z = A' + [1:2:20]';
 	
 	% a = b123 + 1;
 	% d = sin ((10 - 7) / 7);
@@ -59,6 +62,15 @@
 	% a = 4; b = a ^ 2; 
 	% a = 4; b = a ^ 2; c = b ^ 2; d = c / 3; clear a b c
 	
+	
+	
+	
+	% these handled in InputLine	
+	% b = [ ...
+	     % 3  ...
+		 % 4  ...
+		 % 5];
+		 
 	
 	% TokenParsing
 	% a = sprintf ('%3d', 123);
@@ -123,11 +135,6 @@
 
 	% a = 7 + 8 + 9;
 	
-	% b = [ ...
-	     % 3  ...
-		 % 4  ...
-		 % 5];
-		 
 	% b = [3 ; 4; 5];
 		 
 	% strings

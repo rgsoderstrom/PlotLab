@@ -24,6 +24,11 @@
 	% Blocks
 	%
 
+	for a = 1 : 5,
+	b = a * a
+	end
+	
+
 	% if A > B,       % BLOCK_1, test [0]
 		% c = A * B;
 		
@@ -96,13 +101,13 @@
 	
 % day = 'Saturday';
 
-switch day
-    case 'Monday'
-        A = 1;
-    case 'Friday'
-        B = 1;
-    case 'Saturday'
-        C = 1;
-    otherwise
-        Z = 123;
-end
+% switch day
+    % case 'Monday'
+        % A = 1;
+    % case 'Friday'
+        % B = 1;
+    % case 'Saturday'
+        % C = 1;
+    % otherwise
+        % Z = 123;
+% end
