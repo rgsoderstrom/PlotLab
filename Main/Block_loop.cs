@@ -5,6 +5,7 @@
 
 using System;
 
+using Common;
 using PLCommon;
 
 namespace PLMain
@@ -49,7 +50,7 @@ namespace PLMain
                 PLVariable answer = tree.Evaluate ();
 
                 if ((answer as PLBool) == null)
-                    throw new Exception ("while block " + Name + " test not a boolean: " + testString);
+                    throw new Exception ("loop block " + Name + " test not a boolean: " + testString);
 
                 if ((answer as PLBool).Data == false)
                     return TerminationReason.Completed;
@@ -70,8 +71,10 @@ namespace PLMain
                     if (str == "continue")
                         break;
 
-                    PLVariable unused = null;
-                    TerminationReason reason = ilp.ProcessString (ref unused, str);
+                    TerminationReason reason = ilp.ProcessString (ref answer, str);
+
+                    if (astr2.SupressPrinting == false && answer != null)
+                        Print (answer.ToString () + "\n");
 
                     // if BreakEncountered passed up from the block just completed, his block terminates but
                     // any containing block does not need to take any special action

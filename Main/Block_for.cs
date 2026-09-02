@@ -41,10 +41,10 @@ namespace PLMain
         //******************************************************************************
 
         // Unique names for these required for nested "for" blocks to work as expected
-        
-        static string GetVarBase   = "get";
-        static string CountVarBase = "count";
-        static string CasesVarBase = "cases";
+
+        private static readonly string GetVarBase   = "get";
+        private static readonly string CountVarBase = "count";
+        private static readonly string CasesVarBase = "cases";
 
         private string GetVar;
         private string CountVar;
@@ -58,7 +58,8 @@ namespace PLMain
             CountVar = CountVarBase + N;
             CasesVar = CasesVarBase + N;
 
-            return "while " + GetVar + " <= " + CountVar + ",";
+            return GetVar + " <= " + CountVar + ";";
+          //return "while " + GetVar + " <= " + CountVar + ",";
         }
 
         internal ForBlock (AnnotatedString astr) : base ()
@@ -68,21 +69,31 @@ namespace PLMain
 
             // initialization code
             string loopArgs     = astr.Arguments; // a = 12 : 15, % in example
-            int    index        = loopArgs.IndexOf ('=');
+
+            // remove any trailing comma
+            if (loopArgs [loopArgs.Length - 1] == ',')
+                loopArgs = loopArgs.Substring (0, loopArgs.Length - 1);
 
             // the equal sign and everything past it
+            int    index = loopArgs.IndexOf ('=');
             string cases = loopArgs.Substring (index); 
             InitializationCode.Add (new AnnotatedString (CasesVar + " " + cases + ";")); // Cases = 12 : 15;
 
             // count = 4; // size (cases, 2) == 4
-            InitializationCode.Add (new AnnotatedString (CountVar + " = size (" + CasesVar + ", 2);"));
+            AnnotatedString astr2 = new AnnotatedString (CountVar + " = size (" + CasesVar + ", 2);");
+            astr2.CheckForTrailingSemi ();
+            InitializationCode.Add (astr2);
 
             // get = 1; 
-            InitializationCode.Add (new AnnotatedString (GetVar + " = 1;"));
+            astr2 = new AnnotatedString (GetVar + " = 1;");
+            astr2.CheckForTrailingSemi ();
+            InitializationCode.Add (astr2);
 
             // a = cases (get);
             string loopVariable = loopArgs.Substring (0, index - 1).Trim ();
-            Add (new AnnotatedString (loopVariable + " = " + CasesVar + " (" + GetVar + ");"));
+            astr2 = new AnnotatedString (loopVariable + " = " + CasesVar + " (" + GetVar + ");");
+            astr2.CheckForTrailingSemi ();
+            Add (astr2);
 
             CleanupCode.Add (new AnnotatedString ("clear " + CasesVar + " " + CountVar + " " + GetVar));
         }
@@ -91,7 +102,9 @@ namespace PLMain
 
         internal override void Close ()
         {
-            Add (new AnnotatedString (GetVar + " = " + GetVar + " + 1;"));  // ("get = get + 1;"));
+            AnnotatedString astr = new AnnotatedString (GetVar + " = " + GetVar + " + 1;");  // ("get = get + 1;"));
+            astr.CheckForTrailingSemi ();
+            Add (astr);
         }
 
         //******************************************************************************

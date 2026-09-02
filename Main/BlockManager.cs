@@ -4,7 +4,7 @@
 */
 
 // define UnitTest to print blocks rather than run them
-#define UnitTest
+//#define UnitTest
 
 using System;
 using System.Collections.Generic;
@@ -14,6 +14,7 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
+using Common;
 using PLCommon;
 
 namespace PLMain
@@ -112,6 +113,7 @@ namespace PLMain
                         }
 
                         Console.WriteLine (str);
+                      //EventLog.WriteLine (str);
                     }
 
                     #else
