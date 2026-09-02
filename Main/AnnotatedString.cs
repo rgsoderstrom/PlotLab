@@ -92,7 +92,10 @@ namespace PLMain
         {
             get
             {
-                return level0Words [0];
+                if (level0Words.Count > 0)
+                    return level0Words [0];
+                
+                return "";
             }
         }
 
