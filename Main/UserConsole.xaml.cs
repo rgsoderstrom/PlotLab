@@ -24,6 +24,7 @@ namespace PLMain
             SystemFunctions.Print = Print;
             ScriptProcessor.Print = Print;
             FileSystem.Print = Print;
+            Block.SetPrintFunction (Print);
 
             FileSystem.Open ();
             InitializeComponent ();
@@ -187,7 +188,9 @@ namespace PLMain
                 }
 
                 CommandLineHistory.Add (raw);
-                EventLog.WriteLine (raw);
+
+                if (raw.EndsWith ("\n")) EventLog.Write (raw);
+                else                     EventLog.WriteLine (raw);
 
                 TextPane.Text += "\n";
                 TextPane.CaretIndex = TextPane.Text.Length;
@@ -271,7 +274,8 @@ namespace PLMain
                 caretLowerLimit     = TextPane.CaretIndex;
             }
 
-            EventLog.Write (str);
+            if (str.EndsWith ("\n")) EventLog.Write (str);
+            else                     EventLog.WriteLine (str);
         }
 
         internal void EditablePrint (string str)
@@ -285,7 +289,8 @@ namespace PLMain
                 TextPane.CaretIndex = TextPane.Text.Length;
             }
 
-            EventLog.Write (str);
+            //if (str.EndsWith ("\n")) EventLog.Write (str);
+            //else                     EventLog.WriteLine (str);
         }
 
         //
@@ -300,7 +305,8 @@ namespace PLMain
                 TextPane.CaretIndex = TextPane.Text.Length;
             }
 
-            EventLog.Write (str);
+            if (str.EndsWith ("\n")) EventLog.Write (str);
+            else                     EventLog.WriteLine (str);
         }
 
         //***************************************************************************************
