@@ -29,7 +29,7 @@ namespace PLMain
 
             try
             { 
-                expression.CheckForTrailingSemi ();
+                //expression.CheckForTrailingSemi ();
                 SupressPrinting = expression.SupressPrinting;
 
                 //ExpressionTreeNode.NodeCounter = 0;

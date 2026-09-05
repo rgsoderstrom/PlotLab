@@ -66,7 +66,7 @@ namespace PLMain
                 while (AnnotatedStrings.Count > 0)
                 {
                     AnnotatedString astr2 = AnnotatedStrings.GetOldest ();
-                    astr2.CheckForTrailingSemi ();
+                    //astr2.CheckForTrailingSemi ();
 
                     SupressPrinting = astr2.SupressPrinting;
 
