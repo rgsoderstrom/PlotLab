@@ -36,7 +36,7 @@ namespace PLMain
 
         public TokenSet StringToTokens (AnnotatedString expression)
         {
-            expression.CheckForTrailingSemi ();
+            //expression.CheckForTrailingSemi ();
 
             TokenSet tokens = ParsingPassOne (expression);
             tokens = ParsingPassTwo (tokens);
