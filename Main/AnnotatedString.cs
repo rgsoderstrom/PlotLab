@@ -64,7 +64,7 @@ namespace PLMain
         //
         // CheckForTrailingSemi () - remove it and mark string with SupressPrinting true
         //
-        internal void CheckForTrailingSemi ()
+        private /*internal*/ void CheckForTrailingSemi ()
         {
             int index = CharacterCount - 1;
 
@@ -141,7 +141,7 @@ namespace PLMain
         // ctors
         //
 
-        internal AnnotatedString (string text)
+        internal AnnotatedString (string text, bool checkForTrailingSemi = true)
         {
             if (text.Length == 0)
                 return;
@@ -166,6 +166,9 @@ namespace PLMain
                 }
 
                 BreakIntoWords ();
+
+                if (checkForTrailingSemi)
+                    CheckForTrailingSemi ();
             }
 
             catch (Exception ex)
@@ -802,18 +805,12 @@ namespace PLMain
             str += "\n" + "IsCompound:       " + IsCompound.ToString ();
             str += "\n" + "AlphanumericOnly: " + AlphanumericOnly.ToString ();    
             
-            //if (AlphanumericOnly)
-            //{ 
-            //    str += "\n" + "Nesting level 0 words:";
-            //    BreakIntoWords ();
-            //    foreach (string oneWord in level0Words)
-            //        str += "\n   " + oneWord;
-            //}
-
-            str += "\n" + "FirstWord: " + FirstWord;
-            str += "\n" + "Arguments: ";
-            str += Arguments;
-            //foreach (string astr in Arguments) str += " " + astr;
+            if (AlphanumericOnly) // these properties are only used on AlphanumericOnly strings
+            { 
+                str += "\n" + "FirstWord: " + FirstWord;
+                str += "\n" + "Arguments: ";
+                str += Arguments;
+            }
 
             if (digits.Count > 0)       {str += "\nDigits      : "; foreach (int i in digits) str += i + ", ";}
             if (quotes.Count > 0)       {str += "\nQuotes      : "; foreach (int i in quotes) str += i + ", ";}
