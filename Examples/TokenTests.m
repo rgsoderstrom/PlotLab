@@ -2,18 +2,21 @@
 
 % TokenTests.m, for utTokens
 
+% lines beginning with # mark the section
+% with lines for a specific test
 	
 	% AnnotatedString - alphanumeric only
 	% BLOCK_2
 	% BLOCK_T
 	% axis + 2 
 	
+	# AnnotatedStringAppend
 	plot (1:10);
 	a = axis;
 	p = rand;
-	q = sin (12)
-	clear a b c
-	clear d e f;
+	% q = sin (12)
+	% clear a b c
+	% clear d e f;
 	% q = rand (3);
 	% axis equal
 	% axis ([1 2 3 4]);
@@ -25,15 +28,13 @@
 	% startup
 	% figure
 	
-	% AnnotatedString - 
-	% if A > B,
-	% if A > B, c = A * B; disp (c); end
-	% if z + x, a = [1,2,3]
-	% p = [1 ; (sqrt (5 * 3)) ; 7]
-	% p=[1 ; 2 ; 3 ; 4 ; (sqrt (5 * 3)) ; 6 ; 7]
+	# AnnotatedString
+	if A > B,
+	p = [1 ; (sqrt (5 * 3)) ; 7]
+	p=[1 ; 2 ; 3 ; 4 ; (sqrt (5 * 3)) ; 6 ; 7]
 	% d = [1 ; (2 * 7) ; 3]'
 	% x >= 3;	
-	% y = z12' .* xyzx';
+	y = z12' .* xyzx';
 	% y = z12' .* xyzx'
 	% z = A' + [1:2:20]';
 	
@@ -58,9 +59,11 @@
 	% ab = sprintf ('%f', sin (c));
 	% c = sprintf ('aa \'bbb\' cc');
 	
-	% AnnotatedStringSet - 
-	% a = 4; b = a ^ 2; 
-	% a = 4; b = a ^ 2; c = b ^ 2; d = c / 3; clear a b c
+	# AnnotatedStringSet
+	if A > B, c = A * B; disp (c); end
+	if z + x, a = [1,2,3]
+	a = 4; b = a ^ 2; 
+	a = 4; b = a ^ 2; c = b ^ 2; d = c / 3; clear a b c
 	
 	
 	
@@ -72,38 +75,44 @@
 		 % 5];
 		 
 	
-	% TokenParsing
-	% a = sprintf ('%3d', 123);
-	% disp (a);
-	% a = '%3d'
-	% '%3d'
-	% p = [1 ; 2 ; 3 ; 4 ; 5 ; 6 ; 7];
-	% z = 987 * 23;
-	% z = -987;
-	% c = ~c123 & 1;
+	# TokenParsing
+	a = sprintf ('%3d', 123);
+	disp (a);
+	a = '%3d'
+	'%3d'
+	p = [1 ; 2 ; 3 ; 4 ; 5 ; 6 ; 7];
+	z = 987 * 23;
+	z = -987;
+	c = ~c123 & 1;
+	rand
+	n = rand
 	% d = -3 * -sin (4);
 	% t1 = [1 2 3]' + (4 : 6)' + [7:9]' + dd' + c123;
 	% b6 = (1, 2, 3, 4)';
 	% a4 = [1, sqrt (2), -3]'
 	% zz = 'asd' + 'fg';
 
-	% TokenUtils
+	# TokenUtils
+	% semi
 	% [2;sin (z) ; 6^2]
 	% [[1:3]; [2:4] ; [3:5] ]
 	% [(1 ; 3) ; [2 ; 4] ;[3 ;5] ]
-	
+
+	% comma
 	% [Abc, 456, 789]
  	% [1,2,3]
 	% [11, 12 , 13]
 	% ['a,aa', 'sss']
 	% ['a:aa', 'sss']
-	
-	% [4 sqrt(5) 6]
-	
 
-	% [1 : 3 : 20]
-	% [1:ZZ:sqrt (22)]
-	% [1 : ZZ : sqrt (22)]
+	% space
+	% [4 sqrt(5) 6]
+	% [4 (sqrt (5)) 6]
+
+	% colon
+	[1 : 3 : 20]
+	[1:ZZ:sqrt (22)]
+	[1 : ZZ : sqrt (22)]
 	
 
 
