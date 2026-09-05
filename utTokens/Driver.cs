@@ -24,41 +24,47 @@ namespace utTokens
 
         //***********************************************************************
 
-        static void Main (string [] args)
+        enum TestToRun {AnnotatedString, AnnotatedStringAppend, AnnotatedStringSet,
+                        TokenParsing, TokenUtils};
+
+        private static readonly TestToRun test = TestToRun.AnnotatedStringAppend;
+
+        private static readonly Dictionary<TestToRun, string> sectionHeader = new Dictionary<TestToRun, string>
+        {
+            {TestToRun.AnnotatedString,       "AnnotatedString"},
+            {TestToRun.AnnotatedStringAppend, "AnnotatedStringAppend"},
+            {TestToRun.AnnotatedStringSet,    "AnnotatedStringSet"},
+            {TestToRun.TokenParsing,          "TokenParsing"},
+            {TestToRun.TokenUtils,            "TokenUtils"},
+        };
+
+        private delegate bool TestFunction (string str);
+
+        private static readonly Dictionary<TestToRun, TestFunction> testFunction = new Dictionary<TestToRun, TestFunction>
+        {
+            {TestToRun.AnnotatedString,       AnnotatedStringTest},
+            {TestToRun.AnnotatedStringAppend, AnnotatedStringAppendTest},
+            {TestToRun.AnnotatedStringSet,    AnnotatedStringSetTest},
+            {TestToRun.TokenParsing,          TokenParsingTest},
+            {TestToRun.TokenUtils,            TokenUtilsTest},
+        };
+
+        static void Main (string [] _)
         {
             try
             {
-                StreamReader inputFile = new StreamReader (InputMFileName);
-                string raw;
+                ReadTestFileLines (sectionHeader [test]);
+                string testCase;
 
-                while ((raw = inputFile.ReadLine ()) != null)
+                while ((testCase = GetNextLine ()) != null)
                 {
-                    if (raw.Length > 0)
-                    {
-                        string noTabs = raw.Replace ('\t', ' ');
-                        string trimmed = noTabs.Trim ();
+                    Console.WriteLine ("Running test: " + test.ToString ());
+                    Console.WriteLine ("Test case: " + testCase);
 
-                        if (trimmed.Length == 0 || trimmed [0] == '%')
-                            continue;
+                    testFunction [test] (testCase);
 
-                        //AnnotatedStringTest (trimmed);
-                        //Print ("===========================================");
-
-                        AnnotatedStringAppendTest (trimmed);
-                        Print ("===========================================");
-
-                        //AnnotatedStringSetTest (trimmed);
-                        //Print ("===========================================");
-
-                        //TokenParsingTest (trimmed);
-                        //Print ("===========================================");
-
-                        //TokenUtilsTest (trimmed);
-                        //Print ("===========================================");
-                    }
+                    Print ("===========================================");
                 }
-
-                inputFile.Close ();
             }
 
             catch (NotImplementedException ex)
@@ -69,8 +75,60 @@ namespace utTokens
             catch (Exception ex)
             {
                 Print ("Exception: " + ex.Message);
-              //Print (ex.StackTrace);
+                //Print (ex.StackTrace);
             }
+        }
+
+        //***********************************************************************
+        //***********************************************************************
+        //***********************************************************************
+
+        private static readonly List<string> fileLines = new List<string> ();
+        static private int get = 0;
+
+        static bool ReadTestFileLines (string sectionStartText)
+        {
+            bool storingFileLines = false;
+
+            using (var reader = new StreamReader (InputMFileName))
+            {
+                while (!reader.EndOfStream)
+                {
+                    string raw = reader.ReadLine ();
+  
+                    if (raw.Length > 0)
+                    {
+                        string noTabs = raw.Replace ('\t', ' ');
+                        string trimmed = noTabs.Trim ();
+
+                        if (trimmed.Length == 0 || trimmed [0] == '%')
+                            continue;
+
+                        if (trimmed [0] == '#')
+                        {
+                            if (storingFileLines)
+                                storingFileLines = false;
+
+                            else
+                                if (trimmed.Substring (2) == sectionStartText)
+                                    storingFileLines = true;
+                        }
+
+                        else if (storingFileLines == true)
+                            fileLines.Add (trimmed);
+                    }
+                } 
+            }
+
+            return true;
+        }
+
+        static string GetNextLine ()
+        {
+            if (get < fileLines.Count)
+                return fileLines [get++];
+
+            return null;
         }
 
         //***********************************************************************
@@ -110,6 +168,7 @@ namespace utTokens
             for (int i=1; i<allAtOnce.Length; i++)
                 charAtATime.Append (inputString [i]);
 
+            
             Print (charAtATime.ToString ());
 
             return true;
@@ -170,7 +229,7 @@ namespace utTokens
 
             Print (annotated.ToString ());
 
-            if (annotated.AlphanumericOnly)
+            if (false) // annotated.AlphanumericOnly)
             {
                 Print ("\nAlphanumericOnly, token parsing skipped");
             }
@@ -198,8 +257,8 @@ namespace utTokens
             Print ("Before split:");
             Print (annot.ToString () + "\n");
 
-            //AnnotatedStringSet args = parsing.SplitBracketArgs_Colon (annot);
-            AnnotatedStringSet args = parsing.SplitBracketArgs_Space (annot);
+            AnnotatedStringSet args = parsing.SplitBracketArgs_Colon (annot);
+            //AnnotatedStringSet args = parsing.SplitBracketArgs_Space (annot);
             //AnnotatedStringSet args = parsing.SplitBracketArgs_Semi (annot);
             //AnnotatedStringSet args = parsing.SplitBracketArgs_Comma (annot);
 
@@ -209,7 +268,6 @@ namespace utTokens
             {
                 AnnotatedString nstr = args.GetOldest ();
                 Print (nstr.Plain);
-            //  Print (nstr.ToString ());
             }
 
             return true;
