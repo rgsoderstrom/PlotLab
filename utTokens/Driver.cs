@@ -27,7 +27,7 @@ namespace utTokens
         enum TestToRun {AnnotatedString, AnnotatedStringAppend, AnnotatedStringSet,
                         TokenParsing, TokenUtils};
 
-        private static readonly TestToRun test = TestToRun.AnnotatedStringAppend;
+        private static readonly TestToRun test = TestToRun.TokenUtils;
 
         private static readonly Dictionary<TestToRun, string> sectionHeader = new Dictionary<TestToRun, string>
         {
