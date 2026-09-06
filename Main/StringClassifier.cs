@@ -46,6 +46,13 @@ namespace PLMain
 
                     if (BlockManager.IsBlockName (astr.Plain))
                         return InputLineType.BlockName;
+
+
+
+                    //if (LibraryManager.IsPlotCommand (astr.Plain))
+                    //    return InputLineType.PlotCommand;
+
+
                 }
 
                 else
@@ -60,8 +67,8 @@ namespace PLMain
             if (SystemFunctions.WhatIs (FirstWord) == SymbolicNameTypes.SystemCommand)
                 return InputLineType.SystemCommand;
 
-            //if (LibraryManager.WhatIs (FirstWord) == SymbolicNameTypes.PlotCommand)
-            //    return InputLineType.PlotCommand;
+            if (LibraryManager.WhatIs (FirstWord) == SymbolicNameTypes.PlotCommand)
+                return InputLineType.PlotCommand;
 
             if (Workspace.WhatIs (FirstWord) == SymbolicNameTypes.WorkspaceCommand)
                 return InputLineType.WorkspaceCommand;
