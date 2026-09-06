@@ -21,6 +21,7 @@ namespace FunctionLibrary
         static public void AddPlotCommands (ref Dictionary<string, BSFunction> dst)
         {
             dst.Add ("close",  CloseFigure);
+            dst.Add ("clf",    ClearFigure);
             dst.Add ("hold",   Hold);
             dst.Add ("axis",   AxisConstraints);
         }
@@ -163,6 +164,17 @@ namespace FunctionLibrary
                 (CurrentFigure as IPlotDrawable).Clear ();
 
             return new PLNull ();
+        }
+
+        static bool ClearFigure (string _)
+        {
+            if (CurrentFigure == null)
+                NewFigure ();
+
+            else if (CurrentFigure is IPlotDrawable)
+                (CurrentFigure as IPlotDrawable).Clear ();
+
+            return true;
         }
 
         //*********************************************************************************************
