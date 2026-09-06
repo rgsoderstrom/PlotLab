@@ -27,7 +27,7 @@ namespace utTokens
         enum TestToRun {AnnotatedString, AnnotatedStringAppend, AnnotatedStringSet,
                         TokenParsing, TokenUtils};
 
-        private static readonly TestToRun test = TestToRun.TokenUtils;
+        private static readonly TestToRun test = TestToRun.AnnotatedStringSet;
 
         private static readonly Dictionary<TestToRun, string> sectionHeader = new Dictionary<TestToRun, string>
         {
@@ -48,6 +48,8 @@ namespace utTokens
             {TestToRun.TokenParsing,          TokenParsingTest},
             {TestToRun.TokenUtils,            TokenUtilsTest},
         };
+
+        //***********************************************************************
 
         static void Main (string [] _)
         {
@@ -180,22 +182,22 @@ namespace utTokens
 
         private static bool AnnotatedStringSetTest (string str)
         {
-            AnnotatedString nested = new AnnotatedString (str);
+            AnnotatedString compound = new AnnotatedString (str);
 
-            if (nested == null)
+            if (compound == null)
                 return false;
 
-            if (nested.IsEmpty)
+            if (compound.IsEmpty)
                 return false;
 
-            AnnotatedStringSet nestedSet = new AnnotatedStringSet ();
-            nestedSet.Add (nested);
+            AnnotatedStringSet astrSet = new AnnotatedStringSet ();
+            astrSet.Add (compound);
 
-            Print ("count = " + nestedSet.Count);
+            Print ("count = " + astrSet.Count);
 
-            while (nestedSet.Count > 0)
+            while (astrSet.Count > 0)
             {
-              AnnotatedString next = nestedSet.GetOldest ();
+              AnnotatedString next = astrSet.GetOldest ();
 
                 if (next == null)
                     break;
@@ -203,7 +205,7 @@ namespace utTokens
                 Print (next.Plain.ToString ());
                 Print (next.ToString ());
 
-                if (nestedSet.Count > 0)
+                if (astrSet.Count > 0)
                     Print ("------------------------");
             }
 

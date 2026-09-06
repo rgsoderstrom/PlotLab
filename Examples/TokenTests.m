@@ -29,12 +29,14 @@
 	% figure
 	
 	# AnnotatedString
-	if A > B,
-	p = [1 ; (sqrt (5 * 3)) ; 7]
-	p=[1 ; 2 ; 3 ; 4 ; (sqrt (5 * 3)) ; 6 ; 7]
+	% clf
+	clf ;
+	% if A > B,
+	% p = [1 ; (sqrt (5 * 3)) ; 7]
+	% p=[1 ; 2 ; 3 ; 4 ; (sqrt (5 * 3)) ; 6 ; 7]
 	% d = [1 ; (2 * 7) ; 3]'
 	% x >= 3;	
-	y = z12' .* xyzx';
+	% y = z12' .* xyzx';
 	% y = z12' .* xyzx'
 	% z = A' + [1:2:20]';
 	
@@ -60,10 +62,13 @@
 	% c = sprintf ('aa \'bbb\' cc');
 	
 	# AnnotatedStringSet
-	if A > B, c = A * B; disp (c); end
-	if z + x, a = [1,2,3]
-	a = 4; b = a ^ 2; 
-	a = 4; b = a ^ 2; c = b ^ 2; d = c / 3; clear a b c
+	clf
+	clf ;
+	figure ; clf ; plot (1:10);
+	% if A > B, c = A * B; disp (c); end
+	% if z + x, a = [1,2,3]
+	% a = 4; b = a ^ 2; 
+	% a = 4; b = a ^ 2; c = b ^ 2; d = c / 3; clear a b c
 	
 	
 	

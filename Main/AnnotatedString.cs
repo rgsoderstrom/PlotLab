@@ -156,8 +156,14 @@ namespace PLMain
                 AssignInitialTypes (trimmed);
                 AdjustTypes ();
 
-                foreach (AnnotatedChar ac in annotatedChars)
+                // for this next test, ignore final character if it is a semicolon
+                int len   = annotatedChars.Count;
+                int Count = annotatedChars [len - 1].IsSemicolon ? len - 1 : len;
+
+                for (int i=0; i<Count; i++)
                 { 
+                    AnnotatedChar ac = annotatedChars [i];
+
                     if (ac.IsAlphanumeric == false && ac.IsWhitespace == false)
                     { 
                         AlphanumericOnly = false;

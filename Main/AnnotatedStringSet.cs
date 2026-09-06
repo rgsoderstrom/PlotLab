@@ -50,12 +50,6 @@ namespace PLMain
             // If we get here astr is a compound expression, e.g.a = 123; b = 456; c = 789; all on one line.
             // It will be split into a list of annotated strings
 
-
-            // if input astr.SuppressOutput is true, restore trailing semicolon
-            //if (astr.SuppressOutput)
-            //    astr = AnnotatedString.Append (astr, ';');
-
-
             int startIndex = 0;
             List<int> boundries = astr.Level0Semis; // these are indices of the breaks between expressions
             boundries.AddRange (astr.Level0Commas);
@@ -65,6 +59,10 @@ namespace PLMain
 
             string str = astr.Plain;
 
+            // if input astr.SuppressOutput is true, restore trailing semicolon
+            if (astr.SupressPrinting)
+                str += ';';
+
             for (int i = 0; i<boundries.Count; i++)
             {
                 int endIndex = boundries [i]; // stop copying after this character
@@ -72,7 +70,8 @@ namespace PLMain
                 string partial = str.Substring (startIndex, endIndex - startIndex + 1);
                 string trimmed = partial.Trim (new char [] { ' ' });
 
-                annotatedStrings.Enqueue (new AnnotatedString (trimmed));
+                AnnotatedString aTrimmed = new AnnotatedString (trimmed);
+                annotatedStrings.Enqueue (aTrimmed);
                 startIndex = endIndex + 1;
             }
 
