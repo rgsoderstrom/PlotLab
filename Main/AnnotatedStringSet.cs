@@ -17,14 +17,8 @@ namespace PLMain
         public int  Count   {get { return annotatedStrings.Count;}}
         public bool IsEmpty {get {return Count == 0;}}
 
-
         public AnnotatedString GetOldest () {return annotatedStrings.Dequeue ();}
-
-        //public AnnotatedString PeekOldest () {return annotatedStrings.Peek ();}
-        //public void Pop () {annotatedStrings.Dequeue ();}
-
         public void Clear () {annotatedStrings.Clear ();}
-
 
         //**************************************************************************
 
@@ -59,29 +53,33 @@ namespace PLMain
 
             string str = astr.Plain;
 
-            // if input astr.SuppressOutput is true, restore trailing semicolon
-            if (astr.SupressPrinting)
-                str += ';';
+            // if input astr.SupressPrinting is true, restore trailing semicolon. this ensures
+            // last string of the set will will also be marked SupressPrinting
+            //if (astr.SupressPrinting)
+            //    str += ';';
 
             for (int i = 0; i<boundries.Count; i++)
             {
-                int endIndex = boundries [i]; // stop copying after this character
+                int endIndex = boundries [i] - 1; // stop copying after this character
 
                 string partial = str.Substring (startIndex, endIndex - startIndex + 1);
-                string trimmed = partial.Trim (new char [] { ' ' });
+                string trimmed = partial.Trim (new char [] {' '});
 
                 AnnotatedString aTrimmed = new AnnotatedString (trimmed);
+                aTrimmed.SupressPrinting = true;
                 annotatedStrings.Enqueue (aTrimmed);
-                startIndex = endIndex + 1;
+                startIndex = endIndex + 2;
             }
 
             // one more outside of loop if input string does not end in semicolon
             if (startIndex < str.Length)// - 1)
             {
                 string partial = str.Substring (startIndex, str.Length - startIndex);
-                string trimmed = partial.Trim (new char [] { ' ' });
+                string trimmed = partial.Trim (new char [] {' '});
 
-                annotatedStrings.Enqueue (new AnnotatedString (trimmed));
+                AnnotatedString aTrimmed = new AnnotatedString (trimmed);
+                aTrimmed.SupressPrinting = astr.SupressPrinting;
+                annotatedStrings.Enqueue (aTrimmed);
             }
         }
     }
