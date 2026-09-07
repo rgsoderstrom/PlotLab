@@ -58,7 +58,7 @@ namespace PLMain
         public bool AlphanumericOnly {get {return alphanumericOnly;} protected set {alphanumericOnly = value;}}
 
         private bool supressPrinting = false;
-        public bool SupressPrinting {get {return supressPrinting;} protected set {supressPrinting = value;}}
+        public bool SupressPrinting {get {return supressPrinting;} internal set {supressPrinting = value;}}
 
         //********************************************************************************
         //
