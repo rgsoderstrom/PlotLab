@@ -47,12 +47,8 @@ namespace PLMain
                     if (BlockManager.IsBlockName (astr.Plain))
                         return InputLineType.BlockName;
 
-
-
-                    //if (LibraryManager.IsPlotCommand (astr.Plain))
-                    //    return InputLineType.PlotCommand;
-
-
+                    if (LibraryManager.IsPlotCommand (astr.Plain))
+                        return InputLineType.PlotCommand;
                 }
 
                 else
