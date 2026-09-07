@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-//using FunctionLibrary;
+// Only Constants are implemnted
 
 using PLCommon;
 
@@ -45,19 +45,19 @@ namespace PLWorkspace
                 throw new Exception ("Only one GlobalWorkspace allowed");
         }
 
-    //***************************************************************************************************
+        //***************************************************************************************************
 
-        //internal override SymbolicNameTypes WhatIs (string str)
-        //{
-        //    SymbolicNameTypes type = base.WhatIs (str);
+        internal override SymbolicNameTypes WhatIs (string str)
+        {
+            SymbolicNameTypes type = base.WhatIs (str);
 
-        //    if (type == SymbolicNameTypes.Unknown) 
-        //        if (Constants.ContainsKey (str))
-        //            type = SymbolicNameTypes.Constant;
+            if (type == SymbolicNameTypes.Unknown)
+                if (Constants.ContainsKey (str))
+                    type = SymbolicNameTypes.Variable; // .Constant;
 
-        //    return type;
-        //}
-       
+            return type;
+        }
+
         internal override bool Contains (string var)
         {
             return Variables.ContainsKey (var) || Constants.ContainsKey (var);

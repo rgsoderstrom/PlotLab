@@ -18,8 +18,9 @@ namespace PLWorkspace
             {
                 Workspace.Print = Console.Write;
 
+                GlobalsTest ();
                 //ReadWriteTest ();
-                OverwriteSubmatrix_Test2 ();
+                //OverwriteSubmatrix_Test2 ();
                 //OverwriteSubmatrix_Test1 ();
                 //Functions_Test1 ();
                 //PushPopTest ();
@@ -30,6 +31,25 @@ namespace PLWorkspace
                 Console.WriteLine ("Exception: {0}", ex.Message);
              //   Console.WriteLine (ex.StackTrace);
             }
+        }
+
+        //********************************************************************************
+
+        static void GlobalsTest ()
+        {
+            PLVariable v1 = Workspace.Get ("pi");
+            Console.WriteLine (v1.ToString () + " " + Workspace.WhatIs ("pi"));
+
+            PLDouble piApprox = new PLDouble ("pi", 3.1);
+            Workspace.Add (piApprox);
+
+            PLVariable v2 = Workspace.Get ("pi");
+            Console.WriteLine (v2.ToString ());
+
+            Workspace.RunCommand ("clear");
+
+            PLVariable v3 = Workspace.Get ("pi");
+            Console.WriteLine (v3.ToString ());
         }
 
         //********************************************************************************
