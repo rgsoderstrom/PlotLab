@@ -594,39 +594,39 @@ namespace PLMain
         // Add outer square brackets
         //
 
-        //internal static AnnotatedString AddOuterBrackets (AnnotatedString src)
-        //{
-        //    string final = "[" + src.Plain + "]";
-        //    return new AnnotatedString (final);
+        internal static AnnotatedString AddOuterBrackets (AnnotatedString src)
+        {
+            string final = "[" + src.Plain + "]";
+            return new AnnotatedString (final);
 
 
-        //    //List<AnnotatedChar> newChars = new List<AnnotatedChar> (CharacterCount + 2);
+            //List<AnnotatedChar> newChars = new List<AnnotatedChar> (CharacterCount + 2);
 
-        //    //foreach (AnnotatedChar ac in annotatedChars)
-        //    //{
-        //    //    AnnotatedChar newChar = ac;
-        //    //    newChar.BracketLevel++;
-        //    //    newChars.Add (newChar); 
-        //    //}
+            //foreach (AnnotatedChar ac in annotatedChars)
+            //{
+            //    AnnotatedChar newChar = ac;
+            //    newChar.BracketLevel++;
+            //    newChars.Add (newChar); 
+            //}
 
-        //    //// new initial character
-        //    //AnnotatedChar c1 = new AnnotatedChar ('[');
+            //// new initial character
+            //AnnotatedChar c1 = new AnnotatedChar ('[');
 
-        //    //// if the previous first char raised a nesting level, we need to undo that for new first char
-        //    //c1.ParenLevel   = (sbyte) (annotatedChars [0].IsOpenParen   ? annotatedChars [0].ParenLevel - 1   : annotatedChars [0].ParenLevel);
-        //    //c1.BracketLevel = (sbyte) (annotatedChars [0].IsOpenBracket ? annotatedChars [0].BracketLevel - 1 : annotatedChars [0].BracketLevel);
+            //// if the previous first char raised a nesting level, we need to undo that for new first char
+            //c1.ParenLevel   = (sbyte) (annotatedChars [0].IsOpenParen   ? annotatedChars [0].ParenLevel - 1   : annotatedChars [0].ParenLevel);
+            //c1.BracketLevel = (sbyte) (annotatedChars [0].IsOpenBracket ? annotatedChars [0].BracketLevel - 1 : annotatedChars [0].BracketLevel);
 
-        //    //newChars.Insert (0, c1);
+            //newChars.Insert (0, c1);
 
-        //    // new final close paren
-        //  //  AnnotatedChar c2 = new AnnotatedChar (annotatedChars [annotatedChars.Count - 1], ']');
-        //  //  newChars.Add (c2);
+            // new final close paren
+            //  AnnotatedChar c2 = new AnnotatedChar (annotatedChars [annotatedChars.Count - 1], ']');
+            //  newChars.Add (c2);
 
-        //  ////  return new AnnotatedString (newChars);
+            ////  return new AnnotatedString (newChars);
 
-        //  //  annotatedChars = newChars;
-        //  //  return this;
-        //}
+            //  annotatedChars = newChars;
+            //  return this;
+        }
 
         //*******************************************************************
         //

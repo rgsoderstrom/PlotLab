@@ -160,8 +160,8 @@ namespace PLMain
 
                     while (args.Count > 0)
                     {
-                        //AnnotatedString edited = EnsureRowVector (args.GetOldest ());
-                        AnnotatedString edited = args.GetOldest ();
+                        AnnotatedString edited = EnsureRowVector (args.GetOldest ());
+                        //AnnotatedString edited = args.GetOldest ();
                         
                         string pl = edited.Plain;
                         if (pl [pl.Length-1] == ';')
@@ -203,17 +203,17 @@ namespace PLMain
 
         // Add outer brackets if original string doesn't have tham
 
-        //AnnotatedString EnsureRowVector (AnnotatedString orig)
-        //{
-        //    AnnotatedString edited = orig.TrimmedSubstring (0, orig.CharacterCount);
+        AnnotatedString EnsureRowVector (AnnotatedString orig)
+        {
+            AnnotatedString edited = orig.TrimmedSubstring (0, orig.CharacterCount);
 
-        //    if (edited [0].IsOpenBracket == false)
-        //    {
-        //        edited = AnnotatedString.AddOuterBrackets (edited);
-        //    }
+            if (edited [0].IsOpenBracket == false)
+            {
+                edited = AnnotatedString.AddOuterBrackets (edited);
+            }
 
-        //    return edited;
-        //}
+            return edited;
+        }
 
         //*************************************************************************************************
         //*************************************************************************************************
