@@ -18,7 +18,8 @@ namespace PLWorkspace
             {
                 Workspace.Print = Console.Write;
 
-                GlobalsTest ();
+                //GlobalsTest ();
+                MatrixTest ();
                 //ReadWriteTest ();
                 //OverwriteSubmatrix_Test2 ();
                 //OverwriteSubmatrix_Test1 ();
@@ -50,6 +51,28 @@ namespace PLWorkspace
 
             PLVariable v3 = Workspace.Get ("pi");
             Console.WriteLine (v3.ToString ());
+        }
+
+        //********************************************************************************
+
+        static void MatrixTest ()
+        {
+            Matrix mat1 = new Matrix (4, 5);
+            mat1.FillByRow (new double [] {11, 12, 13, 14, 15,
+                                           21, 22, 23, 24, 25,
+                                           31, 32, 33, 34, 35,
+                                           41, 42, 43, 44, 45 });
+            PLMatrix Z1 = new PLRMatrix ("Z1", mat1);
+            Workspace.Add (Z1);
+
+
+            Workspace.RunCommand ("whos");
+
+            string name = "Z1";
+            PLVariable r = Workspace.EvaluateFunction ("rows", name); 
+            PLVariable c = Workspace.EvaluateFunction ("cols", name); 
+
+            Console.WriteLine ("rows " + r + ",  cols" + c);
         }
 
         //********************************************************************************

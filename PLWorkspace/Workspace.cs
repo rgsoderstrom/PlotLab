@@ -139,6 +139,11 @@ namespace PLWorkspace
             return Current.Evaluate (funcName, args);
         }
 
+        static public PLVariable EvaluateFunction(string funcName, string name) 
+        {
+            return Current.Evaluate (funcName, Get (name));
+        }
+
         // Workspace commands print information on things in the
         // workspace, e.g. whos
 
