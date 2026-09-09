@@ -42,7 +42,7 @@ namespace PLMain
         // ToString
         public override string ToString () 
         {
-            return string.Format ("{0}, {1}", type, annotatedText.Plain);
+            return "TokenType: " + type.ToString () + ", " + annotatedText.Plain;
           //  return string.Format ("Token type: {0}, Token Text: {1}", type, annotatedText.Plain);
         }
     }
@@ -79,7 +79,7 @@ namespace PLMain
         // ToString
         public override string ToString () 
         {
-            return string.Format (pairType + t1.ToString () + ", " + t2.ToString ());
+            return "TokenPair " + pairType + ": " + t1.ToString () + ", " + t2.ToString ();
                 
             //return string.Format ("Token pair type: {0}, Token Text: {1}", 
             //                      pairType, t1.AnnotatedText.Plain + " " + t2.AnnotatedText.Plain);

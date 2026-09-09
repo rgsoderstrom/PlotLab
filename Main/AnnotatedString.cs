@@ -779,43 +779,43 @@ namespace PLMain
                 str24 += ac.thisCharType == AnnotatedChar.ACType.Comma           ? "1" : ".";
             }
 
-            string str = str0;
+            string str = str0 + " ";
 
-            if (NotAllDots (str1)) str += '\n' + str1;
-            if (NotAllDots (str2)) str += '\n' + str2;
-         // if (NotAllDots (str3)) str += '\n' + str3;
-            if (NotAllDots (str4)) str += '\n' + str4;
+            if (NotAllDots (str1)) str += '\n' + str1 + " ";
+            if (NotAllDots (str2)) str += '\n' + str2 + " ";
+         // if (NotAllDots (str3)) str += '\n' + str3 + " ";
+            if (NotAllDots (str4)) str += '\n' + str4 + " ";
 
-            if (str5.Contains ("1")) str += '\n' + str5;
-            if (str6.Contains ("1")) str += '\n' + str6;
-            if (str7.Contains ("1")) str += '\n' + str7;
-            if (str8.Contains ("1")) str += '\n' + str8;
-            if (str9.Contains ("1")) str += '\n' + str9;
-            if (str10.Contains ("1")) str += '\n' + str10;
-            if (str11.Contains ("1")) str += '\n' + str11;
-            if (str21.Contains ("1")) str += '\n' + str21;
-            if (str12.Contains ("1")) str += '\n' + str12;
-            if (str13.Contains ("1")) str += '\n' + str13;
-            if (str14.Contains ("1")) str += '\n' + str14;
-            if (str15.Contains ("1")) str += '\n' + str15;
-            if (str16.Contains ("1")) str += '\n' + str16;
-            if (str17.Contains ("1")) str += '\n' + str17;
-            if (str18.Contains ("1")) str += '\n' + str18;
-            if (str19.Contains ("1")) str += '\n' + str19;
-            if (str20.Contains ("1")) str += '\n' + str20;
-            if (str22.Contains ("1")) str += '\n' + str22;
-            if (str23.Contains ("1")) str += '\n' + str23;
-            if (str24.Contains ("1")) str += '\n' + str24;
+            if (str5.Contains ("1")) str += '\n' + str5 + " ";
+            if (str6.Contains ("1")) str += '\n' + str6 + " ";
+            if (str7.Contains ("1")) str += '\n' + str7 + " ";
+            if (str8.Contains ("1")) str += '\n' + str8 + " ";
+            if (str9.Contains ("1")) str += '\n' + str9 + " ";
+            if (str10.Contains ("1")) str += '\n' + str10 + " ";
+            if (str11.Contains ("1")) str += '\n' + str11 + " ";
+            if (str21.Contains ("1")) str += '\n' + str21 + " ";
+            if (str12.Contains ("1")) str += '\n' + str12 + " ";
+            if (str13.Contains ("1")) str += '\n' + str13 + " ";
+            if (str14.Contains ("1")) str += '\n' + str14 + " ";
+            if (str15.Contains ("1")) str += '\n' + str15 + " ";
+            if (str16.Contains ("1")) str += '\n' + str16 + " ";
+            if (str17.Contains ("1")) str += '\n' + str17 + " ";
+            if (str18.Contains ("1")) str += '\n' + str18 + " ";
+            if (str19.Contains ("1")) str += '\n' + str19 + " ";
+            if (str20.Contains ("1")) str += '\n' + str20 + " ";
+            if (str22.Contains ("1")) str += '\n' + str22 + " ";
+            if (str23.Contains ("1")) str += '\n' + str23 + " ";
+            if (str24.Contains ("1")) str += '\n' + str24 + " ";
 
-            str += "\n" + "SupressPrinting:  " + SupressPrinting.ToString ();
-            str += "\n" + "IsCompound:       " + IsCompound.ToString ();
-            str += "\n" + "AlphanumericOnly: " + AlphanumericOnly.ToString ();    
+            str += "\n" + "SupressPrinting:  " + SupressPrinting.ToString () + " ";
+            str += "\n" + "IsCompound:       " + IsCompound.ToString () + " ";
+            str += "\n" + "AlphanumericOnly: " + AlphanumericOnly.ToString () + " ";    
             
             if (AlphanumericOnly) // these properties are only used on AlphanumericOnly strings
             { 
-                str += "\n" + "FirstWord: " + FirstWord;
+                str += "\n" + "FirstWord: " + FirstWord + " ";
                 str += "\n" + "Arguments: ";
-                str += Arguments;
+                str += Arguments + " ";
             }
 
             if (digits.Count > 0)       {str += "\nDigits      : "; foreach (int i in digits) str += i + ", ";}
