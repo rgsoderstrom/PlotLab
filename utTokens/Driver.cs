@@ -27,7 +27,9 @@ namespace utTokens
         enum TestToRun {AnnotatedString, AnnotatedStringAppend, AnnotatedStringSet,
                         TokenParsing, TokenUtils};
 
-        private static readonly TestToRun test = TestToRun.AnnotatedStringSet;
+        private static readonly TestToRun test = TestToRun.TokenUtils;
+
+        //***********************************************************************
 
         private static readonly Dictionary<TestToRun, string> sectionHeader = new Dictionary<TestToRun, string>
         {
@@ -61,7 +63,7 @@ namespace utTokens
                 while ((testCase = GetNextLine ()) != null)
                 {
                     Console.WriteLine ("Running test: " + test.ToString ());
-                    Console.WriteLine ("Test case: " + testCase);
+                    Console.WriteLine ("On test case: " + testCase + "\n");
 
                     testFunction [test] (testCase);
 
@@ -182,31 +184,26 @@ namespace utTokens
 
         private static bool AnnotatedStringSetTest (string str)
         {
-            AnnotatedString compound = new AnnotatedString (str);
+            AnnotatedString astr = new AnnotatedString (str);
 
-            if (compound == null)
+            if (astr == null)
                 return false;
 
-            if (compound.IsEmpty)
+            if (astr.IsEmpty)
                 return false;
 
-            AnnotatedStringSet astrSet = new AnnotatedStringSet ();
-            astrSet.Add (compound);
-
-            Print ("count = " + astrSet.Count);
-
-            while (astrSet.Count > 0)
+            AnnotatedStringSet astrSet = new AnnotatedStringSet
             {
-              AnnotatedString next = astrSet.GetOldest ();
+                astr
+            };
 
-                if (next == null)
-                    break;
+            Print ("count = " + astrSet.Count + "\n");
 
+            foreach (AnnotatedString next in astrSet)
+            {
                 Print (next.Plain.ToString ());
                 Print (next.ToString ());
-
-                if (astrSet.Count > 0)
-                    Print ("------------------------");
+                Print ("\n");
             }
 
             return true;
@@ -266,11 +263,8 @@ namespace utTokens
 
             Print ("\n" + args.Count + " args after split:");
 
-            while (args.IsEmpty == false)
-            {
-                AnnotatedString nstr = args.GetOldest ();
+            foreach (AnnotatedString nstr in args)
                 Print (nstr.Plain);
-            }
 
             return true;
         }

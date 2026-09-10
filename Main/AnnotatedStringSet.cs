@@ -1,24 +1,38 @@
 ﻿
 /*
-    AnnotatedStringSet - queue of AnnotatedStrings
+    AnnotatedStringSet - list of AnnotatedStrings
 */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace PLMain
 {
-    public class AnnotatedStringSet
+    public class AnnotatedStringSet : IEnumerable<AnnotatedString>
     {
-        // queue of complete AnnotatedStrings,
-        private Queue<AnnotatedString> annotatedStrings = new Queue<AnnotatedString> ();
+        //********************************************************************
 
-        // number of complete string ready for processing
-        public int  Count   {get { return annotatedStrings.Count;}}
-        public bool IsEmpty {get {return Count == 0;}}
+        // list of complete AnnotatedStrings,
+        private readonly List<AnnotatedString> annotatedStrings = new List<AnnotatedString> ();
+        public int Count {get {return annotatedStrings.Count;}}
 
-        public AnnotatedString GetOldest () {return annotatedStrings.Dequeue ();}
-        public void Clear () {annotatedStrings.Clear ();}
+        //********************************************************************
+
+        // "foreach" support. Google "yield" keyword for explanation
+
+        public IEnumerator<AnnotatedString> GetEnumerator()
+        {
+            foreach (var astring in annotatedStrings)
+            {
+                yield return astring; // Yield elements one by one
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator(); // Simply reuse the generic method above
+        }
 
         //**************************************************************************
 
@@ -37,7 +51,7 @@ namespace PLMain
         {
             if (astr.IsCompound == false)
             {
-                annotatedStrings.Enqueue (astr);
+                annotatedStrings.Add (astr);
                 return;
             }
 
@@ -49,7 +63,6 @@ namespace PLMain
             boundries.AddRange (astr.Level0Commas);
 
             boundries.Sort ();
-
 
             string str = astr.Plain;
 
@@ -67,7 +80,7 @@ namespace PLMain
 
                 AnnotatedString aTrimmed = new AnnotatedString (trimmed);
                 aTrimmed.SupressPrinting = true;
-                annotatedStrings.Enqueue (aTrimmed);
+                annotatedStrings.Add (aTrimmed);
                 startIndex = endIndex + 2;
             }
 
@@ -79,7 +92,7 @@ namespace PLMain
 
                 AnnotatedString aTrimmed = new AnnotatedString (trimmed);
                 aTrimmed.SupressPrinting = astr.SupressPrinting;
-                annotatedStrings.Enqueue (aTrimmed);
+                annotatedStrings.Add (aTrimmed);
             }
         }
     }
