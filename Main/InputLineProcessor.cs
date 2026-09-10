@@ -63,11 +63,8 @@ namespace PLMain
                 AnnotatedString astr  = new AnnotatedString (cleaned);
                 AnnotatedStrings.Add (astr);
 
-                while (AnnotatedStrings.Count > 0)
+                foreach (AnnotatedString astr2 in AnnotatedStrings)
                 {
-                    AnnotatedString astr2 = AnnotatedStrings.GetOldest ();
-                    //astr2.CheckForTrailingSemi ();
-
                     SupressPrinting = astr2.SupressPrinting;
 
                     if (astr2 == null)

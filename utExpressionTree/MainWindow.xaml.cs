@@ -56,20 +56,18 @@ namespace utExpressionTree
                         if (trimmed [0] == '%')
                             continue;
 
+                        Console.WriteLine (trimmed);
                         AnnotatedString astr = new AnnotatedString (trimmed);
                         AnnotatedStringSet annotatedSet = new AnnotatedStringSet (astr);
 
-                        while (annotatedSet.Count > 0)
+                        foreach (AnnotatedString annotated in annotatedSet)
                         {
-                            Console.WriteLine (trimmed);
-                            AnnotatedString annotated = annotatedSet.GetOldest ();
-                            //annotated.CheckForTrailingSemi ();
                             Console.WriteLine (annotated.ToString ());
                             Counter++;
 
                             //**********************************************************************
 
-                            if (true) // show token parsing
+                            if (false) // show token parsing
                             { 
                                 // first pass
                                 TokenParsing parsing = new TokenParsing ();
@@ -99,7 +97,7 @@ namespace utExpressionTree
 
                             ExpressionTree tree = new ExpressionTree (annotated);
 
-                            if (true) // show expression tree
+                            if (false) // show expression tree
                             { 
                                 Window win2 = new Window ();
                                 TreeView tv = new TreeView ();
