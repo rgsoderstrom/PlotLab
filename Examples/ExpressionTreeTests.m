@@ -8,9 +8,17 @@
 	
 	%plot (1:10)
 	%z = rand;
-	rand
-	% a = axis
-	p = rand
+	% rand
+	% % a = axis
+	% p = rand
+
+	a = rand (4);
+	%a (2, 2:3)
+	%a (3, :)
+	
+	b = rand (1, 5);
+	b (3)
+	b (:)
 	
 	% p = [1 ; 2 ; 3 ; 4 ; 15; 6 ; 7]
 	% p = [1 , 2 , 3 , 4 ,  5 * 3  , 6 , 7]

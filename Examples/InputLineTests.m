@@ -16,17 +16,19 @@
 	% a	
 	% startup	
 	% path	
+	% a = 12;
 	% figure
+	% clf
 	
-	% j=3; k = 7; l=  9;
+	j=3; k = 7; l=  9;
 		
 	%
 	% Blocks
 	%
 
-	for a = 1 : 5,
-	b = a * a
-	end
+	% for a = 1 : 5,
+	% b = a * a
+	% end
 	
 
 	% if A > B,       % BLOCK_1, test [0]

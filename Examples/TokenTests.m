@@ -62,9 +62,10 @@
 	% c = sprintf ('aa \'bbb\' cc');
 	
 	# AnnotatedStringSet
-	clf
-	clf ;
+	% clf
+	% ;
 	figure ; clf ; plot (1:10);
+	figure ; clf ; plot (1:10)
 	% if A > B, c = A * B; disp (c); end
 	% if z + x, a = [1,2,3]
 	% a = 4; b = a ^ 2; 
