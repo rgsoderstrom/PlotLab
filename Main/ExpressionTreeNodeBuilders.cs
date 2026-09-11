@@ -390,7 +390,7 @@ namespace PLMain
 
 
 
-            //string matrixName = Operator;
+            string matrixName = Operator;
 
             //if (Workspace.IsVariable (matrixName) == false)
             //    throw new Exception ("Undefined variable: " + matrixName);
@@ -411,7 +411,30 @@ namespace PLMain
             count = 0;
 
             foreach (AnnotatedString astr in args)
-                Operands.Add (new ExpressionTreeNode (astr));
+            {
+                int index = count++;
+
+                if (astr.IsJustColon)
+                {
+                    if (index == 0)
+                    {
+                        AnnotatedString allRows = new AnnotatedString ("1:rows(" + matrixName + ")");
+                        Operands.Add (new ExpressionTreeNode (allRows));
+                    }
+
+                    else if (index == 1)
+                    {
+                        AnnotatedString allCols = new AnnotatedString ("1:cols(" + matrixName + ")");
+                        Operands.Add (new ExpressionTreeNode (allCols));
+                    }
+
+                    else
+                        throw new Exception ("Error in submatrix args " + astr.Plain + " for " + matrixName);
+                }
+
+                else
+                    Operands.Add (new ExpressionTreeNode (astr));
+            }
 
             // search the operand tree for "end". replace any with appropriate number
             // of rows or colums

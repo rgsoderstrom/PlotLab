@@ -60,6 +60,8 @@ namespace PLMain
         private bool supressPrinting = false;
         public bool SupressPrinting {get {return supressPrinting;} internal set {supressPrinting = value;}}
 
+        public bool IsJustColon {get {return CharacterCount == 1 && annotatedChars [0].IsColon;}}
+
         //********************************************************************************
         //
         // CheckForTrailingSemi () - remove it and mark string with SupressPrinting true
