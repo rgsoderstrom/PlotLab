@@ -36,6 +36,16 @@ namespace PLMain
 
         //**************************************************************************
 
+        // Indexing support
+
+        public AnnotatedString this [int index]
+        {
+            get => annotatedStrings [index];
+            set => annotatedStrings [index] = value;
+        }
+
+        //**************************************************************************
+
         public AnnotatedStringSet (AnnotatedString astr)
         {
             Add (astr);
