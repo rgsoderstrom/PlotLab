@@ -374,129 +374,171 @@ namespace PLMain
             Operator = Pair.Get1.AnnotatedText.Plain;
             NodeType = Pair.Get1.Type;
 
+            string matrixName = Operator;
+
+
             TokenParsing parsing = new TokenParsing ();
             AnnotatedStringSet args = parsing.SplitSubmatrixArgs (Pair.Get2.AnnotatedText);
 
-            Console.WriteLine ("Submatrix arg count = " + args.Count);
-
-            int count = 0;
-
-            foreach (AnnotatedString astr in args)
-                Console.WriteLine (count++ + ": " + astr.Plain);
 
 
 
-           // throw new Exception ("******* not implemented *******");
+
+            for (int i=0; i<args.Count; i++)
+                Console.WriteLine (i + ": " + args [i].Plain);
 
 
 
-            string matrixName = Operator;
 
-            //if (Workspace.IsVariable (matrixName) == false)
-            //    throw new Exception ("Undefined variable: " + matrixName);
+            PLVariable prows = Workspace.EvaluateFunction ("rows", matrixName);
+            int rows = (prows as PLInteger).Data;
 
-            //PLVariable prows = Workspace.EvaluateFunction ("rows", matrixName);            
-            //int         rows = (prows as PLInteger).Data;
+            PLVariable pcols = Workspace.EvaluateFunction ("cols", matrixName);
+            int cols = (pcols as PLInteger).Data;
 
-            //PLVariable pcols = Workspace.EvaluateFunction ("cols", matrixName);            
-            //int         cols = (pcols as PLInteger).Data;
+            bool IsMatrix    = rows >  1 && cols >  1;
+            bool IsRowVector = rows == 1 && cols >  1;
+            bool IsColVector = rows >  1 && cols == 1;
+            bool IsScalar    = rows == 1 && cols == 1;
 
-
-            ////bool   row = Workspace.Is
-
-            //int    dimensions = args.Count; // 1 or 2
-
-
-
-            count = 0;
-
-            foreach (AnnotatedString astr in args)
+            if (IsRowVector || IsColVector)
             {
-                int index = count++;
+                if (args.Count != 1)
+                    throw new Exception ("Extract from vector requires one arg: " + matrixName);
+
+                AnnotatedString astr = args [0];
 
                 if (astr.IsJustColon)
                 {
-                    if (index == 0)
-                    {
-                        AnnotatedString allRows = new AnnotatedString ("1:rows(" + matrixName + ")");
-                        Operands.Add (new ExpressionTreeNode (allRows));
-                    }
-
-                    else if (index == 1)
-                    {
-                        AnnotatedString allCols = new AnnotatedString ("1:cols(" + matrixName + ")");
-                        Operands.Add (new ExpressionTreeNode (allCols));
-                    }
-
-                    else
-                        throw new Exception ("Error in submatrix args " + astr.Plain + " for " + matrixName);
+                    AnnotatedString allRows = new AnnotatedString ("1 : length (" + matrixName + ")");
+                    Operands.Add (new ExpressionTreeNode (allRows));
                 }
 
                 else
-                    Operands.Add (new ExpressionTreeNode (astr));
+                {
+                    throw new NotImplementedException ("aaaaaa");
+                }
             }
 
-            // search the operand tree for "end". replace any with appropriate number
-            // of rows or colums
+            else if (IsMatrix)
+            {
+                if (args.Count == 1) // only allowed syntax is matrixName (:)
+                {
+                    throw new NotImplementedException ("bbbbb");
+                }
 
-            //Compact ();
+                else if (args.Count == 2)
+                {
+                    Operands.Add (new ExpressionTreeNode (args [0]));
+                    Operands.Add (new ExpressionTreeNode (args [1]));
+                }
 
-            return;
+                else 
+                    throw new Exception ("Extract from matrix requires two args: " + matrixName);
 
-            //int rows;
-            //int cols;
+            }
 
-            //if (Workspace.Get (matrixName) is PLRMatrix)
+            else // IsScalar
+                throw new Exception ("Cannot extract submatrix from a scalar: " + matrixName);
+
+
+
+
+
+            //for (int i=0; i<args.Count; i++)
             //{
-            //    PLRMatrix mat = Workspace.Get (matrixName) as PLRMatrix;
-            //    rows = mat.Rows; // (workspace.Rows (mat) as PLInteger).Data;
-            //    cols = mat.Cols; // (workspace.Cols (mat) as PLInteger).Data;
-            //}
+            //    AnnotatedString astr = args [i];
 
-            //else if (Workspace.Get (matrixName) is PLCMatrix)
-            //{
-            //    PLCMatrix mat = Workspace.Get (matrixName) as PLCMatrix;
-            //    rows = mat.Rows;
-            //    cols = mat.Cols;
-            //}
-
-            //else
-            //    throw new Exception ("Unrecognized matrix type");
-
-            //bool IsRowVector = rows == 1 && cols > 1;
-            //bool IsColVector = rows > 1  && cols == 1;
-
-            //for (int i = 0; i<Operands.Count; i++)
-            //{
-            //    for (int j = 0; j<Operands [i].Operands.Count; j++)
+            //    if (astr.IsJustColon) // someMatrix (3, :)
             //    {
-            //        if (Operands [i].Operands [j].Operator == "end")
+            //        if (i == 0)
             //        {
-            //            if (IsRowVector)
-            //            {
-            //                Operands [i].Operands [j] = new ExpressionTreeNode (new AnnotatedString (cols.ToString ()));
-            //            }
-
-            //            else if (IsColVector)
-            //            {
-            //                Operands [i].Operands [j] = new ExpressionTreeNode (new AnnotatedString (rows.ToString ()));
-            //            }
-
-            //            else
-            //            {
-            //                if (i == 0)
-            //                {
-            //                    Operands [i].Operands [j] = new ExpressionTreeNode (new AnnotatedString (rows.ToString ()));
-            //                }
-
-            //                else
-            //                {
-            //                    Operands [i].Operands [j] = new ExpressionTreeNode (new AnnotatedString (cols.ToString ()));
-            //                }
-            //            }
+            //            AnnotatedString allRows = new AnnotatedString ("1:rows(" + matrixName + ")");
+            //            Operands.Add (new ExpressionTreeNode (allRows));
             //        }
+
+            //        else if (i == 1)
+            //        {
+            //            AnnotatedString allCols = new AnnotatedString ("1:cols(" + matrixName + ")");
+            //            Operands.Add (new ExpressionTreeNode (allCols));
+            //        }
+
+            //        else
+            //            throw new Exception ("Error in submatrix args, more than 2 dimensions not allowed " + astr.Plain + " for " + matrixName);
             //    }
+
+            //    else // if (true)//astr.IsJustEnd) // someVector (3 : end)
+            //    {
+            //        TokenParsing tp = new TokenParsing ();
+            //        TokenSet tset = tp.StringToTokens (astr);
+            //        Console.WriteLine ("aaa");
+            //    }
+
+            //    //else
+            //    //    Operands.Add (new ExpressionTreeNode (astr));
             //}
+
+            //// search the operand tree for "end". replace any with appropriate number
+            //// of rows or colums
+
+            ////Compact ();
+
+            //return;
+
+            ////int rows;
+            ////int cols;
+
+            ////if (Workspace.Get (matrixName) is PLRMatrix)
+            ////{
+            ////    PLRMatrix mat = Workspace.Get (matrixName) as PLRMatrix;
+            ////    rows = mat.Rows; // (workspace.Rows (mat) as PLInteger).Data;
+            ////    cols = mat.Cols; // (workspace.Cols (mat) as PLInteger).Data;
+            ////}
+
+            ////else if (Workspace.Get (matrixName) is PLCMatrix)
+            ////{
+            ////    PLCMatrix mat = Workspace.Get (matrixName) as PLCMatrix;
+            ////    rows = mat.Rows;
+            ////    cols = mat.Cols;
+            ////}
+
+            ////else
+            ////    throw new Exception ("Unrecognized matrix type");
+
+            ////bool IsRowVector = rows == 1 && cols > 1;
+            ////bool IsColVector = rows > 1  && cols == 1;
+
+            ////for (int i = 0; i<Operands.Count; i++)
+            ////{
+            ////    for (int j = 0; j<Operands [i].Operands.Count; j++)
+            ////    {
+            ////        if (Operands [i].Operands [j].Operator == "end")
+            ////        {
+            ////            if (IsRowVector)
+            ////            {
+            ////                Operands [i].Operands [j] = new ExpressionTreeNode (new AnnotatedString (cols.ToString ()));
+            ////            }
+
+            ////            else if (IsColVector)
+            ////            {
+            ////                Operands [i].Operands [j] = new ExpressionTreeNode (new AnnotatedString (rows.ToString ()));
+            ////            }
+
+            ////            else
+            ////            {
+            ////                if (i == 0)
+            ////                {
+            ////                    Operands [i].Operands [j] = new ExpressionTreeNode (new AnnotatedString (rows.ToString ()));
+            ////                }
+
+            ////                else
+            ////                {
+            ////                    Operands [i].Operands [j] = new ExpressionTreeNode (new AnnotatedString (cols.ToString ()));
+            ////                }
+            ////            }
+            ////        }
+            ////    }
+            ////}
         }
     }
 }
