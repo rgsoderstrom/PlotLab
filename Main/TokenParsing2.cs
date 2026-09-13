@@ -394,7 +394,7 @@ namespace PLMain
                         break;
 
                     default:
-                        throw new Exception ("Unsupported unary operator: " + initial [index].AnnotatedText.Plain [0]);
+                        throw new Exception ("TokenParsing found unsupported unary operator: " + initial [index].AnnotatedText.Plain [0]);
                 }
             }
 
