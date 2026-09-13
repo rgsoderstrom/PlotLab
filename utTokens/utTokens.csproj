@@ -38,6 +38,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Common\bin\Debug\Common.dll</HintPath>
     </Reference>
+    <Reference Include="CommonMath, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\CommonMath\bin\Debug\CommonMath.dll</HintPath>
+    </Reference>
     <Reference Include="PLCommon, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\PLCommon\bin\Debug\PLCommon.dll</HintPath>

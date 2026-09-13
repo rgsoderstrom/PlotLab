@@ -5,11 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using PLCommon;
 using PLMain;
+using PLWorkspace;
 
 //using PLLibrary;
 
-using static System.Net.Mime.MediaTypeNames;
+//using static System.Net.Mime.MediaTypeNames;
 
 namespace utTokens
 {
@@ -27,7 +29,7 @@ namespace utTokens
         enum TestToRun {AnnotatedString, AnnotatedStringAppend, AnnotatedStringSet,
                         TokenParsing, TokenUtils};
 
-        private static readonly TestToRun test = TestToRun.TokenUtils;
+        private static readonly TestToRun test = TestToRun.TokenParsing;
 
         //***********************************************************************
 
@@ -57,6 +59,19 @@ namespace utTokens
         {
             try
             {
+                //****************************************************************
+
+                // Write some test data directly into Workspace
+
+                CommonMath.Matrix bm = new CommonMath.Matrix (1, 5);
+                bm.FillByRow (new double [] {31, 32, 33, 34, 35});
+
+                PLMatrix b = new PLRMatrix (bm);
+                b.Name = "b";
+                Workspace.Add (b);
+
+                //****************************************************************
+
                 ReadTestFileLines (sectionHeader [test]);
                 string testCase;
 
@@ -256,10 +271,10 @@ namespace utTokens
             Print ("Before split:");
             Print (annot.ToString () + "\n");
 
-            AnnotatedStringSet args = parsing.SplitBracketArgs_Colon (annot);
+            //AnnotatedStringSet args = parsing.SplitBracketArgs_Colon (annot);
             //AnnotatedStringSet args = parsing.SplitBracketArgs_Space (annot);
             //AnnotatedStringSet args = parsing.SplitBracketArgs_Semi (annot);
-            //AnnotatedStringSet args = parsing.SplitBracketArgs_Comma (annot);
+            AnnotatedStringSet args = parsing.SplitBracketArgs_Comma (annot);
 
             Print ("\n" + args.Count + " args after split:");
 
