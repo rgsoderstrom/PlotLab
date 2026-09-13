@@ -44,6 +44,19 @@ namespace utExpressionTree
                 string raw;
                 int Counter = 0;
 
+                //****************************************************************
+
+                // Write some test data directly into Workspace
+
+                CommonMath.Matrix bm = new CommonMath.Matrix (1, 5);
+                bm.FillByRow (new double [] {31, 32, 33, 34, 35});
+
+                PLMatrix b = new PLRMatrix (bm);
+                b.Name = "b";
+                Workspace.Add (b);
+
+                //****************************************************************
+
                 while ((raw = inputFile.ReadLine ()) != null)
                 {
                     if (raw.Length > 0)
@@ -67,7 +80,7 @@ namespace utExpressionTree
 
                             //**********************************************************************
 
-                            if (false) // show token parsing
+                            if (true) // show token parsing
                             { 
                                 // first pass
                                 TokenParsing parsing = new TokenParsing ();
@@ -97,7 +110,7 @@ namespace utExpressionTree
 
                             ExpressionTree tree = new ExpressionTree (annotated);
 
-                            if (false) // show expression tree
+                            if (true) // show expression tree
                             { 
                                 Window win2 = new Window ();
                                 TreeView tv = new TreeView ();
