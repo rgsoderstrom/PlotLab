@@ -20,7 +20,7 @@ namespace PLMain
 
             edited = ReplaceTransposeOps (edited); // A' => Transpose (A)
 
-            edited = CombineTokensIntoPairs (edited); // combine FuncName (FuncArgs) or Matrix [range] into TokenPairs
+            edited = CombineTokensIntoPairs (edited); // combine FuncName (FuncArgs) or Matrix (range) into TokenPairs
 
             edited = IdentifyOperatorType (edited);
 
