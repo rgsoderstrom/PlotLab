@@ -20,6 +20,8 @@ namespace PLMain
 
             edited = ReplaceTransposeOps (edited); // A' => Transpose (A)
 
+            edited = ReplaceCollapseOps (edited);
+
             edited = CombineTokensIntoPairs (edited); // combine FuncName (FuncArgs) or Matrix (range) into TokenPairs
 
             edited = IdentifyOperatorType (edited);
@@ -274,6 +276,48 @@ namespace PLMain
             }
 
             return initial;
+        }
+
+        //*************************************************************************************************
+
+        // replace collapse operator by function call
+
+        // b (:) => Collapse (b)
+
+        private TokenSet ReplaceCollapseOps (TokenSet initial)
+        {
+            // look for any SubmatrixParens tokens
+            List<int> submatrixParenIndices = new List<int> ();
+
+            for (int i=1; i<initial.Count; i++)
+            {
+                if (initial [i].Type == TokenType.SubmatrixParens)
+                    submatrixParenIndices.Add (i);
+            }
+
+            if (submatrixParenIndices.Count == 0)
+                return initial;
+
+            // see if any of those contain just (:)
+            List<int> collapseOps = new List<int> ();
+
+            foreach (int i in submatrixParenIndices)
+            {
+                string text = initial [i].AnnotatedText.Plain.Trim ();
+                text = text.Substring (1, text.Length - 2).Trim (); // remove enclosing parens and any extra spaces
+                if (text == ":")
+                    collapseOps.Add (i);
+            }
+
+            if (collapseOps.Count == 0)
+                return initial;
+
+
+
+            return initial;
+
+
+
         }
 
         //*************************************************************************************************
