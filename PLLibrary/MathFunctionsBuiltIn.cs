@@ -43,6 +43,7 @@ namespace FunctionLibrary
             dst.Add ("inv",  Inverse);
             dst.Add ("atan2", Atan2);
             dst.Add ("rand", Rand);
+            dst.Add ("collapse",  Collapse);
             dst.Add ("transpose", Transpose);
             dst.Add ("Transpose", Transpose);
             dst.Add ("log",   Log);
@@ -250,6 +251,24 @@ namespace FunctionLibrary
             }
 
             throw new Exception ("Argument error, arg must be complex");
+        }
+
+
+        //*********************************************************************************************
+        //*********************************************************************************************
+        //*********************************************************************************************
+
+        // Collapse 
+        //    - implements (:)
+
+        static public PLVariable Collapse (PLVariable var)
+        {
+            if (var is PLDouble)
+                return var;
+
+            return (var as PLMatrix).CollapseToColumn ();
+
+            //throw new Exception ("Collapse not implemented");
         }
 
         //*********************************************************************************************

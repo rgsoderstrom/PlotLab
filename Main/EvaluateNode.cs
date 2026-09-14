@@ -340,7 +340,8 @@ namespace PLMain
                 }
 
                 else 
-                    throw new Exception ("EvaluateNode, Operands.Count == 1 not implemented for operator " + Operator);
+                    throw new Exception ("Error evaluating node, function \"" + Operator + "\" not found");
+                    //throw new Exception ("EvaluateNode, Operands.Count == 1 not implemented for operator " + Operator);
             }
 
             else // operand count > 1

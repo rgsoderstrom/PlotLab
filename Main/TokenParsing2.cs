@@ -312,9 +312,34 @@ namespace PLMain
             if (collapseOps.Count == 0)
                 return initial;
 
+            //*************************************************************
 
+            // same pattern as "transpose"
 
-            return initial;
+            TokenSet edited = new TokenSet ();
+            int get = 0;
+
+            foreach (int index in collapseOps)
+            {
+                while (get < index - 1)
+                    edited.Add (initial [get++]);
+
+                edited.Add (new Token (TokenType.Function, new AnnotatedString ("collapse")));
+
+                // add parens unless outer level is already parens                
+                if (initial [get].Type != TokenType.GroupingParens) edited.Add (new Token (TokenType.FunctionParens, AnnotatedString.AddOuterParens (initial [get].AnnotatedText)));
+                else edited.Add (new Token (TokenType.FunctionParens, initial [get].AnnotatedText));
+
+                get += 2;
+            }
+
+            // move tokens after last collapse
+            while (get < initial.Count)
+                edited.Add (initial [get++]);
+
+            //*************************************************************
+
+            return edited;
 
 
 
