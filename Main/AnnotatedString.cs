@@ -60,7 +60,25 @@ namespace PLMain
         private bool supressPrinting = false;
         public bool SupressPrinting {get {return supressPrinting;} internal set {supressPrinting = value;}}
 
-        public bool IsJustColon {get {return CharacterCount == 1 && annotatedChars [0].IsColon;}}
+        //public bool IsJustColon {get {return CharacterCount == 1 && annotatedChars [0].IsColon;}}
+        //public bool IsJustEnd   {get {return CharacterCount == 3 && Plain == "end";}}
+
+        public bool NestingError // paren or bracket nesting error
+        {
+            get
+            {
+                if (CharacterCount == 0) return false;
+                if (annotatedChars [CharacterCount - 1].NestingLevel == 0) return false;
+                if (annotatedChars [CharacterCount - 1].NestingLevel  > 1) return true;
+
+                // NestingLevel == 1 if we get here.
+                if (annotatedChars [CharacterCount - 1].IsCloseParen_   && annotatedChars [CharacterCount - 1].parenlevel   == 1) return false;
+                if (annotatedChars [CharacterCount - 1].IsCloseBracket_ && annotatedChars [CharacterCount - 1].bracketlevel == 1) return false;
+
+                // should never get here
+                return true;
+            }
+        }
 
         //********************************************************************************
         //

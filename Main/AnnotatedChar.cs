@@ -48,9 +48,9 @@ namespace PLMain
         public int   NestingLevel {get {return bracketlevel + parenlevel;}}
 
         private bool IsOpenParen_    {get {return character == '(';}}
-        private bool IsCloseParen_   {get {return character == ')';}}
+        public  bool IsCloseParen_   {get {return character == ')';}}
         private bool IsOpenBracket_  {get {return character == '[';}}
-        private bool IsCloseBracket_ {get {return character == ']';}}
+        public  bool IsCloseBracket_ {get {return character == ']';}}
         private bool IsQuote_        {get {return character == quote;}}
         private bool IsEscape_       {get {return character == esc;}}
         private bool IsPercent_      {get {return character == '%';}}
@@ -97,6 +97,8 @@ namespace PLMain
         public bool IsColon        {get {return thisCharType == ACType.Colon;}}
         public bool IsComma        {get {return thisCharType == ACType.Comma;}}
         public bool IsEqualSign    {get {return thisCharType == ACType.Operator && IsEqualSign_;}}  //
+
+        //public bool IsWhitespaceOrColon {get {return IsWhitespace || IsColon;}}
 
         public bool IsOpenParen    {get {return thisCharType == ACType.OpenParen;}}
         public bool IsOpenBracket  {get {return thisCharType == ACType.OpenBracket;}}

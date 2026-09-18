@@ -38,6 +38,9 @@ namespace PLMain
         {
             //expression.CheckForTrailingSemi ();
 
+            if (expression.NestingError)
+                throw new Exception ("Input expression nesting error: " + expression.Plain);
+
             TokenSet tokens = ParsingPassOne (expression);
             tokens = ParsingPassTwo (tokens);
 

@@ -82,6 +82,9 @@ namespace utExpressionTree
 
                             if (true) // show token parsing
                             { 
+                                if (annotated.NestingError)
+                                    throw new Exception ("Input expression nesting error: " + annotated.Plain);
+
                                 // first pass
                                 TokenParsing parsing = new TokenParsing ();
                                 Window win = new Window ();
@@ -146,7 +149,8 @@ namespace utExpressionTree
 
             catch (Exception ex)
             {
-                Console.WriteLine ("Exception in Window_Loaded: " + ex.Message);
+                //Console.WriteLine ("Exception in Window_Loaded: " + ex.Message);
+                Console.WriteLine (ex.Message);
                 EventLog.WriteLine (ex.StackTrace);
             }
         }
