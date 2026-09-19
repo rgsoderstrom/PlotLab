@@ -55,7 +55,7 @@ namespace PLMain
 
             while (start < Count)
             {
-                int index = FindIndex (start, TokenType.Transpose);
+                int index = FindIndex (start, targetType);
 
                 if (index == -1)
                     break;
@@ -115,10 +115,10 @@ namespace PLMain
         {
             string str = "";
 
-            str += "\n" + Count + " tokens" + "\n";
+            str += "\n" + Count + " tokens " + "\n";
 
             foreach (IToken tok in tokens)
-                str += tok.ToString () + "\n";
+                str += tok.ToString () + " \n";
 
             //str += "SuppressPrinting = " + SuppressPrinting.ToString () + "\n";
             return str;
