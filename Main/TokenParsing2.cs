@@ -22,6 +22,8 @@ namespace PLMain
 
             edited = ReplaceCollapseOps (edited);
 
+            edited = ReplaceSubmatrixEnd (edited); // b (3 : end) => b (3 : (length (b)))
+
             edited = CombineTokensIntoPairs (edited); // combine FuncName (FuncArgs) or Matrix (range) into TokenPairs
 
             edited = IdentifyOperatorType (edited);
@@ -43,20 +45,7 @@ namespace PLMain
             //
             // find all operator tokens
             //
-            List<int> operatorIndices = new List<int> ();
-
-            int start = 0;
-
-            while (start < initial.Count)
-            {
-                int index = initial.FindIndex (start, TokenType.Operator);
-
-                if (index == -1)
-                    break;
-
-                operatorIndices.Add (index);
-                start = index + 1;
-            }
+            List<int> operatorIndices = initial.FindIndices (TokenType.Operator);
 
             // if none found, just return
             if (operatorIndices.Count == 0)
@@ -287,14 +276,9 @@ namespace PLMain
         private TokenSet ReplaceCollapseOps (TokenSet initial)
         {
             // look for any SubmatrixParens tokens
-            List<int> submatrixParenIndices = new List<int> ();
+            List<int> submatrixParenIndices = initial.FindIndices (TokenType.SubmatrixParens);
 
-            for (int i=1; i<initial.Count; i++)
-            {
-                if (initial [i].Type == TokenType.SubmatrixParens)
-                    submatrixParenIndices.Add (i);
-            }
-
+            // if none found, return initial
             if (submatrixParenIndices.Count == 0)
                 return initial;
 
@@ -337,12 +321,17 @@ namespace PLMain
             while (get < initial.Count)
                 edited.Add (initial [get++]);
 
-            //*************************************************************
-
             return edited;
+        }
+
+        //*************************************************************************************************
 
 
+        private TokenSet ReplaceSubmatrixEnd (TokenSet initial)
+        {
 
+
+            return initial;
         }
 
         //*************************************************************************************************
@@ -351,20 +340,7 @@ namespace PLMain
 
         private TokenSet ReplaceTransposeOps (TokenSet initial)
         {
-            List<int> transposeIndices = new List<int> ();
-
-            int start = 0;
-
-            while (start < initial.Count)
-            {
-                int index = initial.FindIndex (start, TokenType.Transpose);
-
-                if (index == -1)
-                    break;
-
-                transposeIndices.Add (index);
-                start = index + 1;
-            }
+            List<int> transposeIndices = initial.FindIndices (TokenType.Transpose);
 
             // if none found, just return original list
             if (transposeIndices.Count == 0)
@@ -404,20 +380,7 @@ namespace PLMain
         {
             TokenSet edited = new TokenSet ();
 
-            List<int> operatorIndices = new List<int> ();
-
-            int start = 0;
-
-            while (start < initial.Count)
-            {
-                int index = initial.FindIndex (start, TokenType.UnaryOperator);
-
-                if (index == -1)
-                    break;
-
-                operatorIndices.Add (index);
-                start = index + 1;
-            }
+            List<int> operatorIndices = initial.FindIndices (TokenType.UnaryOperator);
 
             // if none found, just return original list
             if (operatorIndices.Count == 0)

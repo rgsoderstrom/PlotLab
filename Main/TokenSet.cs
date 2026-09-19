@@ -6,10 +6,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PLMain
 {
@@ -17,9 +13,6 @@ namespace PLMain
     {
         private List<IToken> tokens = new List<IToken> ();
         public int Count {get {return tokens.Count;}}
-
-     //   private bool suppessPrinting = false;
-     //   public  bool SuppressPrinting {get {return suppessPrinting;} set {suppessPrinting = value;}}
 
         //**************************************************************************
 
@@ -38,9 +31,40 @@ namespace PLMain
 
         //**************************************************************************
 
-        public int FindIndex (int start, TokenType targetType)
+        //public bool Contains (TokenType targetType)
+        //{
+        //    foreach (IToken itok in tokens)
+        //        if (itok.Type == targetType)
+        //            return true;
+
+        //    return false;
+        //}
+
+        //**************************************************************************
+
+        private int FindIndex (int start, TokenType targetType)
         {
             return tokens.FindIndex (start, delegate (IToken tok) {return tok.Type == targetType;});
+        }
+
+        public List<int> FindIndices (TokenType targetType)
+        { 
+            List<int> indices = new List<int> ();
+
+            int start = 0;
+
+            while (start < Count)
+            {
+                int index = FindIndex (start, TokenType.Transpose);
+
+                if (index == -1)
+                    break;
+
+                indices.Add (index);
+                start = index + 1;
+            }
+
+            return indices;
         }
 
         //*******************************************************************
