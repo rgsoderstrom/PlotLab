@@ -372,21 +372,38 @@ namespace PLMain
                 {
                     string initialSelect = initial [i].AnnotatedText.Plain;
                     string newSelect = initialSelect.Replace ("end", "(length (" + name + "))");
+                    newSelect = "(" + newSelect + ")";
                     Token tok = new Token (TokenType.SubmatrixParens, new AnnotatedString (newSelect));
                     edited.Add (tok);
                 }
 
                 else if (aset.Count == 2)
                 {
+                    string initialRows = aset [0].Plain;
+                    string initialCols = aset [1].Plain;
 
+                    string newRows = initialRows.Replace ("end", "(rows (" + name + "))");
+                    string newCols = initialCols.Replace ("end", "(cols (" + name + "))");
+
+                    //Console.WriteLine (initialRows);
+                    //Console.WriteLine (newRows);
+                    //Console.WriteLine (initialCols);
+                    //Console.WriteLine (newCols);
+
+                    string newSelect = "(" + newRows + ", " + newCols + ")";
+                    Token tok = new Token (TokenType.SubmatrixParens, new AnnotatedString (newSelect));
+                    edited.Add (tok);
                 }
 
                 else
                     throw new Exception ("Submatrix error, too many dimensions: " + name + " " + initial [i].AnnotatedText.Plain);
+            
+                get += 1;    
             }
 
-
-
+            // move tokens after last "end"
+            while (get < initial.Count)
+                edited.Add (initial [get++]);
 
             return edited;
         }
