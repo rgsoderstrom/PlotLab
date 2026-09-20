@@ -82,9 +82,12 @@
 		 
 	
 	# TokenParsing
-	b'
-	b (:)
-	b (:) + b (:) + 7
+	% b'
+	% b (:)
+	% b (:) + b (:) + 7
+	b (4 : (length (a)))
+	b (3 : end)
+
 	% a (3, 4)
 	% b (5, :)
 	% a = sprintf ('%3d', 123);

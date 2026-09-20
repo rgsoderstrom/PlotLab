@@ -45,16 +45,32 @@ namespace utExpressionTree
                 int Counter = 0;
 
                 //****************************************************************
+                //****************************************************************
+                //****************************************************************
 
                 // Write some test data directly into Workspace
 
                 CommonMath.Matrix bm = new CommonMath.Matrix (1, 5);
-                bm.FillByRow (new double [] {31, 32, 33, 34, 35});
+                bm.FillByRow (new double [] {91, 92, 93, 94, 95});
 
                 PLMatrix b = new PLRMatrix (bm);
                 b.Name = "b";
                 Workspace.Add (b);
 
+                //********************
+
+                CommonMath.Matrix cm = new CommonMath.Matrix (4, 5);
+                cm.FillByRow (new double [] {11, 12, 13, 14, 15, 
+                                             21, 22, 23, 24, 25, 
+                                             31, 32, 33, 34, 35, 
+                                             41, 42, 43, 44, 45});
+
+                PLMatrix c = new PLRMatrix (cm);
+                c.Name = "c";
+                Workspace.Add (c);
+
+                //****************************************************************
+                //****************************************************************
                 //****************************************************************
 
                 while ((raw = inputFile.ReadLine ()) != null)
@@ -80,7 +96,7 @@ namespace utExpressionTree
 
                             //**********************************************************************
 
-                            if (true) // show token parsing
+                            if (false) // show token parsing
                             { 
                                 if (annotated.NestingError)
                                     throw new Exception ("Input expression nesting error: " + annotated.Plain);
@@ -113,7 +129,7 @@ namespace utExpressionTree
 
                             ExpressionTree tree = new ExpressionTree (annotated);
 
-                            if (true) // show expression tree
+                            if (false) // show expression tree
                             { 
                                 Window win2 = new Window ();
                                 TreeView tv = new TreeView ();

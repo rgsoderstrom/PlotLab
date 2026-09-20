@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 using PLCommon;
+
 using PLFileSystem;
-using PLWorkspace;
+
 using PLLibrary;
+
+using PLWorkspace;
 
 namespace PLMain
 {
@@ -326,12 +330,65 @@ namespace PLMain
 
         //*************************************************************************************************
 
-
+        // b (3 : end)          => b (3 : (length (b)))
+        // c (3 : end, 4 : end) =>
+        
         private TokenSet ReplaceSubmatrixEnd (TokenSet initial)
         {
+            // look for any SubmatrixParens tokens
+            List<int> submatrixParenIndices = initial.FindIndices (TokenType.SubmatrixParens);
+
+            // if none found, return initial
+            if (submatrixParenIndices.Count == 0)
+                return initial;
+
+            // see if any of those contain "end"
+            List<int> endOps = new List<int> ();
+
+            foreach (int i in submatrixParenIndices)
+                if (initial [i].AnnotatedText.Plain.Contains ("end"))
+                    endOps.Add (i);
+
+            if (endOps.Count == 0)
+                return initial;
+
+            // new list
+            TokenSet edited = new TokenSet ();
+            int get = 0;
+
+            // parens could operate on a vector: (3 : end)
+            //                      or a matrix: (3 : end, 5 : end)
+
+            // Split each to determine which
+            foreach (int i in submatrixParenIndices)
+            {
+                while (get < i)
+                    edited.Add (initial [get++]);
+
+                string name = initial [i-1].AnnotatedText.Plain; // name of vector or matrix
+                AnnotatedStringSet aset = BreakIntoSubstrings (initial [i].AnnotatedText, delegate (AnnotatedChar ac) {return ac.IsComma;});
+
+                if (aset.Count == 1)
+                {
+                    string initialSelect = initial [i].AnnotatedText.Plain;
+                    string newSelect = initialSelect.Replace ("end", "(length (" + name + "))");
+                    Token tok = new Token (TokenType.SubmatrixParens, new AnnotatedString (newSelect));
+                    edited.Add (tok);
+                }
+
+                else if (aset.Count == 2)
+                {
+
+                }
+
+                else
+                    throw new Exception ("Submatrix error, too many dimensions: " + name + " " + initial [i].AnnotatedText.Plain);
+            }
 
 
-            return initial;
+
+
+            return edited;
         }
 
         //*************************************************************************************************
