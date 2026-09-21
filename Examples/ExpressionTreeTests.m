@@ -27,6 +27,10 @@
 	% b ( :)
 	% b (3 : (length (b)))
 	b (3 : end)
+	c (2:end, 4: end)
+	
+	b (3:end) = [7:9]
+	c (2:end, 4: end) = rand (3, 2);
 	
 	% c
 	
