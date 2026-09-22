@@ -53,8 +53,7 @@ namespace utExpressionTree
                 CommonMath.Matrix bm = new CommonMath.Matrix (1, 5);
                 bm.FillByRow (new double [] {91, 92, 93, 94, 95});
 
-                PLMatrix b = new PLRMatrix (bm);
-                b.Name = "b";
+                PLMatrix b = new PLRMatrix (bm) {Name = "b"};
                 Workspace.Add (b);
 
                 //********************
@@ -65,8 +64,7 @@ namespace utExpressionTree
                                              31, 32, 33, 34, 35, 
                                              41, 42, 43, 44, 45});
 
-                PLMatrix c = new PLRMatrix (cm);
-                c.Name = "c";
+                PLMatrix c = new PLRMatrix (cm) {Name = "c"};
                 Workspace.Add (c);
 
                 //****************************************************************
