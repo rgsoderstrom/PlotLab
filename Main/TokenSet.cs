@@ -31,6 +31,15 @@ namespace PLMain
 
         //**************************************************************************
 
+        public TokenSet DeepCopy ()
+        {
+            TokenSet newSet = new TokenSet ();
+            newSet.tokens = tokens.ConvertAll (new Converter<IToken, IToken>(x => x));
+            return newSet;
+        }
+
+        //**************************************************************************
+
         //public bool Contains (TokenType targetType)
         //{
         //    foreach (IToken itok in tokens)
@@ -47,7 +56,9 @@ namespace PLMain
             return tokens.FindIndex (start, delegate (IToken tok) {return tok.Type == targetType;});
         }
 
-        public List<int> FindIndices (TokenType targetType)
+        // search entire list for a given type
+
+        public List<int> FindTokenTypeIndices (TokenType targetType)
         { 
             List<int> indices = new List<int> ();
 
@@ -63,6 +74,20 @@ namespace PLMain
                 indices.Add (index);
                 start = index + 1;
             }
+
+            return indices;
+        }
+
+        // search a subset of the list for a given type
+
+        public List<int> FindPairTypeIndices (List<int>     tokenPairs, // look at these indices
+                                              TokenPairType targetType) // for this type
+        {
+            List<int> indices = new List<int> ();
+
+            foreach (int i in tokenPairs)
+                if ((tokens [i] as TokenPair).PairType == targetType)
+                    indices.Add (i);
 
             return indices;
         }

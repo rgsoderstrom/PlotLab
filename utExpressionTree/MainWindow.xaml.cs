@@ -94,23 +94,27 @@ namespace utExpressionTree
 
                             //**********************************************************************
 
+                            //ExpressionTree.ShowParsingTokens = true;
+
                             if (false) // show token parsing
-                            { 
+                            {
                                 if (annotated.NestingError)
                                     throw new Exception ("Input expression nesting error: " + annotated.Plain);
 
                                 // first pass
                                 TokenParsing parsing = new TokenParsing ();
+                                parsing.StringToTokens (annotated);
+
                                 Window win = new Window ();
                                 TextBox tb = new TextBox ();
 
                                 // first pass
-                                TokenSet tokens = parsing.ParsingPassOne (annotated);
+                                TokenSet tokens = parsing.Pass1Results;
                                 tb.Text += "First pass:\n";
                                 foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
 
                                 // second pass
-                                tokens = parsing.ParsingPassTwo (tokens);
+                                tokens = parsing.Pass2Results;
                                 tb.Text += "\nSecond pass:\n";
                                 foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
 

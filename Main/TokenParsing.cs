@@ -34,15 +34,25 @@ namespace PLMain
 
         //*****************************************************************************************************
 
+        // debug information
+        private TokenSet pass1Results;
+        private TokenSet pass2Results;
+        
+        public TokenSet Pass1Results {get {return pass1Results;} protected set {pass1Results = value;}}
+        public TokenSet Pass2Results {get {return pass2Results;} protected set {pass2Results = value;}}
+
+        //*****************************************************************************************************
+
         public TokenSet StringToTokens (AnnotatedString expression)
         {
-            //expression.CheckForTrailingSemi ();
-
             if (expression.NestingError)
                 throw new Exception ("Input expression nesting error: " + expression.Plain);
 
             TokenSet tokens = ParsingPassOne (expression);
+            Pass1Results = tokens.DeepCopy ();
+
             tokens = ParsingPassTwo (tokens);
+            Pass2Results = tokens.DeepCopy ();
 
             return tokens;
         }

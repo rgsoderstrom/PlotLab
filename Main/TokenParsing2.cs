@@ -24,11 +24,22 @@ namespace PLMain
 
             edited = ReplaceTransposeOps (edited); // A' => Transpose (A)
 
-            edited = ReplaceCollapseOps (edited);
+            edited = ReplaceCollapseOps (edited);  // b (:) => Collapse (b)
 
-            edited = ReplaceSubmatrixEnd (edited); // b (3 : end) => b (3 : (length (b)))
+
+
+            //edited = ReplaceSubmatrixEnd (edited); // b (3 : end) => b (3 : (length (b)))
+
+            //edited = ReplaceSubmatrixAll (edited); // c (:, 3) => c (1:(rows (c)), 3)
+
+
+
 
             edited = CombineTokensIntoPairs (edited); // combine FuncName (FuncArgs) or Matrix (range) into TokenPairs
+
+            edited = CheckSubmatrixArgs (edited);  // b (3 : end) => b (3 : (length (b)))
+                                                   // c (:, 3)    => c (1:(rows (c)), 3)
+
 
             edited = IdentifyOperatorType (edited);
 
@@ -49,7 +60,7 @@ namespace PLMain
             //
             // find all operator tokens
             //
-            List<int> operatorIndices = initial.FindIndices (TokenType.Operator);
+            List<int> operatorIndices = initial.FindTokenTypeIndices (TokenType.Operator);
 
             // if none found, just return
             if (operatorIndices.Count == 0)
@@ -273,6 +284,97 @@ namespace PLMain
 
         //*************************************************************************************************
 
+        // Replace submatrix all-rows or all-cols
+
+        // c (:, 3) => c (1:(rows (c)), 3)
+
+        //private TokenSet ReplaceSubmatrixAll (TokenSet initial)
+        //{
+        //    // look for any SubmatrixParens tokens
+        //    List<int> submatrixParenIndices = initial.FindTokenTypeIndices (TokenType.SubmatrixParens);
+
+        //    // if none found, return initial
+        //    if (submatrixParenIndices.Count == 0)
+        //        return initial;
+
+        //    // split submatrixParens at level 0 comma to separate row & col specifiers
+
+
+
+
+
+        //    // see if any of those are for matrices and contain ":" for rows and/or cols
+        //    List<int> matrixAllOps = new List<int> ();
+
+
+
+
+
+        //    foreach (int i in submatrixParenIndices)
+        //        if (initial [i].AnnotatedText.Plain.Contains ("end"))
+        //            matrixAllOps.Add (i);
+
+        //    if (matrixAllOps.Count == 0)
+        //        return initial;
+
+        //    // new list
+        //    TokenSet edited = new TokenSet ();
+        //    int get = 0;
+
+        //    //// parens could operate on a vector: (3 : end)
+        //    ////                      or a matrix: (3 : end, 5 : end)
+
+        //    //// Split each to determine which
+        //    //foreach (int i in submatrixParenIndices)
+        //    //{
+        //    //    while (get < i)
+        //    //        edited.Add (initial [get++]);
+
+        //    //    string name = initial [i-1].AnnotatedText.Plain; // name of vector or matrix
+        //    //    AnnotatedStringSet aset = BreakIntoSubstrings (initial [i].AnnotatedText, delegate (AnnotatedChar ac) {return ac.IsComma;});
+
+        //    //    if (aset.Count == 1)
+        //    //    {
+        //    //        string initialSelect = initial [i].AnnotatedText.Plain;
+        //    //        string newSelect = initialSelect.Replace ("end", "(length (" + name + "))");
+        //    //        newSelect = "(" + newSelect + ")";
+        //    //        Token tok = new Token (TokenType.SubmatrixParens, new AnnotatedString (newSelect));
+        //    //        edited.Add (tok);
+        //    //    }
+
+        //    //    else if (aset.Count == 2)
+        //    //    {
+        //    //        string initialRows = aset [0].Plain;
+        //    //        string initialCols = aset [1].Plain;
+
+        //    //        string newRows = initialRows.Replace ("end", "(rows (" + name + "))");
+        //    //        string newCols = initialCols.Replace ("end", "(cols (" + name + "))");
+
+        //    //        //Console.WriteLine (initialRows);
+        //    //        //Console.WriteLine (newRows);
+        //    //        //Console.WriteLine (initialCols);
+        //    //        //Console.WriteLine (newCols);
+
+        //    //        string newSelect = "(" + newRows + ", " + newCols + ")";
+        //    //        Token tok = new Token (TokenType.SubmatrixParens, new AnnotatedString (newSelect));
+        //    //        edited.Add (tok);
+        //    //    }
+
+        //    //    else
+        //    //        throw new Exception ("Submatrix error, too many dimensions: " + name + " " + initial [i].AnnotatedText.Plain);
+
+        //    //    get += 1;    
+        //    //}
+
+        //    // move tokens after last "end"
+        //    while (get < initial.Count)
+        //        edited.Add (initial [get++]);
+
+        //    return edited;
+        //}
+
+        //*************************************************************************************************
+
         // replace collapse operator by function call
 
         // b (:) => Collapse (b)
@@ -280,7 +382,7 @@ namespace PLMain
         private TokenSet ReplaceCollapseOps (TokenSet initial)
         {
             // look for any SubmatrixParens tokens
-            List<int> submatrixParenIndices = initial.FindIndices (TokenType.SubmatrixParens);
+            List<int> submatrixParenIndices = initial.FindTokenTypeIndices (TokenType.SubmatrixParens);
 
             // if none found, return initial
             if (submatrixParenIndices.Count == 0)
@@ -332,81 +434,81 @@ namespace PLMain
 
         // b (3 : end)          => b (3 : (length (b)))
         // c (3 : end, 4 : end) =>
-        
-        private TokenSet ReplaceSubmatrixEnd (TokenSet initial)
-        {
-            // look for any SubmatrixParens tokens
-            List<int> submatrixParenIndices = initial.FindIndices (TokenType.SubmatrixParens);
 
-            // if none found, return initial
-            if (submatrixParenIndices.Count == 0)
-                return initial;
+        //private TokenSet ReplaceSubmatrixEnd (TokenSet initial)
+        //{
+        //    // look for any SubmatrixParens tokens
+        //    List<int> submatrixParenIndices = initial.FindTokenTypeIndices (TokenType.SubmatrixParens);
 
-            // see if any of those contain "end"
-            List<int> endOps = new List<int> ();
+        //    // if none found, return initial
+        //    if (submatrixParenIndices.Count == 0)
+        //        return initial;
 
-            foreach (int i in submatrixParenIndices)
-                if (initial [i].AnnotatedText.Plain.Contains ("end"))
-                    endOps.Add (i);
+        //    // see if any of those contain "end"
+        //    List<int> endOps = new List<int> ();
 
-            if (endOps.Count == 0)
-                return initial;
+        //    foreach (int i in submatrixParenIndices)
+        //        if (initial [i].AnnotatedText.Plain.Contains ("end"))
+        //            endOps.Add (i);
 
-            // new list
-            TokenSet edited = new TokenSet ();
-            int get = 0;
+        //    if (endOps.Count == 0)
+        //        return initial;
 
-            // parens could operate on a vector: (3 : end)
-            //                      or a matrix: (3 : end, 5 : end)
+        //    // new list
+        //    TokenSet edited = new TokenSet ();
+        //    int get = 0;
 
-            // Split each to determine which
-            foreach (int i in submatrixParenIndices)
-            {
-                while (get < i)
-                    edited.Add (initial [get++]);
+        //    // parens could operate on a vector: (3 : end)
+        //    //                      or a matrix: (3 : end, 5 : end)
 
-                string name = initial [i-1].AnnotatedText.Plain; // name of vector or matrix
-                AnnotatedStringSet aset = BreakIntoSubstrings (initial [i].AnnotatedText, delegate (AnnotatedChar ac) {return ac.IsComma;});
+        //    // Split each to determine which
+        //    foreach (int i in submatrixParenIndices)
+        //    {
+        //        while (get < i)
+        //            edited.Add (initial [get++]);
 
-                if (aset.Count == 1)
-                {
-                    string initialSelect = initial [i].AnnotatedText.Plain;
-                    string newSelect = initialSelect.Replace ("end", "(length (" + name + "))");
-                    newSelect = "(" + newSelect + ")";
-                    Token tok = new Token (TokenType.SubmatrixParens, new AnnotatedString (newSelect));
-                    edited.Add (tok);
-                }
+        //        string name = initial [i-1].AnnotatedText.Plain; // name of vector or matrix
+        //        AnnotatedStringSet aset = BreakIntoSubstrings (initial [i].AnnotatedText, delegate (AnnotatedChar ac) {return ac.IsComma;});
 
-                else if (aset.Count == 2)
-                {
-                    string initialRows = aset [0].Plain;
-                    string initialCols = aset [1].Plain;
+        //        if (aset.Count == 1)
+        //        {
+        //            string initialSelect = initial [i].AnnotatedText.Plain;
+        //            string newSelect = initialSelect.Replace ("end", "(length (" + name + "))");
+        //            newSelect = "(" + newSelect + ")";
+        //            Token tok = new Token (TokenType.SubmatrixParens, new AnnotatedString (newSelect));
+        //            edited.Add (tok);
+        //        }
 
-                    string newRows = initialRows.Replace ("end", "(rows (" + name + "))");
-                    string newCols = initialCols.Replace ("end", "(cols (" + name + "))");
+        //        else if (aset.Count == 2)
+        //        {
+        //            string initialRows = aset [0].Plain;
+        //            string initialCols = aset [1].Plain;
 
-                    //Console.WriteLine (initialRows);
-                    //Console.WriteLine (newRows);
-                    //Console.WriteLine (initialCols);
-                    //Console.WriteLine (newCols);
+        //            string newRows = initialRows.Replace ("end", "(rows (" + name + "))");
+        //            string newCols = initialCols.Replace ("end", "(cols (" + name + "))");
 
-                    string newSelect = "(" + newRows + ", " + newCols + ")";
-                    Token tok = new Token (TokenType.SubmatrixParens, new AnnotatedString (newSelect));
-                    edited.Add (tok);
-                }
+        //            //Console.WriteLine (initialRows);
+        //            //Console.WriteLine (newRows);
+        //            //Console.WriteLine (initialCols);
+        //            //Console.WriteLine (newCols);
 
-                else
-                    throw new Exception ("Submatrix error, too many dimensions: " + name + " " + initial [i].AnnotatedText.Plain);
-            
-                get += 1;    
-            }
+        //            string newSelect = "(" + newRows + ", " + newCols + ")";
+        //            Token tok = new Token (TokenType.SubmatrixParens, new AnnotatedString (newSelect));
+        //            edited.Add (tok);
+        //        }
 
-            // move tokens after last "end"
-            while (get < initial.Count)
-                edited.Add (initial [get++]);
+        //        else
+        //            throw new Exception ("Submatrix error, too many dimensions: " + name + " " + initial [i].AnnotatedText.Plain);
 
-            return edited;
-        }
+        //        get += 1;    
+        //    }
+
+        //    // move tokens after last "end"
+        //    while (get < initial.Count)
+        //        edited.Add (initial [get++]);
+
+        //    return edited;
+        //}
 
         //*************************************************************************************************
 
@@ -414,7 +516,7 @@ namespace PLMain
 
         private TokenSet ReplaceTransposeOps (TokenSet initial)
         {
-            List<int> transposeIndices = initial.FindIndices (TokenType.Transpose);
+            List<int> transposeIndices = initial.FindTokenTypeIndices (TokenType.Transpose);
 
             // if none found, just return original list
             if (transposeIndices.Count == 0)
@@ -454,7 +556,7 @@ namespace PLMain
         {
             TokenSet edited = new TokenSet ();
 
-            List<int> operatorIndices = initial.FindIndices (TokenType.UnaryOperator);
+            List<int> operatorIndices = initial.FindTokenTypeIndices (TokenType.UnaryOperator);
 
             // if none found, just return original list
             if (operatorIndices.Count == 0)
@@ -562,6 +664,128 @@ namespace PLMain
 
             if ((initial [last].Type != TokenType.SubmatrixParens) && (initial [last].Type != TokenType.FunctionParens))
                 edited.Add (initial [last]);
+
+            return edited;
+        }
+
+        //*************************************************************************************************
+
+        private TokenSet CheckSubmatrixArgs (TokenSet initial)
+        {
+            // look for any token pairs. they could be a FunctionWithArgs or Submatrix
+            List<int> tokenPairs = initial.FindTokenTypeIndices (TokenType.Pair);
+
+            // if none found, return initial
+            if (tokenPairs.Count == 0)
+                return initial;
+
+            // look for Submatrix pairs among tokenPairs
+            List<int> submatrixPairs = initial.FindPairTypeIndices (tokenPairs,  // look at these indices
+                                                                    TokenPairType.Submatrix); // for this type
+            // if none found, return initial
+            if (submatrixPairs.Count == 0)
+                return initial;
+
+            //******************************************
+
+            TokenSet edited = new TokenSet ();
+
+            int get = 0; // index used to copy out of initial
+
+            for (int i = 0; i<submatrixPairs.Count; i++)
+            {
+                int index = submatrixPairs [i];
+
+                while (get < index)
+                    edited.Add (initial [get++]);
+
+                // tokens [index] is a submatrixPair
+                TokenPair tp = initial [get] as TokenPair;
+                string name = tp.Get1.AnnotatedText.Plain; // name of vector or matrix
+                string args = tp.Get2.AnnotatedText.Plain;
+
+                AnnotatedStringSet aset = BreakIntoSubstrings (tp.Get2.AnnotatedText, delegate (AnnotatedChar ac) {return ac.IsComma;});
+
+                if (aset.Count == 1) // working on a vector
+                {
+                    string initialSelect = args;
+
+                    /*****
+                    if (initialSelect == ":")
+                    {
+                        string newSelect = "(1 : length (" + name + "))";
+
+                        Token     tok1    = new Token     (TokenType.VariableName,    new AnnotatedString (name));
+                        Token     tok2    = new Token     (TokenType.SubmatrixParens, new AnnotatedString (newSelect));
+                        TokenPair tokPair = new TokenPair (TokenPairType.Submatrix, tok1, tok2);
+
+                        edited.Add (tokPair);
+                    }
+
+                    else ****/ if (initialSelect.Contains ("end"))
+                    { 
+                        string newSelect = initialSelect.Replace ("end", "(length (" + name + "))");
+
+                        Token     tok1    = new Token     (TokenType.VariableName,    new AnnotatedString (name));
+                        Token     tok2    = new Token     (TokenType.SubmatrixParens, new AnnotatedString (newSelect));
+                        TokenPair tokPair = new TokenPair (TokenPairType.Submatrix, tok1, tok2);
+
+                        edited.Add (tokPair);
+                    }
+            
+                    else
+                        edited.Add (initial [get]);
+                }
+
+                else if (aset.Count == 2)
+                {
+                    string initialRows = aset [0].Plain;
+                    string initialCols = aset [1].Plain;
+
+                    bool rowsJustColon   = initialRows == ":";
+                    bool colsJustColon   = initialCols == ":";
+                    bool rowsContainsEnd = initialRows.Contains ("end");
+                    bool colsContainsEnd = initialCols.Contains ("end");
+
+                    if (rowsContainsEnd == false && rowsJustColon == false && colsContainsEnd == false && colsJustColon == false)
+                    {
+                        edited.Add (initial [get]);
+                    }
+
+                    else
+                    {
+                        string newRows;
+
+                        if (rowsContainsEnd)    newRows = initialRows.Replace ("end", "(rows (" + name + "))");
+                        else if (rowsJustColon) newRows = "1 : (rows (" + name + "))";
+                        else                    newRows = initialRows;
+
+                        string newCols = "";
+                        
+                        if (colsContainsEnd)    newCols = initialCols.Replace ("end", "(cols (" + name + "))");
+                        else if (colsJustColon) newCols = "1 : (cols (" + name + "))";
+                        else                    newCols = initialCols;
+
+                        //Console.WriteLine (initialRows);
+                        //Console.WriteLine (newRows);
+                        //Console.WriteLine (initialCols);
+                        //Console.WriteLine (newCols);
+
+                        string newSelect = "(" + newRows + ", " + newCols + ")";
+
+                        Token     tok1    = new Token     (TokenType.VariableName,    new AnnotatedString (name));
+                        Token     tok2    = new Token     (TokenType.SubmatrixParens, new AnnotatedString (newSelect));
+                        TokenPair tokPair = new TokenPair (TokenPairType.Submatrix, tok1, tok2);
+
+                        edited.Add (tokPair);
+                    }
+                }
+
+                else
+                    throw new Exception ("Submatrix error, too many dimensions: " + name + " " + initial [i].AnnotatedText.Plain);
+
+                get += 1;
+            }
 
             return edited;
         }

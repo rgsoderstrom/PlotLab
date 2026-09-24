@@ -45,15 +45,17 @@ namespace PLMain
                 {
                     // this runs a copy of the actual parsing code
                     TokenParsing parsing = new TokenParsing ();
+                    parsing.StringToTokens (expression);
+
                     TextBox tb = new TextBox ();
 
                     // first pass
-                    TokenSet tokens = parsing.ParsingPassOne (expression);
+                    TokenSet tokens = parsing.Pass1Results;
                     tb.Text += "First pass:\n";
                     foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
 
                     // second pass
-                    tokens = parsing.ParsingPassTwo (tokens);
+                    tokens = parsing.Pass2Results;
                     tb.Text += "\nSecond pass:\n";
                     foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
 

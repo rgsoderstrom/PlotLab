@@ -2,6 +2,10 @@
 
 % ExpressionTreeTests
 
+% defined in MainWindow
+%	b = vector
+%   c = matrix
+
 	% A = 7;
 	% B = 9;
 	% A > B
@@ -21,16 +25,22 @@
 	% a (:, 2)
 	% a (:, :)
 	
-	% b = [11 12 13 14 15];
-	% b (3: 4)
-	% b'
-	% b ( :)
+	% b (3 : 4)
+	% b (3:(length (b)))
+	% b (3:end)
+	% b (3: 4) + b (1:2)
+	% % b'
+
+	c (:)
+	% c (3:(rows (c)), 2)
+	c (3 : end, 2)
+	c (:, 2)
 	% b (3 : (length (b)))
-	b (3 : end)
-	c (2:end, 4: end)
+	% b (3 : end)
+	% c (2:end, 4: end)
 	
-	b (3:end) = [7:9]
-	c (2:end, 4: end) = rand (3, 2);
+	% b (3:end) = [7:9]
+	% c (2:end, 4: end) = rand (3, 2);
 	
 	% c
 	
@@ -46,11 +56,11 @@
 	% p = [1 ; 2 ; 3 ; 4 ; 5 ; 6 ; 7];
 	% q = [1 ; 2 ; 3 ; 4 ; 5 ; 6 ; 7]';
 
-	% a = -3;
-	% b = 4;
-	% c = a * b;
+	% aa = -3;
+	% bb = 4;
+	% cc = aa * bb;
 	
-	% t1 = [1 2 3]' + [7:9]'; % + dd' + c123;	
+	% t1 = [1 2 3]' + [7:9]';	
 	% b = ~0;
 	% b = -1;
 	% f = '%5f';
