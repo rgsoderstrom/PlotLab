@@ -57,6 +57,13 @@ namespace PLMain
 
         //*************************************************************************
 
+        public void Clear ()
+        {
+            annotatedStrings.Clear ();
+        }
+
+        //*************************************************************************
+
         public void Add (AnnotatedString astr)
         {
             if (astr.IsCompound == false)

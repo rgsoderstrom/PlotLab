@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
+using Common;
 using PLCommon;
 using PLFileSystem;
 using PLLibrary;
@@ -25,7 +26,7 @@ namespace PLMain
 
         // queue of strings for processing
         private readonly CleanStringQueue CleanedStrings;
-        private readonly AnnotatedStringSet AnnotatedStrings;
+        //private readonly AnnotatedStringSet AnnotatedStrings;
 
         private StringClassifier classifier = new StringClassifier (); 
 
@@ -37,7 +38,7 @@ namespace PLMain
         public InputLineProcessor ()
         {
             CleanedStrings = new CleanStringQueue ();
-            AnnotatedStrings = new AnnotatedStringSet ();
+            //AnnotatedStrings = new AnnotatedStringSet ();
         }
 
         //**************************************************************************************
@@ -56,6 +57,8 @@ namespace PLMain
             // if a blank line or a comment line was passed in just return
             if (somethingAdded == false) 
                 return TerminationReason.Completed;
+
+            AnnotatedStringSet AnnotatedStrings = new AnnotatedStringSet ();
 
             while (CleanedStrings.Count > 0)
             {
@@ -93,7 +96,8 @@ namespace PLMain
 
                             case InputLineType.VariableName:
                                 PLVariable v = Workspace.Get (astr2.Plain);
-                                Print?.Invoke (v.ToString ());
+                                if (SupressPrinting == false)
+                                    Print?.Invoke (v.ToString ());
                                 break;
 
                             case InputLineType.SystemCommand:
