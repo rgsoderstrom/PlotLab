@@ -102,7 +102,7 @@ namespace PLMain
 
             catch (Exception ex)
             {
-                Console.WriteLine ("Startup error: " + ex.Message + "\n");
+                EventLog.WriteLine ("Startup error: " + ex.Message + "\n");
                 //Print ("Startup error: " + ex.StackTrace + "\n");
             }
 
