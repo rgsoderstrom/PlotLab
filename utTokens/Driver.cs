@@ -29,9 +29,11 @@ namespace utTokens
         enum TestToRun {AnnotatedString, AnnotatedStringAppend, AnnotatedStringSet,
                         TokenParsing, TokenUtils};
 
-        private static readonly TestToRun test = TestToRun.TokenParsing;
+        private static readonly TestToRun test = TestToRun.AnnotatedStringSet;
 
         //***********************************************************************
+
+        // specify the section of the input test data .m file to use
 
         private static readonly Dictionary<TestToRun, string> sectionHeader = new Dictionary<TestToRun, string>
         {
@@ -41,6 +43,8 @@ namespace utTokens
             {TestToRun.TokenParsing,          "TokenParsing"},
             {TestToRun.TokenUtils,            "TokenUtils"},
         };
+
+        // specify which test method to run
 
         private delegate bool TestFunction (string str);
 
@@ -213,6 +217,8 @@ namespace utTokens
         //***********************************************************************
         //***********************************************************************
 
+        private static readonly AnnotatedStringSet astrSet = new AnnotatedStringSet ();
+
         private static bool AnnotatedStringSetTest (string str)
         {
             AnnotatedString astr = new AnnotatedString (str);
@@ -223,10 +229,13 @@ namespace utTokens
             if (astr.IsEmpty)
                 return false;
 
-            AnnotatedStringSet astrSet = new AnnotatedStringSet
-            {
-                astr
-            };
+            //AnnotatedStringSet astrSet = new AnnotatedStringSet
+            //{
+            //    astr
+            //};
+
+            astrSet.Add (astr);
+
 
             Print ("count = " + astrSet.Count + "\n");
 
@@ -236,6 +245,8 @@ namespace utTokens
                 Print (next.ToString ());
                 Print ("\n");
             }
+
+            astrSet.Clear ();
 
             return true;
         }
