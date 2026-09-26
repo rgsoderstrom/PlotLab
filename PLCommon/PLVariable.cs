@@ -239,52 +239,52 @@ namespace PLCommon
 
         public override string ToString (string cfmt)
         {
-            throw new Exception ("PLMatrix.ToString (cfmt) not implemented");
+            //throw new Exception ("PLMatrix.ToString (cfmt) not implemented");
 
-            //int a = 8, b = 5; // defaults
-            //string str = "";
+            int a = 8, b = 5; // defaults
+            string str = "";
 
-            ////PLVariable p1; 
-            ////PLComplex  p2;
-            ////PLDouble   p3;
+            //PLVariable p1; 
+            //PLComplex  p2;
+            //PLDouble   p3;
 
-            //try
-            //{
-            //    List<string> cfmtParts = base.SplitFormatString (cfmt);
+            try
+            {
+                List<string> cfmtParts = base.SplitFormatString (cfmt);
 
-            //    if (cfmtParts.Count == 3)  // --------------------- use defaults if error in format
-            //    {
-            //        a = int.Parse (cfmtParts [0]);
-            //        b = int.Parse (cfmtParts [1]);
-            //    }
+                if (cfmtParts.Count == 3)  // --------------------- use defaults if error in format
+                {
+                    a = int.Parse (cfmtParts [0]);
+                    b = int.Parse (cfmtParts [1]);
+                }
 
-            //    string fmt = "{0," + a + ":0.";
-            //    for (int i = 0; i<b; i++) fmt += '#';
-            //    fmt += "}";
+                string fmt = "{0," + a + ":0.";
+                for (int i = 0; i<b; i++) fmt += '#';
+                fmt += "}";
 
-            //    for (int r = 0; r<Rows; r++)
-            //    {
-            //        for (int c = 0; c<Cols; c++)
-            //        {
-            //            //p1 = Get (r, c);
-            //            //p2 = p1 as PLComplex;
-            //            //p3 = p1 as PLDouble;
+                for (int r = 0; r<Rows; r++)
+                {
+                    for (int c = 0; c<Cols; c++)
+                    {
+                        //p1 = Get (r, c);
+                        //p2 = p1 as PLComplex;
+                        //p3 = p1 as PLDouble;
 
-            //            str += string.Format (fmt, Get (r, c)) + ", ";
-            //        }
+                        str += string.Format (fmt, Get (r, c)) + ", ";
+                    }
 
-            //        if (r < Rows - 1)
-            //            str += "\n";
-            //    }
-            //}
+                    if (r < Rows - 1)
+                        str += "\n";
+                }
+            }
 
-            //catch (Exception ex)
-            //{
-            //    EventLog.WriteLine ("Exception: " + ex.Message);
-            //  //EventLog.WriteLine (ex.StackTrace);
-            //}
+            catch (Exception ex)
+            {
+                EventLog.WriteLine ("Exception: " + ex.Message);
+                //EventLog.WriteLine (ex.StackTrace);
+            }
 
-            //return str;
+            return str;
         }
 
         //**************************************************************************
