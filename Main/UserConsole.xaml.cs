@@ -25,6 +25,7 @@ namespace PLMain
             ScriptProcessor.Print = Print;
             FileSystem.Print = Print;
             Block.SetPrintFunction (Print);
+      //    Block.SetPrintFunction (Console.WriteLine);
 
             FileSystem.Open ();
             InitializeComponent ();
