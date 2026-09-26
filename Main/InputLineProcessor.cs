@@ -117,8 +117,9 @@ namespace PLMain
                                 break;
 
                             case InputLineType.BlockName:
+                                answer = null;
                                 TerminationReason status = BlockManager.RunBlock (astr2);
-                                Console.WriteLine ("BlockExit status = " + status);
+                                //Console.WriteLine ("BlockExit status = " + status);
 
                                 if (status == TerminationReason.BreakEncountered)    return status;
                                 if (status == TerminationReason.ContinueEncountered) return status;
