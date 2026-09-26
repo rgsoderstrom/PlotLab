@@ -112,8 +112,8 @@ namespace PLMain
                             str += "\n\n";
                         }
 
-                        Console.WriteLine (str);
-                      //EventLog.WriteLine (str);
+                        Print (str);
+                        //EventLog.WriteLine (str);
                     }
 
                     #else
