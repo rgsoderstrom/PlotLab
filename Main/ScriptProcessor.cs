@@ -29,6 +29,9 @@ namespace PLMain
 
             foreach (string raw in scriptLines)
             { 
+                if (raw.StartsWith ("return"))
+                    break;
+
                 PLVariable ans = new PLNull ();
                 ip.ProcessString (ref ans, raw);
 
