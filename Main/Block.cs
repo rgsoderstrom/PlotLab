@@ -29,6 +29,7 @@ namespace PLMain
         static public void SetPrintFunction (PrintFunction pr)
         {
             Print = pr;
+            BlockManager.SetPrintFunction (pr);
         }
 
         //************************************************************************
