@@ -87,7 +87,7 @@ namespace PLMain
                 Workspace.Print = Print;
                 TextPane.Focus ();
 
-                Print ("Running startup script\n");
+                //Print ("Running startup script\n");
                 PLVariable ans = new PLNull ();
                 InputLineProcessor ip = new InputLineProcessor (Print);
                 TerminationReason a = ip.ProcessString (ref ans, "startup");
@@ -103,8 +103,12 @@ namespace PLMain
 
             catch (Exception ex)
             {
+                Print ("Startup error: " + ex.Message + "\n");
+
+                // also write to event log in case whatever error got us here prevents
+                // user console's display
                 EventLog.WriteLine ("Startup error: " + ex.Message + "\n");
-                //Print ("Startup error: " + ex.StackTrace + "\n");
+                //EventLog.WriteLine ("Startup error: " + ex.StackTrace + "\n");
             }
 
             PrintPrompt ();
@@ -255,7 +259,8 @@ namespace PLMain
 
             catch (Exception ex)
             {
-                throw new Exception ("Error in UserConsole ReturnKeyHandler:\n" + "  " + ex.Message);
+                throw new Exception (ex.Message);
+               //hrow new Exception ("Error in UserConsole ReturnKeyHandler:\n" + "  " + ex.Message);
             }
         }
 
