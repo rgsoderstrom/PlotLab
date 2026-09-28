@@ -367,8 +367,14 @@ namespace PLSystem
 
                 if (pathEntry [last] == '\'') pathEntry = pathEntry.Substring (0, last);
 
-                FileSystem.AddPath (pathEntry);
-            //  MFileFunctionMgr.SearchPathCopy = FileSystem.GetPathCopy ();
+                if (Directory.Exists (pathEntry))
+                {
+                    FileSystem.AddPath (pathEntry);
+                //  MFileFunctionMgr.SearchPathCopy = FileSystem.GetPathCopy ();
+                }
+
+                else
+                    throw new Exception ("Error in addpath, directory " + pathEntry + " doesn't exist");
             }
 
             return true;
