@@ -36,11 +36,15 @@ namespace PLMain
                     testString = testString.Remove (testString.Length - 1, 1);
 
                 // remove any optional parens
-                if (testString [0] == '(' && testString [testString.Length-1] == ')')
-                {
-                    testString = testString.Remove (0, 1);
-                    testString = testString.Remove (testString.Length-1, 1);
-                }
+
+                // this caused error evaluating exresssions like:
+                // if (size (zValues, 1) ~= NR) || (size (zValues, 2) ~= NC)
+
+                //if (testString [0] == '(' && testString [testString.Length-1] == ')')
+                //{
+                //    testString = testString.Remove (0, 1);
+                //    testString = testString.Remove (testString.Length-1, 1);
+                //}
 
                 ExpressionTree tree = new ExpressionTree (new AnnotatedString (testString));
                 PLVariable answer = tree.Evaluate ();
