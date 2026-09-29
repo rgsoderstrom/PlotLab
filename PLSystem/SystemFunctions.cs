@@ -269,6 +269,11 @@ namespace PLSystem
             return true;
         }
 
+        public static string Pwd ()
+        {
+            return FileSystem.CurrentDirectory;
+        }
+
         //*********************************************************************************************
         //*********************************************************************************************
         //*********************************************************************************************
@@ -342,40 +347,50 @@ namespace PLSystem
 
         //*********************************************************************************************
 
+        // Accepts absolute path or relative path. 
+
+        // Relative paths must begin with . or .. and are appended to current working
+        // directory before being added to path list
+
         public static bool AddPath (string pathEntry)
         {
-            if (pathEntry != null)
-            {
-                // remove any leading open paren
-                if (pathEntry [0] == '(') pathEntry = pathEntry.Substring (1);
+            if (pathEntry == null)
+                throw new Exception ("Null string passed to addpath");
 
-                // remove any leading backslash
-                if (pathEntry [0] == '\'') pathEntry = pathEntry.Substring (1);
+            // remove any leading open paren
+            if (pathEntry [0] == '(') pathEntry = pathEntry.Substring (1);
 
-                // remove any trailing semicolon
-                int last = pathEntry.Length - 1;
+            // remove any leading backslash
+            if (pathEntry [0] == '\'') pathEntry = pathEntry.Substring (1);
 
-                if (pathEntry [last] == ';') pathEntry = pathEntry.Substring (0, pathEntry.Length - 1);
+            // remove any trailing semicolon
+            int last = pathEntry.Length - 1;
 
-                // remove any closing paren
-                last = pathEntry.Length - 1;
+            if (pathEntry [last] == ';') pathEntry = pathEntry.Substring (0, pathEntry.Length - 1);
 
-                if (pathEntry [last] == ')') pathEntry = pathEntry.Substring (0, last);
+            // remove any closing paren
+            last = pathEntry.Length - 1;
+
+            if (pathEntry [last] == ')') pathEntry = pathEntry.Substring (0, last);
  
-                // remove any trailing backslash
-                last = pathEntry.Length - 1;
+            // remove any trailing backslash
+            last = pathEntry.Length - 1;
 
-                if (pathEntry [last] == '\'') pathEntry = pathEntry.Substring (0, last);
+            if (pathEntry [last] == '\'') pathEntry = pathEntry.Substring (0, last);
 
-                if (Directory.Exists (pathEntry))
-                {
-                    FileSystem.AddPath (pathEntry);
-                //  MFileFunctionMgr.SearchPathCopy = FileSystem.GetPathCopy ();
-                }
+            // if passed-in string is a relative path append it to cwd.
+            // if it is an absolute path add it as-is
 
-                else
-                    throw new Exception ("Error in addpath, directory " + pathEntry + " doesn't exist");
+            string fullPath = pathEntry [0] == '.' ? Pwd () + "\\" + pathEntry
+                                                    : pathEntry;
+            if (Directory.Exists (fullPath))
+            {
+                FileSystem.AddPath (fullPath);
+            //  MFileFunctionMgr.SearchPathCopy = FileSystem.GetPathCopy ();
             }
+
+            else
+                throw new Exception ("Error in addpath, directory " + pathEntry + " doesn't exist");
 
             return true;
         }
