@@ -252,7 +252,16 @@ namespace PLMain
                 if (annotatedChars [i].IsNumber)      digits.Add       (i);   
                 if (annotatedChars [i].IsQuote)       quotes.Add       (i);
                 if (annotatedChars [i].IsDecimal)     decimals.Add     (i);
-                if (annotatedChars [i].IsExponential) exponentials.Add (i);
+
+                if (i > 0)
+                { 
+                    if (annotatedChars [i].IsE && annotatedChars [i-1].IsNumber) 
+                    { 
+                        exponentials.Add (i);
+                        annotatedChars [i].IsExponential = true;
+                    }
+                }
+
                 if (annotatedChars [i].IsOperator)    operators.Add    (i);
 
                 if (annotatedChars [i].IsWhitespace == true  && annotatedChars [i].NestingLevel == 0) level0Spaces.Add (i);

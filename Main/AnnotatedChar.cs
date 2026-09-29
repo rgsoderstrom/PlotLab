@@ -68,7 +68,7 @@ namespace PLMain
 
 
         private bool IsLetter_ {get {return Char.IsLetter (character);}}
-        private bool IsAlphanumeric_ {get {return Char.IsLetterOrDigit (character);}}
+      //private bool IsAlphanumeric_ {get {return Char.IsLetterOrDigit (character);}}
 
 
 
@@ -103,7 +103,14 @@ namespace PLMain
         public bool IsOpenParen    {get {return thisCharType == ACType.OpenParen;}}
         public bool IsOpenBracket  {get {return thisCharType == ACType.OpenBracket;}}
 
-        public bool IsExponential {get {return IsExponential_;}}
+
+
+        public  bool IsE            {get {return char.ToUpper (character) == 'E';}}
+        private bool isExponential = false;
+        public  bool IsExponential  {get {return isExponential;} set {isExponential = value;}}
+
+
+
         public bool IsPlusMinus   {get {return IsPlusMinus_;}}
 
         private bool IsDecimal_     {get {return character == '.';}}
@@ -113,7 +120,6 @@ namespace PLMain
         private bool IsOperator_    {get {return Operators.Contains (character);}}
      // private bool IsTilde_       {get {return character == '~';}}
         private bool IsEqualSign_   {get {return character == '=';}}
-        private bool IsExponential_ {get {return char.ToUpper (character) == 'E';}}
         private bool IsMinus_       {get {return character == '-';}}
         private bool IsPlusMinus_   {get {return character == '+' || character == '-';}}
         private bool IsComma_       {get {return character == ',';}}
