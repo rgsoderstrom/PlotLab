@@ -87,7 +87,7 @@ namespace FunctionLibrary
                 else throw new Exception ("Unrecognized option: " + arg);
 
                 //      bool wasFrozen = (CurrentFigure as IPlotDrawable).AxesFrozen;
-                (CurrentFigure as IPlotDrawable).AxesFrozen = true;
+                // (CurrentFigure as IPlotDrawable).AxesFrozen = true;
 
                 if (CurrentFigure is Plot2D) (CurrentFigure as Plot2D).RectangularGridOn = flag;
                 else if (CurrentFigure is Plot3D) (CurrentFigure as Plot3D).RectangularGridOn = flag;
