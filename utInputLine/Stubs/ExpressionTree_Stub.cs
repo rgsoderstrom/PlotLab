@@ -70,7 +70,7 @@ namespace PLMain
                     break;
 
                 default:
-                    throw new Exception ("ExpressionTree stub can't evaluate " + astr.Plain);
+                    throw new Exception (astr.Plain + " not supported by ExpressionTree stub");
 
             }
         }
