@@ -195,7 +195,7 @@ namespace PLMain
                 CommandLineHistory.Add (raw);
 
                 if (raw.EndsWith ("\n")) EventLog.Write (raw);
-                else                     EventLog.WriteLine (raw);
+                else EventLog.WriteLine (raw);
 
                 TextPane.Text += "\n";
                 TextPane.CaretIndex = TextPane.Text.Length;
@@ -280,8 +280,14 @@ namespace PLMain
                 caretLowerLimit     = TextPane.CaretIndex;
             }
 
-            if (str.EndsWith ("\n")) EventLog.Write (str);
-            else                     EventLog.WriteLine (str);
+            if (str == Prompt) 
+                EventLog.Write (str);
+
+            else
+            { 
+                if (str.EndsWith ("\n")) EventLog.Write (str);
+                else                     EventLog.WriteLine (str);
+            }
         }
 
         internal void EditablePrint (string str)
