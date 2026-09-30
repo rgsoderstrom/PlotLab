@@ -24,6 +24,7 @@ namespace FunctionLibrary
             dst.Add ("clf",    ClearFigure);
             dst.Add ("hold",   Hold);
             dst.Add ("axis",   AxisConstraints);
+            dst.Add ("grid",   Grid);
         }
 
         //*********************************************************************************************
@@ -68,6 +69,30 @@ namespace FunctionLibrary
 
                 default:
                     throw new Exception ("Axis command - unrecognized option");
+            }
+
+            return true;
+        }
+
+        //*********************************************************************************************
+
+        static public bool Grid (string arg)
+        {
+            if (CurrentFigure != null)
+            {
+                bool flag;
+
+                if (arg == "on") flag = true;
+                else if (arg == "off") flag = false;
+                else throw new Exception ("Unrecognized option: " + arg);
+
+                //      bool wasFrozen = (CurrentFigure as IPlotDrawable).AxesFrozen;
+                (CurrentFigure as IPlotDrawable).AxesFrozen = true;
+
+                if (CurrentFigure is Plot2D) (CurrentFigure as Plot2D).RectangularGridOn = flag;
+                else if (CurrentFigure is Plot3D) (CurrentFigure as Plot3D).RectangularGridOn = flag;
+
+                //       (CurrentFigure as IPlotDrawable).AxesFrozen = wasFrozen;
             }
 
             return true;

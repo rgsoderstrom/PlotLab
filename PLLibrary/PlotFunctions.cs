@@ -53,7 +53,7 @@ namespace FunctionLibrary
             dst.Add ("CameraCenter", CameraCenter);
             dst.Add ("CameraAbsPos", CameraPosition);
             dst.Add ("CameraRelPos", CameraRelPosition);
-            dst.Add ("grid",         Grid);
+            //dst.Add ("grid",         Grid);
         }
 
         // functions that can be invoked with no arguments

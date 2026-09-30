@@ -202,27 +202,27 @@ namespace FunctionLibrary
         //*********************************************************************************************
         //*********************************************************************************************
 
-        static public PLVariable Grid (PLVariable arg)
-        {
-            if (CurrentFigure != null)
-            {
-                bool flag;
-                string str = (arg as PLString).Data;
+        //static public PLVariable Grid (PLVariable arg)
+        //{
+        //    if (CurrentFigure != null)
+        //    {
+        //        bool flag;
+        //        string str = (arg as PLString).Data;
 
-                if      (str == "on")  flag = true;
-                else if (str == "off") flag = false;
-                else throw new Exception ("Unrecognized option: " + str);
+        //        if      (str == "on")  flag = true;
+        //        else if (str == "off") flag = false;
+        //        else throw new Exception ("Unrecognized option: " + str);
 
-          //      bool wasFrozen = (CurrentFigure as IPlotDrawable).AxesFrozen;
-                (CurrentFigure as IPlotDrawable).AxesFrozen = true;
+        //  //      bool wasFrozen = (CurrentFigure as IPlotDrawable).AxesFrozen;
+        //        (CurrentFigure as IPlotDrawable).AxesFrozen = true;
                 
-                if (CurrentFigure is Plot2D)      (CurrentFigure as Plot2D).RectangularGridOn = flag;
-                else if (CurrentFigure is Plot3D) (CurrentFigure as Plot3D).RectangularGridOn = flag;
+        //        if (CurrentFigure is Plot2D)      (CurrentFigure as Plot2D).RectangularGridOn = flag;
+        //        else if (CurrentFigure is Plot3D) (CurrentFigure as Plot3D).RectangularGridOn = flag;
 
-         //       (CurrentFigure as IPlotDrawable).AxesFrozen = wasFrozen;
-            }
-            return new PLNull ();
-        }
+        // //       (CurrentFigure as IPlotDrawable).AxesFrozen = wasFrozen;
+        //    }
+        //    return new PLNull ();
+        //}
 
         //*********************************************************************************************
         //*********************************************************************************************
@@ -417,7 +417,8 @@ namespace FunctionLibrary
             foreach (CanvasObject co in VV)
                 list.Add (new PLCanvasObject (co));
 
-            return list;
+            //return list;
+            return new PLDouble (1);
         }
 
         //*********************************************************************************************
