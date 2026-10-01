@@ -29,7 +29,7 @@ namespace utTokens
         enum TestToRun {AnnotatedString, AnnotatedStringAppend, AnnotatedStringSet,
                         TokenParsing, TokenUtils};
 
-        private static readonly TestToRun test = TestToRun.AnnotatedStringSet;
+        private static readonly TestToRun test = TestToRun.TokenParsing;
 
         //***********************************************************************
 

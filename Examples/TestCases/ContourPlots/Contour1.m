@@ -13,9 +13,18 @@ xValues = linspace (-2, 2, NC);
 yValues = linspace (0, 4, NR);
 zValues = yValues' * xValues; % size NR rows by NC cols
 
+
+
 if (size (zValues, 1) ~= NR) || (size (zValues, 2) ~= NC)
+
+%if size (zValues, 1) ~= NR || size (zValues, 2) ~= NC
+
+%if (size (zValues, 1) ~= NR) || (size (zValues, 2) ~= NC)
+
 	disp ('Size error');
 end
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

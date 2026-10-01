@@ -2,13 +2,9 @@
 
 % TokenTests.m, for utTokens
 
-% lines beginning with # mark the section
-% with lines for a specific test
+% lines beginning with # mark the start of the section
+% with lines for a specific test.
 	
-	% AnnotatedString - alphanumeric only
-	% BLOCK_2
-	% BLOCK_T
-	% axis + 2 
 	
 	# AnnotatedStringAppend
 	plot (1:10);
@@ -29,8 +25,21 @@
 	% figure
 	
 	# AnnotatedString
+	% Rotatf2D
+	% Rotate2D
+
+	% exponential
+	p = 123e45;
+	p = -23e-0.5;
+	p = +24e+6.8;
+	
+	% BLOCK_2
+	% BLOCK_T
+	% axis + 2 
+
+	% PlotTests2D_1
 	% clf
-	clf ;
+	% clf ;
 	% if A > B,
 	% p = [1 ; (sqrt (5 * 3)) ; 7]
 	% p=[1 ; 2 ; 3 ; 4 ; (sqrt (5 * 3)) ; 6 ; 7]
@@ -82,16 +91,18 @@
 		 
 	
 	# TokenParsing
+	c = [(1, 10, 100) ; (2, 20, 200) ; (3, 30, 300)]
+	d = [1, 10, 100 ; 2, 20, 200 ; 3, 30, 300]
 	% b'
 	% b (:)
 	% b (:) + b (:) + 7
 	% b (4 : (length (a)))
 	% b (3 : end)
 	% c (4, 5)
-	c (3:end, 7 : end) = 567;
+	% c (3:end, 7 : end) = 567;
 	
-	b (2) = 4
-	b (end + 1) = 9
+	% b (2) = 4
+	% b (end + 1) = 9
 
 	% a (3, 4)
 	% b (5, :)
@@ -129,9 +140,9 @@
 	% [4 (sqrt (5)) 6]
 
 	% colon
-	[1 : 3 : 20]
-	[1:ZZ:sqrt (22)]
-	[1 : ZZ : sqrt (22)]
+	% [1 : 3 : 20]
+	% [1:ZZ:sqrt (22)]
+	% [1 : ZZ : sqrt (22)]
 	
 
 
@@ -208,11 +219,6 @@
 	% two-char operators
 	% z2 = a ~= b;
 	% z3 = A.*B;
-	
-	% exponential
-	% p = 123e45;
-	% p = -23e-0.5;
-	% p = +24e+6.8;
 	
 	% a3 = (3^r) + 7;
 	% y1 = a1 + b12;
