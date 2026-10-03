@@ -24,10 +24,8 @@ namespace PLMain
 
             try
             { 
-                //expression.CheckForTrailingSemi ();
                 SupressPrinting = expression.SupressPrinting;
 
-                //ExpressionTreeNode.NodeCounter = 0;
                 tree = new ExpressionTreeNode (expression);
                 Compact ();
 
@@ -140,7 +138,5 @@ namespace PLMain
 
             return answer;
         }
-
-
     }
 }
