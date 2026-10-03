@@ -256,15 +256,13 @@ namespace FunctionLibrary
 
         static bool Hold (string arg)
         {
-            if (arg.Length == 0)
-            { 
-                if (CurrentFigure != null)
-                    CurrentFigure.Hold = true;
-
+            if (CurrentFigure == null)
                 return true;
-            }
 
-            if (arg == "on")
+            if (arg.Length == 0)
+                CurrentFigure.Hold = true;
+
+            else if (arg == "on")
                 CurrentFigure.Hold = true;
 
             else if (arg == "off")
