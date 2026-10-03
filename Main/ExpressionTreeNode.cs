@@ -50,6 +50,11 @@ namespace PLMain
             Compact ();
         }
 
+        public ExpressionTreeNode (string str) : this (new AnnotatedString (str))
+        {
+
+        }
+
         ExpressionTreeNode (TokenSet tokens)
         {
             ConstructorCommon (tokens);
@@ -235,9 +240,5 @@ namespace PLMain
 
             Operands = newOperands;
         }
-
-
-
-
     }
 }

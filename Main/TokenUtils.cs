@@ -76,42 +76,42 @@ namespace PLMain
         //***********************************************************************************************************************************
         //***********************************************************************************************************************************
 
-        //public class BracketSeparatorPriority
-        //{
-        //    public readonly char oper;
-        //    public readonly int  priority;   // higher number => higher priority
-        //    public readonly TokenType tokenType;
+        public class BracketSeparatorPriority
+        {
+            public readonly char oper;
+            public readonly int priority;   // higher number => higher priority
+            public readonly TokenType tokenType;
 
-        //    public BracketSeparatorPriority (char o, int p, TokenType ty)
-        //    {
-        //        oper = o;
-        //        priority = p;  // high number => high priority
-        //        tokenType = ty;
-        //    }
-        //}
+            public BracketSeparatorPriority (char o, int p, TokenType ty)
+            {
+                oper = o;
+                priority = p;  // high number => high priority
+                tokenType = ty;
+            }
+        }
 
-        //public static readonly List<BracketSeparatorPriority> bracketPrioritys = new List<BracketSeparatorPriority> ()
-        //{
-        //    new BracketSeparatorPriority (' ', 800, TokenType.BracketsSpace),
-        //    new BracketSeparatorPriority (',', 600, TokenType.BracketsComma),
-        //    new BracketSeparatorPriority (':', 600, TokenType.BracketsColon),
-        //    new BracketSeparatorPriority (';', 400, TokenType.BracketsSemi),
-        //};
+        public static readonly List<BracketSeparatorPriority> bracketPrioritys = new List<BracketSeparatorPriority> ()
+        {
+            new BracketSeparatorPriority (' ', 800, TokenType.BracketsSpace),
+            new BracketSeparatorPriority (',', 600, TokenType.BracketsComma),
+            new BracketSeparatorPriority (':', 600, TokenType.BracketsColon),
+            new BracketSeparatorPriority (';', 400, TokenType.BracketsSemi),
+        };
 
-        // public static readonly List<char> bracketSeparators = new List<char> {' ', ',', ':', ';'};
-        public static readonly List<char> bracketSeparators = new List<char> { ',', ':', ';' };
+        public static readonly List<char> bracketSeparators = new List<char> {' ', ',', ':', ';'};
+        //public static readonly List<char> bracketSeparators = new List<char> {',', ':', ';' };
 
-        //public static BracketSeparatorPriority GetBspForOperator (char op)
-        //{
-        //    foreach (TokenUtils.BracketSeparatorPriority bsp in TokenUtils.bracketPrioritys)
-        //    {
-        //        if (op == bsp.oper)
-        //        {
-        //            return bsp;
-        //        }
-        //    }
+        public static BracketSeparatorPriority GetBspForOperator (char op)
+        {
+            foreach (TokenUtils.BracketSeparatorPriority bsp in TokenUtils.bracketPrioritys)
+            {
+                if (op == bsp.oper)
+                {
+                    return bsp;
+                }
+            }
 
-        //    throw new Exception ("Bracket separator not found");
-        //}
+            throw new Exception ("Bracket separator not found");
+        }
     }
 }

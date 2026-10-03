@@ -134,20 +134,20 @@ namespace PLMain
                 case TokenType.BracketsColon:
                 {
                     Operator = "RowVectorIterator";
-                    AnnotatedStringSet args = parser.SplitBracketArgs_Colon (tokens [0].AnnotatedText);
+                    List<string> args = parser.SplitBracketArgs_Colon (tokens [0].AnnotatedText);
 
-                    foreach (AnnotatedString astr in args)
-                        Operands.Add (new ExpressionTreeNode (astr));
+                    foreach (string str in args)
+                        Operands.Add (new ExpressionTreeNode (str));
                 }
                 break;
 
                 case TokenType.BracketsComma:
                 {
                     Operator = "RowVectorElements";
-                    AnnotatedStringSet args = parser.SplitBracketArgs_Comma (tokens [0].AnnotatedText);
+                    List<string> args = parser.SplitBracketArgs_Comma (tokens [0].AnnotatedText);
 
-                    foreach (AnnotatedString astr in args)
-                        Operands.Add (new ExpressionTreeNode (astr));
+                    foreach (string str in args)
+                        Operands.Add (new ExpressionTreeNode (str));
                 }
                 break;
 
@@ -156,17 +156,17 @@ namespace PLMain
                 case TokenType.BracketsSemi:
                 {
                     Operator = "ColVectorElements";
-                    AnnotatedStringSet args = parser.SplitBracketArgs_Semi (tokens [0].AnnotatedText);
+                    List<string> args = parser.SplitBracketArgs_Semi (tokens [0].AnnotatedText);
 
-                    foreach (AnnotatedString astr in args)
+                    foreach (string str in args)
                     {
-                        AnnotatedString edited = EnsureRowVector (astr);
+                        string edited = EnsureRowVector (str);
                         //AnnotatedString edited = args.GetOldest ();
                         
-                        string pl = edited.Plain;
+                        string pl = edited;//.Plain;
                         if (pl [pl.Length-1] == ';')
                             pl = pl.Remove (pl.Length-1);
-                        edited = new AnnotatedString (pl);
+                        edited = pl;// new AnnotatedString (pl);
 
                         Operands.Add (new ExpressionTreeNode (edited));
                     }
@@ -182,13 +182,13 @@ namespace PLMain
                 {
                     Operator = "RowVectorElements";
                     string tmp = tokens [0].AnnotatedText.Plain;
-                    AnnotatedStringSet args = parser.SplitBracketArgs_Space (tokens [0].AnnotatedText);
+                    List<string> args = parser.SplitBracketArgs_Space (tokens [0].AnnotatedText);
 
-                    foreach (AnnotatedString astr in args)
+                    foreach (string str in args)
                     {
-                        AnnotatedString str = astr;
+                       // AnnotatedString str = astr;
 
-                        if (str.CharacterCount > 0)        //   <==========================================================
+                        if (str.Length > 0)        //   <==========================================================
                             Operands.Add (new ExpressionTreeNode (str));
                     }
                 }
@@ -210,6 +210,18 @@ namespace PLMain
             if (edited [0].IsOpenBracket == false)
             {
                 edited = AnnotatedString.AddOuterBrackets (edited);
+            }
+
+            return edited;
+        }
+
+        string EnsureRowVector (string orig)
+        {
+            string edited = orig.Trim ();
+
+            if (edited [0] != '[')
+            {
+                edited = '[' + edited + ']';
             }
 
             return edited;
@@ -296,10 +308,10 @@ namespace PLMain
                 case TokenType.GroupingParens:
                 case TokenType.FunctionParens:
                 {
-                    AnnotatedStringSet args = parser.SplitFunctionArgs (Pair.Get2.AnnotatedText);
+                    List<string> args = parser.SplitFunctionArgs (Pair.Get2.AnnotatedText);
 
-                    foreach (AnnotatedString astr in args)
-                        Operands.Add (new ExpressionTreeNode (astr));
+                    foreach (string str in args)
+                        Operands.Add (new ExpressionTreeNode (str));
                 }
                 break;
 
@@ -319,37 +331,37 @@ namespace PLMain
                 
                 case TokenType.BracketsComma:
                 {
-                    AnnotatedStringSet tok = parser.SplitBracketArgs_Comma (Pair.Get2.AnnotatedText);
+                    List<string> tok = parser.SplitBracketArgs_Comma (Pair.Get2.AnnotatedText);
 
-                    foreach (AnnotatedString astr in tok)
-                        Operands.Add (new ExpressionTreeNode (astr));
+                    foreach (string str in tok)
+                        Operands.Add (new ExpressionTreeNode (str));
                 }
                 break;
 
                 case TokenType.BracketsColon:
                 {
-                    AnnotatedStringSet tok = parser.SplitBracketArgs_Colon (Pair.Get2.AnnotatedText);
+                    List<string> tok = parser.SplitBracketArgs_Colon (Pair.Get2.AnnotatedText);
 
-                    foreach (AnnotatedString astr in tok)
-                        Operands.Add (new ExpressionTreeNode (astr));
+                    foreach (string str in tok)
+                        Operands.Add (new ExpressionTreeNode (str));
                 }
                 break;
 
                 case TokenType.BracketsSemi:
                 {
-                    AnnotatedStringSet tok = parser.SplitBracketArgs_Semi (Pair.Get2.AnnotatedText);
+                    List<string> tok = parser.SplitBracketArgs_Semi (Pair.Get2.AnnotatedText);
 
-                    foreach (AnnotatedString astr in tok)
-                        Operands.Add (new ExpressionTreeNode (astr));
+                    foreach (string str in tok)
+                        Operands.Add (new ExpressionTreeNode (str));
                 }
                 break;
 
                 case TokenType.BracketsSpace:
                 {
-                    AnnotatedStringSet tok = parser.SplitBracketArgs_Space (Pair.Get2.AnnotatedText);
+                    List<string> tok = parser.SplitBracketArgs_Space (Pair.Get2.AnnotatedText);
 
-                    foreach (AnnotatedString astr in tok)
-                        Operands.Add (new ExpressionTreeNode (astr));
+                    foreach (string str in tok)
+                        Operands.Add (new ExpressionTreeNode (str));
                 }
                 break;
 
@@ -376,7 +388,7 @@ namespace PLMain
             string matrixName = Operator;
 
             TokenParsing parsing = new TokenParsing ();
-            AnnotatedStringSet args = parsing.SplitSubmatrixArgs (Pair.Get2.AnnotatedText);
+            List<string> args = parsing.SplitSubmatrixArgs (Pair.Get2.AnnotatedText);
 
             //for (int i=0; i<args.Count; i++)
             //    Console.WriteLine (i + ": " + args [i].Plain);
@@ -397,8 +409,8 @@ namespace PLMain
                 if (args.Count != 1)
                     throw new Exception ("Extract from vector requires one arg: " + matrixName);
 
-                AnnotatedString astr = args [0];
-                Operands.Add (new ExpressionTreeNode (astr));
+                string str = args [0];
+                Operands.Add (new ExpressionTreeNode (str));
             }
 
             else if (IsMatrix)
