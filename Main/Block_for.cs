@@ -81,18 +81,15 @@ namespace PLMain
 
             // count = 4; // size (cases, 2) == 4
             AnnotatedString astr2 = new AnnotatedString (CountVar + " = size (" + CasesVar + ", 2);");
-            //astr2.CheckForTrailingSemi ();
             InitializationCode.Add (astr2);
 
             // get = 1; 
             astr2 = new AnnotatedString (GetVar + " = 1;");
-            //astr2.CheckForTrailingSemi ();
             InitializationCode.Add (astr2);
 
             // a = cases (get);
-            string loopVariable = loopArgs.Substring (0, index - 1).Trim ();
+            string loopVariable = loopArgs.Substring (0, index).Trim ();
             astr2 = new AnnotatedString (loopVariable + " = " + CasesVar + " (" + GetVar + ");");
-            //astr2.CheckForTrailingSemi ();
             Add (astr2);
 
             CleanupCode.Add (new AnnotatedString ("clear " + CasesVar + " " + CountVar + " " + GetVar));
@@ -103,7 +100,6 @@ namespace PLMain
         internal override void Close ()
         {
             AnnotatedString astr = new AnnotatedString (GetVar + " = " + GetVar + " + 1;");  // ("get = get + 1;"));
-            //astr.CheckForTrailingSemi ();
             Add (astr);
         }
 
