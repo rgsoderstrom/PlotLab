@@ -91,24 +91,15 @@ namespace PLMain
                 PLVariable ans = new PLNull ();
                 InputLineProcessor ip = new InputLineProcessor (Print);
                 TerminationReason a = ip.ProcessString (ref ans, "startup");
-
-
-                //   SystemFunctions.UserConsoleRequests = SystemRequests;
-
-
-
-                //        MFileFunctionMgr.CurrentDir = FileSearch.CurrentDirectory;
-                //      MFileFunctionMgr.SearchPathCopy = FileSearch.GetPathCopy ();
             }
 
             catch (Exception ex)
             {
                 Print ("Startup error: " + ex.Message + "\n");
 
-                // also write to event log in case whatever error got us here prevents
-                // user console's display
+                // also write to event log in case whatever error got us here prevents user console display
                 EventLog.WriteLine ("Startup error: " + ex.Message + "\n");
-                //EventLog.WriteLine ("Startup error: " + ex.StackTrace + "\n");
+              //EventLog.WriteLine ("Startup error: " + ex.StackTrace + "\n");
             }
 
             PrintPrompt ();
