@@ -122,18 +122,11 @@ namespace PLMain
                         }
                     }
 
-
-
-
                     else if (LibraryManager.WhatIs (str) == SymbolicNameTypes.Function)
                         initial [i].Type = TokenType.Function;
 
                     //else if (LibraryManager.IsFunctionWithArgs (str) || LibraryManager.IsZeroArgFunction (str))
                     //    initial [i].Type = TokenType.FunctionName;
-
-
-
-
 
                     else if (FileSystem.IsFunctionFile (initial [i].AnnotatedText.Plain))
                         initial [i].Type = TokenType.FunctionFile;
