@@ -214,15 +214,14 @@ namespace PLFileSystem
         //******************************************************************************************
         //******************************************************************************************
 
-        public static FileTypes WhatIs (string name)
+        private static FileTypes WhatIs (string name)
         {
-            string fullName = "";
-            MFileFunctionProcessor proc = null;
             FileTypes fileType = FileTypes.Unknown;
+            string fullName = "";
 
             if (NameSearch (name, ref fullName) == true)
             {
-                if (MFileFunctionMgr.IsMFileFunction (name, ref fullName, ref proc))
+                if (MFileFunctionMgr.IsMFileFunction (fullName))
                     fileType = FileTypes.FunctionFile;
                 else
                     fileType = FileTypes.ScriptFile;
