@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using PLCommon;
 using PLMain;
 using PLWorkspace;
+using PLFileSystem;
 
 //using PLLibrary;
 
@@ -87,6 +88,12 @@ namespace utTokens
                 PLMatrix c = new PLRMatrix (cm);
                 c.Name = "c";
                 Workspace.Add (c);
+
+                //****************************************************************
+                //****************************************************************
+                //****************************************************************
+
+                FileSystem.AddPath (@"D:\From_C_Visual Studio 2022\Visual Studio 2022\Projects\PlotLab\Examples\FuncsAndScripts1");
 
                 //****************************************************************
                 //****************************************************************
@@ -270,18 +277,21 @@ namespace utTokens
 
             Print (annotated.ToString ());
 
-            if (false) // annotated.AlphanumericOnly)
-            {
-                Print ("\nAlphanumericOnly, token parsing skipped");
-            }
-            else
-            { 
-                // pass annotated string to token processor
-                TokenParsing parser = new TokenParsing ();
-                TokenSet statementtokens = parser.StringToTokens (annotated);
+            // pass annotated string to token processor
+            TokenParsing parser = new TokenParsing ();
 
-                Print (statementtokens.ToString ());
+            try
+            { 
+                TokenSet statementtokens = parser.StringToTokens (annotated);
             }
+
+            catch (Exception ex)
+            {
+                Print ("\nParsing error: " + ex.Message);
+            }
+
+            if (parser.Pass1Results != null) Print ("\nPass 1 results: " + parser.Pass1Results.ToString ());
+            if (parser.Pass2Results != null) Print ("Final results: " + parser.Pass2Results.ToString ());
 
             return true;
         }
@@ -301,12 +311,12 @@ namespace utTokens
             //AnnotatedStringSet args = parsing.SplitBracketArgs_Colon (annot);
             //AnnotatedStringSet args = parsing.SplitBracketArgs_Space (annot);
             //AnnotatedStringSet args = parsing.SplitBracketArgs_Semi (annot);
-            AnnotatedStringSet args = parsing.SplitBracketArgs_Comma (annot);
+            List<string> args = parsing.SplitBracketArgs_Comma (annot);
 
             Print ("\n" + args.Count + " args after split:");
 
-            foreach (AnnotatedString nstr in args)
-                Print (nstr.Plain);
+            foreach (string str2 in args)
+                Print (str2);
 
             return true;
         }
