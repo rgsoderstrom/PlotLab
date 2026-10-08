@@ -14,31 +14,57 @@ namespace PLMain
 {
     public partial class TokenParsing
     {
+        public readonly List<TokenSet> History = new List<TokenSet> ();
+        public               TokenSet  Results {get {return History [History.Count - 1];}}
+
+        private delegate TokenSet ParsingStep (TokenSet src, out bool save);
+
+        private static readonly List<ParsingStep> ParsingSteps = new List<ParsingStep> ()
+        {
+            LookupAlphanumerics,  // Assign a more specific type to an Alphanumeric
+            IdentifyParens,       // grouping, function args, sub matrix
+        };
+
+        //****************************************************************************
+
         internal TokenSet ParsingPassTwo (TokenSet initial)
         {
-            TokenSet edited = LookupAlphanumerics (initial);
+            bool saveFlag;
 
-            edited = IdentifyParens (edited); // grouping, function args, sub matrix
+            History.Add (initial);
 
-            edited = IdentifyBrackets (edited); // by separator: :, ;, etc.
+            foreach (ParsingStep nextStep in ParsingSteps)
+            { 
+                TokenSet edited = nextStep (Results, out saveFlag); 
 
-            edited = ReplaceTransposeOps (edited); // A' => Transpose (A)
+                if (saveFlag) 
+                    History.Add (edited);
+            }
 
-            edited = ReplaceCollapseOps (edited);  // b (:) => Collapse (b)
 
-            edited = CombineTokensIntoPairs (edited); // combine FuncName (FuncArgs) or Matrix (range) into TokenPairs
 
-            edited = CheckSubmatrixArgs (edited);  // b (3 : end) => b (3 : (length (b)))
-                                                   // c (:, 3)    => c (1:(rows (c)), 3)
 
-            edited = IdentifyOperatorType (edited);
 
-            edited = BindUnaryOperators (edited); // -, A => (-1 * A),
-                                                  // -, 7 => -7
 
-            edited = RenameTwoCharOperator (edited); // rename to BinaryOperator
+            //edited = IdentifyBrackets (edited); // by separator: :, ;, etc.
 
-            return edited;
+            //edited = ReplaceTransposeOps (edited); // A' => Transpose (A)
+
+            //edited = ReplaceCollapseOps (edited);  // b (:) => Collapse (b)
+
+            //edited = CombineTokensIntoPairs (edited); // combine FuncName (FuncArgs) or Matrix (range) into TokenPairs
+
+            //edited = CheckSubmatrixArgs (edited);  // b (3 : end) => b (3 : (length (b)))
+            //                                       // c (:, 3)    => c (1:(rows (c)), 3)
+
+            //edited = IdentifyOperatorType (edited);
+
+            //edited = BindUnaryOperators (edited); // -, A => (-1 * A),
+            //                                      // -, 7 => -7
+
+            //edited = RenameTwoCharOperator (edited); // rename to BinaryOperator
+
+            return Results;
         }
 
         //*************************************************************************************************
@@ -87,13 +113,17 @@ namespace PLMain
 
         // Assign a more specific type to an Alphanumeric
 
-        TokenSet LookupAlphanumerics (TokenSet initial)
+        private static TokenSet LookupAlphanumerics (TokenSet initial, out bool setModified)
         {
+            TokenSet edited = new TokenSet ("LookupAlphanumerics");
+            setModified = false;
+
             for (int i = 0; i<initial.Count; i++)
             {
                 if (initial [i].Type == TokenType.Alphanumeric)
                 {
                     string str = initial [i].AnnotatedText.Plain;
+                    setModified = true;
 
                     SymbolicNameTypes whatIs = Workspace.WhatIs (str);
 
@@ -102,16 +132,12 @@ namespace PLMain
                         switch (whatIs)
                         {
                             case SymbolicNameTypes.Variable:
-                                initial [i].Type = TokenType.VariableName;
+                                edited.Add (new Token (TokenType.VariableName, initial [i].AnnotatedText));
                                 break;
 
                             case SymbolicNameTypes.Function:
-                                initial [i].Type = TokenType.Function;// .FunctionName;
+                                edited.Add (new Token (TokenType.Function, initial [i].AnnotatedText));
                                 break;
-
-                            //case SymbolicNameTypes.ZeroArgFunction:
-                            //    initial [i].Type = TokenType.FunctionName;
-                            //    break;
 
                             case SymbolicNameTypes.WorkspaceCommand:
                                 throw new Exception ("Unexpected Workspace Command: " + str);
@@ -123,22 +149,25 @@ namespace PLMain
                     }
 
                     else if (LibraryManager.WhatIs (str) == SymbolicNameTypes.Function)
-                        initial [i].Type = TokenType.Function;
-
-                    //else if (LibraryManager.IsFunctionWithArgs (str) || LibraryManager.IsZeroArgFunction (str))
-                    //    initial [i].Type = TokenType.FunctionName;
+                        edited.Add (new Token (TokenType.Function, initial [i].AnnotatedText));
 
                     else if (FileSystem.IsFunctionFile (initial [i].AnnotatedText.Plain))
-                        initial [i].Type = TokenType.FunctionFile;
+                        edited.Add (new Token (TokenType.FunctionFile, initial [i].AnnotatedText));
 
                     else if (FileSystem.IsScriptFile (initial [i].AnnotatedText.Plain))
-                        initial [i].Type = TokenType.ScriptFile;
+                        edited.Add (new Token (TokenType.ScriptFile, initial [i].AnnotatedText));
 
-                    else initial [i].Type = TokenType.Undefined;
+                    else
+                        edited.Add (new Token (TokenType.Undefined, initial [i].AnnotatedText));
+                }
+
+                else // token type not alphanumeric, so just move it to new list
+                {
+                    edited.Add (initial [i]);
                 }
             }
 
-            return initial;
+            return edited;
         }
 
         //*************************************************************************************************
@@ -148,15 +177,18 @@ namespace PLMain
         //    FunctionParens,  // Func1 (P, Q, R, S)
         //    SubmatrixParens, // ZMat (Rs, Cs); % (row select, col select)
 
-        TokenSet IdentifyParens (TokenSet tokens)
+        private static TokenSet IdentifyParens (TokenSet tokens, out bool saveFlag)
         {
-            TokenSet edited = new TokenSet ();
+            TokenSet edited = new TokenSet ("IdentifyParens");
+            saveFlag = false;
 
             for (int i = 0; i<tokens.Count; i++)
             {
                 if (tokens [i].Type == TokenType.Parens)
                 {
-                    if (edited.Count == 0)
+                    saveFlag = true;
+
+                    if (i == 0) // parens with nothing before them
                     {
                         Token tok = new Token (TokenType.GroupingParens, tokens [i].AnnotatedText);
                         edited.Add (tok);
@@ -170,7 +202,8 @@ namespace PLMain
                                 edited.Add (tok1);
                                 break;
 
-                            case TokenType.Function: // FunctionName:
+                            case TokenType.Function:
+                            case TokenType.FunctionFile:
                                 Token tok2 = new Token (TokenType.FunctionParens, tokens [i].AnnotatedText);
                                 edited.Add (tok2);
                                 break;
@@ -421,6 +454,30 @@ namespace PLMain
                         else
                             edited.Add (initial [i]);
                         break;
+
+
+
+
+                    case TokenType.FunctionFile: // .m file
+                        if (initial [i+1].Type == TokenType.Parens) // FunctionParens)
+                        {
+                            initial [i].Type = TokenType.FunctionFile;
+                            TokenPair funcPair = new TokenPair (TokenPairType.FunctionWithArgs, initial [i], initial [i+1]);
+                            edited.Add (funcPair);
+                            i++; // don't look at the function parens token a second time
+                        }
+
+                        else
+                        { 
+                            throw new Exception ("Zero-arg .m file functions not allowed");
+                            //initial [i].Type = TokenType.ZeroArgFunction;
+                            //edited.Add (initial [i]);
+                        }
+
+                        break;
+
+
+
 
                     case TokenType.Function:
                         if (initial [i+1].Type == TokenType.FunctionParens)

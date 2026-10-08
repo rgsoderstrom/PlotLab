@@ -290,8 +290,10 @@ namespace utTokens
                 Print ("\nParsing error: " + ex.Message);
             }
 
-            if (parser.Pass1Results != null) Print ("\nPass 1 results: " + parser.Pass1Results.ToString ());
-            if (parser.Pass2Results != null) Print ("Final results: " + parser.Pass2Results.ToString ());
+            Print ("");
+
+            foreach (TokenSet ts in parser.History)
+                Print (ts.ToString ());
 
             return true;
         }

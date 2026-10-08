@@ -12,13 +12,21 @@ namespace PLMain
     public class TokenSet : IEnumerable
     {
         private List<IToken> tokens = new List<IToken> ();
-        public int Count {get {return tokens.Count;}}
+        private string name = "";
+
+        public int    Count {get {return tokens.Count;}}
+        public string Name  {get {return name;} protected set {name = value;}}
 
         //**************************************************************************
 
         // ctors
 
-        public TokenSet ()
+        public TokenSet (string str)
+        {
+            name = str;
+        }
+
+        public TokenSet () : this ("Unknown")
         {
         }
 
@@ -31,12 +39,31 @@ namespace PLMain
 
         //**************************************************************************
 
-        public TokenSet DeepCopy ()
-        {
-            TokenSet newSet = new TokenSet ();
-            newSet.tokens = tokens.ConvertAll (new Converter<IToken, IToken>(x => x));
-            return newSet;
-        }
+        //public TokenSet DeepCopy (TokenSet src)
+        //{
+        //    TokenSet newSet = new TokenSet ();
+
+        //    foreach (IToken tok in src)
+        //    {
+        //        if (tok is Token)
+        //        { 
+        //            Token tokCopy = new Token (tok.Type, new AnnotatedString (tok.AnnotatedText.Plain));
+        //            newSet.Add (tokCopy);
+        //        }
+
+        //        else if (tok is TokenPair)
+        //        {
+        //            TokenPair origPair = tok as TokenPair;
+        //            Token t1 = new Token (origPair.Get1.Type, new AnnotatedString (origPair.Get1.AnnotatedText.Plain));
+        //            Token t2 = new Token (origPair.Get2.Type, new AnnotatedString (origPair.Get2.AnnotatedText.Plain));
+
+        //            TokenPair copyPair = new TokenPair (origPair.PairType, t1, t2);
+        //            newSet.Add (copyPair);
+        //        }
+        //    }
+
+        //    return newSet;
+        //}
 
         //**************************************************************************
 
@@ -140,15 +167,13 @@ namespace PLMain
         {
             string str = "";
 
-            str += "\n" + Count + " tokens " + "\n";
+            str += Name + ", " + Count + " tokens " + "\n";
 
             foreach (IToken tok in tokens)
                 str += tok.ToString () + " \n";
 
-            //str += "SuppressPrinting = " + SuppressPrinting.ToString () + "\n";
             return str;
         }
-
     }
 
     //**************************************************************************

@@ -79,10 +79,7 @@ namespace PLMain
         // ToString
         public override string ToString () 
         {
-            return "TokenPair " + pairType + ": " + t1.ToString () + ", " + t2.ToString ();
-                
-            //return string.Format ("Token pair type: {0}, Token Text: {1}", 
-            //                      pairType, t1.AnnotatedText.Plain + " " + t2.AnnotatedText.Plain);
+            return "TokenPair: " + pairType + ": " + t1.ToString () + ", " + t2.ToString ();
         }
         
     }

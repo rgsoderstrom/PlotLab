@@ -35,11 +35,11 @@ namespace PLMain
         //*****************************************************************************************************
 
         // debug information
-        private TokenSet pass1Results;
-        private TokenSet pass2Results;
+        //private TokenSet pass1Results;
+        //private TokenSet pass2Results;
         
-        public TokenSet Pass1Results {get {return pass1Results;} protected set {pass1Results = value;}}
-        public TokenSet Pass2Results {get {return pass2Results;} protected set {pass2Results = value;}}
+        //public TokenSet Pass1Results {get {return pass1Results;} protected set {pass1Results = value;}}
+        //public TokenSet Pass2Results {get {return pass2Results;} protected set {pass2Results = value;}}
 
         //*****************************************************************************************************
 
@@ -49,10 +49,10 @@ namespace PLMain
                 throw new Exception ("Input expression nesting error: " + expression.Plain);
 
             TokenSet tokens = ParsingPassOne (expression);
-            Pass1Results = tokens.DeepCopy ();
+            //Pass1Results = tokens.DeepCopy (tokens);
 
             tokens = ParsingPassTwo (tokens);
-            Pass2Results = tokens.DeepCopy ();
+            //Pass2Results = tokens.DeepCopy (tokens);
 
             return tokens;
         }
@@ -64,7 +64,7 @@ namespace PLMain
 
         internal TokenSet ParsingPassOne (AnnotatedString expression)
         {
-            TokenSet tokens = new TokenSet ();
+            TokenSet tokens = new TokenSet ("initial");
             IToken CurrentToken = null;
 
             //
