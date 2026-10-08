@@ -12,8 +12,8 @@ namespace PLMain
         //
         delegate bool CharacterTest (AnnotatedChar c);
 
-        private List<string> BreakIntoSubstrings (AnnotatedString src,                                          
-                                                  CharacterTest   test)
+        private static List<string> BreakIntoSubstrings (AnnotatedString src,                                          
+                                                         CharacterTest   test)
         {
             List<string> substrings = new List<string> ();
 

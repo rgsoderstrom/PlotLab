@@ -21,8 +21,15 @@ namespace PLMain
 
         private static readonly List<ParsingStep> ParsingSteps = new List<ParsingStep> ()
         {
-            LookupAlphanumerics,  // Assign a more specific type to an Alphanumeric
-            IdentifyParens,       // grouping, function args, sub matrix
+            LookupAlphanumerics,    // Assign a more specific type to an Alphanumeric
+            IdentifyParens,         // grouping, function args, sub matrix
+            IdentifyBrackets,       // by separator: :, ;, etc.
+            ReplaceTransposeOps,    // A' => Transpose (A)
+            ReplaceCollapseOps,     // b (:) => Collapse (b)
+            CombineTokensIntoPairs, // combine FuncName (FuncArgs) or Matrix (range) into TokenPairs
+            CheckSubmatrixArgs,     // b (3 : end) => b (3 : (length (b)))
+
+
         };
 
         //****************************************************************************
@@ -42,20 +49,8 @@ namespace PLMain
             }
 
 
-
-
-
-
-            //edited = IdentifyBrackets (edited); // by separator: :, ;, etc.
-
-            //edited = ReplaceTransposeOps (edited); // A' => Transpose (A)
-
-            //edited = ReplaceCollapseOps (edited);  // b (:) => Collapse (b)
-
-            //edited = CombineTokensIntoPairs (edited); // combine FuncName (FuncArgs) or Matrix (range) into TokenPairs
-
-            //edited = CheckSubmatrixArgs (edited);  // b (3 : end) => b (3 : (length (b)))
-            //                                       // c (:, 3)    => c (1:(rows (c)), 3)
+            //edited = 
+            //         
 
             //edited = IdentifyOperatorType (edited);
 
@@ -154,7 +149,8 @@ namespace PLMain
                     else if (FileSystem.IsFunctionFile (initial [i].AnnotatedText.Plain))
                         edited.Add (new Token (TokenType.FunctionFile, initial [i].AnnotatedText));
 
-                    else if (FileSystem.IsScriptFile (initial [i].AnnotatedText.Plain))
+                    // a script name must be the only token on a line
+                    else if (FileSystem.IsScriptFile (initial [i].AnnotatedText.Plain) && initial.Count == 1)
                         edited.Add (new Token (TokenType.ScriptFile, initial [i].AnnotatedText));
 
                     else
@@ -233,12 +229,16 @@ namespace PLMain
 
         // for any Bracket tokens, identify top-level (i.e. same nesting level as opening bracket) separator
 
-        TokenSet IdentifyBrackets (TokenSet initial)
+        private static TokenSet IdentifyBrackets (TokenSet initial, out bool saveFlag)
         {
+            TokenSet edited = new TokenSet ("IdentifyBrackets");
+            saveFlag = false;
+
             for (int i=0; i<initial.Count; i++)
             {
                 if (initial [i].Type == TokenType.Brackets)
                 {
+                    saveFlag = true;
 
                     AnnotatedString tokenText = initial [i].AnnotatedText;
                     AnnotatedString inside = AnnotatedString.RemoveWrapper (tokenText);
@@ -269,11 +269,14 @@ namespace PLMain
                         if (lowestBSP.priority > bsp.priority) lowestBSP = bsp;
                     }
 
-                    initial [i].Type = lowestBSP.tokenType;
+                    edited.Add (new Token (lowestBSP.tokenType, initial [i].AnnotatedText));
                 }
+
+                else
+                    edited.Add (initial [i]);
             }
 
-            return initial;
+            return edited;
         }
 
         //*************************************************************************************************
@@ -282,8 +285,10 @@ namespace PLMain
 
         // b (:) => Collapse (b)
 
-        private TokenSet ReplaceCollapseOps (TokenSet initial)
+        private static TokenSet ReplaceCollapseOps (TokenSet initial, out bool saveFlag)
         {
+            saveFlag = false;
+
             // look for any SubmatrixParens tokens
             List<int> submatrixParenIndices = initial.FindTokenTypeIndices (TokenType.SubmatrixParens);
 
@@ -305,11 +310,13 @@ namespace PLMain
             if (collapseOps.Count == 0)
                 return initial;
 
+            saveFlag = true;
+
             //*************************************************************
 
             // same pattern as "transpose"
 
-            TokenSet edited = new TokenSet ();
+            TokenSet edited = new TokenSet ("ReplaceCollapseOps");
             int get = 0;
 
             foreach (int index in collapseOps)
@@ -337,15 +344,18 @@ namespace PLMain
 
         // replace transpose operator by function call
 
-        private TokenSet ReplaceTransposeOps (TokenSet initial)
+        private static TokenSet ReplaceTransposeOps (TokenSet initial, out bool saveFlag)
         {
+            TokenSet edited = new TokenSet ("ReplaceTransposeOps");
+            saveFlag = false;
+
             List<int> transposeIndices = initial.FindTokenTypeIndices (TokenType.Transpose);
 
             // if none found, just return original list
             if (transposeIndices.Count == 0)
                 return initial;
 
-            TokenSet edited = new TokenSet ();
+            saveFlag = true;
             int get = 0;
 
             foreach (int index in transposeIndices)
@@ -436,9 +446,10 @@ namespace PLMain
 
         //*************************************************************************************************
 
-        private TokenSet CombineTokensIntoPairs (TokenSet initial)
+        private static TokenSet CombineTokensIntoPairs (TokenSet initial, out bool saveFlag)
         {
-            TokenSet edited = new TokenSet ();
+            TokenSet edited = new TokenSet ("CombineTokensIntoPairs");
+            saveFlag = false;
 
             for (int i = 0; i<initial.Count-1; i++)
             {
@@ -450,21 +461,20 @@ namespace PLMain
                             TokenPair submatPair = new TokenPair (TokenPairType.Submatrix, initial [i], initial [i+1]);
                             edited.Add (submatPair);
                             i++; // don't look at the parens token a second time
+                            saveFlag = true;
                         }
                         else
                             edited.Add (initial [i]);
                         break;
 
-
-
-
                     case TokenType.FunctionFile: // .m file
-                        if (initial [i+1].Type == TokenType.Parens) // FunctionParens)
+                        if (initial [i+1].Type == TokenType.FunctionParens)
                         {
                             initial [i].Type = TokenType.FunctionFile;
                             TokenPair funcPair = new TokenPair (TokenPairType.FunctionWithArgs, initial [i], initial [i+1]);
                             edited.Add (funcPair);
                             i++; // don't look at the function parens token a second time
+                            saveFlag = true;
                         }
 
                         else
@@ -476,9 +486,6 @@ namespace PLMain
 
                         break;
 
-
-
-
                     case TokenType.Function:
                         if (initial [i+1].Type == TokenType.FunctionParens)
                         {
@@ -486,6 +493,7 @@ namespace PLMain
                             TokenPair funcPair = new TokenPair (TokenPairType.FunctionWithArgs, initial [i], initial [i+1]);
                             edited.Add (funcPair);
                             i++; // don't look at the function parens token a second time
+                            saveFlag = true;
                         }
 
                         else
@@ -521,8 +529,10 @@ namespace PLMain
         // b (3 : end)          => b (3 : (length (b)))
         // c (3 : end, 4 : end) => c (3 : (rows (c)), 4 : (cols (c))
 
-        private TokenSet CheckSubmatrixArgs (TokenSet initial)
+        private static TokenSet CheckSubmatrixArgs (TokenSet initial, out bool saveFlag)
         {
+            saveFlag = false;
+
             // look for any token pairs. they could be a FunctionWithArgs or Submatrix
             List<int> tokenPairs = initial.FindTokenTypeIndices (TokenType.Pair);
 
@@ -539,7 +549,7 @@ namespace PLMain
 
             //******************************************
 
-            TokenSet edited = new TokenSet ();
+            TokenSet edited = new TokenSet ("CheckSubmatrixArgs");
 
             int get = 0; // index used to copy out of initial
 
@@ -563,6 +573,7 @@ namespace PLMain
 
                     if (initialSelect.Contains ("end"))
                     { 
+                        saveFlag = true;
                         string newSelect = initialSelect.Replace ("end", "(length (" + name + "))");
 
                         Token     tok1    = new Token     (TokenType.VariableName,    new AnnotatedString (name));
@@ -593,6 +604,7 @@ namespace PLMain
 
                     else
                     {
+                        saveFlag = true;
                         string newRows;
 
                         if (rowsContainsEnd)    newRows = initialRows.Replace ("end", "(rows (" + name + "))");
