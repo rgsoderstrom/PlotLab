@@ -28,7 +28,7 @@ namespace PLMain
             ReplaceCollapseOps,     // b (:) => Collapse (b)
             CombineTokensIntoPairs, // combine FuncName (FuncArgs) or Matrix (range) into TokenPairs
             CheckSubmatrixArgs,     // b (3 : end) => b (3 : (length (b)))
-
+            IdentifyOperatorType,   // label operators as binary or unary
 
         };
 
@@ -48,12 +48,6 @@ namespace PLMain
                     History.Add (edited);
             }
 
-
-            //edited = 
-            //         
-
-            //edited = IdentifyOperatorType (edited);
-
             //edited = BindUnaryOperators (edited); // -, A => (-1 * A),
             //                                      // -, 7 => -7
 
@@ -64,10 +58,12 @@ namespace PLMain
 
         //*************************************************************************************************
 
-        // label operators as binary or unary. in-place
+        // label operators as binary or unary
 
-        TokenSet IdentifyOperatorType (TokenSet initial)
+        private static TokenSet IdentifyOperatorType (TokenSet initial, out bool saveFlag)
         {
+            saveFlag = false;
+
             //
             // find all operator tokens
             //
@@ -77,12 +73,20 @@ namespace PLMain
             if (operatorIndices.Count == 0)
                 return initial;
 
+            TokenSet edited = new TokenSet ("IdentifyOperatorType");
+            saveFlag = true;
+
             //
             // determine whether each operator is unary or binary
             //
-            for (int i = 0; i<operatorIndices.Count; i++)
+
+            int get = 0;
+
+            foreach (int index in operatorIndices)
             {
-                int index = operatorIndices [i];
+                while (get < index)
+                    edited.Add (initial [get++]);
+
                 TokenType prevType = index > 0 ? initial [index-1].Type : TokenType.None;
 
                 switch (prevType)
@@ -92,16 +96,21 @@ namespace PLMain
                     case TokenType.BinaryOperator:
                     case TokenType.TwoCharOperator:
                     case TokenType.EqualSign:
-                        initial [index].Type = TokenType.UnaryOperator; // a * -b
+                        edited.Add (new Token (TokenType.UnaryOperator, initial [index].AnnotatedText));
                         break;
 
                     default:
-                        initial [index].Type = TokenType.BinaryOperator; // a * b
+                        edited.Add (new Token (TokenType.BinaryOperator, initial [index].AnnotatedText));
                         break;
                 }
+
+                get++;
             }
 
-            return initial;
+            while (get < initial.Count)
+                edited.Add (initial [get++]);
+
+            return edited;
         }
 
         //*************************************************************************************************
