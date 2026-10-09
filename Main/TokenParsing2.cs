@@ -29,7 +29,8 @@ namespace PLMain
             CombineTokensIntoPairs, // combine FuncName (FuncArgs) or Matrix (range) into TokenPairs
             CheckSubmatrixArgs,     // b (3 : end) => b (3 : (length (b)))
             IdentifyOperatorType,   // label operators as binary or unary
-
+            BindUnaryOperators,     // -, A => (-1 * A)
+            RenameTwoCharOperator,  // rename to BinaryOperator
         };
 
         //****************************************************************************
@@ -48,10 +49,7 @@ namespace PLMain
                     History.Add (edited);
             }
 
-            //edited = BindUnaryOperators (edited); // -, A => (-1 * A),
-            //                                      // -, 7 => -7
-
-            //edited = RenameTwoCharOperator (edited); // rename to BinaryOperator
+            //edited = 
 
             return Results;
         }
@@ -117,17 +115,17 @@ namespace PLMain
 
         // Assign a more specific type to an Alphanumeric
 
-        private static TokenSet LookupAlphanumerics (TokenSet initial, out bool setModified)
+        private static TokenSet LookupAlphanumerics (TokenSet initial, out bool saveFlag)
         {
             TokenSet edited = new TokenSet ("LookupAlphanumerics");
-            setModified = false;
+            saveFlag = false;
 
             for (int i = 0; i<initial.Count; i++)
             {
                 if (initial [i].Type == TokenType.Alphanumeric)
                 {
                     string str = initial [i].AnnotatedText.Plain;
-                    setModified = true;
+                    saveFlag = true;
 
                     SymbolicNameTypes whatIs = Workspace.WhatIs (str);
 
@@ -393,22 +391,22 @@ namespace PLMain
         //
         //
         //
-        TokenSet BindUnaryOperators (TokenSet initial)
+        private static TokenSet BindUnaryOperators (TokenSet initial, out bool saveFlag)
         {
-            TokenSet edited = new TokenSet ();
-
-            List<int> operatorIndices = initial.FindTokenTypeIndices (TokenType.UnaryOperator);
+            saveFlag = false;
+            List<int> unaryOpIndices = initial.FindTokenTypeIndices (TokenType.UnaryOperator);
 
             // if none found, just return original list
-            if (operatorIndices.Count == 0)
+            if (unaryOpIndices.Count == 0)
                 return initial;
+
+            TokenSet edited = new TokenSet ();
+            saveFlag = true;
 
             int get = 0; // index used to copy out of initial
 
-            for (int i = 0; i<operatorIndices.Count; i++)
+            foreach (int index in unaryOpIndices)
             {
-                int index = operatorIndices [i];
-
                 while (get < index)
                     edited.Add (initial [get++]);
 
@@ -419,9 +417,11 @@ namespace PLMain
                 {
                     case '+':
                     case '-':
-                        initial [get].AnnotatedText.Append ('1');
-                        Token t1 = new Token (TokenType.Numeric, initial [get].AnnotatedText);
+                        string str = initial [get].AnnotatedText.Plain + "1";
+
+                        Token t1 = new Token (TokenType.Numeric, new AnnotatedString (str));
                         edited.Add (t1);
+
                         Token t2 = new Token (TokenType.BinaryOperator, new AnnotatedString ("*"));
                         edited.Add (t2);
                         edited.Add (initial [get+1]);
@@ -430,7 +430,6 @@ namespace PLMain
 
                     case '~': // "not" function
                         Token t3 = new Token (TokenType.Function, new AnnotatedString ("not"));
-                      //Token t3 = new Token (TokenType.FunctionName, new AnnotatedString ("not"));
 
                         // add parens unless outer level is already parens                
                         Token t4 = initial [get].Type != TokenType.GroupingParens ?
@@ -652,13 +651,33 @@ namespace PLMain
 
         //*************************************************************************************************
 
-        private TokenSet RenameTwoCharOperator (TokenSet initial)
+        private static TokenSet RenameTwoCharOperator (TokenSet initial, out bool saveFlag)
         {
-            for (int i = 0; i<initial.Count; i++)
-                if (initial [i].Type == TokenType.TwoCharOperator)
-                    initial [i].Type = TokenType.BinaryOperator;
+            saveFlag = false;
+            List<int> twoCharOpIndices = initial.FindTokenTypeIndices (TokenType.TwoCharOperator);
 
-            return initial;
+            // if none found, just return original list
+            if (twoCharOpIndices.Count == 0)
+                return initial;
+
+            TokenSet edited = new TokenSet ();
+            saveFlag = true;
+
+            int get = 0; // index used to copy out of initial
+
+            foreach (int index in twoCharOpIndices)
+            {
+                while (get < index)
+                    edited.Add (initial [get++]);
+
+                edited.Add (new Token (TokenType.BinaryOperator, initial [index].AnnotatedText));
+                get++;
+            }
+
+            while (get < initial.Count)
+                edited.Add (initial [get++]);
+
+            return edited;
         }
     }
 }
