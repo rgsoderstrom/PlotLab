@@ -56,8 +56,7 @@ namespace PLMain
                     {
                         Content = tb,
                         Title   = "Token Parsing " + Counter,
-                        Width   = 400,
-                        Height  = 300
+                        SizeToContent = SizeToContent.WidthAndHeight,
                     };
 
                     win.Show ();
