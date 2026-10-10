@@ -17,6 +17,9 @@ namespace PLMain
         public readonly List<TokenSet> History = new List<TokenSet> ();
         public               TokenSet  Results {get {return History [History.Count - 1];}}
 
+        public TokenSet InitialParsing {get {return History [0];}}
+        public TokenSet FinalParsing   {get {return History [History.Count - 1];}}
+
         private delegate TokenSet ParsingStep (TokenSet src, out bool save);
 
         private static readonly List<ParsingStep> ParsingSteps = new List<ParsingStep> ()
@@ -48,8 +51,6 @@ namespace PLMain
                 if (saveFlag) 
                     History.Add (edited);
             }
-
-            //edited = 
 
             return Results;
         }

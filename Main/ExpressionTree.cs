@@ -43,13 +43,13 @@ namespace PLMain
                     TextBox tb = new TextBox ();
 
                     // first pass
-                    TokenSet tokens = parsing.Pass1Results;
-                    tb.Text += "First pass:\n";
+                    TokenSet tokens = parsing.InitialParsing;
+                    tb.Text += "Initial:\n";
                     foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
 
                     // second pass
-                    tokens = parsing.Pass2Results;
-                    tb.Text += "\nSecond pass:\n";
+                    tokens = parsing.FinalParsing;
+                    tb.Text += "\nFinal:\n";
                     foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
 
                     Window win = new Window
