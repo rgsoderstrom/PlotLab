@@ -94,56 +94,10 @@ namespace utExpressionTree
 
                             //**********************************************************************
 
-                            //ExpressionTree.ShowParsingTokens = true;
-
-                            if (false) // show token parsing
-                            {
-                                if (annotated.NestingError)
-                                    throw new Exception ("Input expression nesting error: " + annotated.Plain);
-
-                                // first pass
-                                TokenParsing parsing = new TokenParsing ();
-                                parsing.StringToTokens (annotated);
-
-                                Window win = new Window ();
-                                TextBox tb = new TextBox ();
-
-                                // first pass
-                                TokenSet tokens = parsing.Pass1Results;
-                                tb.Text += "First pass:\n";
-                                foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
-
-                                // second pass
-                                tokens = parsing.Pass2Results;
-                                tb.Text += "\nSecond pass:\n";
-                                foreach (IToken tok in tokens) tb.Text += tok.ToString () + "\n";
-
-                                win.Content = tb;
-                                win.SizeToContent = SizeToContent.Height;
-                                win.Title = "Parsing " + Counter;
-                                win.Width = 400;
-                                win.Show ();
-                            }
-
-                            //**********************************************************************
-
-                            //ExpressionTreeNode.Print = Print;
+                            ExpressionTree.ShowParsingTokens = true;
+                            ExpressionTree.ShowExprTree = true;
 
                             ExpressionTree tree = new ExpressionTree (annotated);
-
-                            if (false) // show expression tree
-                            { 
-                                Window win2 = new Window ();
-                                TreeView tv = new TreeView ();
-                                tv.Items.Add (tree.BuildTreeView ());
-                                win2.Content = tv;
-                                win2.Title = "Tree " + Counter;
-                                win2.Width = 400;
-                                win2.Height = 300;
-                                win2.Show ();
-                            }
-
-                            //**********************************************************************
 
                             PLVariable answer = tree.Evaluate ();
 
@@ -167,8 +121,7 @@ namespace utExpressionTree
 
             catch (Exception ex)
             {
-                //Console.WriteLine ("Exception in Window_Loaded: " + ex.Message);
-                Console.WriteLine (ex.Message);
+                Console.WriteLine ("Exception" + ex.Message);
                 EventLog.WriteLine (ex.StackTrace);
             }
         }
