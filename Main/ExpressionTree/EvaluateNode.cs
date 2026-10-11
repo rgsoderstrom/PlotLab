@@ -48,13 +48,12 @@ namespace PLMain
                     break;
 
                 case TokenType.ZeroArgFunction:
-              //      throw new Exception ("zzzzzzzzzzzz");
                     Evaluate_ZeroArgFunction ();
                     break;
 
-                //case TokenType.FunctionFile:
-                //    Evaluate_MFileFunction (expression);
-                //    break;
+                case TokenType.FunctionFile:
+                    Evaluate_MFileFunction ();
+                    break;
 
 
                 default: throw new Exception ("ExpressionTree Evaluate can't find token: " + Operator.ToString ());
@@ -67,8 +66,21 @@ namespace PLMain
         //*********************************************************************************
         //*********************************************************************************
 
-        PLVariable Evaluate_MFileFunction (string expression)
+        PLVariable Evaluate_MFileFunction ()
         {
+            string op = Operator;
+            int count = Operands.Count;
+
+            // test code, assumes 2 operands
+
+            PLVariable op1 = Operands [0].Value;
+            PLVariable op2 = Operands [1].Value;
+
+            PLVariable results = op1 + op2;
+
+            Value = results;
+
+            return new PLNull ();
 
             // Create new (empty) local workspace
             // Copy passed-in operands into that workspace, with names of input parameters (from m-file)
@@ -180,7 +192,7 @@ namespace PLMain
             //    throw new Exception ("Error evaluating m-file function " + funcName + ": " + ex.Message);
             //}
 
-            return new PLNull ();
+            //return new PLNull ();
         }
 
         //*********************************************************************************
