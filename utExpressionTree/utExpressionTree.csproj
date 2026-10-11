@@ -87,49 +87,49 @@
     <Compile Include="..\Main\AnnotatedStringSet.cs">
       <Link>AnnotatedStringSet.cs</Link>
     </Compile>
-    <Compile Include="..\Main\EvaluateNode.cs">
+    <Compile Include="..\Main\ExpressionTree\EvaluateNode.cs">
       <Link>EvaluateNode.cs</Link>
     </Compile>
-    <Compile Include="..\Main\EvaluateNode2.cs">
+    <Compile Include="..\Main\ExpressionTree\EvaluateNode2.cs">
       <Link>EvaluateNode2.cs</Link>
     </Compile>
-    <Compile Include="..\Main\ExpressionTree.cs">
+    <Compile Include="..\Main\ExpressionTree\ExpressionTree.cs">
       <Link>ExpressionTree.cs</Link>
     </Compile>
-    <Compile Include="..\Main\ExpressionTreeNode.cs">
+    <Compile Include="..\Main\ExpressionTree\ExpressionTreeNode.cs">
       <Link>ExpressionTreeNode.cs</Link>
     </Compile>
-    <Compile Include="..\Main\ExpressionTreeNodeBuilders.cs">
+    <Compile Include="..\Main\ExpressionTree\ExpressionTreeNodeBuilders.cs">
       <Link>ExpressionTreeNodeBuilders.cs</Link>
     </Compile>
     <Compile Include="..\Main\InternalFunctions.cs">
       <Link>InternalFunctions.cs</Link>
     </Compile>
-    <Compile Include="..\Main\Token.cs">
-      <Link>Token.cs</Link>
-    </Compile>
-    <Compile Include="..\Main\TokenParsing.cs">
-      <Link>TokenParsing.cs</Link>
-    </Compile>
-    <Compile Include="..\Main\TokenParsing2.cs">
-      <Link>TokenParsing2.cs</Link>
-    </Compile>
-    <Compile Include="..\Main\TokenSet.cs">
-      <Link>TokenSet.cs</Link>
-    </Compile>
-    <Compile Include="..\Main\TokenTypes.cs">
-      <Link>TokenTypes.cs</Link>
-    </Compile>
-    <Compile Include="..\Main\TokenUtils.cs">
-      <Link>TokenUtils.cs</Link>
-    </Compile>
-    <Compile Include="..\Main\TokenUtils2.cs">
-      <Link>TokenUtils2.cs</Link>
-    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="..\Main\Tokens\Token.cs">
+      <Link>Token.cs</Link>
+    </Compile>
+    <Compile Include="..\Main\Tokens\TokenParsing.cs">
+      <Link>TokenParsing.cs</Link>
+    </Compile>
+    <Compile Include="..\Main\Tokens\TokenParsing2.cs">
+      <Link>TokenParsing2.cs</Link>
+    </Compile>
+    <Compile Include="..\Main\Tokens\TokenSet.cs">
+      <Link>TokenSet.cs</Link>
+    </Compile>
+    <Compile Include="..\Main\Tokens\TokenTypes.cs">
+      <Link>TokenTypes.cs</Link>
+    </Compile>
+    <Compile Include="..\Main\Tokens\TokenUtils.cs">
+      <Link>TokenUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\Main\Tokens\TokenUtils2.cs">
+      <Link>TokenUtils2.cs</Link>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>

@@ -73,37 +73,37 @@
     <Compile Include="..\Main\AnnotatedStringSet.cs">
       <Link>AnnotatedStringSet.cs</Link>
     </Compile>
-    <Compile Include="..\Main\Block.cs">
+    <Compile Include="..\Main\Blocks\Block.cs">
       <Link>Block.cs</Link>
     </Compile>
-    <Compile Include="..\Main\BlockManager.cs">
+    <Compile Include="..\Main\Blocks\BlockManager.cs">
       <Link>BlockManager.cs</Link>
     </Compile>
-    <Compile Include="..\Main\Block_for.cs">
+    <Compile Include="..\Main\Blocks\Block_for.cs">
       <Link>Block_for.cs</Link>
     </Compile>
-    <Compile Include="..\Main\Block_if.cs">
+    <Compile Include="..\Main\Blocks\Block_if.cs">
       <Link>Block_if.cs</Link>
     </Compile>
-    <Compile Include="..\Main\Block_loop.cs">
+    <Compile Include="..\Main\Blocks\Block_loop.cs">
       <Link>Block_loop.cs</Link>
     </Compile>
-    <Compile Include="..\Main\Block_select.cs">
+    <Compile Include="..\Main\Blocks\Block_select.cs">
       <Link>Block_select.cs</Link>
     </Compile>
-    <Compile Include="..\Main\Block_switch.cs">
+    <Compile Include="..\Main\Blocks\Block_switch.cs">
       <Link>Block_switch.cs</Link>
     </Compile>
-    <Compile Include="..\Main\Block_TestCodePair.cs">
+    <Compile Include="..\Main\Blocks\Block_TestCodePair.cs">
       <Link>Block_TestCodePair.cs</Link>
     </Compile>
-    <Compile Include="..\Main\Block_while.cs">
+    <Compile Include="..\Main\Blocks\Block_while.cs">
       <Link>Block_while.cs</Link>
     </Compile>
     <Compile Include="..\Main\InputLineProcessor.cs">
       <Link>InputLineProcessor.cs</Link>
     </Compile>
-    <Compile Include="..\Main\ScriptProcessor.cs">
+    <Compile Include="..\Main\MFileProcessor\ScriptProcessor.cs">
       <Link>ScriptProcessor.cs</Link>
     </Compile>
     <Compile Include="..\Main\StringClassifier.cs">

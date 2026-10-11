@@ -76,25 +76,25 @@
     <Compile Include="..\Main\AnnotatedStringSet.cs">
       <Link>AnnotatedStringSet.cs</Link>
     </Compile>
-    <Compile Include="..\Main\Token.cs">
+    <Compile Include="..\Main\Tokens\Token.cs">
       <Link>Token.cs</Link>
     </Compile>
-    <Compile Include="..\Main\TokenParsing.cs">
+    <Compile Include="..\Main\Tokens\TokenParsing.cs">
       <Link>TokenParsing.cs</Link>
     </Compile>
-    <Compile Include="..\Main\TokenParsing2.cs">
+    <Compile Include="..\Main\Tokens\TokenParsing2.cs">
       <Link>TokenParsing2.cs</Link>
     </Compile>
-    <Compile Include="..\Main\TokenSet.cs">
+    <Compile Include="..\Main\Tokens\TokenSet.cs">
       <Link>TokenSet.cs</Link>
     </Compile>
-    <Compile Include="..\Main\TokenTypes.cs">
+    <Compile Include="..\Main\Tokens\TokenTypes.cs">
       <Link>TokenTypes.cs</Link>
     </Compile>
-    <Compile Include="..\Main\TokenUtils.cs">
+    <Compile Include="..\Main\Tokens\TokenUtils.cs">
       <Link>TokenUtils.cs</Link>
     </Compile>
-    <Compile Include="..\Main\TokenUtils2.cs">
+    <Compile Include="..\Main\Tokens\TokenUtils2.cs">
       <Link>TokenUtils2.cs</Link>
     </Compile>
     <Compile Include="Driver.cs" />
