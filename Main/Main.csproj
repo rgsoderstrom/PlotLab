@@ -60,6 +60,8 @@
     <Compile Include="ExpressionTree\ExpressionTreeNodeBuilders.cs" />
     <Compile Include="InputLineProcessor.cs" />
     <Compile Include="InternalFunctions.cs" />
+    <Compile Include="MFileProcessor\FunctionProcessor.cs" />
+    <Compile Include="MFileProcessor\MFileProcessor.cs" />
     <Compile Include="MFileProcessor\ScriptProcessor.cs" />
     <Compile Include="StringClassifier.cs" />
     <Compile Include="StringUtils.cs" />

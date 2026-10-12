@@ -10,24 +10,13 @@ using PLWorkspace;
 
 namespace PLMain
 {
-    public class ScriptProcessor
+    public class ScriptProcessor : MFileProcessor
     {
-        static public PrintFunction Print = null;
-
-        public enum ScriptTerminationReason {Completed, Failed};
-
-        public ScriptProcessor (string scriptName)
+        public ScriptProcessor (string scriptName) : base (scriptName)
         {
-            string fullName = "";
-
-            if (FileSystem.NameSearch (scriptName, ref fullName) == false)
-                throw new Exception ("Script " + scriptName + " not found");
-
-            List<string> scriptLines = ReadInputFile (fullName);
-
             InputLineProcessor ip = new InputLineProcessor (Print);
 
-            foreach (string raw in scriptLines)
+            foreach (string raw in fileLines)
             { 
                 if (raw.StartsWith ("return"))
                     break;
@@ -35,7 +24,12 @@ namespace PLMain
                 PLVariable ans = new PLNull ();
                 ip.ProcessString (ref ans, raw);
 
-                if (ans != null && ans is PLNull == false && ans is PLCanvasObject == false && ans is PLViewportObject == false)
+                bool t1 = ans != null;
+                bool t2 = ans is PLNull == false;
+                bool t3 = ans is PLCanvasObject == false;
+                bool t4 = ans is PLViewportObject == false;
+
+                if (t1 & t2 & t3 & t4)
                 {
                     ans.Name = "ans";
                     Workspace.Add (ans);
@@ -46,48 +40,6 @@ namespace PLMain
                         Print ("\n");
                     }
                 }
-            }
-        }
-
-        //*******************************************************************************
-        //
-        // Passed full name of a script
-        //    - including path and extension
-        //
-        private List<string> ReadInputFile (string fullName)
-        {
-            try
-            {
-                List<string> scriptLines = new List<string> ();
-                StreamReader file = new StreamReader (fullName);
-                string raw;
-
-                while ((raw = file.ReadLine ()) != null)
-                {
-                    if (raw.Length > 0)
-                    {
-                        int index, count = 0;
-
-                        while ((index = raw.IndexOf ('\t')) >= 0) // replace tabs with single space
-                        {
-                            raw = raw.Remove (index, 1);
-                            raw = raw.Insert (index, " ");
-
-                            if (count++ > 100) 
-                                throw new Exception ("Error removing tabs from script line");
-                        }
-
-                        scriptLines.Add (raw);
-                    }
-                }
-
-                file.Close ();
-                return scriptLines;
-            }
-
-            catch (Exception ex)
-            {
-                throw new Exception ("Error reading script file: " + ex.Message);
             }
         }
     }
