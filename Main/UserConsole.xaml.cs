@@ -235,7 +235,12 @@ namespace PLMain
                 PLVariable ans = new PLNull ();
                 ip.ProcessString (ref ans, raw);
 
-                if (ans != null && ans is PLNull == false && ans is PLCanvasObject == false && ans is PLViewportObject == false)
+                bool t1 = ans != null;
+                bool t2 = ans is PLNull == false;
+                bool t3 = ans is PLCanvasObject == false;
+                bool t4 = ans is PLViewportObject == false;
+
+                if (t1 & t2 & t3 & t4)
                 {
                     ans.Name = "ans";
                     Workspace.Add (ans);
