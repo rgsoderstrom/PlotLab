@@ -3,6 +3,9 @@
         - classify a single input string
 */
 
+using System;
+
+using Common;
 using PLCommon;
 using PLSystem;
 using PLFileSystem;
@@ -56,6 +59,9 @@ namespace PLMain
                     if (LibraryManager.IsPlotCommand (FirstWord))
                         return InputLineType.PlotCommand;
                 }
+
+                EventLog.WriteLine ("AlphanumericOnly input not found: " + FirstWord);
+                throw new Exception ("Input not found: " + FirstWord);
             }
 
 

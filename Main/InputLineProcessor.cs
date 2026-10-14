@@ -52,90 +52,99 @@ namespace PLMain
 
         public TerminationReason ProcessString (ref PLVariable answer, string rawString)
         {
-            bool somethingAdded = CleanedStrings.Add (rawString);
+            try
+            { 
+                bool somethingAdded = CleanedStrings.Add (rawString);
 
-            // if a blank line or a comment line was passed in just return
-            if (somethingAdded == false) 
-                return TerminationReason.Completed;
+                // if a blank line or a comment line was passed in just return
+                if (somethingAdded == false) 
+                    return TerminationReason.Completed;
 
-            AnnotatedStringSet AnnotatedStrings = new AnnotatedStringSet ();
+                AnnotatedStringSet AnnotatedStrings = new AnnotatedStringSet ();
 
-            while (CleanedStrings.Count > 0)
-            {
-                string          cleaned = CleanedStrings.GetOldest ();
-                AnnotatedString astr  = new AnnotatedString (cleaned);
-                AnnotatedStrings.Add (astr);
-
-                foreach (AnnotatedString astr2 in AnnotatedStrings)
+                while (CleanedStrings.Count > 0)
                 {
-                    SupressPrinting = astr2.SupressPrinting;
+                    string          cleaned = CleanedStrings.GetOldest ();
+                    AnnotatedString astr  = new AnnotatedString (cleaned);
+                    AnnotatedStrings.Add (astr);
 
-                    if (astr2 == null)
-                        return TerminationReason.Completed;
-
-                    if (BlockManager.BlockCollectionInProgress)
+                    foreach (AnnotatedString astr2 in AnnotatedStrings)
                     {
-                        BlockManager.Add (astr2);
-                    }
+                        SupressPrinting = astr2.SupressPrinting;
 
-                    else
-                    { 
-                        InputLineType lineType = classifier.Classify (astr2);
+                        if (astr2 == null)
+                            return TerminationReason.Completed;
 
-                        switch (lineType)
+                        if (BlockManager.BlockCollectionInProgress)
                         {
-                            case InputLineType.Unknown:
-                            case InputLineType.ExpressionTree:
-                                ExpressionTree tree = new ExpressionTree (astr2);
-                                answer = tree.Evaluate ();
-                                break;
+                            BlockManager.Add (astr2);
+                        }
 
-                            case InputLineType.ZeroArgFunction:
-                                answer = LibraryManager.RunZeroArgFunction (astr2.Plain);
-                                break;
+                        else
+                        { 
+                            InputLineType lineType = classifier.Classify (astr2);
 
-                            case InputLineType.VariableName:
-                                PLVariable v = Workspace.Get (astr2.Plain);
-                                if (SupressPrinting == false)
-                                    Print?.Invoke (v.ToString ());
-                                break;
+                            switch (lineType)
+                            {
+                                case InputLineType.Unknown:
+                                case InputLineType.ExpressionTree:
+                                    ExpressionTree tree = new ExpressionTree (astr2);
+                                    answer = tree.Evaluate ();
+                                    break;
 
-                            case InputLineType.SystemCommand:
-                                PLSystem.SystemFunctions.RunSystemCommand (astr2.FirstWord, astr2.Arguments);
-                                break;
+                                case InputLineType.ZeroArgFunction:
+                                    answer = LibraryManager.RunZeroArgFunction (astr2.Plain);
+                                    break;
 
-                            case InputLineType.PlotCommand:
-                                PLLibrary.LibraryManager.RunPlotCommand (astr2.FirstWord, astr2.Arguments);
-                                break;
+                                case InputLineType.VariableName:
+                                    PLVariable v = Workspace.Get (astr2.Plain);
+                                    if (SupressPrinting == false)
+                                        Print?.Invoke (v.ToString ());
+                                    break;
 
-                            case InputLineType.WorkspaceCommand: 
-                                Workspace.RunCommand (astr2.FirstWord, astr2.Arguments);
-                                break;
+                                case InputLineType.SystemCommand:
+                                    PLSystem.SystemFunctions.RunSystemCommand (astr2.FirstWord, astr2.Arguments);
+                                    break;
 
-                            case InputLineType.ScriptFile:
-                                /*ScriptProcessor script = */ new ScriptProcessor (astr2.Plain);
-                                break;
+                                case InputLineType.PlotCommand:
+                                    PLLibrary.LibraryManager.RunPlotCommand (astr2.FirstWord, astr2.Arguments);
+                                    break;
 
-                            case InputLineType.BlockName:
-                                answer = null;
-                                TerminationReason status = BlockManager.RunBlock (astr2);
-                                //Console.WriteLine ("BlockExit status = " + status);
+                                case InputLineType.WorkspaceCommand: 
+                                    Workspace.RunCommand (astr2.FirstWord, astr2.Arguments);
+                                    break;
 
-                                if (status == TerminationReason.BreakEncountered)    return status;
-                                if (status == TerminationReason.ContinueEncountered) return status;
-                                break;
+                                case InputLineType.ScriptFile:
+                                    /*ScriptProcessor script = */ new ScriptProcessor (astr2.Plain);
+                                    break;
 
-                            case InputLineType.BlockStart:
-                                BlockManager.StartNewBlock (astr2);
-                                break;
+                                case InputLineType.BlockName:
+                                    answer = null;
+                                    TerminationReason status = BlockManager.RunBlock (astr2);
+                                    //Console.WriteLine ("BlockExit status = " + status);
 
-                            case InputLineType.BlockEnd:
-                                throw new Exception ("Error: \"end\" outside of block not allowed");
+                                    if (status == TerminationReason.BreakEncountered)    return status;
+                                    if (status == TerminationReason.ContinueEncountered) return status;
+                                    break;
 
-                            default: throw new Exception ("Unsupported InputLineType: " + lineType);
+                                case InputLineType.BlockStart:
+                                    BlockManager.StartNewBlock (astr2);
+                                    break;
+
+                                case InputLineType.BlockEnd:
+                                    throw new Exception ("Error: \"end\" outside of block not allowed");
+
+                                default: throw new Exception ("Unsupported InputLineType: " + lineType);
+                            }
                         }
                     }
                 }
+            }
+
+            catch (Exception ex)
+            {
+                EventLog.WriteLine ("Error in ProcessString: " + ex.Message);
+                Print (ex.Message);
             }
 
             return TerminationReason.Completed;

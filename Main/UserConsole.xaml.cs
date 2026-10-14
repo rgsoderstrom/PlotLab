@@ -79,7 +79,7 @@ namespace PLMain
             {
                 string s1 = FileSystem.LogFileDir;
 
-                EventLog.Open (FileSystem.LogFileDir + "\\Log.txt", true); // false);
+                EventLog.Open (FileSystem.LogFileDir + "\\Log.txt", true);
                 CommandLineHistory.Open ();
                 LibraryManager.Print = Print;
 
@@ -255,6 +255,7 @@ namespace PLMain
 
             catch (Exception ex)
             {
+                EventLog.WriteLine ("Exception in ReturnKeyHanfler: " + ex.Message);
                 throw new Exception (ex.Message);
                //hrow new Exception ("Error in UserConsole ReturnKeyHandler:\n" + "  " + ex.Message);
             }
