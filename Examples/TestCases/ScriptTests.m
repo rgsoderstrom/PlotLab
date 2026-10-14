@@ -1,13 +1,14 @@
 
 % ScriptTests.m
 
-	c = [1, 10, 100 ; ...
-	     2, 20, 200 ; ...
-		 3, 30, 300];
+DD = zeros (1, 4);
 
+for p=1:4,
+	DD (p) = p ^ 2;
+end
 
-disp ('good');
-
+disp (DD);
+		
 return
 
 

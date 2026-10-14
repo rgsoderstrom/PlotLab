@@ -11,8 +11,8 @@ disp ('go to T2')
 t2     
 disp ('back from T2')	  
    
-B = 2;
-C = 3; 
+B = 2
+C = 3;
 disp ('t1 complete')
 
 

@@ -2,8 +2,9 @@
 % i am a comment
 % me too
 
-function [p, q, r] = f2 (bb, cc, dd)
+function [p, q] = f2 (aa, bb, cc)
 
-p = bb * cc;
-q = f1 (cc, dd);
-r = bb + cc;
+p = aa + bb + cc;
+q = aa * bb * cc;
+
+% q = f1 (cc, dd);

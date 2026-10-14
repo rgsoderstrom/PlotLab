@@ -7,12 +7,19 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+
+using Common;
+
+using FunctionLibrary;
+
+using PLCommon;
+
+using PLFileSystem;
 
 using PLMain;
+
 using PLWorkspace;
-using Common;
-using PLCommon;
-using FunctionLibrary;
 
 namespace utExpressionTree
 {
@@ -67,6 +74,10 @@ namespace utExpressionTree
                 PLMatrix c = new PLRMatrix (cm) {Name = "c"};
                 Workspace.Add (c);
 
+                // Set working directory to location of test m-files
+
+                FileSystem.CurrentDirectory = @"D:\From_C_Visual Studio 2022\Visual Studio 2022\Projects\PlotLab\Examples\FuncsAndScripts1";                
+
                 //****************************************************************
                 //****************************************************************
                 //****************************************************************
@@ -110,6 +121,12 @@ namespace utExpressionTree
                 }
 
                 inputFile.Close ();
+
+                Print ("Workspace whos:");
+                Workspace.RunCommand ("whos");
+
+           //     Print ("\nWorkspace dump:");
+           //     Workspace.RunCommand ("dump");
             }
             
             catch (NotImplementedException ex)
