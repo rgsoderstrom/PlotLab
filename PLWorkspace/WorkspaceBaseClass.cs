@@ -163,6 +163,12 @@ namespace PLWorkspace
                     printString += (string.Format ("    {0} x {1}", var.Rows, var.Cols));
                 }
 
+                if (val is PLList)
+                {
+                    PLList var = val as PLList;
+                    printString += var.Count + " elements";
+                }
+
                 pf (printString);
                 pf ("\n");
             }
