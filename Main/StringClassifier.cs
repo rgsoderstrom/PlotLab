@@ -59,11 +59,7 @@ namespace PLMain
                     if (LibraryManager.IsPlotCommand (FirstWord))
                         return InputLineType.PlotCommand;
                 }
-
-                EventLog.WriteLine ("AlphanumericOnly input not found: " + FirstWord);
-                throw new Exception ("Input not found: " + FirstWord);
             }
-
 
             // see if the first word is a system command
             if (SystemFunctions.WhatIs (FirstWord) == SymbolicNameTypes.SystemCommand)
