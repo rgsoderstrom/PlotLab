@@ -190,6 +190,8 @@ namespace PLMain
                         if (lookFor == nextBackCmnd.Substring (0, lookFor.Length))
                             return true;
                 }
+
+                ResetIndices ();
             }
 
             catch (Exception)
