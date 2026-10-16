@@ -41,13 +41,11 @@ namespace PLMain
 
         internal TokenSet ParsingPassTwo (TokenSet initial)
         {
-            bool saveFlag;
-
             History.Add (initial);
 
             foreach (ParsingStep nextStep in ParsingSteps)
             { 
-                TokenSet edited = nextStep (Results, out saveFlag); 
+                TokenSet edited = nextStep (Results, out bool saveFlag); 
 
                 if (saveFlag) 
                     History.Add (edited);
