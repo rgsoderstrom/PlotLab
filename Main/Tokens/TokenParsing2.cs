@@ -27,6 +27,7 @@ namespace PLMain
             LookupAlphanumerics,    // Assign a more specific type to an Alphanumeric
             IdentifyParens,         // grouping, function args, sub matrix
             IdentifyBrackets,       // by separator: :, ;, etc.
+            IdentifyFuncOut,        // Brackets on left hand side[a, b, c] = 
             ReplaceTransposeOps,    // A' => Transpose (A)
             ReplaceCollapseOps,     // b (:) => Collapse (b)
             CombineTokensIntoPairs, // combine FuncName (FuncArgs) or Matrix (range) into TokenPairs
@@ -230,10 +231,10 @@ namespace PLMain
         //*************************************************************************************************
 
         // Identify brackets as:
-        //      BracketsColon,  // [A : B : C] or [A : B]
-        //      BracketsSemi,   // [a ; b ; c ; d] or [1 2 3 ; 4 5 6]
-        //      BracketsComma,  // [1, 2, 3]
-        //      BracketsSpace,  // [1 2 3]
+        //      BracketsColon,   // [A : B : C] or [A : B]
+        //      BracketsSemi,    // [a ; b ; c ; d] or [1 2 3 ; 4 5 6]
+        //      BracketsComma,   // [1, 2, 3]
+        //      BracketsSpace,   // [1 2 3]
 
         // for any Bracket tokens, identify top-level (i.e. same nesting level as opening bracket) separator
 
@@ -285,6 +286,36 @@ namespace PLMain
             }
 
             return edited;
+        }
+
+        //*************************************************************************************************
+
+        // Identify function output brackets
+
+        // [a, b, c] = some function
+
+        private static TokenSet IdentifyFuncOut (TokenSet initial, out bool saveFlag)
+        {
+            saveFlag = false;
+
+            if (initial.Count < 2)
+                return initial;
+
+            if (initial [0].Type == TokenType.BracketsComma && initial [1].Type == TokenType.EqualSign)
+            {
+                TokenSet edited = new TokenSet
+                {
+                    new Token (TokenType.BracketsFuncOut, initial [0].AnnotatedText)
+                };
+
+                for (int i=1; i<initial.Count; i++)
+                    edited.Add (initial [i]);
+
+                saveFlag = true;
+                return edited;
+            }
+
+            return initial;
         }
 
         //*************************************************************************************************

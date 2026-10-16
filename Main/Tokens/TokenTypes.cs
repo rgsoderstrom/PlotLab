@@ -51,10 +51,11 @@ namespace PLMain
         FunctionParens,  // Func1 (P, Q, R, S)
         SubmatrixParens, // ZMat (Rs, Cs); % (row select, col select)
 
-        BracketsColon,  // [A : B : C] or [A : B]
-        BracketsSemi,   // [a ; b ; c ; d] or [1 2 3 ; 4 5 6]
-        BracketsComma,  // [1, 2, 3]
-        BracketsSpace,  // [1 2 3]
+        BracketsColon,   // [A : B : C] or [A : B]
+        BracketsSemi,    // [a ; b ; c ; d] or [1 2 3 ; 4 5 6]
+        BracketsComma,   // [1, 2, 3]
+        BracketsSpace,   // [1 2 3]
+        BracketsFuncOut, // [a, b, c] = 
 
       //SupressPrinting,
         Pair, // for class TokenPair
