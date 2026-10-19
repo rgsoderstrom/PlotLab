@@ -105,8 +105,8 @@ namespace utExpressionTree
 
                             //**********************************************************************
 
-                            ExpressionTree.ShowParsingTokens = true;
-                            ExpressionTree.ShowExprTree = true;
+                            ExpressionTree.ShowParsingTokens = false;
+                            ExpressionTree.ShowExprTree = false;
 
                             ExpressionTree tree = new ExpressionTree (annotated);
 
@@ -121,12 +121,8 @@ namespace utExpressionTree
                 }
 
                 inputFile.Close ();
-
-                Print ("Workspace whos:");
-                Workspace.RunCommand ("whos");
-
-           //     Print ("\nWorkspace dump:");
-           //     Workspace.RunCommand ("dump");
+                Print ("\n");
+                Workspace.RunCommand ("dump");
             }
             
             catch (NotImplementedException ex)
@@ -138,7 +134,7 @@ namespace utExpressionTree
 
             catch (Exception ex)
             {
-                Console.WriteLine ("Exception" + ex.Message);
+                Console.WriteLine ("Exception: " + ex.Message);
                 EventLog.WriteLine (ex.StackTrace);
             }
         }
