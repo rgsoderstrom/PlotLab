@@ -273,79 +273,132 @@ namespace PLMain
         //*******************************************************************************************
         //*******************************************************************************************
 
+        // Operator_Equal, 3 cases:
+        //      [out1, out2] = someFunction (in1, in2, in3); % multi-output function
+        //      A (3:7) = 13:17; % submatrix overwrite
+        //      everything else
+
         private void Operator_Equal ()
         {
             if (Operands.Count != 2)
-                throw new Exception ("Operand count error at \'=\'");
-            /***/
-            string LeftSideName = Operands [0].Operator;
+                throw new Exception ("Equal Operator needs two operands");
+            
+            ExpressionTreeNode LHS = Operands [0];
 
-            if (Workspace.IsVariable (LeftSideName))
+            //***********************************************************************
+
+            // [out1, out2] = someFunction (in1, in2, in3);
+
+            if (LHS.NodeType == TokenType.BracketsFuncOut)
             {
-                PLRMatrix LeftSide = Workspace.Get (LeftSideName) as PLRMatrix;
+                List<string> callersOutputArgs = new List<string> ();
 
-                if (LeftSide != null) // left side is a matrix
+                foreach (ExpressionTreeNode op in LHS.Operands)
+                    callersOutputArgs.Add (op.Operator);
+
+                PLList functionOutputData = Operands [1].Value as PLList;
+
+                if (functionOutputData == null || functionOutputData.Count != callersOutputArgs.Count)
+                    throw new Exception ("Error extracting output data");
+
+                for (int i=0; i<callersOutputArgs.Count; i++)
                 {
-                    if (Operands [0].Operands.Count > 0) // left side is a aub-matrix
-                    {
-                        PLVariable overwriteData = Operands [1].Value;  // new data to replace some of the old
-                        PLDouble overwrite1 = overwriteData as PLDouble;
-                        PLRMatrix overwrite2 = overwriteData as PLRMatrix;
+                    PLVariable oneFunctionOutput = functionOutputData [i];
+                    oneFunctionOutput.Name = callersOutputArgs [i];
 
-
-                        PLVariable r; // rows to overwrite
-                        PLVariable c; // cols to overwrite
-
-                        if (Operands [0].Operands.Count == 1 && LeftSide.Rows == 1)
-                        {
-                            r = new PLDouble (1);
-                            c = Operands [0].Operands [0].Value;
-                        }
-
-                        else if (Operands [0].Operands.Count == 1 && LeftSide.Cols == 1)
-                        {
-                            r = Operands [0].Operands [0].Value;
-                            c = new PLDouble (1);
-                        }
-
-                        else if (Operands [0].Operands.Count == 2)
-                        {
-                            r = Operands [0].Operands [0].Value; // rows to overwrite
-                            c = Operands [0].Operands [1].Value; // cols to overwrite
-                        }
-
-                        else
-                            throw new Exception ("Left side operand error");
-
-                        PLDouble rr  = r as PLDouble;
-                        PLDouble cc  = c as PLDouble;
-                        PLRMatrix rrr = r as PLRMatrix;
-                        PLRMatrix ccc = c as PLRMatrix;
-
-                        List<int> rows = new List<int> (); // to be overwritten
-                        List<int> cols = new List<int> ();
-
-                        if (rr != null) rows.Add ((int) rr.Data);
-                        else for (int i = 0; i<rrr.Size; i++) rows.Add ((int)rrr [0, i]);
-                        
-                        if (cc != null) cols.Add ((int) cc.Data);
-                        else for (int i = 0; i<ccc.Size; i++) cols.Add ((int)ccc [0, i]);
-
-
-                        Workspace.OverwriteSubmatrix (LeftSideName,       // name of matrix already in workspace
-                                                      rows [0], cols [0], // 1-based
-                                                      overwriteData);     // new data to overwrite some of old
-
-                        Value = Workspace.Get (LeftSideName);
-                        return;
-                    }
+                    Workspace.Add (oneFunctionOutput);
                 }
+
+                Value = Operands [1].Value;
+                Value.Name = Operands [1].Operator;
+                return;
             }
-            /***/
+
+            //***********************************************************************
+
+            // A (3:7) = 13:17;
+
+            string lhsName  = LHS.Operator;
+            bool isSubmatrixOverwrite = IsExistingMatrix (lhsName) && Operands [0].Operands.Count > 0;
+
+            if (isSubmatrixOverwrite)
+            {
+                OverwriteExistingMatrix (lhsName);
+                Value = Workspace.Get (lhsName);
+                return;
+            }
+
+            //***********************************************************************
 
             Value = Operands [1].Value;
             Value.Name = Operands [0].Operator;
             Workspace.Add (Value);
+        }
+
+        //*******************************************************************************************
+
+        private bool IsExistingMatrix (string name)
+        {
+            if (Workspace.IsVariable (name) == false) return false;
+            return Workspace.Get (name) is PLMatrix;
+        }
+
+        private void OverwriteExistingMatrix (string name)
+        {
+            PLRMatrix LeftSide = Workspace.Get (name) as PLRMatrix;
+
+            if (LeftSide != null) // left side is a matrix
+            {
+                if (Operands [0].Operands.Count > 0) // left side is a aub-matrix
+                {
+                    PLVariable overwriteData = Operands [1].Value;  // new data to replace some of the old
+                    PLDouble overwrite1 = overwriteData as PLDouble;
+                    PLRMatrix overwrite2 = overwriteData as PLRMatrix;
+
+
+                    PLVariable r; // rows to overwrite
+                    PLVariable c; // cols to overwrite
+
+                    if (Operands [0].Operands.Count == 1 && LeftSide.Rows == 1)
+                    {
+                        r = new PLDouble (1);
+                        c = Operands [0].Operands [0].Value;
+                    }
+
+                    else if (Operands [0].Operands.Count == 1 && LeftSide.Cols == 1)
+                    {
+                        r = Operands [0].Operands [0].Value;
+                        c = new PLDouble (1);
+                    }
+
+                    else if (Operands [0].Operands.Count == 2)
+                    {
+                        r = Operands [0].Operands [0].Value; // rows to overwrite
+                        c = Operands [0].Operands [1].Value; // cols to overwrite
+                    }
+
+                    else
+                        throw new Exception ("Left side operand error");
+
+                    PLDouble rr  = r as PLDouble;
+                    PLDouble cc  = c as PLDouble;
+                    PLRMatrix rrr = r as PLRMatrix;
+                    PLRMatrix ccc = c as PLRMatrix;
+
+                    List<int> rows = new List<int> (); // to be overwritten
+                    List<int> cols = new List<int> ();
+
+                    if (rr != null) rows.Add ((int) rr.Data);
+                    else for (int i = 0; i<rrr.Size; i++) rows.Add ((int)rrr [0, i]);
+                        
+                    if (cc != null) cols.Add ((int) cc.Data);
+                    else for (int i = 0; i<ccc.Size; i++) cols.Add ((int)ccc [0, i]);
+
+                    Workspace.OverwriteSubmatrix (name,               // name of matrix already in workspace
+                                                  rows [0], cols [0], // 1-based
+                                                  overwriteData);     // new data to overwrite some of old
+                }
+            }
         }
 
         //*******************************************************************************************
