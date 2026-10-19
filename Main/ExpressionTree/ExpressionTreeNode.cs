@@ -94,6 +94,7 @@ namespace PLMain
                         case TokenType.BracketsComma:
                         case TokenType.BracketsSemi:
                         case TokenType.BracketsSpace:
+                        case TokenType.BracketsFuncOut:
                             BuildNodeFrom_Brackets (tokens);                                
                             break;
                        

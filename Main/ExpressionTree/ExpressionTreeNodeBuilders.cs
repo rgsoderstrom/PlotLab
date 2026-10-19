@@ -151,7 +151,15 @@ namespace PLMain
                 }
                 break;
 
+                case TokenType.BracketsFuncOut: // a type of BracketsComma
+                {
+                    Operator = "FunctionOut";
+                    List<string> args = parser.SplitBracketArgs_Comma (tokens [0].AnnotatedText);
 
+                    foreach (string str in args)
+                        Operands.Add (new ExpressionTreeNode (str));
+                }
+                break;
 
                 case TokenType.BracketsSemi:
                 {
