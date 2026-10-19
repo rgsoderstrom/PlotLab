@@ -59,7 +59,10 @@ namespace PLMain
                                 throw new Exception ("Error removing tabs from .m line");
                         }
 
-                        fileLines.Add (raw);
+                        raw = raw.Trim ();
+
+                        if (raw.Length > 0)
+                            fileLines.Add (raw);
                     }
                 }
 

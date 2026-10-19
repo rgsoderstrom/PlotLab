@@ -66,19 +66,48 @@ namespace PLMain
         //*********************************************************************************
         //*********************************************************************************
 
+        // Caller's syntax:
+        // [actual output parameters] = functionName (actual input parameters)
+
+        // Function Name - In this node's Operator field
+        // Actual input parameters - In this node's list of Operands
+        // Actual output parameters - Not known at this level. This function returns a list of outputs, with one 
+        //                            entry corresponding to each formal output parameter. Caller extracts them
+        //                            and assigns each to an actual output parameter.
+
         PLVariable Evaluate_MFileFunction ()
         {
-            string op = Operator;
-            int count = Operands.Count;
+            string functionName = Operator;
 
-            // test code, assumes 2 operands
+            // function inputs
+            List<PLVariable> actualInputsParameters = new List<PLVariable> ();
 
-            PLVariable op1 = Operands [0].Value;
-            PLVariable op2 = Operands [1].Value;
+            foreach (ExpressionTreeNode operand in Operands)
+                actualInputsParameters.Add (operand.Value);
 
-            PLVariable results = op1 + op2;
 
-            Value = results;
+
+
+
+
+
+            double o1 = 0;
+            double o2 = 1;
+
+            foreach (var inp in actualInputsParameters)
+            {
+                if (inp is PLDouble)
+                {
+                    o1 += (inp as PLDouble).Data;
+                    o2 *= (inp as PLDouble).Data;
+                }
+            }
+
+            List<PLVariable> outputs = new List<PLVariable> () {new PLDouble (o1), new PLDouble (o2)}; 
+
+            PLList outs = new PLList () {outputs [0], outputs [1]};
+
+            Value = outs;
 
             return new PLNull ();
 
