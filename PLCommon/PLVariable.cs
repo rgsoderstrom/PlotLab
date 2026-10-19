@@ -293,7 +293,7 @@ namespace PLCommon
 
         public override string ToString ()
         {
-            string str = "\n";
+            string str = Rows > 1 ? "\n" : " ";
 
             try
             { 
@@ -1379,7 +1379,7 @@ namespace PLCommon
 
         public override string ToString ()
         {
-            string str = ""; // "[";
+            string str = "{"; // "[";
 
             foreach (PLVariable var in Data)
             {
@@ -1387,7 +1387,7 @@ namespace PLCommon
               //str += "(" + var.ToString () + ")" + "\n";
             }
 
-            //str += ']';
+            str += '}';
             return str;
         }
 
