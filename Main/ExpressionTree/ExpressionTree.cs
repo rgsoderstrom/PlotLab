@@ -95,10 +95,10 @@ namespace PLMain
             string headerString = "";
 
             if (tree.Operator.Length > 0)
-                headerString = tree.Operator + ", " + tree.NodeType.ToString ();
+                headerString += tree.Operator + ", " + tree.NodeType.ToString ();
 
-            else if (tree.ValueValid)
-                headerString = tree.Value.ToString () + ", " + tree.NodeType.ToString ();
+            if (tree.ValueValid)
+                headerString += ", Value = " + tree.Value.ToString ();
 
             treeView.Header = headerString;
 
@@ -128,6 +128,21 @@ namespace PLMain
             try
             {
                 answer = tree.Evaluate ();
+
+                if (ShowExprTree)
+                {
+                    TreeView tv = new TreeView ();
+                    tv.Items.Add (BuildTreeView ());
+                    Window win = new Window
+                    {
+                        Content = tv,
+                        Title   = "Expression Tree after Evaluate" + Counter,
+                        Width   = 400,
+                        Height  = 300
+                    };
+
+                    win.Show ();
+                }
             }
 
             catch (Exception ex)
