@@ -51,6 +51,14 @@ namespace PLWorkspace
 
         //*************************************************************
 
+        // Create an empty workspace
+
+        internal FunctionWorkspace (string name) : base (name)
+        {
+        }
+
+        //*************************************************************
+
         // Copy and rename variables from this workspace to destination workspace
 
         internal void GetOutputs (WorkspaceBaseClass dstWorkspace,

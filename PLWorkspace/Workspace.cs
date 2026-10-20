@@ -82,6 +82,14 @@ namespace PLWorkspace
             workSpaceStack.Push (new FunctionWorkspace (name, Current, currentNames, localNames));
         }
 
+        static public void Push (string name)
+        {
+            if (workSpaceStack.Count > 100)
+                throw new Exception ("Workspace stack overflow");
+
+            workSpaceStack.Push (new FunctionWorkspace (name));
+        }
+
         //************************************************************************************
 
         static public void Pop (List<string> callersNames, List<string> functionsNames)
@@ -94,6 +102,11 @@ namespace PLWorkspace
             function.GetOutputs (Current,         // copy into Current
                                  callersNames,    // names in Current
                                  functionsNames); // names in function
+        }
+
+        static public void Pop ()
+        {
+            workSpaceStack.Pop ();
         }
 
         //************************************************************************************

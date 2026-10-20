@@ -77,6 +77,10 @@ namespace PLMain
 
         PLVariable Evaluate_MFileFunction ()
         {
+            //***********************************************
+
+            // Evaluate the input args in caller's workspace
+
             string functionName = Operator;
 
             // function inputs
@@ -85,31 +89,53 @@ namespace PLMain
             foreach (ExpressionTreeNode operand in Operands)
                 actualInputsParameters.Add (operand.Value);
 
+            //***********************************************
 
+            // Create a workspace for the function
+            Workspace.Push (functionName);
 
+            //***********************************************
 
+            // Run the function
+            FunctionProcessor processor = new FunctionProcessor (functionName);
+            PLList outputs = processor.Run (actualInputsParameters);
 
+            //***********************************************
 
+            // Pop and discard the function's workspace
+            Workspace.Pop ();
 
-            double o1 = 0;
-            double o2 = 1;
+            //***********************************************
 
-            foreach (var inp in actualInputsParameters)
-            {
-                if (inp is PLDouble)
-                {
-                    o1 += (inp as PLDouble).Data;
-                    o2 *= (inp as PLDouble).Data;
-                }
-            }
+            // Put the function outputs in this node's Value field
 
-            List<PLVariable> outputs = new List<PLVariable> () {new PLDouble (o1), new PLDouble (o2)}; 
-
-            PLList outs = new PLList () {outputs [0], outputs [1]};
-
-            Value = outs;
-
+            Value = outputs;
             return new PLNull ();
+        }
+
+
+
+
+
+            //double o1 = 0;
+            //double o2 = 1;
+
+            //foreach (var inp in actualInputsParameters)
+            //{
+            //    if (inp is PLDouble)
+            //    {
+            //        o1 += (inp as PLDouble).Data;
+            //        o2 *= (inp as PLDouble).Data;
+            //    }
+            //}
+
+            //List<PLVariable> outputs = new List<PLVariable> () {new PLDouble (o1), new PLDouble (o2)}; 
+
+            //PLList outs = new PLList () {outputs [0], outputs [1]};
+
+            //Value = outs;
+
+            //return new PLNull ();
 
             // Create new (empty) local workspace
             // Copy passed-in operands into that workspace, with names of input parameters (from m-file)
@@ -222,7 +248,7 @@ namespace PLMain
             //}
 
             //return new PLNull ();
-        }
+        //}
 
         //*********************************************************************************
         //*********************************************************************************
