@@ -145,6 +145,11 @@ namespace PLMain
 
                 else if (tokens.Count == 2)
                 {
+                    if (tokens [0].Type == TokenType.Undefined && tokens [1].Type == TokenType.GroupingParens)
+                    {
+                        throw new Exception ("Undefined function or matrix: " + tokens [0].AnnotatedText.Plain);
+                    }
+
                     string str = "\nToken count == 2. Tokens:\n";
                     str += "  " + tokens [0].ToString () + "\n";
                     str += "  " + tokens [1].ToString () + "\n";
