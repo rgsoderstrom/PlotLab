@@ -42,28 +42,19 @@ namespace PLMain
             try
             {
                 StreamReader file = new StreamReader (fullName);
-                string raw;
+                string fileLine;
 
-                while ((raw = file.ReadLine ()) != null)
+                while ((fileLine = file.ReadLine ()) != null)
                 {
-                    if (raw.Length > 0)
+                    if (fileLine.Length > 0)
                     {
-                        int index, count = 0;
+                        fileLine = ReplaceTabs (fileLine);
+                        fileLine = RemoveComments (fileLine);
 
-                        while ((index = raw.IndexOf ('\t')) >= 0) // replace tabs with single space
-                        {
-                            raw = raw.Remove (index, 1);
-                            raw = raw.Insert (index, " ");
-
-                            if (count++ > 100) 
-                                throw new Exception ("Error removing tabs from .m line");
-                        }
-
-                        raw = raw.Trim ();
-
-                        if (raw.Length > 0)
-                            fileLines.Add (raw);
+                        if (fileLine.Length > 0) 
+                            fileLines.Add (fileLine);
                     }
+
                 }
 
                 file.Close ();
@@ -74,6 +65,58 @@ namespace PLMain
             {
                 throw new Exception ("Error reading script file: " + ex.Message);
             }
+        }
+
+        //***************************************************
+
+        // replace tabs with single space
+
+        private static string ReplaceTabs (string lineIn)
+        {
+            if (lineIn.Length > 0)
+            {
+                int index, count = 0;
+
+                while ((index = lineIn.IndexOf ('\t')) >= 0) 
+                {
+                    lineIn = lineIn.Remove (index, 1);
+                    lineIn = lineIn.Insert (index, " ");
+
+                    if (count++ > 100) 
+                        throw new Exception ("Error removing tabs from .m line");
+                }
+
+                lineIn = lineIn.Trim ();
+            }
+
+            return lineIn;
+        }
+
+        //***************************************************
+
+        // remove lines that are just comments. Comments following code
+        // are removed later
+
+        private static string RemoveComments (string lineIn)
+        {
+            bool commentOnly = false;
+
+            foreach (char c in lineIn)
+            { 
+                if (c == '%')
+                {
+                    commentOnly = true;
+                    break;
+                }
+
+                if (char.IsWhiteSpace (c) == false)
+                    break;
+            }
+
+            if (commentOnly == true)
+                return "";
+
+            return lineIn;
         }
     }
 }

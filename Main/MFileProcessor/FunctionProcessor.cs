@@ -23,9 +23,21 @@ namespace PLMain
 
         public FunctionProcessor (string scriptName) : base (scriptName)
         {
-            // get first line. extract formal input and output parameter names
-
             EventLog.WriteLine ("M-File function " + scriptName);
+
+            // get first line. extract formal input and output parameter names
+            string firstLine = fileLines [0];
+
+
+            AnnotatedString astr = new AnnotatedString (firstLine);
+            TokenParsing Parser = new TokenParsing ();
+            TokenSet tokens = Parser.StringToTokens (astr);
+
+            TokenPair tp = tokens [3] as TokenPair;
+            formalInputParameters  = Parser.SplitFunctionArgs (tp.Get2.AnnotatedText);
+            formalOutputParameters = Parser.SplitBracketArgs_Comma (tokens [1].AnnotatedText);
+
+            EventLog.WriteLine ("first: " + firstLine);
         }
 
         //*******************************************************

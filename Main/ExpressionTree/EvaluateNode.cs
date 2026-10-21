@@ -117,26 +117,6 @@ namespace PLMain
 
 
 
-            //double o1 = 0;
-            //double o2 = 1;
-
-            //foreach (var inp in actualInputsParameters)
-            //{
-            //    if (inp is PLDouble)
-            //    {
-            //        o1 += (inp as PLDouble).Data;
-            //        o2 *= (inp as PLDouble).Data;
-            //    }
-            //}
-
-            //List<PLVariable> outputs = new List<PLVariable> () {new PLDouble (o1), new PLDouble (o2)}; 
-
-            //PLList outs = new PLList () {outputs [0], outputs [1]};
-
-            //Value = outs;
-
-            //return new PLNull ();
-
             // Create new (empty) local workspace
             // Copy passed-in operands into that workspace, with names of input parameters (from m-file)
             // Pass function lines to ScriptProcessor
