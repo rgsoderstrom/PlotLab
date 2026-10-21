@@ -115,7 +115,8 @@ namespace PLMain
                                     break;
 
                                 case InputLineType.ScriptFile:
-                                    /*ScriptProcessor script = */ new ScriptProcessor (astr2.Plain);
+                                    ScriptProcessor script = new ScriptProcessor (astr2.Plain);
+                                    script.Run ();
                                     break;
 
                                 case InputLineType.BlockName:
