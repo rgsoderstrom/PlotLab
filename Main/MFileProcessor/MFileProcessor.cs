@@ -48,7 +48,7 @@ namespace PLMain
                 {
                     if (fileLine.Length > 0)
                     {
-                        fileLine = ReplaceTabs (fileLine);
+                      //  fileLine = ReplaceTabs (fileLine);
                         fileLine = RemoveComments (fileLine);
 
                         if (fileLine.Length > 0) 
@@ -69,28 +69,28 @@ namespace PLMain
 
         //***************************************************
 
-        // replace tabs with single space
+        //// replace tabs with single space
 
-        private static string ReplaceTabs (string lineIn)
-        {
-            if (lineIn.Length > 0)
-            {
-                int index, count = 0;
+        //private static string ReplaceTabs (string lineIn)
+        //{
+        //    if (lineIn.Length > 0)
+        //    {
+        //        int index, count = 0;
 
-                while ((index = lineIn.IndexOf ('\t')) >= 0) 
-                {
-                    lineIn = lineIn.Remove (index, 1);
-                    lineIn = lineIn.Insert (index, " ");
+        //        while ((index = lineIn.IndexOf ('\t')) >= 0) 
+        //        {
+        //            lineIn = lineIn.Remove (index, 1);
+        //            lineIn = lineIn.Insert (index, " ");
 
-                    if (count++ > 100) 
-                        throw new Exception ("Error removing tabs from .m line");
-                }
+        //            if (count++ > 100) 
+        //                throw new Exception ("Error removing tabs from .m line");
+        //        }
 
-                lineIn = lineIn.Trim ();
-            }
+        //        lineIn = lineIn.Trim ();
+        //    }
 
-            return lineIn;
-        }
+        //    return lineIn;
+        //}
 
         //***************************************************
 

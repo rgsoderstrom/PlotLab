@@ -282,8 +282,9 @@ namespace PLMain
         {
             if (Operands.Count != 2)
                 throw new Exception ("Equal Operator needs two operands");
-            
-            ExpressionTreeNode LHS = Operands [0];
+                        
+            ExpressionTreeNode LHS = Operands [0]; // left hand side
+            ExpressionTreeNode RHS = Operands [1]; // right hand side
 
             //***********************************************************************
 
@@ -291,26 +292,29 @@ namespace PLMain
 
             if (LHS.NodeType == TokenType.BracketsFuncOut)
             {
+                // get the names of the caller's actual output variables
                 List<string> callersOutputArgs = new List<string> ();
 
                 foreach (ExpressionTreeNode op in LHS.Operands)
                     callersOutputArgs.Add (op.Operator);
 
-                PLList functionOutputData = Operands [1].Value as PLList;
+                // the function's results are stored in the RHS Value
+                PLList functionOutputData = RHS.Value as PLList;
 
                 if (functionOutputData == null || functionOutputData.Count != callersOutputArgs.Count)
                     throw new Exception ("Error extracting output data");
 
+                // create a variable for each name, assign the appropriate vale and place in Workspace
                 for (int i=0; i<callersOutputArgs.Count; i++)
                 {
                     PLVariable oneFunctionOutput = functionOutputData [i];
-                    oneFunctionOutput.Name = callersOutputArgs [i];
+                    oneFunctionOutput.Name       = callersOutputArgs  [i];
 
                     Workspace.Add (oneFunctionOutput);
                 }
 
-                Value = Operands [1].Value;
-                Value.Name = Operands [1].Operator;
+                Value = RHS.Value;
+                Value.Name = RHS.Operator;
                 return;
             }
 

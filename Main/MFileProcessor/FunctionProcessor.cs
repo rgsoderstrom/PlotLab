@@ -5,7 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Common;
+
 using PLCommon;
+
+using PLWorkspace;
 
 namespace PLMain
 {
@@ -31,21 +34,46 @@ namespace PLMain
 
             AnnotatedString astr = new AnnotatedString (firstLine);
             TokenParsing Parser = new TokenParsing ();
-            TokenSet tokens = Parser.StringToTokens (astr);
+            TokenSet tokens = Parser.ParsingPassOne (astr);
 
-            TokenPair tp = tokens [3] as TokenPair;
-            formalInputParameters  = Parser.SplitFunctionArgs (tp.Get2.AnnotatedText);
+            if (tokens.Count != 5)
+                throw new Exception ("Syntax error in function file header: " + firstLine);
+
+            if (tokens [0].Type != TokenType.Alphanumeric && tokens [0].AnnotatedText.Plain != "function")
+                throw new Exception ("Syntax error in function file header: " + firstLine);
+
+            if (tokens [1].Type != TokenType.Brackets)
+                throw new Exception ("Syntax error in function file header: " + firstLine);
+
+            if (tokens [2].Type != TokenType.EqualSign)
+                throw new Exception ("Syntax error in function file header: " + firstLine);
+
+            if (tokens [3].AnnotatedText.Plain != scriptName)
+                throw new Exception ("Function name in header line must match file name: " + scriptName);
+
+            if (tokens [4].Type != TokenType.Parens)
+                throw new Exception ("Syntax error in function file header: " + firstLine);
+
+            formalInputParameters  = Parser.SplitFunctionArgs (tokens [4].AnnotatedText);
             formalOutputParameters = Parser.SplitBracketArgs_Comma (tokens [1].AnnotatedText);
-
-            EventLog.WriteLine ("first: " + firstLine);
         }
 
         //*******************************************************
 
-        public PLList Run (List<PLVariable> actualParameters)
+        // Run the function in the Workspace provided by the caller
+
+        public PLList Run (List<PLVariable> actualInputParameters)
         {
             // Create a variable for each formal input parameter and
             // initialize it with the corresponding actual parameter
+            for (int i=0; i<formalInputParameters.Count; i++)
+            {
+                PLVariable oneFunctionInput = actualInputParameters [i];
+                oneFunctionInput.Name       = formalInputParameters [i];
+
+                Workspace.Add (oneFunctionInput);
+            }
+
 
 
 
