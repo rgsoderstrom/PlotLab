@@ -301,8 +301,11 @@ namespace PLMain
                 // the function's results are stored in the RHS Value
                 PLList functionOutputData = RHS.Value as PLList;
 
-                if (functionOutputData == null || functionOutputData.Count != callersOutputArgs.Count)
-                    throw new Exception ("Error extracting output data");
+                if (functionOutputData == null)
+                    throw new Exception ("No function output data");
+                    
+                if (functionOutputData.Count != callersOutputArgs.Count)
+                    throw new Exception ("Expected and actual function output counts don't match");
 
                 // create a variable for each name, assign the appropriate vale and place in Workspace
                 for (int i=0; i<callersOutputArgs.Count; i++)

@@ -96,7 +96,7 @@ namespace PLMain
 
             //***********************************************
 
-            // Run the function
+            // Load and run the function
             FunctionProcessor processor = new FunctionProcessor (functionName);
             PLList outputs = processor.Run (actualInputsParameters);
 
@@ -338,7 +338,8 @@ namespace PLMain
 
             catch (Exception ex)
             {
-                throw new Exception ("Error " + ex.Message + " evaluating " + Operator);
+                throw new Exception (ex.Message);
+             // throw new Exception ("Error " + ex.Message + " evaluating " + Operator);
             }
         }
 
