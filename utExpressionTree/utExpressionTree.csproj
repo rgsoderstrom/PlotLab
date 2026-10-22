@@ -105,6 +105,7 @@
     <Compile Include="..\Main\InternalFunctions.cs">
       <Link>InternalFunctions.cs</Link>
     </Compile>
+    <Compile Include="Stubs\FunctionProcessor.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -167,7 +168,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\" />
-    <Folder Include="Stubs\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
