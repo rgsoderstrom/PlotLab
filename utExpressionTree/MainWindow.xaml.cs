@@ -116,6 +116,8 @@ namespace utExpressionTree
                             if (answer is PLNull == false)  Console.WriteLine ("answer: " + answer.ToString ());
                             else                            Console.WriteLine ("null answer");
 
+                         // Workspace.RunCommand ("clear");
+
                             Console.WriteLine ("========================================");
                         }
                     }
