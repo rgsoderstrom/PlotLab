@@ -38,7 +38,7 @@ namespace PLFileSystem
         private static string currentDirectory = "";
         public  static string CurrentDirectory {get {return currentDirectory;}
                                                 set {if (Directory.Exists (value)) currentDirectory = value;
-                                                         else throw new Exception ("Dir " + value + "doesn't exist");}}
+                                                         else throw new Exception ("Dir " + value + " doesn't exist");}}
 
         private static List<string> searchPath = new List<string> ();
         public  static List<string> SearchPath {get {return searchPath;}}
