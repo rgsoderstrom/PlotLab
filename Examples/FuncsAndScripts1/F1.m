@@ -2,9 +2,10 @@
 % i am a comment
 % me too
 
-function A = F1 (b, c)
+function [A] = F1 (b, c)
+% function A = F1 (b, c)
 
-% disp (sprintf ('F1 = %d', 135));
+disp (sprintf ('F1 = %d', 135));
 
 % plot (1:10);
 
