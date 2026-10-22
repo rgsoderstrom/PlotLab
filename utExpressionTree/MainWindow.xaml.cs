@@ -76,7 +76,8 @@ namespace utExpressionTree
 
                 // Set working directory to location of test m-files
 
-                FileSystem.CurrentDirectory = @"D:\From_C_Visual Studio 2022\Visual Studio 2022\Projects\PlotLab\Examples\FuncsAndScripts1";                
+
+                FileSystem.CurrentDirectory = @"..\..\..\Examples\FuncsAndScripts1";                
 
                 //****************************************************************
                 //****************************************************************
