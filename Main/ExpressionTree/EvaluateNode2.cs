@@ -337,7 +337,19 @@ namespace PLMain
 
             //***********************************************************************
 
-            Value = Operands [1].Value;
+            if (Operands [1].Value is PLList)
+            {
+                PLList pll = Operands [1].Value as PLList;
+
+                if (pll.Count != 1)
+                    throw new Exception ("Expected and actual function output counts don't match");
+
+                Value = pll [0];
+            }
+
+            else
+                Value = Operands [1].Value;
+
             Value.Name = Operands [0].Operator;
             Workspace.Add (Value);
         }
