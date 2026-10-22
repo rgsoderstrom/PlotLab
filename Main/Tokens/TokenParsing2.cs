@@ -299,7 +299,10 @@ namespace PLMain
             if (initial.Count < 2)
                 return initial;
 
-            if (initial [0].Type == TokenType.BracketsComma && initial [1].Type == TokenType.EqualSign)
+            bool isBrackets = initial [0].Type == TokenType.BracketsComma  // [a, b, c] = 
+                           || initial [0].Type == TokenType.Brackets;      // [d] = 
+
+            if (isBrackets && initial [1].Type == TokenType.EqualSign)
             {
                 TokenSet edited = new TokenSet
                 {
