@@ -9,6 +9,8 @@ using PLCommon;
 
 using PLFileSystem;
 
+using PLWorkspace;
+
 namespace PLMain
 {
     abstract public class MFileProcessor
@@ -34,6 +36,41 @@ namespace PLMain
 
         //*******************************************************************************
         //
+        // Execute each file line
+        //
+        public virtual void Run ()
+        {
+            InputLineProcessor ip = new InputLineProcessor (Print);
+
+            foreach (string raw in fileLines)
+            { 
+                if (raw.StartsWith ("return"))
+                    break;
+
+                PLVariable ans = new PLNull ();
+                ip.ProcessString (ref ans, raw);
+
+                bool t1 = ans != null;
+                bool t2 = ans is PLNull == false;
+                bool t3 = ans is PLCanvasObject == false;
+                bool t4 = ans is PLViewportObject == false;
+
+                if (t1 & t2 & t3 & t4)
+                {
+                    ans.Name = "ans";
+                    Workspace.Add (ans);
+
+                    if (ip.SupressPrinting == false)
+                    {
+                        Print (ans.ToString ());
+                        Print ("\n");
+                    }
+                }
+            }
+        }
+
+        //*******************************************************************************
+        //
         // Passed full file name
         //    - including path and extension
         //
@@ -48,13 +85,11 @@ namespace PLMain
                 {
                     if (fileLine.Length > 0)
                     {
-                      //  fileLine = ReplaceTabs (fileLine);
-                        fileLine = RemoveComments (fileLine);
+                        fileLine = RemoveCommentLines (fileLine);
 
                         if (fileLine.Length > 0) 
                             fileLines.Add (fileLine);
                     }
-
                 }
 
                 file.Close ();
@@ -68,36 +103,11 @@ namespace PLMain
         }
 
         //***************************************************
-
-        //// replace tabs with single space
-
-        //private static string ReplaceTabs (string lineIn)
-        //{
-        //    if (lineIn.Length > 0)
-        //    {
-        //        int index, count = 0;
-
-        //        while ((index = lineIn.IndexOf ('\t')) >= 0) 
-        //        {
-        //            lineIn = lineIn.Remove (index, 1);
-        //            lineIn = lineIn.Insert (index, " ");
-
-        //            if (count++ > 100) 
-        //                throw new Exception ("Error removing tabs from .m line");
-        //        }
-
-        //        lineIn = lineIn.Trim ();
-        //    }
-
-        //    return lineIn;
-        //}
-
-        //***************************************************
-
+        //
         // remove lines that are just comments. Comments following code
         // are removed later
 
-        private static string RemoveComments (string lineIn)
+        private static string RemoveCommentLines (string lineIn)
         {
             bool commentOnly = false;
 
