@@ -53,7 +53,7 @@ namespace PLMain
             if (tokens [2].Type != TokenType.EqualSign)
                 throw new Exception ("Syntax error in function file header: " + firstLine);
 
-            if (tokens [3].AnnotatedText.Plain != scriptName)
+            if (tokens [3].AnnotatedText.Plain.ToLower () != scriptName.ToLower ())
                 throw new Exception ("Function name in header line must match file name: " + scriptName);
 
             if (tokens [4].Type != TokenType.Parens)
