@@ -23,8 +23,18 @@ namespace PLMain
         {
             EventLog.WriteLine ("M-File function " + scriptName);
 
+            // must deal with continued lines
+
+            // function [a, b, c] = f1 (a,  % comment
+            //                          b); % comment
+
+
+
             // get first line. extract formal input and output parameter names
             string firstLine = fileLines [0];
+
+            // remove the header line
+            fileLines.RemoveAt (0);
 
 
             AnnotatedString astr = new AnnotatedString (firstLine);
@@ -69,19 +79,20 @@ namespace PLMain
                 Workspace.Add (oneFunctionInput);
             }
 
-
-
-
             // Run the file lines like a script
-
-
+            Run ();
 
             // Build a list of actual outputs in same order as formal outputs
-
             PLList actualOutputs = new PLList ();
 
-            actualOutputs.Add (new PLDouble (123));
-            actualOutputs.Add (new PLDouble (456));
+            foreach (string str in formalOutputParameters)
+            {
+                PLVariable plv = Workspace.Get (str);
+                actualOutputs.Add (plv);
+            }
+
+            //actualOutputs.Add (new PLDouble (123));
+            //actualOutputs.Add (new PLDouble (456));
 
             return actualOutputs;
         }
