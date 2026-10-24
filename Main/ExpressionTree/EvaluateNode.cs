@@ -56,7 +56,7 @@ namespace PLMain
                     break;
 
 
-                default: throw new Exception ("ExpressionTree Evaluate can't find token: " + Operator.ToString ());
+                default: throw new Exception ("Can't find : " + Operator.ToString ());
                 //default: throw new Exception ("Evaluate: node type not supported: " + NodeType.ToString ());
             }
 

@@ -147,7 +147,7 @@ namespace PLMain
 
             catch (Exception ex)
             {
-                throw new Exception ("    ExpressionTree evaluation failed for " + originalExpression + " , " + ex.Message + "\n");
+                throw new Exception ("Error evaluating " + originalExpression + ", " + ex.Message + "\n");
             }
 
             return answer;
