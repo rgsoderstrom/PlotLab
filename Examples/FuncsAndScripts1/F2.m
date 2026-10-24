@@ -8,7 +8,11 @@ function [p, q] = f2 (aa, bb, cc)
                       % bb, ...  % some more
 					  % cc)
 
-p = aa + bb + cc; % + F1 (2,-1);
+A = -20;
+
+p = aa + bb + cc + A;
 q = aa * bb * cc;
 
-% q = f1 (cc, dd);
+disp (sprintf ('print inside F2, A = %d', A));
+
+
