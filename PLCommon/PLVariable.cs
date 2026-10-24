@@ -1373,7 +1373,6 @@ namespace PLCommon
             }
 
             str += ']';
-
             return str;
         }
 
@@ -1381,10 +1380,12 @@ namespace PLCommon
         {
             string str = "{"; // "[";
 
-            foreach (PLVariable var in Data)
+            for (int i=0; i<Data.Count; i++)
             {
-                str += var.ToString () + ", ";
-              //str += "(" + var.ToString () + ")" + "\n";
+                if (i < Data.Count - 1)
+                    str += Data [i].ToString () +", ";
+                else
+                    str += Data [i].ToString ();
             }
 
             str += '}';
