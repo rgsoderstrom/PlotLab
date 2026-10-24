@@ -58,6 +58,7 @@ namespace FunctionLibrary
             dst.Add ("conj",  Conj);
             dst.Add ("mag",   Mag);
             dst.Add ("angle", Angle);
+            dst.Add ("magandangle",  MagAndAngle);
             dst.Add ("round", Round);
             dst.Add ("sum",   Sum);
             dst.Add ("mean",  Mean);
@@ -251,6 +252,16 @@ namespace FunctionLibrary
             }
 
             throw new Exception ("Argument error, arg must be complex");
+        }
+
+        //*********************************************************************************************
+
+        // Test returning more than one output variable
+
+        static public PLList MagAndAngle (PLVariable src)
+        {
+            PLList results = new PLList () {Mag (src), Angle (src)};
+            return results;
         }
 
 

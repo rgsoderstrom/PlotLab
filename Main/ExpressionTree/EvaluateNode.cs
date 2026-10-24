@@ -410,7 +410,8 @@ namespace PLMain
             }
 
             if (Value is PLList)
-                throw new Exception ("EvaluateNode, function returning list not implemented");
+                return;
+        //      throw new Exception ("EvaluateNode, function returning list not implemented");
 
                 ////if (Value is PLList)
                 ////{
