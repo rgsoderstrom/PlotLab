@@ -2,11 +2,11 @@
 % i am a comment
 % me too
 
-function [p, q] = f2 (aa, bb, cc)
+% function [p, q] = f2 (aa, bb, cc)
 
-% function [p, q] = f2 (aa, ...  % some of the line
-                      % bb, ...  % some more
-					  % cc)
+function [p, q] = f2 (aa, ...  % some of the line
+                      bb, ...  % some more
+					  cc)
 
 A = -20;
 
