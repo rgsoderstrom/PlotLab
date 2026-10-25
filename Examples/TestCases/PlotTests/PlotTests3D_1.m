@@ -16,7 +16,7 @@ z = 3 * log (t);
 
 pts = [x ; y ; z];
 %figure (2) % ; plot (pts);
-figure % ; plot (pts);
+figure; % ; plot (pts);
 
 hold on
 
