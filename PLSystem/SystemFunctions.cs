@@ -43,6 +43,7 @@ namespace PLSystem
             dst.Add ("clc",   Clc);
             dst.Add ("path",  Path);
             dst.Add ("addpath", AddPath);
+            dst.Add ("which",   Which);
             dst.Add ("history", History);
             dst.Add ("help",    HelpWindow);
         }
@@ -131,6 +132,33 @@ namespace PLSystem
 
             if (found)
                 System.Diagnostics.Process.Start (fullName);
+            else
+                throw new Exception ("File " + filename + " not found");
+
+            return true;
+        }
+
+        //*********************************************************************************************
+        //*********************************************************************************************
+        //*********************************************************************************************
+
+        /// <summary>
+        /// Print path to a file
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+
+        public static bool Which (string filename)
+        {
+            if (filename.Contains (".m")) // NameSearch function assumes no extension
+                filename = filename.Replace (".m", "");
+
+            string fullName = "";
+
+            bool found = FileSystem.NameSearch (filename, ref fullName);
+
+            if (found)
+                Print (fullName);
             else
                 throw new Exception ("File " + filename + " not found");
 
