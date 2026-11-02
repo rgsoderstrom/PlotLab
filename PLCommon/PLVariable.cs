@@ -157,6 +157,20 @@ namespace PLCommon
             throw new Exception ("Multiplication of " + op1.GetType () + " and " + op2.GetType () + " not implemented");
         }
 
+        public static PLComplex operator/ (double op1, PLVariable op2)
+        {  
+            if (op2 is PLComplex)
+            { 
+                PLComplex c2 = op2 as PLComplex;
+                double mag = op1 / c2.Magnitude;
+                double ang = -1 * c2.Angle;
+                PLComplex r = new PLComplex (mag * Math.Cos (ang), mag * Math.Sin (ang));
+                return r;
+            }
+
+            throw new Exception ("Division of real and " + op2.GetType () + " not supported");
+        }
+
         public static PLVariable operator/ (PLVariable op1, PLVariable op2)
         {  
             if (op1 is PLRMatrix && op2 is PLDouble)  return (op1 as PLRMatrix).Div (op2 as PLDouble);

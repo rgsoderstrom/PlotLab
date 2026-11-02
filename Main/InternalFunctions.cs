@@ -85,26 +85,74 @@ namespace PLMain
 
         // element-by-element divide
 
-        static internal PLRMatrix DotDivide (PLVariable arg1, PLVariable arg2)
+        static internal PLMatrix DotDivide (PLVariable arg1, PLVariable arg2)
         {
-            PLRMatrix m1 = arg1 as PLRMatrix;
-            PLRMatrix m2 = arg2 as PLRMatrix;
+            PLMatrix m1 = arg1 as PLMatrix;
+            PLMatrix m2 = arg2 as PLMatrix;
 
-            if (m1 != null && m2 != null)
+            if (m1 == null || m2 == null)
+                throw new Exception ("Dot-divide requres two matrices");
+
+            if (m1.Rows != m2.Rows || m1.Cols != m2.Cols)
+                throw new Exception ("Dot-divide arguments must be same size");
+
+            int Rows = m1.Rows;
+            int Cols = m1.Cols;
+
+            bool arg1Real = m1 is PLRMatrix;
+            bool arg2Real = m2 is PLRMatrix;
+
+            bool arg1Complex = !arg1Real;
+            bool arg2Complex = !arg2Real;
+
+            PLMatrix results;
+
+            if (arg1Real && arg2Real) results = new PLRMatrix (Rows, Cols);
+            else                      results = new PLCMatrix (Rows, Cols);
+
+            if (arg1Real && arg2Real)
             {
-                if (m1.Rows != m2.Rows || m1.Cols != m2.Cols)
-                    throw new Exception ("Argument size mis-match");
+                PLRMatrix r1 = m1 as PLRMatrix;
+                PLRMatrix r2 = m2 as PLRMatrix;
 
-                PLRMatrix result = new PLRMatrix (m1.Rows, m1.Cols);
-
-                for (int i = 0; i<result.Rows; i++)
-                    for (int j = 0; j<result.Cols; j++)
-                        result [i, j] = m1 [i, j] / m2 [i, j];
-
-                return result;
+                for (int i = 0; i<Rows; i++)
+                    for (int j = 0; j<Cols; j++)
+                        (results as PLRMatrix) [i, j] = r1 [i, j] / r2 [i, j];
             }
 
-            throw new Exception ("Dot-divide requres two matrices");
+            else if (arg1Real && arg2Complex)
+            {
+                PLRMatrix r1 = m1 as PLRMatrix;
+                PLCMatrix c2 = m2 as PLCMatrix;
+
+                for (int i = 0; i<Rows; i++)
+                    for (int j = 0; j<Cols; j++)
+                        (results as PLCMatrix) [i, j] = r1 [i, j] / c2 [i, j];
+            }
+
+            else if (arg1Complex && arg2Real)
+            {
+                PLCMatrix c1 = m1 as PLCMatrix;
+                PLRMatrix r2 = m2 as PLRMatrix;
+
+
+            }
+
+            else // both complex
+            {
+                PLCMatrix c1 = m1 as PLCMatrix;
+                PLCMatrix c2 = m2 as PLCMatrix;
+
+            }
+
+
+         
+            //for (int i = 0; i<results.Rows; i++)
+            //    for (int j = 0; j<results.Cols; j++)
+            //        results [i, j] = m1 [i, j] / m2 [i, j];
+
+
+            return results;
         }
 
         //*********************************************************************************************
