@@ -16,8 +16,10 @@ namespace PLLibrary
         static readonly Dictionary<string, PLFunction> MathFunctions    = new Dictionary<string, PLFunction> ();
         static readonly Dictionary<string, PLFunction> IOFunctionsDict  = new Dictionary<string, PLFunction> ();
         static readonly Dictionary<string, PLFunction> PlotFunctions    = new Dictionary<string, PLFunction> ();
-        static readonly Dictionary<string, BSFunction> PlotCommands     = new Dictionary<string, BSFunction> ();
         static readonly Dictionary<string, PZFunction> ZeroArgFunctions = new Dictionary<string, PZFunction> ();
+
+        static readonly Dictionary<string, BSFunction> PlotCommands = new Dictionary<string, BSFunction> ();
+        static readonly Dictionary<string, BSFunction> IOCommands   = new Dictionary<string, BSFunction> ();
 
         static public PrintFunction Print {set {IOFunctions.Print = value;}}
 
@@ -35,14 +37,16 @@ namespace PLLibrary
             FunctionLibrary.MathFunctions.AddUserDefinedContents (ref MathFunctions);
 
             //
-            // IO functions
+            // IO functions & commands
             //
              IOFunctions.AddIOFunctions (ref IOFunctionsDict);
+             IOFunctions.AddIOCommands  (ref IOCommands);
 
             //
-            // Plot functions
+            // Plot functions & commands
             //
             FunctionLibrary.PlotFunctions.AddPlotFunctions (ref PlotFunctions);
+            FunctionLibrary.PlotFunctions.AddPlotCommands (ref PlotCommands);
 
             //
             // Zero Argument functions
@@ -51,10 +55,6 @@ namespace PLLibrary
             FunctionLibrary.MathFunctions.AddZeroArgMathFunctions (ref ZeroArgFunctions);
             FunctionLibrary.PlotFunctions.AddZeroArgFunctions     (ref ZeroArgFunctions);
 
-            //
-            // Plot commands
-            //
-            FunctionLibrary.PlotFunctions.AddPlotCommands (ref PlotCommands);
         }
 
         //***************************************************************************************************
@@ -106,6 +106,11 @@ namespace PLLibrary
         public static bool IsPlotCommand (string str)
         {
             return PlotCommands.ContainsKey (str);
+        }
+
+        public static bool IsIOCommand (string str)
+        {
+            return IOCommands.ContainsKey (str);
         }
 
         public static PLVariable RunZeroArgFunction (string fname)
@@ -219,6 +224,17 @@ namespace PLLibrary
             }
             else
                 throw new Exception ("Plot Command " + name + " not found");
+        }
+
+        public static bool RunIOCommand (string name, string args)
+        {
+            if (IOCommands.ContainsKey (name))
+            {
+                BSFunction func = IOCommands [name];
+                return func (args);
+            }
+            else
+                throw new Exception ("IO Command " + name + " not found");
         }
     }
 }

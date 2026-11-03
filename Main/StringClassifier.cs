@@ -58,6 +58,9 @@ namespace PLMain
                 {
                     if (LibraryManager.IsPlotCommand (FirstWord))
                         return InputLineType.PlotCommand;
+
+                    if (LibraryManager.IsIOCommand (FirstWord))
+                        return InputLineType.IOCommand;
                 }
             }
 

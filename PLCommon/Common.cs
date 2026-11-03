@@ -34,6 +34,7 @@ namespace PLCommon
         ZeroArgFunction,
         SystemCommand,
         PlotCommand,
+        IOCommand,
         WorkspaceCommand,
         ScriptFile,
         BlockStart,

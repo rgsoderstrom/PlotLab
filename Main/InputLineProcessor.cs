@@ -110,6 +110,10 @@ namespace PLMain
                                     PLLibrary.LibraryManager.RunPlotCommand (astr2.FirstWord, astr2.Arguments);
                                     break;
 
+                                case InputLineType.IOCommand:
+                                    PLLibrary.LibraryManager.RunIOCommand (astr2.FirstWord, astr2.Arguments);
+                                    break;
+
                                 case InputLineType.WorkspaceCommand: 
                                     Workspace.RunCommand (astr2.FirstWord, astr2.Arguments);
                                     break;

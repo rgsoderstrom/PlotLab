@@ -17,6 +17,10 @@ namespace FunctionLibrary
         {
             dst.Add ("sprintf", PrintToString);
             dst.Add ("disp",    Display);  
+        }
+
+        static public void AddIOCommands (ref Dictionary<string, BSFunction> dst)
+        {
             dst.Add ("format",  Format);  
         }
 
@@ -28,16 +32,9 @@ namespace FunctionLibrary
         //*********************************************************************************************
         //*********************************************************************************************
 
-        static public PLVariable Format (PLVariable arg)
+        static public bool Format (string arg)
         {
-            PLString pstr = arg as PLString;
-
-            if (pstr == null)
-                throw new Exception ("Invalid print format");
-
-            string str = pstr.Text;
-
-            switch (str)
+            switch (arg)
             {
                 case "short": PLVariable.PrintFormat = PLVariable.PrintFormatType.Short; break;
                 case "long":  PLVariable.PrintFormat = PLVariable.PrintFormatType.Long;  break;
@@ -45,7 +42,7 @@ namespace FunctionLibrary
                 default: throw new Exception ("Unrecognized \"format\" option");
             }
 
-            return new PLNull ();
+            return true;
         }
 
         //*********************************************************************************************
