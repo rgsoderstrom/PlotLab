@@ -135,7 +135,9 @@ namespace PLMain
                 PLCMatrix c1 = m1 as PLCMatrix;
                 PLRMatrix r2 = m2 as PLRMatrix;
 
-
+                for (int i = 0; i<Rows; i++)
+                    for (int j = 0; j<Cols; j++)
+                        (results as PLCMatrix) [i, j] = c1 [i, j] / r2 [i, j];
             }
 
             else // both complex
@@ -143,14 +145,10 @@ namespace PLMain
                 PLCMatrix c1 = m1 as PLCMatrix;
                 PLCMatrix c2 = m2 as PLCMatrix;
 
+                for (int i = 0; i<Rows; i++)
+                    for (int j = 0; j<Cols; j++)
+                        (results as PLCMatrix) [i, j] = c1 [i, j] / c2 [i, j];
             }
-
-
-         
-            //for (int i = 0; i<results.Rows; i++)
-            //    for (int j = 0; j<results.Cols; j++)
-            //        results [i, j] = m1 [i, j] / m2 [i, j];
-
 
             return results;
         }
