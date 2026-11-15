@@ -248,13 +248,50 @@ namespace PLMain
         }
 
         //*****************************************************************
+        //*****************************************************************
+        //*****************************************************************
+
+        // !23     execute
+        // !23:p   just print
+       
+        public enum SearchResults {Error, Found, Print};
+
+        public static SearchResults SearchForBang (ref string bangResults, 
+                                                   string     bangRequest) 
+        {                                                                  
+            string [] tokens = bangRequest.Split (new char [] { '!', ':' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (tokens.Length == 0 || tokens.Length > 2)
+                throw new Exception ("Bang syntax error");
+
+            bool printFlag = false;
+
+            if (tokens.Length == 2)
+            {   
+                if (tokens [1] == "p")
+                    printFlag = true;
+                else
+                    return SearchResults.Error;
+            }
+
+            int index = Convert.ToInt16 (tokens [0]) - 1;
+
+            if (index < 0 || index >= History.Count)
+                return SearchResults.Error;
+
+            bangResults = CommandLineHistory.History [index];
+
+            return printFlag ? SearchResults.Print : SearchResults.Found;
+        }
+
+        //*****************************************************************
 
         public static new string ToString ()
         {
             string str = "";
 
             for (int i=0; i<History.Count; i++)
-                str += i.ToString () + ": " + History [i] + "\n";
+                str += (i + 1).ToString () + ": " + History [i] + "\n";
 
             return str;
         }

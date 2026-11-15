@@ -40,6 +40,8 @@
       <Text>
         history           - list recently entered commands, with an identifying number
         up or down arrows - scroll through command history
+        !12               - recall, print and run entry 12
+        !12:p             - recall and print but don't run entry 12
       </Text>
     </Content>
   </HelpTopic>

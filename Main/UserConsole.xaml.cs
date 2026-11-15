@@ -2,15 +2,22 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 using Common;
-using PLSystem;
+
 using PLCommon;
-using PLWorkspace;
-using PLLibrary;
+
 using PLFileSystem;
+
+using PLLibrary;
+
+using PLSystem;
+
+using PLWorkspace;
+
+using static PLMain.CommandLineHistory;
 
 namespace PLMain
 {
@@ -183,6 +190,39 @@ namespace PLMain
                     return;
                 }
 
+                 // Look for bang (i.e. !) followed by a number and maybe the letter 'p'. Number is index of command
+                 // to recall. It is executed unless followed by :p. If so it is just printed for editing
+                
+                if (raw [0] == '!')
+                {
+                    string bangResults = "";
+                    SearchResults results = CommandLineHistory.SearchForBang (ref bangResults, raw);
+
+                    switch (results)
+                    {
+                        case SearchResults.Found:
+                            TextPane.Text += "\n" + bangResults;
+                            TextPane.CaretIndex = TextPane.Text.Length;
+                            caretLowerLimit     = TextPane.CaretIndex;
+                            raw = bangResults;
+                            break;
+
+                        case SearchResults.Print:
+                            TextPane.Text += "\n" + bangResults;
+                            TextPane.CaretIndex = TextPane.Text.Length;
+                            caretLowerLimit     = TextPane.CaretIndex;
+                            CommandLineHistory.Add (bangResults);
+                            return;
+
+                        case SearchResults.Error:
+                            Print ("\nHistory search error: " + raw);
+                            return;
+
+                        default:
+                            throw new Exception ("Unsupported 'bang' option");
+                    }
+                }
+
                 CommandLineHistory.Add (raw);
 
                 if (raw.EndsWith ("\n")) EventLog.Write (raw);
@@ -197,7 +237,7 @@ namespace PLMain
                 /* bang
                 //
                 // Look for bang (i.e. !) followed by a number and maybe the letter 'p'. Number is index of command
-                // to recall. It is executed unless followed by :p. If so it is just printed for editting
+                // to recall. It is executed unless followed by :p. If so it is just printed for editing
                 //
                 //if (raw [0] == '!')
                 //{
