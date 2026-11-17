@@ -41,7 +41,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MFileFunctionMgr.cs" />
-    <Compile Include="MFileFunctionProcessor.cs" />
     <Compile Include="PLFileSystem.cs" />
   </ItemGroup>
   <ItemGroup>
