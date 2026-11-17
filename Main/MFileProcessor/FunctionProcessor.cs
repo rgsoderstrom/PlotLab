@@ -66,6 +66,12 @@ namespace PLMain
 
         public PLList Run (List<PLVariable> actualInputParameters)
         {
+            if (actualInputParameters.Count != formalInputParameters.Count)
+            {
+                Workspace.Pop ();
+                throw new Exception ("Incorrect number of input parameters");
+            }
+
             // Create a variable for each formal input parameter and
             // initialize it with the corresponding actual parameter
             for (int i=0; i<formalInputParameters.Count; i++)
