@@ -80,7 +80,7 @@ namespace PLMain
 
             catch (Exception ex)
             {
-                throw new Exception ("    ExpressionTree build failed for " + originalExpression + " , " + ex.Message + "\n");
+                throw new Exception ("ExpressionTree build failed for " + originalExpression + " , " + ex.Message + "\n");
             }
         }
 
