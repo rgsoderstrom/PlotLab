@@ -157,9 +157,13 @@ namespace PLMain
                         edited.Add (new Token (TokenType.FunctionFile, initial [i].AnnotatedText));
 
                     // a script name must be the only token on a line
-                    else if (FileSystem.IsScriptFile (initial [i].AnnotatedText.Plain) && initial.Count == 1)
-                        edited.Add (new Token (TokenType.ScriptFile, initial [i].AnnotatedText));
-
+                    else if (FileSystem.IsScriptFile (initial [i].AnnotatedText.Plain))
+                    { 
+                        if (initial.Count == 1)
+                            edited.Add (new Token (TokenType.ScriptFile, initial [i].AnnotatedText));
+                        else
+                            throw new Exception ("Script file '" + initial [i].AnnotatedText.Plain + "' used like a function");
+                    }
                     else
                         edited.Add (new Token (TokenType.Undefined, initial [i].AnnotatedText));
                 }
