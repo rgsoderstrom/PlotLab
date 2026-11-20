@@ -73,10 +73,28 @@ namespace PLCommon
 
         public static PLVariable operator + (PLVariable op1, PLVariable op2)
         {
-            if (op1 is PLRMatrix && op2 is PLRMatrix) return (op1 as PLRMatrix).Add (op2 as PLRMatrix);
-            if (op1 is PLRMatrix && op2 is PLCMatrix) return (op1 as PLRMatrix).Add (op2 as PLCMatrix);
-            if (op1 is PLRMatrix && op2 is PLDouble)  return (op1 as PLRMatrix).Add (op2 as PLDouble);
-            if (op1 is PLRMatrix && op2 is PLComplex)  return (op1 as PLRMatrix).Add (op2 as PLComplex);
+            if (op1 is PLRMatrix)
+            {
+                PLRMatrix realMat = op1 as PLRMatrix;
+                if      (op2 is PLRMatrix) return realMat.Add (op2 as PLRMatrix);
+                else if (op2 is PLCMatrix) return realMat.Add (op2 as PLCMatrix);
+                else if (op2 is PLDouble)  return realMat.Add (op2 as PLDouble);
+                else if (op2 is PLComplex) return realMat.Add (op2 as PLComplex);
+                else throw new Exception ("Addition of real matrix and " + op2.GetType () + " not implemented");
+            }
+
+            //if (op1 is PLCMatrix)
+            //{
+            //    PLCMatrix complexMat = op1 as PLCMatrix;
+            //    if      (op2 is PLRMatrix) return complexMat.Add (op2 as PLRMatrix);
+            //    else if (op2 is PLCMatrix) return complexMat.Add (op2 as PLCMatrix);
+            //    else if (op2 is PLDouble)  return complexMat.Add (op2 as PLDouble);
+            //    else if (op2 is PLComplex) return complexMat.Add (op2 as PLComplex);
+            //    else throw new Exception ("Addition of complex matrix and " + op2.GetType () + " not implemented");
+            //}
+
+
+
 
             if (op1 is PLCMatrix && op2 is PLRMatrix) return (op2 as PLRMatrix).Add (op1 as PLCMatrix);
             if (op1 is PLCMatrix && op2 is PLCMatrix) return (op1 as PLCMatrix).Add (op2 as PLCMatrix);
@@ -143,6 +161,7 @@ namespace PLCommon
             if (op1 is PLDouble  && op2 is PLDouble)  return (op1 as PLDouble).Mul (op2 as PLDouble);
             if (op1 is PLDouble  && op2 is PLComplex) return (op1 as PLDouble).Mul (op2 as PLComplex);
             if (op1 is PLDouble  && op2 is PLInteger) return (op1 as PLDouble).Mul (op2 as PLInteger);
+            if (op1 is PLDouble  && op2 is PLList)    return (op1 as PLDouble).Mul (op2 as PLList);
 
             if (op1 is PLComplex && op2 is PLRMatrix) return (op1 as PLComplex).Mul (op2 as PLRMatrix);
             if (op1 is PLComplex && op2 is PLCMatrix) return (op1 as PLComplex).Mul (op2 as PLCMatrix);
@@ -152,7 +171,6 @@ namespace PLCommon
             if (op1 is PLInteger && op2 is PLDouble)  return (op1 as PLInteger).Mul (op2 as PLDouble);
             if (op1 is PLInteger && op2 is PLInteger) return (op1 as PLInteger).Mul (op2 as PLInteger);
 
-            //return new PLString ("Multiplication of " + op1.GetType () + " and " + op2.GetType () + " not implemented");
             throw new Exception ("Multiplication of " + op1.GetType () + " and " + op2.GetType () + " not implemented");
         }
 

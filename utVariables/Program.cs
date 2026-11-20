@@ -8,7 +8,9 @@ using System.Collections.Generic;
 
 using PLCommon;
 
-public delegate PLVariable PLFunction (PLVariable var);
+//public delegate PLVariable PLFunction (PLVariable var);
+
+using CommonMath;
 
 namespace utVariables
 {
@@ -18,78 +20,53 @@ namespace utVariables
         {
             try
             {
-                // declare everything needed
-                PLRMatrix rm1 = new PLRMatrix (3, 3);
-                PLRMatrix rm2 = new PLRMatrix (3, 3);
+                // declare two of each:
+                //    real matrix
+                //    complex matrix
+                //    real scalar
+                //    complex scalar
 
-                PLCMatrix cm1 = new PLCMatrix (3, 3);
-                PLCMatrix cm2 = new PLCMatrix (3, 3);
+                Matrix rm1 = new Matrix (3, 3); rm1.FillByRow (new double [] {3, 4, 5, 6, 7, 8, 9, 10, 11});
+                PLRMatrix realMatrix1 = new PLRMatrix ("realMatrix1", rm1);
+                
+                Matrix rm2 = new Matrix (3, 3); rm2.FillByRow (new double [] {13, 14, 15, 16, 17, 18, 19, 20, 21});
+                PLRMatrix realMatrix2 = new PLRMatrix ("realMatrix2", rm2);
+                
+                CMatrix cm1 = new CMatrix (3, 3); cm1.FillByRow (new Complex [] {new Complex (3, 1), new Complex (4, 1),  new Complex (5, 1),
+                                                                                 new Complex (6, 1), new Complex (7, 1),  new Complex (8, 1),
+                                                                                 new Complex (9, 1), new Complex (10, 1), new Complex (11, 1)});
+                PLCMatrix complexMatrix1 = new PLCMatrix ("complexMatrix1", cm1);
+                
+                CMatrix cm2 = new CMatrix (3, 3); cm2.FillByRow (new Complex [] {new Complex (13, 1), new Complex (14, 1), new Complex (15, 1),
+                                                                                 new Complex (16, 1), new Complex (17, 1), new Complex (18, 1),
+                                                                                 new Complex (19, 1), new Complex (20, 1), new Complex (21, 1)});
+                PLCMatrix complexMatrix2 = new PLCMatrix ("complexMatrix2", cm2);
+                
 
-                PLDouble pd1 = new PLDouble (7);
-                PLDouble pd2 = new PLDouble (5);
+                PLDouble double1 = new PLDouble (107);
+                PLDouble double2 = new PLDouble (105);
 
-                PLComplex pc1 = new PLComplex (1, 3);
-                PLComplex pc2 = new PLComplex (5, 7);
-
-                PLInteger pi1 = new PLInteger (3);
-                PLInteger pi2 = new PLInteger (9);
-
-                // initialize matrices
-                for (int i = 0; i<rm1.Rows; i++)
-                    for (int j = 0; j<rm1.Cols; j++)
-                        rm1 [i, j] = (i + 1) * (j + 1);
-
-                for (int i = 0; i<rm2.Rows; i++)
-                    for (int j = 0; j<rm2.Cols; j++)
-                        rm2 [i, j] = (i + 10) + (j + 10);
-
-                for (int i = 0; i<cm1.Rows; i++)
-                    for (int j = 0; j<cm1.Cols; j++)
-                        cm1 [i, j] = new PLComplex (i + 1, j + 1);
-
-                for (int i = 0; i<cm2.Rows; i++)
-                    for (int j = 0; j<cm2.Cols; j++)
-                        cm2 [i, j] = new PLComplex (2 * i + 7, 3 * j + 9);
+                PLComplex complex1 = new PLComplex (100, 300);
+                PLComplex complex2 = new PLComplex (500, 700);
 
                 //***************************************************************
 
-                //PLMatrix m = rm1.
+                List<PLVariable> allOp1 = new List<PLVariable> () {realMatrix1, complexMatrix1, double1, complex1};
+                List<PLVariable> allOp2 = new List<PLVariable> () {realMatrix2, complexMatrix2, double2, complex2};
 
-                List<PLVariable> results = new List<PLVariable>
+                //***************************************************************
+
+                foreach (PLVariable op1 in allOp1)
                 {
-                    rm1 - pd1,
-                    pd2 - rm2,
-                    cm1 - pd1,
-                    pd2 - cm2,
-
-                    //cm2 + pc1,
-                    //pc1 + cm1,
-                    //cm2 + pd1,
-                    //pd2 + cm1,
-
-                    //pd1 / pd2,
-                    //pd1 / pc1,
-                    //pc1 / pd1,
-                    //pc1 / pc2,
-
-                    //rm1 / pd1,
-                    //pd1 / rm1,
-
-                    //rm1,
-                    //cm1,
-                    //rm1.Get (1, 1),
-                    //cm1.Get (1, 1),
-                    //cm1.CollapseToColumn (),
-                    //cm1.CollapseToColumn (),
-                };
-
-                foreach (PLVariable plv in results)
-                {
-                    Console.WriteLine (plv.GetType ());
-                    Console.WriteLine (plv + "\n");
+                    foreach (PLVariable op2 in allOp2)
+                    {
+                        Console.WriteLine ("Adding " + op1.GetType ().ToString () + " to " + op2.GetType ());
+                        PLVariable results = op1 + op2;
+                        Console.WriteLine ("result type: " + results.GetType ());
+                        Console.WriteLine (results.ToString ());
+                        Console.WriteLine ("\n---------------------------------------------\n");
+                    }
                 }
-
-
             }
 
             catch (Exception ex)

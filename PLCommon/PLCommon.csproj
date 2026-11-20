@@ -49,9 +49,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common.cs" />
+    <Compile Include="PLCMatrix.cs" />
     <Compile Include="PLComplex.cs" />
     <Compile Include="PLDouble.cs" />
     <Compile Include="PLMatrix.cs" />
+    <Compile Include="PLRMatrix.cs" />
     <Compile Include="PLVariable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

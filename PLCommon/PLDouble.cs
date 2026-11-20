@@ -103,6 +103,28 @@ namespace PLCommon
         public PLRMatrix Mul (PLRMatrix  op2) {return new PLRMatrix  ("", Data * op2.Data); }
         public PLComplex Mul (PLComplex op2)  {return new PLComplex (Data * op2.Real, Data * op2.Imag);}
 
+
+        public PLList Mul (PLList op2)
+        {
+            PLList results = new PLList ();
+
+            foreach (PLVariable plv in op2.Data)
+            {
+                if (plv is PLDouble)
+                {
+                    double d2 = (plv as PLDouble).Data;
+                    results.Add (new PLDouble (Data * d2));
+                }
+
+                else
+                    throw new Exception ("Multiplication by list of " + plv.GetType () + " not implemented");
+            }
+
+            return results;
+        }
+
+
+
         public PLDouble  Div (PLDouble  op2)  {return new PLDouble   (Data / op2.Data);}
         public PLRMatrix Div (PLRMatrix  op2) {return new PLRMatrix  ("", Data / op2.Data);}
         public PLCMatrix Div (PLCMatrix  op2) {return new PLCMatrix  (Data / op2.Data);}

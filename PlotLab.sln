@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31912.275
+# Visual Studio Version 18
+VisualStudioVersion = 18.11.12402.416 oobstable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PLCommon", "PLCommon\PLCommon.csproj", "{3769E3A7-B965-4B82-9430-402D88227140}"
 EndProject
@@ -74,6 +74,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "utWorkspace", "utWorkspace\
 		{509D9AD1-4FFF-4DDB-AB62-1385FC175CA8} = {509D9AD1-4FFF-4DDB-AB62-1385FC175CA8}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "utVariables", "utVariables\utVariables.csproj", "{3819F209-7184-4DDE-95DA-53F2D7788FB9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -124,6 +126,10 @@ Global
 		{56956CBF-D5F5-4BD6-ACC7-ED4F3581A59F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56956CBF-D5F5-4BD6-ACC7-ED4F3581A59F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56956CBF-D5F5-4BD6-ACC7-ED4F3581A59F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3819F209-7184-4DDE-95DA-53F2D7788FB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3819F209-7184-4DDE-95DA-53F2D7788FB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3819F209-7184-4DDE-95DA-53F2D7788FB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3819F209-7184-4DDE-95DA-53F2D7788FB9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
