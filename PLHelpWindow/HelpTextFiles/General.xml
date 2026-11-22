@@ -20,6 +20,7 @@
     </Content>
 
     <SubTopics>
+      <SubTopic SearchKey="exists"/>
       <SubTopic SearchKey="history"/>
       <SubTopic SearchKey="help"/>
       <SubTopic SearchKey="edit"/>
@@ -27,6 +28,20 @@
       <SubTopic SearchKey="pwd"/>
       <SubTopic SearchKey="ls"/>
     </SubTopics>
+  </HelpTopic>
+
+  <!-- ********************************************************************-->
+
+  <HelpTopic SearchKey="exists">
+    <Header>exists</Header>
+
+    <Content>
+      <Title>Returns bool indicating whether or not a variable exists</Title>
+
+      <Text>
+        exists ('name')
+      </Text>
+    </Content>
   </HelpTopic>
 
   <!-- ********************************************************************-->

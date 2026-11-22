@@ -16,7 +16,10 @@ namespace PLWorkspace
 
         internal virtual PLVariable Exists (PLVariable pstr)
         {
-            return new PLBool (Contains ((pstr as PLString).Text));
+            if (pstr is PLString)
+                return new PLBool (Contains ((pstr as PLString).Text));
+            else
+                throw new Exception ("Exists requires a string input argument");
         }
 
         internal static PLVariable Rows (PLVariable a)
