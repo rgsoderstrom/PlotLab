@@ -1,10 +1,10 @@
 
-% integrate trig functions
+% test driver for integrate function
 
 x1 = 0;
 x2 = pi;
-N  = 31; % number of points, number
-         % of intervals is one less
+N  = 31; % number of points, odd for best results.
+		 % number of intervals is one less
 
 figure (1) ; clf ;
 
@@ -12,7 +12,7 @@ x = linspace (x1, x2, N);
 dx = (x2 - x1) / (N - 1); % interval width
 
 % y = x .* x;
-y = sin (x);
+y = sin (x) .* cos (x);
 
 clear res stat
 
