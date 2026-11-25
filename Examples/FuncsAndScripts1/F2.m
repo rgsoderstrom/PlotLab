@@ -2,17 +2,25 @@
 % i am a comment
 % me too
 
-% function [p, q] = f2 (aa, bb, cc)
+% function [p, q] = f2 (aa, bb)
 
-function [p, q] = f2 (aa, ...  % some of the line
-                      bb, ...  % some more
-					  cc)
+function [sum, prod] = f2 (aa, ...  % some of the line
+                           bb)      % some more
 
-A = -20;
+A = 10;
 
-p = aa + bb + cc + A;
-q = aa * bb * cc;
+sum  = aa + bb + A;
+prod = aa * bb * A;
 
-disp (sprintf ('print inside F2, A = %d', A));
+if sum > 20,
+	disp ('in f2, if stmt over writing sum');
+	sum = 123;
+	return
+end
+
+disp ('in f2, fall through over writing sum');
+sum = 456;
+
+% disp (sprintf ('print inside F2, A = %d', A));
 
 

@@ -2,9 +2,13 @@
 % i am a comment
 % me too
 
-function [] = F3 (b, c)
+function [z] = F3 (b)
 
-disp (sprintf ('inside F3: %d', b * c));
-z = 123;
+if (b < 5)
+	z = b * 10;
+	return
+end
+
+z = b * 100;
 
 
