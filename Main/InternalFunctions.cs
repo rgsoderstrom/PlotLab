@@ -194,6 +194,12 @@ namespace PLMain
                     if (var is PLDouble)
                         mat = new PLRMatrix (var as PLDouble);
 
+                    else if (var is PLInteger)
+                    {
+                        double d = (var as PLInteger).DataAsDouble;
+                        mat = new PLRMatrix (new PLDouble (d));
+                    }
+
                     else if (var is PLComplex)
                         mat = new PLCMatrix (var as PLComplex);
 
@@ -201,7 +207,7 @@ namespace PLMain
                         mat = var as PLMatrix;
 
                     else
-                        throw new Exception ("Invalid operand: " + var.GetType () + " not supported");
+                        throw new Exception ("Build ColVector, invalid operand: " + var.GetType () + " not supported");
 
                     for (int j = 0; j<mat.Rows; j++)
                     {
@@ -268,6 +274,12 @@ namespace PLMain
                     if (var is PLDouble)
                         mat = new PLRMatrix (var as PLDouble);
 
+                    else if (var is PLInteger)
+                    {
+                        double d = (var as PLInteger).DataAsDouble;
+                        mat = new PLRMatrix (new PLDouble (d));
+                    }
+
                     else if (var is PLComplex)
                         mat = new PLCMatrix (var as PLComplex);
 
@@ -275,7 +287,7 @@ namespace PLMain
                         mat = var as PLMatrix;
 
                     else
-                        throw new Exception ("Invalid operand: " + var.GetType () + " not supported");
+                        throw new Exception ("Build RowVector, invalid operand: " + var.GetType () + " not supported");
 
                     for (int j = 0; j<mat.Cols; j++)
                     {
