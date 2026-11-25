@@ -21,7 +21,7 @@ namespace PLMain
 
         //***************************************************************************
 
-        internal override TerminationReason Run ()
+        internal override BlockTerminationReason Run ()
         {
             foreach (TestCodePair oneBlock in SelectBlockSections)
             { 
@@ -60,17 +60,20 @@ namespace PLMain
                     { 
                         string str = astr.Plain;
 
+                        if (str == "return")
+                            return BlockTerminationReason.ReturnEncountered;
+
                         if (str == "break")
-                            return TerminationReason.BreakEncountered;
+                            return BlockTerminationReason.BreakEncountered;
 
                         if (str == "continue")
-                            return TerminationReason.ContinueEncountered;
+                            return BlockTerminationReason.ContinueEncountered;
 
                         PLVariable unused = null;
-                        TerminationReason status = ilp.ProcessString (ref unused, str);
+                        BlockTerminationReason status = ilp.ProcessString (ref unused, str);
 
                         // "if" blocks pass these up to parent block
-                        if (status == TerminationReason.ContinueEncountered || status == TerminationReason.BreakEncountered)
+                        if (status == BlockTerminationReason.ContinueEncountered || status == BlockTerminationReason.BreakEncountered)
                             return status;
                     }
 
@@ -78,7 +81,7 @@ namespace PLMain
                 }
             }
 
-            return TerminationReason.Completed;
+            return BlockTerminationReason.Completed;
         }
 
     }

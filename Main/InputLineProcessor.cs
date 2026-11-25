@@ -16,7 +16,7 @@ using PLWorkspace;
 
 namespace PLMain
 {
-    public enum TerminationReason {Completed, BreakEncountered, ContinueEncountered};
+    public enum BlockTerminationReason {Completed, BreakEncountered, ContinueEncountered, ReturnEncountered};
 
     public partial class InputLineProcessor
     {
@@ -50,7 +50,7 @@ namespace PLMain
         //  - may contain prompt, a comment and extra spaces
         //
 
-        public TerminationReason ProcessString (ref PLVariable answer, string rawString)
+        public BlockTerminationReason ProcessString (ref PLVariable answer, string rawString)
         {
             try
             { 
@@ -58,7 +58,7 @@ namespace PLMain
 
                 // if a blank line or a comment line was passed in just return
                 if (somethingAdded == false) 
-                    return TerminationReason.Completed;
+                    return BlockTerminationReason.Completed;
 
                 AnnotatedStringSet AnnotatedStrings = new AnnotatedStringSet ();
 
@@ -73,11 +73,14 @@ namespace PLMain
                         SupressPrinting = astr2.SupressPrinting;
 
                         if (astr2 == null)
-                            return TerminationReason.Completed;
+                            return BlockTerminationReason.Completed;
 
                         if (BlockManager.BlockCollectionInProgress)
                         {
-                            BlockManager.Add (astr2);
+                            BlockTerminationReason btr = BlockManager.Add (astr2);
+
+                            if (btr == BlockTerminationReason.ReturnEncountered)
+                                return btr;
                         }
 
                         else
@@ -125,11 +128,14 @@ namespace PLMain
 
                                 case InputLineType.BlockName:
                                     answer = null;
-                                    TerminationReason status = BlockManager.RunBlock (astr2);
+                                    BlockTerminationReason status = BlockManager.RunBlock (astr2);
                                     //Console.WriteLine ("BlockExit status = " + status);
 
-                                    if (status == TerminationReason.BreakEncountered)    return status;
-                                    if (status == TerminationReason.ContinueEncountered) return status;
+                                    if (status == BlockTerminationReason.ReturnEncountered)   
+                                        return status;
+
+                                    if (status == BlockTerminationReason.BreakEncountered)    return status;
+                                    if (status == BlockTerminationReason.ContinueEncountered) return status;
                                     break;
 
                                 case InputLineType.BlockStart:
@@ -152,7 +158,7 @@ namespace PLMain
                 Print (ex.Message);
             }
 
-            return TerminationReason.Completed;
+            return BlockTerminationReason.Completed;
         }
     }
 }

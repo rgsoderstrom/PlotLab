@@ -97,7 +97,7 @@ namespace PLMain
                 //Print ("Running startup script\n");
                 PLVariable ans = new PLNull ();
                 InputLineProcessor ip = new InputLineProcessor (Print);
-                TerminationReason a = ip.ProcessString (ref ans, "startup");
+                BlockTerminationReason a = ip.ProcessString (ref ans, "startup");
             }
 
             catch (Exception ex)

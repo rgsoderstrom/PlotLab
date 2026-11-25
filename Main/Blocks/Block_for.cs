@@ -105,7 +105,7 @@ namespace PLMain
 
         //******************************************************************************
 
-        internal override TerminationReason Run ()
+        internal override BlockTerminationReason Run ()
         {
             InputLineProcessor ilp = new InputLineProcessor ();
             PLVariable unused = null;            
@@ -115,7 +115,7 @@ namespace PLMain
                 ilp.ProcessString (ref unused, astr.Plain);
 
             // run loop code
-            TerminationReason reason = base.Run ();
+            BlockTerminationReason reason = base.Run ();
 
             // run cleanup
             foreach (AnnotatedString astr in CleanupCode)

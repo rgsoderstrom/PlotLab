@@ -1,7 +1,7 @@
 ﻿
 /*
     Block.cs
-        - a "Block" is a list of statements starting with one of (for, while, if)
+        - a "Block" is a list of statements starting with one of (for, while, if, switch)
           and ending with "end"
 */
 
@@ -12,7 +12,7 @@ namespace PLMain
 {
     abstract internal class Block
     {
-        // a "Block" is a list of statements starting with one of (for, while, if) and ending with "end"
+        // a "Block" is a list of statements starting with one of (for, while, if, switch) and ending with "end"
 
         protected string name = "";
         public string Name {get {return name;} protected set {name = value;}}
@@ -41,7 +41,7 @@ namespace PLMain
 
         // Add () and Run () must be implemented by any derived class
         internal abstract void Add   (AnnotatedString astr);
-        internal abstract TerminationReason Run ();
+        internal abstract BlockTerminationReason Run ();
 
         // not all derived blocks require Close () to do anything
         internal virtual void Close ()

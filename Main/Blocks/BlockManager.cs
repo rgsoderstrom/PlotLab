@@ -80,7 +80,7 @@ namespace PLMain
 
         //*************************************************************************************
 
-        public static void Add (AnnotatedString astr)
+        public static BlockTerminationReason Add (AnnotatedString astr)
         {
             StringClassifier classifier = new StringClassifier ();
             InputLineType lineType = classifier.Classify (astr);
@@ -96,7 +96,7 @@ namespace PLMain
                 justCompleted.Close (); // needed by "for" block
 
                 CompleteBlocks.Add (justCompleted.Name, justCompleted);
-
+                 
                 if (PartialBlock != null)
                     PartialBlock.Add (new AnnotatedString (justCompleted.Name));
 
@@ -117,7 +117,14 @@ namespace PLMain
                     }
 
                     #else
-                        justCompleted.Run ();
+                        BlockTerminationReason tr = justCompleted.Run ();
+
+                        if (tr == BlockTerminationReason.ReturnEncountered)
+                        {
+                            PartialBlocks.Clear ();
+                            CompleteBlocks.Clear ();
+                            return BlockTerminationReason.ReturnEncountered;
+                        }
                     #endif
 
                     CompleteBlocks.Clear ();
@@ -126,6 +133,8 @@ namespace PLMain
 
             else
                 PartialBlock.Add (astr);
+
+            return BlockTerminationReason.Completed;
         }
 
         //*************************************************************************************
@@ -158,7 +167,7 @@ namespace PLMain
 
         //*************************************************************************************
 
-        public static TerminationReason RunBlock (AnnotatedString astr)
+        public static BlockTerminationReason RunBlock (AnnotatedString astr)
         {
             Block block = CompleteBlocks [astr.Plain];
             return block.Run ();

@@ -16,7 +16,7 @@ namespace PLMain
     abstract public class MFileProcessor
     {
         static public PrintFunction Print = null;
-        public enum TerminationReason {Completed, Failed};
+        public enum MFileTerminationReason {Completed, Failed};
 
         protected List<string> fileLines = new List<string> ();
 
@@ -48,7 +48,12 @@ namespace PLMain
                     break;
 
                 PLVariable ans = new PLNull ();
-                ip.ProcessString (ref ans, raw);
+                BlockTerminationReason tr = ip.ProcessString (ref ans, raw);
+
+                if (tr == BlockTerminationReason.ReturnEncountered)
+                    break;
+
+
 
                 bool t1 = ans != null;
                 bool t2 = ans is PLNull == false;

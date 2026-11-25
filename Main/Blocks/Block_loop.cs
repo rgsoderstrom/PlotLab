@@ -27,7 +27,7 @@ namespace PLMain
 
         //************************************************************************
 
-        internal override TerminationReason Run ()
+        internal override BlockTerminationReason Run ()
         {
             // extract and format while block "test"
             string testString = BlockStatements.test.Trim ();
@@ -53,7 +53,7 @@ namespace PLMain
                     throw new Exception ("loop block " + Name + " test not a boolean: " + testString);
 
                 if ((answer as PLBool).Data == false)
-                    return TerminationReason.Completed;
+                    return BlockTerminationReason.Completed;
 
                 // if we get here, test has passed so run all satements in "code" section
                 InputLineProcessor ilp = new InputLineProcessor ();
@@ -62,16 +62,19 @@ namespace PLMain
                 { 
                     string str = astr2.Plain;
 
+                    if (str == "return")
+                        return BlockTerminationReason.Completed;
+
                     // if "break" executed, this block terminates but any containg block does
                     // not need to take any special action
                     if (str == "break")
-                        return TerminationReason.Completed;
+                        return BlockTerminationReason.Completed;
 
                     // on "continue" just skip to end and iterate again
                     if (str == "continue")
                         break;
 
-                    TerminationReason reason = ilp.ProcessString (ref answer, str);
+                    BlockTerminationReason reason = ilp.ProcessString (ref answer, str);
 
                     if (astr2.SupressPrinting == false && answer != null)
                         Print (answer.ToString () + "\n");
@@ -79,17 +82,17 @@ namespace PLMain
                     // if BreakEncountered passed up from the block just completed, his block terminates but
                     // any containing block does not need to take any special action
                     //    - typically an "if" block 
-                    if (reason == TerminationReason.BreakEncountered) 
-                        return TerminationReason.Completed;
+                    if (reason == BlockTerminationReason.BreakEncountered) 
+                        return BlockTerminationReason.Completed;
 
                     // if ContinueEncountered passed up from the block just completed, this remaining statements
                     // in the code block of are skipped
-                    if (reason == TerminationReason.ContinueEncountered)
+                    if (reason == BlockTerminationReason.ContinueEncountered)
                         break;
                 }
             }
 
-            return TerminationReason.Completed;
+            return BlockTerminationReason.Completed;
         }
 
 
