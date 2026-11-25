@@ -2,7 +2,7 @@
 % integrate.m
 
 % Simpson's 1/3 rule, from Google's AI Summary
-% 	web site uses 0-based indexing
+% 	web article uses 0-based indexing
 
 % Simpson's requires an even number of intervals 
 %	i.e. length (samples) is odd
@@ -26,7 +26,6 @@ N = length (samples);
 
 if N < 5,
 	status = 2; % error
-	% return;                %     ----------------  doesn't work
 else
 
 	lengthIsOdd = (floor (N / 2) * 2 ~= N);
