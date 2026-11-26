@@ -170,7 +170,8 @@ namespace PLWorkspace
                 }
 
                 else
-                    throw new Exception ("Unsupported matrix-matrix overwrite option");
+                    throw new Exception ("Unsupported matrix-matrix overwrite option: " 
+                                        + newData.GetType () + " overwriting " + oldData.GetType ());
             }
         }
     }
