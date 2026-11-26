@@ -304,8 +304,9 @@ namespace PLMain
                 if (functionOutputData == null)
                     throw new Exception ("No function output data");
                     
-                if (functionOutputData.Count != callersOutputArgs.Count)
-                    throw new Exception ("Expected and actual function output counts don't match");
+                // will copy as many output args as caller wants.
+                if (functionOutputData.Count < callersOutputArgs.Count)
+                    throw new Exception ("Function does not output " + callersOutputArgs.Count + " args");
 
                 // create a variable for each name, assign the appropriate vale and place in Workspace
                 for (int i=0; i<callersOutputArgs.Count; i++)
@@ -341,8 +342,8 @@ namespace PLMain
             {
                 PLList pll = Operands [1].Value as PLList;
 
-                if (pll.Count != 1)
-                    throw new Exception ("Expected and actual function output counts don't match");
+                //if (pll.Count != 1)
+                //    throw new Exception ("Expected and actual function output counts don't match");
 
                 Value = pll [0];
             }
