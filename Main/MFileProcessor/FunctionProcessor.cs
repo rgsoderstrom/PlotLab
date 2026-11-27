@@ -64,7 +64,7 @@ namespace PLMain
 
         // Run the fileLines in the Workspace provided by the caller
 
-        public PLList Run (List<PLVariable> actualInputParameters)
+        public PLVariable Run (List<PLVariable> actualInputParameters)
         {
             if (actualInputParameters.Count != formalInputParameters.Count)
             {
@@ -84,7 +84,23 @@ namespace PLMain
             // Run the file lines like a script
             Run ();
 
-            // Build a list of actual outputs in same order as formal outputs
+            //*******************************************************
+
+            // Output results. If only a single PLDouble, return it as PLDouble
+            // else put all in a PLList
+
+            if (formalOutputParameters.Count == 1)
+            {
+                string str = formalOutputParameters [0];
+                PLVariable plv = Workspace.Get (str);
+
+                if (plv is PLDouble)
+                {
+                    return plv as PLDouble;
+                }
+            }
+
+            // else build a list of actual outputs in same order as formal outputs
             PLList actualOutputs = new PLList ();
 
             foreach (string str in formalOutputParameters)

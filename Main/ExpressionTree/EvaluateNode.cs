@@ -98,7 +98,7 @@ namespace PLMain
 
             // Load and run the function
             FunctionProcessor processor = new FunctionProcessor (functionName);
-            PLList outputs = processor.Run (actualInputsParameters);
+            PLVariable outputs = processor.Run (actualInputsParameters);
 
             //***********************************************
 
