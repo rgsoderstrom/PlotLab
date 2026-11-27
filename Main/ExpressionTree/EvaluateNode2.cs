@@ -80,6 +80,9 @@ namespace PLMain
                 PLString  selectString = select as PLString;
                 PLInteger selectInt    = select as PLInteger;
 
+                if (select is PLComplex)
+                    throw new Exception ("Can't use a complex number as an index");
+
                 if (selectString != null && selectString.Data == "All")
                 {
                     Value = matValue.CollapseToColumn ();
